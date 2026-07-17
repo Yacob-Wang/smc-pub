@@ -268,46 +268,85 @@ def build_module_index(module: str, mod_dir: Path) -> str:
     return "\n".join(lines)
 
 
+def _article_files(dir_path: Path) -> list[str]:
+    """目录内可作为篇章的 md（排除 README / index）。"""
+    files = [
+        p.name
+        for p in dir_path.iterdir()
+        if p.is_file()
+        and p.suffix.lower() == ".md"
+        and not p.name.lower().startswith("readme")
+        and p.name.lower() != "index.md"
+    ]
+    return sorted(files, key=natural_key)
+
+
+def _ensure_series_overview(dir_path: Path, module: str | None) -> str:
+    """保证系列有总览页；无 README 时生成 index.md，侧栏只挂这一页。"""
+    readme = _pick_readme(dir_path)
+    if readme:
+        return readme.name
+
+    index_path = dir_path / "index.md"
+    if index_path.is_file():
+        return "index.md"
+
+    short = _short_title(module, dir_path.name, dir_path)
+    articles = _article_files(dir_path)
+    lines = [
+        f"# {short}",
+        "",
+        "本系列篇章如下。点开单篇阅读。",
+        "",
+        "| # | 篇章 |",
+        "|---|------|",
+    ]
+    for i, fname in enumerate(articles, 1):
+        title = get_title_from_markdown(
+            (dir_path / fname).read_text(encoding="utf-8", errors="replace"),
+            fname,
+        )
+        if len(title) > 56:
+            title = title[:54] + "…"
+        lines.append(f"| {i} | [{title}]({fname}) |")
+    if not articles:
+        lines.append("| — | （暂无篇章） |")
+    lines.append("")
+    index_path.write_text("\n".join(lines), encoding="utf-8")
+    return "index.md"
+
+
 def generate_dir_pages(dir_path: Path, *, depth: int = 0) -> None:
     """生成 .pages。
 
     depth=0 模块层：总览 + 系列短名
-    depth=1 系列层：系列总览 +（可选）子模块
-    depth>=2 子模块：仅总览/README，不再铺单篇
+    depth>=1 系列/子模块：只挂「系列总览」，单篇不进侧栏
     """
     module = _module_name_for(dir_path)
     subdirs = _list_nav_subdirs(dir_path)
     nav: list[tuple[str, str]] = []
 
     if depth == 0:
-        # 模块总览
         if (dir_path / "index.md").is_file():
             nav.append(("本模块总览", "index.md"))
         for sub in subdirs:
             nav.append((_short_title(module, sub.name, sub), sub.name))
             generate_dir_pages(sub, depth=1)
-        # 模块根上的 README（如 Framework/README.md）收到总览后，不占侧栏
         write_pages_file(dir_path, nav)
         return
 
-    # 系列 / 子模块：只挂一份总览，避免篇章堆叠
-    readme = _pick_readme(dir_path)
-    if readme:
-        nav.append(("系列总览", readme.name))
+    overview = _ensure_series_overview(dir_path, module)
+    nav.append(("系列总览", overview))
 
-    # 仅在系列第一层展开子目录（ART 子模块）；更深不再分叉进侧栏
+    # 仅系列第一层展开子目录（如 ART）；更深只保留总览入口
     if depth == 1 and subdirs:
         for sub in subdirs:
             nav.append((_short_title(module, sub.name, sub), sub.name))
             generate_dir_pages(sub, depth=2)
-    elif depth >= 2 and subdirs:
-        # 更深层（如 GC 九子目录）仍给一层入口，但标题缩短；单篇不进侧栏
+    elif depth == 2 and subdirs:
         for sub in subdirs:
             nav.append((_short_title(module, sub.name, sub), sub.name))
             generate_dir_pages(sub, depth=3)
-    elif depth >= 3:
-        # 到底：只保留总览
-        pass
 
     write_pages_file(dir_path, nav)
 
