@@ -3,9 +3,9 @@
 #   pip install -r scripts/requirements-docs.txt
 #   py -3.12 scripts/prepare_web_docs.py
 #   mkdocs serve
-site_name: 稳知库 · Stability Matrix Course
-site_description: Android 稳定性架构师系列技术博客（AOSP 17 + android17-6.18）
-site_author: Stability Matrix Course
+site_name: 稳知库
+site_description: JacobKing · Android 稳定性架构师系列技术博客（AOSP 17 + android17-6.18）
+site_author: JacobKing
 
 # docs/ 由 prepare_web_docs.py 生成；关闭「编辑此页」避免链到临时 docs/ 路径
 edit_uri: ""
@@ -15,6 +15,7 @@ site_dir: site
 
 theme:
   name: material
+  custom_dir: overrides
   language: zh
   features:
     # 顶栏模块 Tab；侧栏只展示当前模块/系列，避免 500+ 篇堆在一起
@@ -101,5 +102,9 @@ validation:
 
 extra:
   generator: false
+  homepage: /
 
-copyright: Copyright &copy; Stability Matrix Course
+extra_css:
+  - stylesheets/extra.css
+
+copyright: Copyright &copy; JacobKing · Stability Matrix Course

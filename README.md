@@ -73,4 +73,4 @@ git push -u origin master
 
 技术基线：AOSP 17 + android17-6.18（详见各系列 README）
 
-© Stability Matrix Course
+© JacobKing · Stability Matrix Course

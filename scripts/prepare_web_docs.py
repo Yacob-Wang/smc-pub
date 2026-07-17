@@ -420,6 +420,19 @@ def main() -> int:
     total += 1
     print("  root: index.md (blog homepage)")
 
+    # 站点静态资源（顶栏 / 首页样式等）
+    web_src = REPO_ROOT / "web"
+    if web_src.is_dir():
+        for path in web_src.rglob("*"):
+            if not path.is_file():
+                continue
+            rel = path.relative_to(web_src)
+            dst = DOCS_DIR / rel
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, dst)
+            total += 1
+        print("  web/: assets copied into docs/")
+
     generate_pages_tree(DOCS_DIR)
     print(f"Prepared docs/ with {total} content files; skipped ~{skipped_meta} meta docs")
     print("Generated layered .pages navigation")
