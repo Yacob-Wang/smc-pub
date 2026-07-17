@@ -20,12 +20,84 @@ PUBLIC_MODULES = [
 
 MODULE_TITLES = {
     "Linux_Kernel": "Linux 内核",
-    "Runtime": "运行时 / ART",
-    "Android_Framework": "Android Framework",
+    "Runtime": "运行时",
+    "Android_Framework": "Framework",
     "App": "应用层",
     "Tools": "工具",
-    "Hook": "Hook 专题",
+    "Hook": "Hook",
     "AI_Native_X": "AI Native",
+}
+
+MODULE_BLURBS = {
+    "Linux_Kernel": "进程 · 内存 · IO · Binder · Socket · 分区",
+    "Runtime": "ART · Native Crash",
+    "Android_Framework": "进程 · ANR · Watchdog · Input · Window",
+    "App": "Handler · MessageQueue · Looper",
+    "Tools": "调试 · 追踪 · 内存分析 · Git",
+    "Hook": "OEM Hook 专题",
+    "AI_Native_X": "端侧 Runtime · AI OS · 稳定性 · 工程实践",
+}
+
+# 侧栏短名：避免把系列 README 长标题整条塞进导航
+SERIES_NAV_TITLES: dict[str, dict[str, str]] = {
+    "Linux_Kernel": {
+        "Process": "进程",
+        "Memory_Management": "内存管理",
+        "IO": "IO",
+        "Binder": "Binder",
+        "socket": "Socket",
+        "epoll": "epoll",
+        "FS": "文件系统",
+        "Partition": "分区",
+        "Program_Execution": "程序加载",
+        "Input_Driver": "输入驱动",
+        "GKI": "GKI",
+        "DM": "Device Mapper",
+        "Interrupt": "中断",
+        "Syscalls": "系统调用",
+    },
+    "Runtime": {
+        "ART": "ART",
+        "Java_Crash": "Java Crash",
+        "Native_Crash": "Native Crash",
+    },
+    "Android_Framework": {
+        "Process": "进程",
+        "ANR_Detection": "ANR 检测",
+        "Watchdog": "Watchdog",
+        "Input": "Input",
+        "Window": "Window",
+        "Broadcast": "Broadcast",
+        "Service": "Service",
+        "PKMS": "PKMS",
+        "AOSP_Startup": "启动",
+        "Partition_System": "分区系统",
+        "Build_System": "编译系统",
+        "Dumpsys": "dumpsys",
+        "AmCommand": "am 命令",
+        "Hprof": "Hprof",
+        "Perfetto": "Perfetto",
+        "Dynamic_Updates": "动态更新",
+        "System_Integration": "系统集成",
+    },
+    "App": {
+        "Handler_MessageQueue_Looper": "Handler / MQ / Looper",
+    },
+    "Tools": {
+        "Tracing": "追踪",
+        "Memory_Analysis": "内存分析",
+        "Debugging": "调试",
+        "Android_Tools": "Android 工具",
+        "Kernel_Tools": "内核工具",
+        "Git_Mastery": "Git",
+        "Automation": "自动化",
+    },
+    "AI_Native_X": {
+        "01_AI_Native_Runtime": "AI Runtime",
+        "02_AI_Native_OS": "AI OS",
+        "03_AI_for_Stability": "AI for Stability",
+        "04_AI_Engineering": "AI 工程",
+    },
 }
 
 MODULE_SERIES_ORDER: dict[str, list[str]] = {
@@ -59,13 +131,13 @@ MODULE_SERIES_ORDER: dict[str, list[str]] = {
         "Partition_System",
         "Build_System",
         "Dumpsys",
+        "AmCommand",
+        "Hprof",
+        "Perfetto",
+        "Dynamic_Updates",
+        "System_Integration",
     ],
-    "AI_Native_X": [
-        "01_AI_Native_Runtime",
-        "02_AI_Native_OS",
-        "03_AI_for_Stability",
-        "04_AI_Engineering",
-    ],
+    "App": ["Handler_MessageQueue_Looper"],
     "Tools": [
         "Tracing",
         "Memory_Analysis",
@@ -74,6 +146,13 @@ MODULE_SERIES_ORDER: dict[str, list[str]] = {
         "Kernel_Tools",
         "Git_Mastery",
         "Automation",
+    ],
+    "Hook": [],
+    "AI_Native_X": [
+        "01_AI_Native_Runtime",
+        "02_AI_Native_OS",
+        "03_AI_for_Stability",
+        "04_AI_Engineering",
     ],
 }
 

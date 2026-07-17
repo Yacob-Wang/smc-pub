@@ -10,9 +10,9 @@
 
 ## 怎么读
 
-1. 打开下方某个**模块**
-2. 进入该模块下的**系列 README**（总览 + 篇章目录）
-3. 按目录阅读单篇；站点内也支持全文搜索
+1. **顶栏**选模块（Linux 内核 / 运行时 / Framework …）
+2. **左侧**进系列，打开「系列总览」
+3. 在总览的**篇章表**里读单篇（侧栏不堆全部文章）
 
 ---
 
@@ -20,26 +20,25 @@
 
 | 模块 | 说明 |
 |------|------|
-| [Linux 内核](Linux_Kernel/) | 进程 / 内存 / IO / Binder / Socket / epoll / 分区 … |
-| [运行时 / ART](Runtime/) | ART、Java Crash、Native Crash |
-| [Android Framework](Android_Framework/) | 进程、ANR、Watchdog、Input、Window … |
-| [应用层](App/) | Handler / MessageQueue / Looper |
-| [工具](Tools/) | 调试、追踪、内存分析、Git … |
-| [Hook 专题](Hook/) | OEM Hook 等 |
-| [AI Native](AI_Native_X/) | 端侧 AI Runtime / AI OS / AI for Stability / AI 工程 |
+| [Linux 内核](Linux_Kernel/) | 进程 · 内存 · IO · Binder · Socket · 分区 |
+| [运行时](Runtime/) | ART · Native Crash |
+| [Framework](Android_Framework/) | 进程 · ANR · Watchdog · Input · Window |
+| [应用层](App/) | Handler · MessageQueue · Looper |
+| [工具](Tools/) | 调试 · 追踪 · 内存分析 · Git |
+| [Hook](Hook/) | OEM Hook 专题 |
+| [AI Native](AI_Native_X/) | 端侧 Runtime · AI OS · 稳定性 · 工程 |
 
 ## 按问题进入
 
 | 问题 | 入口 |
 |------|------|
-| Java Crash | [Runtime/Java_Crash](Runtime/Java_Crash/) |
-| Native Crash | [Runtime/Native_Crash](Runtime/Native_Crash/) |
-| ANR | [ANR_Detection](Android_Framework/ANR_Detection/)、[Input](Android_Framework/Input/) |
-| Binder | [Linux_Kernel/Binder](Linux_Kernel/Binder/) |
-| OOM / 内存 | [Memory_Management](Linux_Kernel/Memory_Management/)、[ART](Runtime/ART/) |
-| Watchdog | [Android_Framework/Watchdog](Android_Framework/Watchdog/) |
-| Socket / epoll | [socket](Linux_Kernel/socket/)、[epoll](Linux_Kernel/epoll/) |
-| 端侧 AI | [AI_Native_X](AI_Native_X/) |
+| Native Crash | [Native Crash](Runtime/Native_Crash/) |
+| ANR | [ANR 检测](Android_Framework/ANR_Detection/)、[Input](Android_Framework/Input/) |
+| Binder | [Binder](Linux_Kernel/Binder/) |
+| OOM / 内存 | [内存管理](Linux_Kernel/Memory_Management/)、[ART](Runtime/ART/) |
+| Watchdog | [Watchdog](Android_Framework/Watchdog/) |
+| Socket / epoll | [Socket](Linux_Kernel/socket/)、[epoll](Linux_Kernel/epoll/) |
+| 端侧 AI | [AI Native](AI_Native_X/) |
 
 ---
 

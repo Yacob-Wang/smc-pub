@@ -17,8 +17,12 @@ theme:
   name: material
   language: zh
   features:
+    # 顶栏模块 Tab；侧栏只展示当前模块/系列，避免 500+ 篇堆在一起
     - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
     - navigation.indexes
+    - navigation.prune
     - navigation.top
     - navigation.footer
     - navigation.path

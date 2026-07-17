@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """将仓库 Markdown 同步到 docs/，供 MkDocs / GitHub Pages 构建。
 
-- 同步七大模块正文与配图
-- 生成博客首页 index.md
-- 按系列 README 表格顺序生成 .pages 层级导航
+导航策略（分层，避免侧栏一次铺开）：
+1. 顶栏 Tab = 七大模块
+2. 模块页 = 系列目录（短名）
+3. 系列页 = 仅「系列总览」；单篇从总览表格进入
+4. 有子目录的系列（如 ART）再展开一层子模块
 """
 
 from __future__ import annotations
@@ -19,10 +21,12 @@ if str(_SCRIPTS) not in sys.path:
 
 from content_policy import (  # noqa: E402
     ASSET_SUFFIXES,
+    MODULE_BLURBS,
     MODULE_SERIES_ORDER,
     MODULE_TITLES,
     PUBLIC_MODULES,
     PUBLIC_ROOT_FILES,
+    SERIES_NAV_TITLES,
     is_excluded_path,
     is_meta_file,
 )
@@ -31,9 +35,20 @@ from public_readme import build_public_readme  # noqa: E402
 REPO_ROOT = _SCRIPTS.parent
 DOCS_DIR = REPO_ROOT / "docs"
 
-# 兼容旧变量名
 MODULE_DIRS = PUBLIC_MODULES
 ROOT_FILES = [(name, name) for name in PUBLIC_ROOT_FILES]
+
+NAV_SKIP_DIR_NAMES = {
+    "bridge",
+    "appendix",
+    "appendices",
+    "assets",
+    "images",
+    "img",
+    "scripts",
+    "_archive",
+    "_studio",
+}
 
 
 def is_excluded(rel: Path) -> bool:
@@ -58,7 +73,6 @@ def get_title_from_markdown(content: str, fallback: str) -> str:
 
 
 def parse_series_readme_table(content: str) -> list[str]:
-    """从系列 README 表格解析篇章文件名顺序（与 pack-content.ps1 对齐）。"""
     files: list[str] = []
     for line in content.splitlines():
         m = re.match(r"^\|\s*\[(\d+)\]\(\./([^)]+)\)\s*\|", line)
@@ -72,69 +86,24 @@ def parse_series_readme_table(content: str) -> list[str]:
 
 
 def natural_key(name: str) -> tuple:
-    """数字前缀优先的自然排序键。"""
     stem = Path(name).stem
     m = re.match(r"^(\d+)", stem)
     if m:
         return (0, int(m.group(1)), stem.lower())
     if stem.lower().startswith("readme"):
         return (-1, 0, stem.lower())
-    # AE01 / R01 / F01 / O01 / PM01 等前缀
     m = re.match(r"^[A-Za-z]+(\d+)", stem)
     if m:
         return (0, int(m.group(1)), stem.lower())
     return (1, 0, stem.lower())
 
 
-def order_md_files(dir_path: Path) -> list[str]:
-    """返回目录内 .md 文件的展示顺序（仅文件名）。"""
-    md_files = [p.name for p in dir_path.iterdir() if p.is_file() and p.suffix.lower() == ".md"]
-    if not md_files:
-        return []
-
-    readmes = [f for f in md_files if f.lower().startswith("readme")]
-    others = [f for f in md_files if f not in readmes]
-
-    ordered: list[str] = []
-    # README 优先
-    for r in sorted(readmes, key=lambda x: (0 if x.lower() == "readme.md" else 1, x.lower())):
-        ordered.append(r)
-
-    # 若存在系列 README，尝试按表格排序其余文章
-    table_order: list[str] = []
-    for r in ordered:
-        content = (dir_path / r).read_text(encoding="utf-8", errors="replace")
-        table_order = parse_series_readme_table(content)
-        if table_order:
-            break
-
-    remaining = set(others)
-    for fname in table_order:
-        # 精确匹配或编号前缀模糊匹配
-        if fname in remaining:
-            ordered.append(fname)
-            remaining.discard(fname)
-            continue
-        m = re.match(r"^(\d{2})-", fname)
-        if m:
-            prefix = m.group(1)
-            hits = sorted([f for f in remaining if f.startswith(prefix + "-")], key=natural_key)
-            if hits:
-                ordered.append(hits[0])
-                remaining.discard(hits[0])
-
-    ordered.extend(sorted(remaining, key=natural_key))
-    return ordered
-
-
 def yaml_quote(text: str) -> str:
-    """简单加引号，避免标题中的冒号等破坏 .pages YAML。"""
     escaped = text.replace("\\", "\\\\").replace('"', '\\"')
     return f'"{escaped}"'
 
 
 def write_pages_file(dir_path: Path, nav_entries: list[tuple[str, str]]) -> None:
-    """写入 awesome-pages 的 .pages。entries = [(title, target), ...]。"""
     if not nav_entries:
         return
     lines = ["nav:"]
@@ -143,29 +112,57 @@ def write_pages_file(dir_path: Path, nav_entries: list[tuple[str, str]]) -> None
     (dir_path / ".pages").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def generate_pages_tree(docs_root: Path) -> None:
-    """为 docs/ 下各级目录生成 .pages。"""
-    # 顶层
-    top_nav: list[tuple[str, str]] = [
-        ("首页", "index.md"),
-    ]
-    for mod in MODULE_DIRS:
-        if (docs_root / mod).is_dir():
-            title = MODULE_TITLES.get(mod, mod)
-            top_nav.append((title, mod))
-    write_pages_file(docs_root, top_nav)
+def _pick_readme(dir_path: Path) -> Path | None:
+    series = sorted(
+        [
+            p
+            for p in dir_path.glob("README*.md")
+            if "系列" in p.name or "Series" in p.name
+        ],
+        key=lambda p: p.name.lower(),
+    )
+    if series:
+        return series[0]
+    for candidate in ("README.md", "readme.md"):
+        p = dir_path / candidate
+        if p.is_file():
+            return p
+    readmes = list(dir_path.glob("README*.md")) + list(dir_path.glob("readme*.md"))
+    return readmes[0] if readmes else None
 
-    # 各模块目录
-    for mod in MODULE_DIRS:
-        mod_dir = docs_root / mod
-        if not mod_dir.is_dir():
-            continue
-        generate_dir_pages(mod_dir)
+
+def _dir_has_content(dir_path: Path) -> bool:
+    """目录下是否有可读 Markdown（含嵌套）。"""
+    return any(p.suffix.lower() == ".md" for p in dir_path.rglob("*.md"))
+
+
+def _short_title(module: str | None, dirname: str, dir_path: Path | None = None) -> str:
+    if module and dirname in SERIES_NAV_TITLES.get(module, {}):
+        return SERIES_NAV_TITLES[module][dirname]
+    # 子模块：优先用编号前缀后的短名
+    m = re.match(r"^(\d+)[-_](.+)$", dirname)
+    if m:
+        return m.group(2).replace("_", " ")
+    if dir_path is not None:
+        readme = _pick_readme(dir_path)
+        if readme:
+            title = get_title_from_markdown(
+                readme.read_text(encoding="utf-8", errors="replace"),
+                dirname,
+            )
+            # 去掉常见冗长前缀
+            title = re.sub(r"^面向稳定性的\s*", "", title)
+            title = re.sub(r"（共\s*\d+\s*篇）$", "", title)
+            title = re.sub(r"\(共\s*\d+\s*篇\)$", "", title)
+            title = re.sub(r"\s*—\s*系列总览$", "", title)
+            title = re.sub(r"系列文章$", "", title)
+            title = title.strip(" ：:")
+            if 0 < len(title) <= 24:
+                return title
+    return dirname.replace("_", " ")
 
 
 def sort_subdirs(parent: Path, subdirs: list[Path]) -> list[Path]:
-    """模块级目录按预定义系列顺序排序。"""
-    # parent 相对 docs 根的第一段即 module 名
     try:
         rel = parent.relative_to(DOCS_DIR)
         module = rel.parts[0] if rel.parts else parent.name
@@ -182,52 +179,8 @@ def sort_subdirs(parent: Path, subdirs: list[Path]) -> list[Path]:
     return sorted(subdirs, key=key)
 
 
-# 侧栏不展开的目录名（杂项 / 桥接，从系列 README 内链进入即可）
-NAV_SKIP_DIR_NAMES = {
-    "bridge",
-    "appendix",
-    "appendices",
-    "assets",
-    "images",
-    "img",
-    "scripts",
-    "_archive",
-    "_studio",
-}
-
-
-def _pick_readme(dir_path: Path) -> Path | None:
-    for candidate in ("README.md", "readme.md"):
-        p = dir_path / candidate
-        if p.is_file():
-            return p
-    readmes = list(dir_path.glob("README*.md")) + list(dir_path.glob("readme*.md"))
-    return readmes[0] if readmes else None
-
-
-def _dir_nav_title(sub: Path) -> str:
-    readme = _pick_readme(sub)
-    if readme:
-        title = get_title_from_markdown(
-            readme.read_text(encoding="utf-8", errors="replace"),
-            sub.name,
-        )
-    else:
-        title = MODULE_TITLES.get(sub.name, sub.name.replace("_", " "))
-    if len(title) > 40:
-        title = title[:38] + "…"
-    return title
-
-
-def generate_dir_pages(dir_path: Path) -> None:
-    """递归生成 .pages。
-
-    侧栏策略（避免 500+ 篇铺开）：
-    - 只挂 README* 作为系列入口
-    - 子目录继续递归
-    - 单篇正文仍复制进 docs/，可从系列 README 表格链接 / 搜索到达
-    """
-    subdirs = sort_subdirs(
+def _list_nav_subdirs(dir_path: Path) -> list[Path]:
+    return sort_subdirs(
         dir_path,
         [
             p
@@ -235,32 +188,148 @@ def generate_dir_pages(dir_path: Path) -> None:
             if p.is_dir()
             and not p.name.startswith(".")
             and p.name.lower() not in NAV_SKIP_DIR_NAMES
+            and _dir_has_content(p)
         ],
     )
 
+
+def _module_name_for(dir_path: Path) -> str | None:
+    try:
+        rel = dir_path.relative_to(DOCS_DIR)
+        return rel.parts[0] if rel.parts else None
+    except ValueError:
+        return None
+
+
+def _series_blurb(series_dir: Path) -> str:
+    readme = _pick_readme(series_dir)
+    if not readme:
+        return "打开系列总览，按篇章表阅读"
+    text = readme.read_text(encoding="utf-8", errors="replace")
+    candidates: list[str] = []
+    for line in text.splitlines():
+        s = line.strip()
+        if not s or s.startswith("#") or s.startswith("|") or s.startswith("---"):
+            continue
+        if s.startswith("```") or s.startswith("!!!") or s.startswith("- [") or s.startswith("* ["):
+            continue
+        # 引用块可作简介
+        if s.startswith(">"):
+            s = s.lstrip("> ").strip()
+        s = re.sub(r"\*+", "", s)
+        s = re.sub(r"`+", "", s)
+        if len(s) < 18 or s.endswith(("：", ":", "、")):
+            continue
+        if any(k in s for k in ("目录", "TODO", "写作", "基线：", "源码基线")):
+            continue
+        candidates.append(s)
+        if len(candidates) >= 3:
+            break
+    if not candidates:
+        return "打开系列总览，按篇章表阅读"
+    s = candidates[0]
+    if len(s) > 48:
+        s = s[:46] + "…"
+    return s
+
+
+def build_module_index(module: str, mod_dir: Path) -> str:
+    title = MODULE_TITLES.get(module, module)
+    blurb = MODULE_BLURBS.get(module, "")
+    subdirs = _list_nav_subdirs(mod_dir)
+    lines = [
+        f"# {title}",
+        "",
+        f"{blurb}。" if blurb else "",
+        "",
+        "选择下方**系列**进入总览；单篇请在系列总览的目录表中打开。",
+        "",
+        "## 系列目录",
+        "",
+        "| 系列 | 说明 |",
+        "|------|------|",
+    ]
+    if not subdirs:
+        # 模块本身就是一个系列（如 Hook）
+        readme = _pick_readme(mod_dir)
+        if readme:
+            lines.append(f"| [系列总览]({readme.name}) | {_series_blurb(mod_dir)} |")
+        else:
+            lines.append("| （暂无系列） | — |")
+    else:
+        for sub in subdirs:
+            short = _short_title(module, sub.name, sub)
+            readme = _pick_readme(sub)
+            link = f"{sub.name}/" if not readme else f"{sub.name}/{readme.name}"
+            # index 优先：链到目录，由 indexes 打开总览
+            link = f"{sub.name}/"
+            lines.append(f"| [{short}]({link}) | {_series_blurb(sub)} |")
+    lines.extend(["", "---", "", "返回 [站点首页](../index.md)。", ""])
+    return "\n".join(lines)
+
+
+def generate_dir_pages(dir_path: Path, *, depth: int = 0) -> None:
+    """生成 .pages。
+
+    depth=0 模块层：总览 + 系列短名
+    depth=1 系列层：系列总览 +（可选）子模块
+    depth>=2 子模块：仅总览/README，不再铺单篇
+    """
+    module = _module_name_for(dir_path)
+    subdirs = _list_nav_subdirs(dir_path)
     nav: list[tuple[str, str]] = []
 
-    # 仅 README 进侧栏
-    for fname in order_md_files(dir_path):
-        if not fname.lower().startswith("readme"):
-            continue
-        title = get_title_from_markdown(
-            (dir_path / fname).read_text(encoding="utf-8", errors="replace"),
-            fname,
-        )
-        if len(title) > 48:
-            title = title[:46] + "…"
-        nav.append((title, fname))
+    if depth == 0:
+        # 模块总览
+        if (dir_path / "index.md").is_file():
+            nav.append(("本模块总览", "index.md"))
+        for sub in subdirs:
+            nav.append((_short_title(module, sub.name, sub), sub.name))
+            generate_dir_pages(sub, depth=1)
+        # 模块根上的 README（如 Framework/README.md）收到总览后，不占侧栏
+        write_pages_file(dir_path, nav)
+        return
 
-    for sub in subdirs:
-        nav.append((_dir_nav_title(sub), sub.name))
-        generate_dir_pages(sub)
+    # 系列 / 子模块：只挂一份总览，避免篇章堆叠
+    readme = _pick_readme(dir_path)
+    if readme:
+        nav.append(("系列总览", readme.name))
+
+    # 仅在系列第一层展开子目录（ART 子模块）；更深不再分叉进侧栏
+    if depth == 1 and subdirs:
+        for sub in subdirs:
+            nav.append((_short_title(module, sub.name, sub), sub.name))
+            generate_dir_pages(sub, depth=2)
+    elif depth >= 2 and subdirs:
+        # 更深层（如 GC 九子目录）仍给一层入口，但标题缩短；单篇不进侧栏
+        for sub in subdirs:
+            nav.append((_short_title(module, sub.name, sub), sub.name))
+            generate_dir_pages(sub, depth=3)
+    elif depth >= 3:
+        # 到底：只保留总览
+        pass
 
     write_pages_file(dir_path, nav)
 
 
+def generate_pages_tree(docs_root: Path) -> None:
+    top_nav: list[tuple[str, str]] = [("首页", "index.md")]
+    for mod in MODULE_DIRS:
+        mod_dir = docs_root / mod
+        if not mod_dir.is_dir():
+            continue
+        title = MODULE_TITLES.get(mod, mod)
+        top_nav.append((title, mod))
+        # 模块落地页
+        (mod_dir / "index.md").write_text(
+            build_module_index(mod, mod_dir),
+            encoding="utf-8",
+        )
+        generate_dir_pages(mod_dir, depth=0)
+    write_pages_file(docs_root, top_nav)
+
+
 def build_public_index() -> str:
-    """面向读者的首页（与 public_readme 同源）。"""
     return build_public_readme(REPO_ROOT)
 
 
@@ -314,7 +383,7 @@ def main() -> int:
 
     generate_pages_tree(DOCS_DIR)
     print(f"Prepared docs/ with {total} content files; skipped ~{skipped_meta} meta docs")
-    print("Generated hierarchical .pages navigation")
+    print("Generated layered .pages navigation")
     return 0
 
 
