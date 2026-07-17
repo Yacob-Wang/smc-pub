@@ -1,0 +1,5 @@
+# GitHub Pages / MkDocs Material 构建依赖
+# 安装: pip install -r scripts/requirements-docs.txt
+mkdocs-material>=9.5.0,<10
+mkdocs-awesome-pages-plugin>=2.9.0
+jieba>=0.42.1

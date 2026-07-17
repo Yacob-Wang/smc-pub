@@ -1,0 +1,48 @@
+# 编辑器与系统
+.cursor/
+.claude/
+.mavis/
+.obsidian/
+.opencode/
+.vscode/
+*.suo
+*.user
+Thumbs.db
+.DS_Store
+
+# 临时与构建
+*.log
+*.tmp
+*.swp
+*.idea
+*~
+*.prof
+*.hprof
+*.dump
+
+# 根目录临时源码/草稿
+/*.java
+/*.cpp
+/*.c
+/*.h
+/*.txt
+/*.base
+
+# Android Reader 构建产物
+reader/.gradle/
+reader/build/
+reader/app/build/
+reader/local.properties
+reader/app/src/main/assets/
+reader/.idea/
+
+# MkDocs / GitHub Pages 构建产物（docs/ 由 scripts/prepare_web_docs.py 生成）
+docs/
+site/
+.cache/
+dist/
+
+# Python
+scripts/__pycache__/
+**/__pycache__/
+*.py[cod]

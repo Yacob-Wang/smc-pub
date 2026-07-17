@@ -1,0 +1,196 @@
+# perfetto_hprof 配置模板
+# 用于 Perfetto heapprofd 数据源,采集 native heap 分配信息
+#
+# 用法:
+#   adb push perfetto_hprof.pbtxt /data/local/tmp/
+#   adb shell perfetto --txt -c /data/local/tmp/perfetto_hprof.pbtxt \
+#       -o /data/misc/perfetto-traces/trace.pftrace
+#   adb pull /data/misc/perfetto-traces/trace.pftrace ./
+#   # 然后用 trace_processor 或 https://ui.perfetto.dev 分析
+#
+# 配套文档:Android_Framework_Layer/Hprof/03-perfetto_hprof详解.md
+
+# ============================================================================
+# 场景 1:开发调试(高频采样,5 分钟,定位 native 泄漏)
+# ============================================================================
+# 用途:开发自己排查,看 native 分配热点
+# 采样:1024 字节(高频,捕获所有大对象)
+# 持续:5 分钟
+#
+# 适用:
+#   - 自己复现 native 泄漏问题
+#   - Perfetto UI 中实时查看
+# ============================================================================
+
+duration_ms: 300000
+
+buffers: {
+  size_kb: 10240
+  fill_policy: RING_BUFFER
+}
+
+data_sources: {
+  config: {
+    name: "android.heapprofd"
+    target_buffer: 0
+    
+    heapprofd_config: {
+      # 全局采样间隔(字节)
+      sampling_interval_bytes: 1024
+      
+      # 监控目标进程
+      process_dump_config: {
+        process_name: "com.example.app"
+        sampling_interval_bytes: 1024
+      }
+    }
+  }
+}
+
+# ============================================================================
+# 场景 2:灰度验证(中频采样,10 分钟,线上灰度包)
+# ============================================================================
+# 用途:内部灰度包线上验证,捕获真实用户场景
+# 采样:2048 字节(平衡精度和开销)
+# 持续:10 分钟
+#
+# 适用:
+#   - internal 灰度包线上监控
+#   - 配合 LeakCanary 报告分析
+# ============================================================================
+#
+# 把下面这段替换上面的 data_sources:
+#
+# data_sources: {
+#   config: {
+#     name: "android.heapprofd"
+#     heapprofd_config: {
+#       sampling_interval_bytes: 2048
+#       process_dump_config: {
+#         process_name: "com.example.app"
+#         sampling_interval_bytes: 2048
+#       }
+#     }
+#   }
+# }
+#
+# duration_ms: 600000
+
+# ============================================================================
+# 场景 3:正式监控(低频采样,1 小时,production 包)
+# ============================================================================
+# 用途:production 包抽样(1% 流量)持续监控
+# 采样:4096-16384 字节(只关心大对象)
+# 持续:1 小时
+#
+# 适用:
+#   - production 抽样监控(1% 流量)
+#   - 捕获真实用户场景的 native 增长
+#
+# 注意:此场景必须配合服务端触发,不能用户主动触发
+# ============================================================================
+#
+# duration_ms: 3600000
+#
+# data_sources: {
+#   config: {
+#     name: "android.heapprofd"
+#     heapprofd_config: {
+#       sampling_interval_bytes: 8192
+#       process_dump_config: {
+#         process_name: "com.example.app"
+#         sampling_interval_bytes: 8192
+#       }
+#     }
+#   }
+# }
+
+# ============================================================================
+# 场景 4:Java-only 模式(只监控 Java 堆,5 分钟)
+# ============================================================================
+# 用途:LeakCanary 的替代(系统级)
+# 采样:按时间(100ms)
+# 持续:5 分钟
+#
+# 适用:
+#   - Activity/Fragment 泄漏(传统 LeakCanary 场景)
+#   - 与 LeakCanary 对比验证
+# ============================================================================
+#
+# duration_ms: 300000
+#
+# data_sources: {
+#   config: {
+#     name: "android.heapprofd"
+#     heapprofd_config: {
+#       sampling_interval_ms: 100
+#       process_dump_config: {
+#         process_name: "com.example.app"
+#       }
+#     }
+#   }
+# }
+
+# ============================================================================
+# 场景 5:Native-only 模式(只监控 native 分配,5 分钟)
+# ============================================================================
+# 用途:排查 native 增长(Bitmap/DirectByteBuffer/JNI)
+# 采样:2048 字节
+# 持续:5 分钟
+#
+# 适用:
+#   - dumpsys meminfo 显示 native heap 占比 > 30%
+#   - 怀疑 Bitmap / so / JNI 泄漏
+# ============================================================================
+#
+# duration_ms: 300000
+#
+# data_sources: {
+#   config: {
+#     name: "android.heapprofd"
+#     heapprofd_config: {
+#       sampling_interval_bytes: 2048
+#       process_dump_config: {
+#         process_name: "com.example.app"
+#         sampling_interval_bytes: 2048
+#       }
+#     }
+#   }
+# }
+
+# ============================================================================
+# 高级配置:配合其他数据源交叉分析
+# ============================================================================
+# 推荐同时开启 process_stats + ftrace(atrace memreclaim),交叉分析内存变化
+#
+# 取消下面注释启用:
+#
+# data_sources: {
+#   config: {
+#     name: "android.process_stats"
+#     process_stats_config: {
+#       proc_stats_interval_ms: 1000
+#     }
+#   }
+# }
+#
+# data_sources: {
+#   config: {
+#     name: "linux.ftrace"
+#     ftrace_config: {
+#       atrace_categories: "memreclaim"
+#       atrace_apps: "com.example.app"
+#     }
+#   }
+# }
+
+# ============================================================================
+# 输出文件命名规范
+# ============================================================================
+# 推荐命名格式:<app>_<scenario>_<timestamp>.pftrace
+#
+# 示例:
+#   com.example.app_debug_20260115_143022.pftrace
+#   com.example.app_internal_oom_20260115_150134.pftrace
+#
+# 便于后续 CI / 脚本批量处理

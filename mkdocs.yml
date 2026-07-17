@@ -1,0 +1,101 @@
+# 稳知库 · GitHub Pages 博客
+# 本地预览:
+#   pip install -r scripts/requirements-docs.txt
+#   py -3.12 scripts/prepare_web_docs.py
+#   mkdocs serve
+site_name: 稳知库 · Stability Matrix Course
+site_description: Android 稳定性架构师系列技术博客（AOSP 17 + android17-6.18）
+site_author: Stability Matrix Course
+
+# docs/ 由 prepare_web_docs.py 生成；关闭「编辑此页」避免链到临时 docs/ 路径
+edit_uri: ""
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.tabs
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - navigation.path
+    - navigation.instant
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: 切换到深色模式
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: 切换到浅色模式
+  icon:
+    logo: material/book-open-page-variant
+  font:
+    text: Noto Sans SC
+    code: JetBrains Mono
+
+plugins:
+  - search:
+      lang:
+        - zh
+        - en
+      separator: '[\s\u200b\-/,.]+'
+  - awesome-pages
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+# 历史相对链接较多，先保证能发布
+strict: false
+
+validation:
+  omitted_files: warn
+  absolute_links: ignore
+  unrecognized_links: ignore
+
+extra:
+  generator: false
+
+copyright: Copyright &copy; Stability Matrix Course

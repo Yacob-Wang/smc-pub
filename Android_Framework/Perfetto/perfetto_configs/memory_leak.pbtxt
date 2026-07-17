@@ -1,0 +1,57 @@
+# 文件路径:Android_Framework_Layer/Perfetto/perfetto_configs/memory_leak.pbtxt
+# 场景:内存泄漏专项追踪
+# 适用:Native 内存泄漏、Java 对象泄漏
+# 抓取时长:5 分钟(看泄漏过程)
+
+duration_ms: 300000
+
+buffers {
+  size_kb: 16384       # 16MB,长 trace
+  fill_policy: RING_BUFFER
+}
+
+# ===== heapprofd(Native 内存分配采样) =====
+data_sources {
+  config {
+    name: "android.heapprofd"
+    heapprofd_config {
+      sampling_interval_bytes: 1024   # 高精度
+      # 限定追踪目标进程
+      process_cmdline: "com.example.app"
+    }
+  }
+}
+
+# ===== Java heap profile(Java 对象分配采样) =====
+data_sources {
+  config {
+    name: "android.java_heap_profile"
+    java_heap_config {
+      sampling_interval_bytes: 1024
+      process_cmdline: "com.example.app"
+    }
+  }
+}
+
+# ===== 进程统计(看 RSS 走势) =====
+data_sources {
+  config {
+    name: "linux.process_stats"
+    process_stats_config {
+      proc_stats_poll_interval_ms: 1000
+    }
+  }
+}
+
+# ===== 系统内存统计 =====
+data_sources {
+  config {
+    name: "linux.sys_stats"
+    sys_stats_config {
+      sys_stats_poll_interval_ms: 1000
+    }
+  }
+}
+
+unique_session_name: "memory_leak_v1"
+session_initiator: INTERNAL_INCIATED

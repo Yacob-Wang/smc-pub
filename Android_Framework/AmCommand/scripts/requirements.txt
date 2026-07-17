@@ -1,0 +1,27 @@
+# amlib 依赖清单
+# Python 3.8+ 推荐 3.11
+
+# 核心依赖(无第三方,纯标准库)
+# Python 标准库: subprocess, threading, queue, json, re, time, logging, dataclasses, pathlib
+
+# 可选依赖
+jinja2>=3.0          # 报告模板(若需自定义模板)
+requests>=2.28       # Slack/PagerDuty 通知
+PyYAML>=6.0          # 解析 yml 配置(若用 yml 写巡检配置)
+pytest>=7.0          # 单元测试
+pytest-mock>=3.10    # mock 测试
+
+# 设备信息上报(可选)
+pydantic>=2.0        # 数据类
+
+# CI 集成
+# GitHub Actions: 无需额外依赖(用 actions/* 系列)
+# GitLab CI: 无需额外依赖
+
+# hprof 解析(可选,内存巡检增强)
+# hprof-slurp / hprof-parser 等需要单独安装
+
+# Android SDK 依赖(不在 Python 端处理)
+# - adb (platform-tools 34+)
+# - hprof-conv (platform-tools)
+# - traceview (tools/)
