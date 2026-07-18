@@ -22,7 +22,7 @@
 |------|------|
 | [Linux 内核](Linux_Kernel/) | 进程 · 内存 · IO · Binder · Socket · 分区 |
 | [运行时](Runtime/) | ART · Native Crash |
-| [Framework](Android_Framework/) | 进程 · ANR · Watchdog · Input · Window |
+| [Framework](Android_Framework/) | 进程 · ANR · Watchdog · Input · Window · Stability |
 | [应用层](App/) | Handler · MessageQueue · Looper |
 | [工具](Tools/) | 调试 · 追踪 · 内存分析 · Git |
 | [Hook](Hook/) | OEM Hook 专题 |
@@ -39,6 +39,7 @@
 | Watchdog | [Watchdog](Android_Framework/Watchdog/) |
 | Socket / epoll | [Socket](Linux_Kernel/socket/)、[epoll](Linux_Kernel/epoll/) |
 | 端侧 AI | [AI Native](AI_Native_X/) |
+| **稳定性症状（按问题分类全景）** | **[Stability 系列](Android_Framework/Stability/)** ← 7 类症状（ANR/JE/NE/SWT/HANG/REBOOT/KE）速查入口 |
 
 ---
 
