@@ -2,7 +2,7 @@
 
 > **v2 新写版 · 2026-07-18**
 > - **本篇定位**：诊断实战（12/13）· 节点文件体系 + 6.18 binderfs 成熟
-> - **基线**：`android-17.0.0_r1`（API 37） + `android17-6.18`（Linux 6.18 LTS）
+> - **基线**：`android-17.0.0_r1`（API 37） + `android17-6.18`（Linux 6.18 LTS，2026 Q2/Q3 发版）
 > - **核心新内容**：**§5.4 binderfs vendor 隔离成熟** + **§5.5 binderfs 与 Rust Binder**
 
 ---

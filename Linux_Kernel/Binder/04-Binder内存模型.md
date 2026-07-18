@@ -2,7 +2,7 @@
 
 > **v2 新写版 · 2026-07-18**
 > - **本篇定位**：核心机制深潜（4/13）· 内存管理
-> - **基线**：`android-17.0.0_r1`（API 37） + `android17-6.18`（Linux 6.18 LTS）
+> - **基线**：`android-17.0.0_r1`（API 37） + `android17-6.18`（Linux 6.18 LTS，2026 Q2/Q3 发版）
 > - **核心新内容**：**§4.3 6.18 sparse memory** + **§6 TransactionTooLarge 6.18 行为变化**
 
 ---

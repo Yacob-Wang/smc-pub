@@ -2,7 +2,7 @@
 
 > **v2 新写版 · 2026-07-18**
 > - **本篇定位**：诊断与治理（10/13）· oneway 滥发深度方案
-> - **基线**：`android-17.0.0_r1`（API 37） + `android17-6.18`（Linux 6.18 LTS）
+> - **基线**：`android-17.0.0_r1`（API 37） + `android17-6.18`（Linux 6.18 LTS，2026 Q2/Q3 发版）
 > - **核心新内容**：**§3 6.18 `BR_ONEWAY_SPAM_SUSPECT`** + **§3 AOSP 17 Qualcomm patch**
 
 ---
