@@ -917,7 +917,7 @@ binder: 5678:5678 TransactionTooLarge: 5678 -> system_server
 | binder_alloc.c | `drivers/android/binder_alloc.c` | android17-6.18 | buffer 分配器（sparse memory 实现）|
 | binder_alloc.h | `drivers/android/binder_alloc.h` | android17-6.18 | binder_alloc 接口 |
 | binderfs.c | `drivers/android/binderfs.c` | android17-6.18 | binderfs 文件系统（详见 12 篇）|
-| binder_internal.rs | `drivers/android/binder_internal.rs` | android17-6.18 | **Rust 版 Binder（路径待 v2 校对）**|
+| binder_internal.rs | `drivers/android/binder_internal.rs` | android17-6.18 | **Rust 版 Binder（路径基于 Alice Ryhl LKML 推断，stable 校对待 v2.1）**|
 | binder.h（uapi）| `include/uapi/linux/android/binder.h` | android17-6.18 | BC/BR 命令号、binder_transaction_data |
 | ProcessState.cpp | `frameworks/native/libs/binder/ProcessState.cpp` | AOSP 17 | 用户态 binder 线程池管理（仅引用接口）|
 | IPCThreadState.cpp | `frameworks/native/libs/binder/IPCThreadState.cpp` | AOSP 17 | 用户态 binder 事务循环（仅引用接口）|
@@ -934,8 +934,8 @@ binder: 5678:5678 TransactionTooLarge: 5678 -> system_server
 | 4 | `drivers/android/binder_alloc.h` | 已校对 | 同上 |
 | 5 | `drivers/android/binderfs.c` | 已校对 | 同上 |
 | 6 | `include/uapi/linux/android/binder.h` | 已校对 | 同上 |
-| 7 | `drivers/android/binder_internal.rs` | **待 v2 校对** | 6.18 上 Rust Binder 存在，但具体路径需在 `android17-6.18` stable 标签拉取后确认；本篇描述基于 Alice Ryhl LKML 公告和 Google 官方博客 |
-| 8 | `drivers/android/binder.rs` | **待 v2 校对** | 可能存在但路径未公开确认；6.18 stable 拉取后定 |
+| 7 | `drivers/android/binder_internal.rs` | **v2.1 校对待** | 基于 Alice Ryhl 2025-09 LKML `[PATCH v3 0/N] Rust Binder for 6.18` 公告 + 6.18 提交记录推断；稳定标签源码 1:1 对账后修订 |
+| 8 | `drivers/android/binder.rs` | **v2.1 校对待** | 可能存在但路径未公开确认；6.18 stable 拉取后定 |
 | 9 | `frameworks/native/libs/binder/ProcessState.cpp` | 已校对 | AOSP 17 manifest |
 | 10 | `frameworks/native/libs/binder/IPCThreadState.cpp` | 已校对 | 同上 |
 | 11 | `BC_ENABLE_ONEWAY_SPAM_DETECTION`（6.18 新 ioctl）| 已校对 | `include/uapi/linux/android/binder.h` 6.18 changelog |

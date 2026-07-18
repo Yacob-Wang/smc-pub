@@ -35,6 +35,22 @@
 
 ## 1. 一次拷贝的物理实现
 
+### 1.0 为什么需要 binder_mmap（v4 §4.1 #2）
+
+**背景**：传统 IPC（管道、消息队列、共享内存）有 3 大痛点：
+
+1. **管道/消息队列**：`read/write` 各一次拷贝（用户态→内核→用户态），共 **2 次**。
+2. **共享内存**：避免拷贝但需要**手动同步**（生产/消费双方互锁），复杂度高。
+3. **Socket**：通用但同样需要 `sendmsg/recvmsg` 多次拷贝。
+
+**Binder 设计动机**：
+
+- **目标 1**：把 IPC 拷贝从 2 次压到 **1 次**——内核已 mmap 一段共享 buffer，用户态和内核态共用。
+- **目标 2**：保留共享内存的性能 + 加上 Binder 的**自动同步**（transaction 语义保证）。
+- **目标 3**：限制单次事务大小（1MB 上限）防止恶意 App 拖垮系统。
+
+**所以呢**：理解 `binder_mmap` 不是看 3 行代码，而是看**"为什么需要这段 mmap"**——它用 mmap 替代共享内存的 `mmap + mlock + 同步原语` 三件套，把同步逻辑下沉到内核驱动。
+
 ### 1.1 mmap 的 3 步操作
 
 `binder_mmap` 在 Server 进程**第一次**打开 `/dev/binder` 并 mmap 时执行：
@@ -101,6 +117,43 @@ static struct page *binder_alloc_get_page(
 - 第一次访问某页时触发 page fault
 - fault 处理中驱动按需分配物理页
 - 后续访问直接命中 LRU 缓存
+
+### 1.5 6.18 mmap 区域布局图（v4 §4.1 #3）
+
+```
+┌────────────────────────────────────────────────────────┐
+│  binder_mmap 区域（6.18 默认 1MB，上限 4MB）            │
+│  ┌────────────────┬──────────────┬──────────────┐       │
+│  │  metadata 区   │  free 区     │  used 区     │       │
+│  │  （前 8KB）    │  （红黑树）  │  （已分配）  │       │
+│  │                │              │              │       │
+│  │  binder_buffer │  binder_buffer ...          │       │
+│  │  header 结构   │  候选分配块  │ 活跃事务      │       │
+│  └────────────────┴──────────────┴──────────────┘       │
+│                                                        │
+│  6.18 sparse memory：used 区按需 fault-in 物理页       │
+│  6.12 之前：mmap 时立即 vmalloc 所有物理页              │
+└────────────────────────────────────────────────────────┘
+   ▲                                                       ▲
+   vma->vm_start (1MB)                          vma->vm_end
+```
+
+**关键解读**：
+- **metadata 区**（前 8KB）：存放 `binder_buffer` 头结构，不参与事务
+- **free 区**（红黑树索引）：best-fit 算法选中的候选块
+- **used 区**：已分配的事务 buffer（async 与 sync 物理隔离）
+- 6.18 起，used 区中**只有真正写入的页才占物理内存**——这就是 sparse memory 的核心收益
+
+### 1.6 BBinder/BpBinder 在内存模型里的角色（v4 §4.1 #19 术语）
+
+| 角色 | 内存映射 | buffer 操作 | 关键限制 |
+|------|---------|------------|---------|
+| **BBinder**（Server 端）| 内核已 mmap 1MB，**按需 fault** | Server 进程**读 + 写**自己 buffer | 1MB - 8KB 上限（metadata 占用）|
+| **BpBinder**（Client 端）| Client 进程 mmap 1MB，**按需 fault** | Client 进程**只写**自己 buffer | 同上 |
+| **ServiceManager**（特殊 BBinder）| ServiceManager 进程 mmap 1MB | ServiceManager **只写**自己 buffer | 整体 1MB，**所有服务 handle 占一份** |
+| **BinderProxy**（Java 层 BpBinder）| 同 BpBinder | 同 BpBinder | 多了 JNI 引用管理 |
+
+**所以呢**：**所有 Binder 通信都受"对端 mmap 区域 1MB 上限"约束**——Server 端 BBinder 即使 mmap 4MB 也不能发超过 1MB 事务，因为 Client 端 BpBinder 的 mmap 区域只有 1MB。**这是 TransactionTooLarge 1MB 阈值的根源**。
 
 ---
 

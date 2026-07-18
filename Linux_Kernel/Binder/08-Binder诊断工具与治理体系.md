@@ -377,7 +377,21 @@ $ bpf-pkg build --sign-by /path/to/vendor-key ...
 
 ### 7.1 场景
 
+> **典型模式 · OEM 监控体系建设**（v4 §4.1 #25 案例标注）：完整监控体系 = 业务 L1 + Framework L2 + Kernel L3 + 链路 L4 四层联动。
+
 某 OEM 厂商需要为 Android 17 + 6.18 GKI 升级构建 Binder 稳定性监控体系。
+
+### 7.0 工具背后的数据结构（v4 §4.1 #9 深度）
+
+`dumpsys binder`、`debugfs/binder/proc/<pid>/`、Binder trojan 等工具的"读者"都是以下 3 个核心结构：
+
+| 结构体 | 关键字段 | 工具对应 | 路径 |
+|--------|---------|---------|------|
+| `struct binder_proc` | `threads/nodes/refs` RB-tree | `proc/<pid>/` debugfs | `drivers/android/binder_internal.h` |
+| `struct binder_node` | `ptr/cookie/ls/is/iw` 引用计数 | `nodes` 节点 | `drivers/android/binder_internal.h` |
+| `struct binder_ref` | `desc/node/s/w/d` 引用计数 + death | `refs` 节点 | `drivers/android/binder_internal.h` |
+
+**所以呢**：理解工具输出 = 理解这 3 个结构体的字段映射（详见 [09-Binder debugfs 字段字典](09-Binder-debugfs日志解读实战.md)）。
 
 ### 7.2 监控体系设计
 

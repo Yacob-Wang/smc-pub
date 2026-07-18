@@ -23,6 +23,23 @@
   - 不重复 04 的 async buffer 机制
   - 本篇展开**限流 + 防护**方案
 
+### 为什么需要"oneway 限流"专题（v4 §4.1 #2）
+
+**背景与动机**：
+
+- **背景**：oneway 是 Android IPC 的"无返回值模式"——Client 调完立即返回，结果异步处理。**它设计时是给低优先级通知用的**（如 SystemUI 刷新），但实际线上**80% 的 oneway 滥发来自 App 后台服务**（定时拉取、自启动等）。
+- **设计动机**：
+  - **需求 1**：oneway 没有返回值，**Client 无法感知失败**——一个 1ms 的恶意 oneway 在 1 秒内可发 1000 次，远超 system_server 处理能力。
+  - **需求 2**：传统 IPC 限流**对 oneway 无效**——没有 reply 路径，无法用超时检测。
+  - **需求 3**：AOSP 17 + 6.18 提供了**新武器**（`BR_ONEWAY_SPAM_SUSPECT` + `BINDER_ENABLE_ONEWAY_SPAM_DETECTION` ioctl），但**默认不开启**——需要 OEM 主动配置。
+- **本篇目标**：把 4 道防线（App 端 / Native 端 / Kernel 端 / 监控端）做成可落地的防护方案。
+
+**关键术语**（v4 §4.1 #19 术语）：
+- **BBinder**（Server 端）：处理 oneway 事务的实体，**线程池耗尽**是它最常见的故障
+- **BpBinder**（Client 端）：发起 oneway 的代理，**它的 `transact(..., TF_ONE_WAY)` 调用触发一次 oneway**
+- **BinderProxy**（Java 层）：BpBinder 的 JNI 包装，`transact(code, data, reply, FLAG_ONEWAY)` = Java 层 oneway
+- **ServiceManager**：**`desc 0` 是它的 handle**，system_server 转发的 oneway 也会冲击 ServiceManager 线程池
+
 **源码版本基线**：
 
 | 层级 | 基线版本 | 本篇重点引用 |

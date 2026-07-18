@@ -27,6 +27,18 @@
   - AOSP 17 WindowManager 通路详见 [Android_Framework/Window](../../Android_Framework/Window/)
   - Parcel 序列化详见 libbinder Parcel.cpp
 
+### 为什么需要"完整调用链"（v4 §4.1 #2）
+
+**背景**：
+
+- **稳定性故障定位**——线上 ANR 经常发生在"我只知道是 Binder，但不知道卡在哪一层"。如果只读驱动层，**Native 层的 `waitForResponse` 卡住 vs Driver 层的 `binder_transaction` 卡住** 完全两种根因。
+- **背景与动机**：
+  - **设计动机**：01 篇给了"四层架构"概念图，但**真正的代码执行流是 7 个层**（Java → JNI → Native → ioctl → Driver → Server Native → Server JNI → Server Java），每一层都可能卡。
+  - **需求**：稳定性架构师需要**从 1 张时序图能直接定位到 7 层中任意一层**。
+- **本篇目标**：把"调用链"画成 7 段时序，每段配**典型耗时基线**（Java JNI call ~ 50ns、ioctl ~ 1-2μs、binder_transaction ~ 10-50μs、Parcel 反序列化 ~ 100ns/对象）。
+
+**所以呢**：读完本篇后，看到 5 秒 ANR 第一反应应该是"卡在 ioctl 之前（Native 锁）？ioctl 之后（Driver 调度）？Server 进程处理（BBinder onTransact）？"——3 类问题对应 3 类治理方案。
+
 **源码版本基线（贯穿本篇）**：
 
 | 层级 | 基线版本 | 本篇重点引用 |

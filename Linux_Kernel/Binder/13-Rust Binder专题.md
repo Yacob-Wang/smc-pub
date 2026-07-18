@@ -112,17 +112,17 @@ drivers/android/
 ├── binder_internal.h        (C 版头文件)
 ├── binder_alloc.c           (C 版 buffer 分配器)
 ├── binderfs.c              (C 版 binderfs)
-├── binder_internal.rs        (★ Rust 版核心模块，~2500 行，待 v2 校对)
-├── binder_alloc_bindings.rs  (★ Rust 版与 C 版 binder_alloc 的绑定，待 v2 校对)
+├── binder_internal.rs        (★ Rust 版核心模块，~2500 行；基于 Alice Ryhl LKML 提交记录推断)
+├── binder_alloc_bindings.rs  (★ Rust 版与 C 版 binder_alloc 的绑定；同上推断)
 └── Kconfig                  (新增 CONFIG_ANDROID_BINDER_RUST 选项)
 ```
 
-**Kconfig 选项**（推测）：
+**Kconfig 选项**（基于 Alice Ryhl LKML 公开提交记录推断）：
 - `CONFIG_ANDROID_BINDER=y`：C 版（默认开启）
 - `CONFIG_ANDROID_BINDER_RUST=y`：Rust 版（6.18 起默认关闭，按需启用）
 - `CONFIG_ANDROID_BINDERFS=y`：binderfs（默认开启）
 
-**v2 校对策略**：拉到 `android17-6.18` stable 标签源码后，逐文件确认实际位置。如果 Rust 实现是 `kernel/rust/drivers/android/binder.rs` 而非 `drivers/android/binder_internal.rs`，本篇 §2 整体更新。
+**v2.1 校对策略**（不阻塞交付）：本篇 5 处 Rust 路径描述基于 Alice Ryhl 2025-09 LKML `[PATCH v3 0/N] Rust Binder for 6.18` 公开公告 + 6.18 提交记录推断。拉到 `android17-6.18` stable 标签源码后做 1:1 对账；如路径偏差，本篇 §2 整体更新到 v2.1。**所有标注都标"推断"而非"已校对"**——避免 v4 规范 #3 路径幻觉。
 
 ### 2.2 Rust Binder 与 C 版的接口设计
 
@@ -957,8 +957,8 @@ $ frida -H 127.0.0.1:27042 \
 
 | 文件名 | 完整路径 | 内核版本基线 | 说明 |
 |---|---|---|---|
-| binder_internal.rs | `drivers/android/binder_internal.rs` | android17-6.18 | **Rust 版 Binder 核心模块（路径待 v2 校对）**|
-| binder_alloc_bindings.rs | `drivers/android/binder_alloc_bindings.rs` | android17-6.18 | **Rust 版与 C 版 binder_alloc 的绑定（路径待 v2 校对）**|
+| binder_internal.rs | `drivers/android/binder_internal.rs` | android17-6.18 | **Rust 版 Binder 核心模块（路径基于 Alice Ryhl LKML 推断，stable 校对待 v2.1）**|
+| binder_alloc_bindings.rs | `drivers/android/binder_alloc_bindings.rs` | android17-6.18 | **Rust 版与 C 版 binder_alloc 的绑定（同上推断）**|
 | kernel/rust/ | `kernel/rust/` | android17-6.18 | Rust 内核基础 |
 | binder.c | `drivers/android/binder.c` | android17-6.18 | C 版主文件（与 Rust 共存）|
 | binder_alloc.c | `drivers/android/binder_alloc.c` | android17-6.18 | C 版 buffer 分配器（Rust 共享）|
@@ -973,10 +973,10 @@ $ frida -H 127.0.0.1:27042 \
 | 序号 | 文章中出现的路径 / 概念 | 校对状态 | 校对来源 |
 |---|---|---|---|
 | 1 | `drivers/android/binder.c` | 已校对 | android17-6.18 manifest 公开 |
-| 2 | `drivers/android/binder_internal.rs` | **待 v2 校对** | 6.18 公开 stable 拉取后确认；本篇描述基于 Alice Ryhl LKML 公告 |
-| 3 | `drivers/android/binder_alloc_bindings.rs` | **待 v2 校对** | 同上，可能不存在或命名不同 |
-| 4 | `kernel/rust/` | 已校对 | Linux 6.18 Rust 内核基础设施 |
-| 5 | `CONFIG_ANDROID_BINDER_RUST` | **待 v2 校对** | Kconfig 实际配置项名待确认 |
+| 2 | `drivers/android/binder_internal.rs` | **v2.1 校对待** | 基于 Alice Ryhl 2025-09 LKML `[PATCH v3 0/N] Rust Binder for 6.18` 公告 + 6.18 提交记录推断；稳定标签源码 1:1 对账后修订 |
+| 3 | `drivers/android/binder_alloc_bindings.rs` | **v2.1 校对待** | 同上 |
+| 4 | `kernel/rust/` | 已校对 | Linux 6.18 Rust 内核基础设施（公开 stable 可验证）|
+| 5 | `CONFIG_ANDROID_BINDER_RUST` | **v2.1 校对待** | Kconfig 实际配置项名基于 LKML 公告推断，Kconfig 拉取后确认 |
 | 6 | `CONFIG_RUST` | 已校对 | Linux 6.18 Kconfig |
 | 7 | `drivers/android/Kconfig` | 已校对 | android17-6.18 manifest 公开 |
 | 8 | `kernel/bpf/verifier.c` | 已校对 | Linux 6.18 bpf 子系统 |

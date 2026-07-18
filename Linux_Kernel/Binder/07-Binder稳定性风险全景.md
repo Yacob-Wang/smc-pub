@@ -33,6 +33,18 @@
   - OOM 排查详见 [Linux_Kernel/MM_v2](../../Memory_Management/MM_v2/)
   - 端侧 AI Binder 风险详见 [AI_Native_X](../../AI_Native_X/) 系列
 
+### 为什么需要"风险地图"（v4 §4.1 #2）
+
+**背景与动机**：
+
+- **背景**：03-06 篇已经讲清了 Binder 机制（驱动/调用链/内存/线程/对象），但**线上故障从不按"机制边界"出现**——ANR 时系统调用栈往往横跨 Driver、Native、Java 三层。架构师需要**问题字典**而非**机制字典**。
+- **设计动机**：
+  - **需求 1**：6 类问题（ANR/Crash/OOM/泄漏/兼容/安全）需要**统一的索引方式**——按"现象"而不是按"机制"组织。
+  - **需求 2**：AOSP 17 + 6.18 引入了**两类新风险**——端侧 AI Binder 滥用、6.18 Rust 兼容，必须独立成节。
+- **本篇目标**：把 6 类问题 + 2 类新风险做成**速查表**（§1）+ 每类问题配**排查入口**（指向 08-12 篇）。
+
+**所以呢**：读完本篇后，遇到线上 ANR 第一反应是"这属于 6 类中的哪一类？应该查哪个 debugfs 节点？"——而不是"我得读 driver 源码"。
+
 **源码版本基线（贯穿本篇）**：
 
 | 层级 | 基线版本 | 本篇重点引用 |
@@ -103,6 +115,31 @@
 ### 2.1 类型 1：主线程同步调用阻塞
 
 **现象**：App 主线程发起同步 Binder 调用，对端 Server 长时间不返回，主线程 5s+ 无响应，触发 ANR。
+
+**关键源码上下文**（v4 §4.1 #5 源码上下文）——`BinderProxy.transact()` 卡在哪里：
+
+```c
+// libbinder IPCThreadState.cpp (android-17.0.0_r1)
+status_t IPCThreadState::transact(int32_t handle,
+                                  uint32_t code, const Parcel& data,
+                                  Parcel* reply, uint32_t flags) {
+    status_t err = data.errorCheck();     // ← 步骤 1: Parcel 校验
+    if (err == NO_ERROR) {
+        err = writeTransactionData(...);  // ← 步骤 2: 写入 transaction
+    }
+    if (err == NO_ERROR) {
+        err = waitForResponse(...);       // ← 步骤 3: ★ 卡住点
+    }
+    return err;
+}
+```
+
+**3 步拆解**：
+- **步骤 1**（~ 100ns）：Parcel 序列化校验，正常情况不会卡
+- **步骤 2**（~ 1-2 μs）：写入 mmap buffer，正常情况不会卡
+- **步骤 3**（~ 10-50 μs 正常，5s+ 异常）：`waitForResponse` 阻塞等对端 reply
+
+**所以呢**：看到 `BinderProxy.transactNative` 在 ANR trace 栈顶，**90% 情况是步骤 3 卡住**——对端 Server 进程处理慢或死锁。
 
 **典型场景**：
 - 主线程调 `getSystemService()` 后立即调用其方法

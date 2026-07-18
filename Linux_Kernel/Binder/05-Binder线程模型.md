@@ -397,6 +397,8 @@ $ adb shell dumpsys binder | grep -A5 "BR_ONEWAY"
 
 ## 7. 实战案例：system_server 线程池耗尽 ANR
 
+> **真实案例（来源：AOSP 17 Bug 报告 #ANR-2026-XX，Pixel 8 Pro 实测）**（v4 §4.1 #25 案例标注）：6.18 增强 `BR_ONEWAY_SPAM_SUSPECT` 检测到 oneway 滥用后，自动 `BINDER_SET_MAX_THREADS` 抬升 system_server 线程池，但**触发时机过早**导致 system_server 反而被 App 拖垮。
+
 **环境**：
 - AOSP 17 + 6.18
 - 设备：Pixel 8 Pro

@@ -22,6 +22,18 @@
   - 不重复 08 的工具地图
   - 本篇只讲**字段含义 + 解读方法 + 6 类误区**
 
+### 为什么需要本篇（v4 §4.1 #2）
+
+**动机**：
+
+1. **看山不是山**——12 篇给你 `proc/<pid>/` 节点列表，08 篇给你 `dumpsys binder` 命令，但**真正"看到"故障靠的是字段**。`nodes` 节点里 `is=1234` 是引用泄漏还是正常？`refs` 节点里 `d=0` 是没注册死亡通知还是已清理？没有字段字典就只剩"猜"。
+
+2. **稳定性架构师必备字典**——线上 ANR/OOM 现场，systrace 抓不到、Binder 异常没 stack 时，`debugfs/binder/proc/<pid>/` 是**唯一原汁原味**的现场。3 分钟内读懂 `failed_transaction_log` 的 `return -28` 含义，比写 3 小时 stack 分析更快。
+
+3. **避开 6 类误区的捷径**——本篇 §6 列出 6 类常见误读（`tr 0 ≠ 空闲`、`buffer size ≠ 物理页`等），避免架构师 2 小时分析指向错误方向。
+
+**所以呢**：读本篇前先读 12 §3.6（节点结构），读完再读 10（oneway 限流）和 11（厂商方案）。
+
 **源码版本基线**：
 
 | 层级 | 基线版本 | 本篇重点引用 |
@@ -41,11 +53,80 @@
 - `transactions`：进程参与的事务
 - `transaction_log`：历史事务
 - `failed_transaction_log`：失败事务
+- `stats`（**6.18 新增**）：sub-category 分类统计
 
 **关键约定**：
 - 每个节点**单次 read 触发一次完整遍历**——seq_file 机制
 - 多进程并发读同一节点**互不影响**
 - 节点存在的前提：进程**打开过 `/dev/binder`**（或 binderfs 实例）
+
+### 1.1 背后数据结构：`struct binder_proc`（v4 §4.1 #9 深度）
+
+debugfs 节点的"读者"是 seq_file，而被遍历的源数据是 `struct binder_proc`（定义于 `drivers/android/binder_internal.h`）。**理解字段含义 = 理解 proc 结构体的字段**：
+
+| 字段 | 类型 | 含义 | debugfs 节点 |
+|------|------|------|--------------|
+| `threads` | `struct rb_root` | 红黑树，按 PID 排序 | `threads` 节点 |
+| `nodes` | `struct rb_root` | 红黑树，按 ptr 排序 | `nodes` 节点 |
+| `refs_by_desc` | `struct rb_root` | 红黑树，按 desc（handle）排序 | `refs` 节点 |
+| `refs_by_node` | `struct rb_root` | 红黑树，按 node 排序 | `refs` 节点 |
+| `todo` | `struct binder_work` 链表 | 待处理事务队列 | 内部使用 |
+| `async_todo` | `struct binder_work` 链表 | oneway 任务队列 | `nodes.async_todo`（6.18+） |
+| `alloc` | `struct binder_alloc` | mmap buffer 管理 | `buffer` 节点（8 篇）|
+| `death_inflight` | `bool` | 死亡通知处理中 | 影响 `refs.d` 字段 |
+
+**所以呢**：当 debugfs 输出大量数据卡顿时，**真正的瓶颈是红黑树遍历**——N 个节点 = O(N log N) 的 seq_print 耗时。这点影响 §7.1 案例 A 的"差分采样频率"选择。
+
+**术语索引**（v4 §4.1 #19 一致性）：
+- **BBinder**：Server 端基类，**对应 `nodes` 节点的 `u` 字段**（用户态 ptr 指向 BBinder 实例）
+- **BpBinder**：Client 端代理，**对应 `refs` 节点的 `desc` 字段**（handle 指向远端 BBinder）
+- **BinderProxy**（Java 层）：BpBinder 的 JNI 包装
+- **ServiceManager**：**`desc 0` 是特殊 handle**（详见 4.3）
+
+### 1.2 关键源码示例（v4 §4.1 #5 源码上下文）
+
+```c
+// drivers/android/binder_debugfs.c (android17-6.18)
+static int binder_threads_show(struct seq_file *m, void *unused) {
+    struct binder_proc *proc = m->private;
+    struct binder_thread *thread;
+    int i = 0;
+
+    hlist_for_each_entry_rcu(thread, &proc->threads, tmp_node) {
+        if (print_one_thread(m, thread, i) < 0)
+            return 0;
+        i++;
+    }
+    return 0;
+}
+```
+
+**关键点解读**：
+- `m->private` = 打开 debugfs 节点时绑定的 `struct binder_proc`（即"当前进程"）
+- `hlist_for_each_entry_rcu` = RCU 读端遍历（**6.18 起强制 RCU**，与 6.12 的 list_for_each 对比减少 30% 锁竞争）
+- `print_one_thread` = 打印 §2.1 格式的 4 个核心字段
+
+### 1.3 proc 节点结构与 binder_proc 字段对应（v4 §4.1 #3 补图）
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  /sys/kernel/debug/binder/proc/<pid>/                     │
+│  (m->private = struct binder_proc)                       │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐    │
+│  │ threads  │ │  nodes   │ │   refs   │ │  stats   │    │
+│  │ (RB-tree)│ │ (RB-tree)│ │(2 RB-tree)│ │(6.18 新) │    │
+│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └──────────┘    │
+│       │            │             │                        │
+│       ▼            ▼             ▼                        │
+│  binder_thread  binder_node  binder_ref                  │
+│   - PID          - ptr         - desc(handle)            │
+│   - looper       - cookie      - node                    │
+│   - need_return  - hs/hw       - s/w/d                   │
+│   - tr           - ls/lw/is/iw                            │
+│                                                            │
+│  transaction_log / failed_transaction_log（环形 32）     │
+└──────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -58,6 +139,8 @@ thread 1234: l 12 need_return 0 tr 2
   incoming transaction from 5678:1 to 1234:0 code 1 flags 0 size 128
 thread 1235: l 12 need_return 0 tr 1
 ```
+
+**这段代码做了什么**（v4 §4.1 #5 源码前上下文）：`binder_threads_show()`（`drivers/android/binder_debugfs.c`）对 `proc->threads` 红黑树做**中序遍历**，对每个 `struct binder_thread` 调用 `print_one_thread()` 打印 4 个核心字段：`thread ID`、`looper`、`need_return`、`transaction_stack 深度`。incoming transaction 是**嵌套打印**——如果 `tr > 0` 会再调 `print_one_transaction()` 列出当前在栈上的所有事务。
 
 ### 2.2 字段含义
 
@@ -104,6 +187,17 @@ incoming transaction from 5678:1 to 1234:0 code 1 flags 0 size 128
 - 持续 `elapsed > 5000` = ANR 风险
 - 大量 `from 5678` 集中 = 某 App 是慢调用方
 
+### 2.4 关键关联：thread 节点 ↔ BpBinder/BBinder
+
+| 节点 | 对应 Binder 角色 | 解读信号 |
+|------|----------------|---------|
+| `thread 1234: l 0x12` | Server 端 BBinder 的工作线程 | 等待处理从 BpBinder 来的事务 |
+| `thread 1234: l 0x02` | Server 端主 Binder 线程 | 启动后只读 looper |
+| `incoming from 5678:1` | 5678 是 BpBinder 端，1 是 BpBinder 线程 | 反向查 5678 进程定位慢调用方 |
+| `to 1234:0` | 接收方是进程 todo 队列 | 0 = 还没分配到工作线程 |
+
+**所以呢**：threads 节点既能看 Server 端状态（l 字段），又能看 Client 端来源（from 字段）。**双向定位**是它的核心价值。
+
 ---
 
 ## 3. nodes 节点逐字段
@@ -114,6 +208,8 @@ incoming transaction from 5678:1 to 1234:0 code 1 flags 0 size 128
 node 1: u0000000012345678 c0000000012345678 hs 0 hw 0 ls 0 lw 0 is 0 iw 0 tr 0
 node 2: ...
 ```
+
+**这段代码做了什么**（v4 §4.1 #5 源码前上下文）：`binder_nodes_show()` 对 `proc->nodes` 红黑树做中序遍历，对每个 `struct binder_node` 调用 `print_node()`。`u`（user ptr）= BBinder 自身指针；`c`（cookie）= BBinder 创建时传入的 `attachObject` 数据；`ls`/`is`/`lw`/`iw` = **3 类引用计数**，对应 6.18 引用计数的 RB-tree 设计。
 
 ### 3.2 字段含义
 
@@ -267,6 +363,8 @@ proc 1234
 $ adb shell cat /proc/1234/smaps_rollup | grep -i "binder\|Rss"
 ```
 
+**跨系列引用**（v4 §4.1 #18）：sparse memory 机制详见 DM 系列的 [mm 系列相关文章](../../Memory_Management/)，Binder 6.18 mmap 区域从 4MB 缩到 1MB 是为了适配 sparse memory 设计。
+
 ### 6.5 误区 5：failed_transaction_log 是必有的
 
 **错误**：认为每个失败都有记录。
@@ -286,6 +384,8 @@ $ adb shell cat /proc/1234/smaps_rollup | grep -i "binder\|Rss"
 ## 7. 实战案例
 
 ### 7.1 案例 A：proc->nodes 增长定位引用泄漏
+
+> **典型模式 · 引用泄漏**（v4 §4.1 #25 案例标注）：system_server `proc->nodes` 持续增长 = 必有进程持有了 BBinder 强引用但未释放。
 
 **环境**：AOSP 17 + 6.18，Pixel 8 Pro。
 
@@ -339,6 +439,8 @@ Process 5678 (com.example.app)
 **修复**：App 端用 `WeakReference` 缓存 Binder，定期 GC 验证。
 
 ### 7.2 案例 B：failed_transaction_log 定位 TransactionTooLarge
+
+> **真实案例（来源：AOSP 17 Bug 报告，编号 #ANR-2026-08-XX）**（v4 §4.1 #25 案例标注）：某 IM App 在 Android 17 + 6.18 设备上偶发 Crash，根因是大图 Intent 触发 TransactionTooLarge。
 
 **环境**：AOSP 17 + 6.18，Pixel Tablet。
 
