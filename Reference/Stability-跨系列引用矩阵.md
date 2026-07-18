@@ -73,6 +73,8 @@ Stability 系列（症状维度）= 横向问题分类
 | S09 | §5 GC 卡顿 | [S01-ANR](../../Android_Framework/Stability/S01-ANR.md) + [S02-JE](../../Android_Framework/Stability/S02-JE.md) + [Runtime/ART/03-GC系统](../../Runtime/ART/03-GC系统/) | §3 全部 | GC 卡顿与 ANR/JE 关联 + GenCC 机制 | 2026-07-18 |
 | S09 | §6 渲染卡顿 | [S01-ANR](../../Android_Framework/Stability/S01-ANR.md) + [S05-HANG](../../Android_Framework/Stability/S05-HANG.md) + [Runtime/ART](../../Runtime/ART/) | 全部 | Choreographer / SurfaceFlinger 机制 | 2026-07-18 |
 | S09 | §7 锁竞争 | [S01-ANR](../../Android_Framework/Stability/S01-ANR.md) + [S02-JE](../../Android_Framework/Stability/S02-JE.md) + [S04-SWT](../../Android_Framework/Stability/S04-SWT.md) | §3 全部 | 锁竞争与 ANR/JE/SWT 关联 | 2026-07-18 |
+| **S10 度量门禁** | §3 5 大度量 | [S00-S07](../../Android_Framework/Stability/) | 全部 | 度量数据来源（崩溃率/ANR率/MTBF）| 2026-07-18 |
+| S10 | §5 6 大门禁 | [S08 演进全景](../../Android_Framework/Stability/S08-AOSP17与K618稳定性全景.md) + [S09 横切专题](../../Android_Framework/Stability/S09-性能vs稳定性五大横向专题.md) | §5 / §8 | 升级决策 + 性能 vs 稳定性 权衡 → 门禁阈值 | 2026-07-18 |
 
 ---
 
