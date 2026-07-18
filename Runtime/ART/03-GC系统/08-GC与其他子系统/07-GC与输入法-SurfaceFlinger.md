@@ -1,3 +1,22 @@
+# ⚠️ v1 旧稿标记
+
+> **本篇状态**：v1 后期已按 v4 规范写（含 A/B/D 附录），但 ART 17 硬变化未覆盖
+>
+> - **本篇基线**：AOSP `android-14.0.0_r1`（API 34）+ Linux `android14-5.10/5.15`（**v1 时代基线**）
+> - **v2 新基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
+> - **ART 17 硬变化未覆盖**：分代 GC 强化 / 无锁 MessageQueue（API 37+）/ static final 不可变 / AppFunctions / AI Agent OS
+>
+> **v2 替代/补充篇**（已按 v4 规范 + AOSP 17 + 6.18 写完）：
+>
+> [10-ART17分代GC强化专章 v2](10-ART17分代GC强化专章-v2.md) · 分代 GC 强化（频繁低耗年轻代回收 + 软阈值 + 端侧 LLM 友好）· [README-ART系列-v2](../../README-ART系列-v2.md) 含 9 子模块 v2 全部链接
+>
+> **建议**：本篇读完后**必须结合 v2 篇一起看** —— v1 讲基础机制，v2 讲新基线变化。
+>
+> **当前文件名**：`07-GC与输入法-SurfaceFlinger.md`
+> **标记时间**：2026-07-17（v2 全系列成稿后批量标）
+>
+> ---
+
 # 8.7 GC × 输入法 / SurfaceFlinger
 
 > **本节回答一个根本问题**：高频 Native 内存分配的子系统（输入法、SurfaceFlinger）怎么影响 Java GC？跨进程协作导致的 GC 异常？
