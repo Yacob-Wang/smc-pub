@@ -1,0 +1,293 @@
+/* JacobKing · 稳知库 — header + homepage layout */
+
+:root {
+  --jk-ink: #0f172a;
+  --jk-muted: #64748b;
+  --jk-line: rgba(15, 23, 42, 0.08);
+  --jk-surface: #ffffff;
+  --jk-soft: #f4f7f8;
+  --jk-accent: #0f766e;
+  --jk-accent-soft: rgba(15, 118, 110, 0.12);
+  --jk-radius: 16px;
+  --jk-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px rgba(15, 23, 42, 0.06);
+}
+
+[data-md-color-scheme="slate"] {
+  --jk-ink: #e2e8f0;
+  --jk-muted: #94a3b8;
+  --jk-line: rgba(226, 232, 240, 0.12);
+  --jk-surface: #1e293b;
+  --jk-soft: #0f172a;
+  --jk-accent: #2dd4bf;
+  --jk-accent-soft: rgba(45, 212, 191, 0.16);
+  --jk-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 12px 32px rgba(0, 0, 0, 0.28);
+}
+
+/* ---- Sticky header author chip ---- */
+.md-header {
+  backdrop-filter: saturate(1.2) blur(10px);
+}
+
+.md-header__inner {
+  gap: 0.35rem;
+}
+
+.jk-author {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-left: 0.25rem;
+  margin-right: 0.35rem;
+  padding: 0.28rem 0.7rem 0.28rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--md-primary-bg-color);
+  text-decoration: none !important;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.jk-author:hover {
+  background: rgba(255, 255, 255, 0.24);
+  transform: translateY(-1px);
+}
+
+.jk-author__mark {
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.55));
+  color: var(--md-primary-fg-color);
+  display: inline-grid;
+  place-items: center;
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+
+.jk-author__mark::before {
+  content: "JK";
+  color: var(--md-primary-fg-color);
+}
+
+.jk-author__name {
+  padding-right: 0.1rem;
+}
+
+@media screen and (max-width: 44.9375em) {
+  .jk-author__name {
+    /* keep name visible on mobile; shorten only if extremely narrow */
+  }
+}
+
+@media screen and (max-width: 24em) {
+  .jk-author__name {
+    display: none;
+  }
+
+  .jk-author {
+    padding-right: 0.45rem;
+  }
+}
+
+/* ---- Homepage hero + cards ---- */
+.md-typeset .jk-hero {
+  margin: 0.4rem 0 1.6rem;
+  padding: 1.5rem 1.4rem 1.35rem;
+  border: 1px solid var(--jk-line);
+  border-radius: calc(var(--jk-radius) + 4px);
+  background:
+    radial-gradient(1200px 280px at 10% -20%, var(--jk-accent-soft), transparent 55%),
+    linear-gradient(180deg, var(--jk-soft), var(--jk-surface));
+  box-shadow: var(--jk-shadow);
+}
+
+.md-typeset .jk-hero h1 {
+  margin: 0 0 0.45rem;
+  font-size: clamp(1.55rem, 2.4vw, 2rem);
+  letter-spacing: -0.02em;
+  border: 0;
+}
+
+.md-typeset .jk-hero h1::after {
+  display: none;
+}
+
+.md-typeset .jk-hero__lead {
+  margin: 0 0 0.85rem;
+  max-width: 46rem;
+  color: var(--jk-muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.md-typeset .jk-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.md-typeset .jk-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid var(--jk-line);
+  background: var(--jk-surface);
+  color: var(--jk-ink);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.md-typeset .jk-chip--accent {
+  border-color: transparent;
+  background: var(--jk-accent-soft);
+  color: var(--jk-accent);
+}
+
+.md-typeset .jk-steps {
+  margin: 0 0 1.75rem;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  counter-reset: jk-step;
+}
+
+.md-typeset .jk-steps li {
+  counter-increment: jk-step;
+  margin: 0;
+  padding: 0.95rem 1rem 0.95rem 1rem;
+  border: 1px solid var(--jk-line);
+  border-radius: var(--jk-radius);
+  background: var(--jk-surface);
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
+}
+
+.md-typeset .jk-steps li::before {
+  content: "0" counter(jk-step);
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--jk-accent);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.md-typeset .jk-steps strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--jk-ink);
+  font-size: 0.9rem;
+}
+
+.md-typeset .jk-steps span {
+  color: var(--jk-muted);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.md-typeset .jk-section-title {
+  margin: 0.5rem 0 0.85rem;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.md-typeset .jk-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin: 0 0 1.8rem;
+}
+
+.md-typeset .jk-card {
+  display: block;
+  margin: 0;
+  padding: 1.05rem 1.1rem 1rem;
+  border: 1px solid var(--jk-line);
+  border-radius: var(--jk-radius);
+  background: var(--jk-surface);
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
+  text-decoration: none !important;
+  color: inherit;
+  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.md-typeset .jk-card:hover {
+  border-color: color-mix(in srgb, var(--jk-accent) 45%, var(--jk-line));
+  box-shadow: var(--jk-shadow);
+  transform: translateY(-2px);
+}
+
+.md-typeset .jk-card__title {
+  margin: 0 0 0.35rem;
+  color: var(--jk-ink);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.md-typeset .jk-card__desc {
+  margin: 0;
+  color: var(--jk-muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.md-typeset .jk-card__arrow {
+  display: inline-block;
+  margin-top: 0.7rem;
+  color: var(--jk-accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.md-typeset .jk-quick {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid var(--jk-line);
+  border-radius: var(--jk-radius);
+  background: var(--jk-surface);
+}
+
+.md-typeset .jk-quick th,
+.md-typeset .jk-quick td {
+  border-top: 1px solid var(--jk-line);
+  padding: 0.7rem 0.9rem;
+}
+
+.md-typeset .jk-quick tr:first-child th,
+.md-typeset .jk-quick tr:first-child td {
+  border-top: 0;
+}
+
+.md-typeset .jk-quick th {
+  width: 28%;
+  background: var(--jk-soft);
+  color: var(--jk-ink);
+  font-weight: 650;
+}
+
+.md-typeset .jk-foot {
+  margin-top: 1.4rem;
+  color: var(--jk-muted);
+  font-size: 0.8rem;
+}
+
+@media screen and (max-width: 76.1875em) {
+  .md-typeset .jk-steps,
+  .md-typeset .jk-grid {
+    grid-template-columns: 1fr;
+  }
+}

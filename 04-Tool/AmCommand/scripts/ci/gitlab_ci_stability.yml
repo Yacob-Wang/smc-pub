@@ -1,0 +1,138 @@
+# GitLab CI 稳定性巡检模板
+# 详见 06 篇 §6.2
+
+stages:
+  - build
+  - stability-test
+  - summary
+
+variables:
+  ANDROID_HOME: "/opt/android-sdk"
+  PACKAGE_NAME: "com.example.app"
+  BASELINE_MS: "720"
+
+# ==================== Stage 1: 构建 APK ====================
+build_apk:
+  stage: build
+  tags: [android-runner]
+  script:
+    - echo "Building APK..."
+    - ./gradlew assembleDebug
+  artifacts:
+    paths:
+      - app/build/outputs/apk/debug/app-debug.apk
+    expire_in: 1 day
+
+# ==================== Stage 2: 三大巡检 ====================
+# 注意:GitLab CI 默认会跑同一个 stage 内的所有 job(并发)
+# 稳定性测试会占用 adb 设备,需要 needs: [build_apk] 串行依赖
+
+cold_start_check:
+  stage: stability-test
+  tags: [android-runner]
+  needs: ["build_apk"]
+  timeout: 15min
+  script:
+    - adb devices
+    - adb install -r app/build/outputs/apk/debug/app-debug.apk
+    - pip install -r AmCommand/scripts/requirements.txt
+    - |
+      python AmCommand/scripts/check_cold_start.py \
+        --package "$PACKAGE_NAME" \
+        --activities .MainActivity .MineActivity .OrderActivity .DetailActivity .SettingActivity \
+        --baseline-ms "$BASELINE_MS" \
+        --threshold-pct 20 \
+        --samples 3 \
+        --with-trace \
+        --output-dir ./reports/cold_start
+  artifacts:
+    when: always
+    paths:
+      - reports/cold_start/
+    expire_in: 14 days
+    reports:
+      junit: reports/cold_start/*.xml  # 可选:集成 junit 测试报告
+
+memory_pressure_check:
+  stage: stability-test
+  tags: [android-runner]
+  needs: ["build_apk"]
+  timeout: 30min
+  script:
+    - adb devices
+    - adb install -r app/build/outputs/apk/debug/app-debug.apk
+    - pip install -r AmCommand/scripts/requirements.txt
+    - |
+      python AmCommand/scripts/check_memory_pressure.py \
+        --package "$PACKAGE_NAME" \
+        --duration-sec 600 \
+        --dump-interval-sec 120 \
+        --output-dir ./reports/memory_pressure
+  artifacts:
+    when: always
+    paths:
+      - reports/memory_pressure/
+    expire_in: 14 days
+
+process_stability_check:
+  stage: stability-test
+  tags: [android-runner]
+  needs: ["build_apk"]
+  timeout: 45min
+  script:
+    - adb devices
+    - adb install -r app/build/outputs/apk/debug/app-debug.apk
+    - pip install -r AmCommand/scripts/requirements.txt
+    - |
+      python AmCommand/scripts/check_process_stability.py \
+        --package "$PACKAGE_NAME" \
+        --iterations 1000 \
+        --throttle-ms 100 \
+        --with-collect-on-crash \
+        --output-dir ./reports/stability
+  artifacts:
+    when: always
+    paths:
+      - reports/stability/
+    expire_in: 14 days
+  allow_failure: false  # 关键失败指标,失败立即 fail pipeline
+
+# ==================== Stage 3: 汇总 ====================
+summary_report:
+  stage: summary
+  tags: [android-runner]
+  needs: ["cold_start_check", "memory_pressure_check", "process_stability_check"]
+  when: always
+  script:
+    - |
+      cat <<EOF > reports/SUMMARY.md
+      # Android 稳定性巡检汇总
+      ## 时间
+      $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+      EOF
+    - ls -la reports/
+  artifacts:
+    paths:
+      - reports/SUMMARY.md
+    expire_in: 30 days
+  allow_failure: true
+
+# ==================== 可选:钉钉/企业微信通知 ====================
+notify_on_failure:
+  stage: summary
+  tags: [android-runner]
+  needs: ["cold_start_check", "memory_pressure_check", "process_stability_check"]
+  when: on_failure
+  script:
+    - |
+      if [ -n "$DINGTALK_WEBHOOK" ]; then
+        curl -X POST "$DINGTALK_WEBHOOK" \
+          -H 'Content-Type: application/json' \
+          -d "{
+            \"msgtype\": \"markdown\",
+            \"markdown\": {
+              \"title\": \"Android 稳定性巡检失败\",
+              \"text\": \"## :rotating_light: 稳定性巡检失败\n- Pipeline: $CI_PIPELINE_URL\n- Branch: $CI_COMMIT_REF_NAME\n- Commit: $CI_COMMIT_SHORT_SHA\"
+            }
+          }"
+      fi

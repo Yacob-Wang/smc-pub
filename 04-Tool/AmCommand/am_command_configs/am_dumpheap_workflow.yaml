@@ -1,0 +1,231 @@
+# am_command_configs/am_dumpheap_workflow.yaml
+
+> **配套文章**:[04-堆内存转储-dumpheap详解 §6 线上 OOM 现场保留](../04-堆内存转储-dumpheap详解.md#6-实战-3线上-oom-现场保留)
+> **基线**:AOSP `android-14.0.0_r1`
+
+线上 OOM 现场保留的工作流配置模板,用于稳定性 SDK 集成。
+
+---
+
+## 1. 触发策略
+
+```yaml
+# am_dumpheap_workflow.yaml
+# 集成到稳定性 SDK 内部,作为 dumpheap 触发配置
+
+trigger:
+  # 策略 1:内存阈值触发(最常用)
+  memory_threshold:
+    enabled: true
+    metric: pss   # pss / rss / java_heap / native_heap
+    threshold_mb: 700
+    # 触发后冷却时间(避免连续触发)
+    cooldown_minutes: 30
+    # 同一进程同一会话只触发一次
+    once_per_session: true
+
+  # 策略 2:用户操作触发
+  user_action:
+    enabled: true
+    # 用户点击"反馈问题"时附带 dump
+    on_feedback: true
+    # 用户连续 3 次崩溃
+    crash_count_3: true
+
+  # 策略 3:定时巡检(后台)
+  periodic:
+    enabled: false   # 默认关闭,避免影响用户
+    interval_hours: 24
+    only_when_idle: true   # 仅在充电 + 空闲时
+    max_size_mb: 200       # 超过则不上传,只记录
+
+# 灰度策略
+rollout:
+  # 仅在灰度包启用
+  enabled_channels:
+    - "gray"
+    - "beta"
+  # 全量包不启用(避免影响所有用户)
+  disabled_channels:
+    - "production"
+
+# 隐私过滤
+privacy:
+  # 排除敏感路径
+  exclude_paths:
+    - "/data/data/com.example.app/files/user_*"
+    - "/data/data/com.example.app/databases/auth_*"
+  # 字段脱敏(SDK 内部处理)
+  anonymize_fields:
+    - "phone"
+    - "email"
+    - "idcard"
+```
+
+---
+
+## 2. 端到端流程
+
+```yaml
+pipeline:
+  # Step 1: 触发 am dumpheap
+  step_1_dump:
+    command: "am dumpheap"
+    args:
+      pid: "{target_pid}"     # 动态替换
+      file: "/data/local/tmp/oom_capture.hprof"
+    timeout_seconds: 60
+    on_failure: abort_upload
+
+  # Step 2: 拉取文件
+  step_2_pull:
+    # 设备侧:压缩后存到 sdcard
+    compress:
+      command: "gzip"
+      args: ["-f", "/data/local/tmp/oom_capture.hprof"]
+    upload:
+      protocol: "https"
+      endpoint: "https://stability.example.com/api/oom/upload"
+      method: "POST"
+      headers:
+        X-Device-Id: "{device_id}"
+        X-App-Version: "{app_version}"
+        X-OOM-Type: "am-dumpheap"
+      timeout_seconds: 300
+      retry:
+        max_attempts: 3
+        backoff_seconds: [5, 15, 30]
+
+  # Step 3: 服务端处理
+  step_3_server:
+    decompress: gunzip
+    hprof_conv: "platform-tools/hprof-conv"
+    mat_analysis:
+      generate_leak_suspects: true
+      generate_dominator_tree: true
+      oql_queries:
+        - "SELECT * FROM android.app.Activity"
+        - "SELECT * FROM android.graphics.Bitmap"
+        - "SELECT * FROM android.os.Handler"
+    archive:
+      bucket: "s3://stability-artifacts/oom/{date}/{device_id}/"
+      retention_days: 30
+    alert:
+      on_critical_leak: true
+      slack_channel: "#stability-alerts"
+      jira_project: "STAB"
+      jira_priority: "P1"
+```
+
+---
+
+## 3. App 端 SDK 集成示例
+
+```java
+// 稳定性 SDK 内部(伪代码)
+public class AmDumpheapCapture {
+
+    public void captureOnMemoryPressure(Process targetProc) {
+        // 1. 检查灰度
+        if (!isGrayChannel()) return;
+
+        // 2. 检查冷却
+        if (isInCooldown(targetProc.pid)) return;
+
+        // 3. 触发 am dumpheap
+        try {
+            String outputPath = "/data/local/tmp/oom_capture.hprof";
+            // 实际调用:
+            //   am dumpheap <pid> <file>
+            String[] cmd = {"am", "dumpheap",
+                            String.valueOf(targetProc.pid), outputPath};
+            Process p = Runtime.getRuntime().exec(cmd);
+            int exit = p.waitFor();
+
+            if (exit == 0) {
+                // 4. 压缩
+                FileCompressor.gzip(outputPath);
+
+                // 5. 上传
+                uploadToServer(outputPath + ".gz");
+            }
+        } catch (Exception e) {
+            Log.e("AmDumpheap", "capture failed", e);
+        } finally {
+            // 6. 标记冷却
+            markCooldown(targetProc.pid);
+        }
+    }
+}
+```
+
+---
+
+## 4. 配套 LeakCanary 灰度
+
+```
+┌──────────────┬──────────────────────┬──────────────────────┐
+│   场景        │  工具                 │  触发方式            │
+├──────────────┼──────────────────────┼──────────────────────┤
+│ Debug 包     │ LeakCanary            │ 自动,泄漏即 dump     │
+│ 灰度包(1%)   │ am dumpheap           │ SDK 阈值触发         │
+│ 全量包       │ 仅监控 + logcat       │ 无 dump,只打点       │
+└──────────────┴──────────────────────┴──────────────────────┘
+```
+
+**为什么不全量包也用 am dumpheap?**
+- dump 期间 app 卡 5-30s(详见 [04 §7.1](../04-堆内存转储-dumpheap详解.md#71-dumpheap-期间的-app-卡顿stop-the-world-5-30s))
+- 全量包影响范围大
+- 灰度包先用,验证稳定后再逐步放开
+
+---
+
+## 5. 监控指标
+
+```yaml
+metrics:
+  # 触发率
+  - name: oom_capture_trigger_rate
+    type: counter
+    description: OOM 触发 dumpheap 次数
+
+  # 成功率
+  - name: oom_capture_success_rate
+    type: gauge
+    description: 触发到成功上传的成功率
+
+  # dump 耗时
+  - name: oom_capture_duration_seconds
+    type: histogram
+    description: am dumpheap 执行耗时
+    buckets: [5, 10, 20, 30, 60]
+
+  # 文件大小
+  - name: oom_capture_file_size_mb
+    type: histogram
+    description: hprof 文件大小
+    buckets: [50, 100, 200, 500]
+
+  # 上传耗时
+  - name: oom_capture_upload_seconds
+    type: histogram
+    description: 上传耗时
+    buckets: [10, 30, 60, 120, 300]
+```
+
+---
+
+## 6. 5 分钟自检清单
+
+集成后,用这个清单验证:
+
+- [ ] Debug 包触发 → hprof 文件成功生成
+- [ ] hprof-conv 转换无报错
+- [ ] MAT 能打开转换后文件
+- [ ] Leak Suspects Report 输出
+- [ ] 上传到 server 成功(看 server 日志)
+- [ ] Dashboard 显示本次 dump
+- [ ] 告警通道收到(如果有泄漏)
+- [ ] dump 期间 ANR 告警已排除
+- [ ] 冷却机制工作(30 分钟内不重复触发)
+- [ ] 灰度包生效,全量包不触发
