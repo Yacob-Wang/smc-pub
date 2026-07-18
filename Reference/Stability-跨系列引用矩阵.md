@@ -68,6 +68,11 @@ Stability 系列（症状维度）= 横向问题分类
 | S08 | §3.1 GenCC | [Runtime/ART/03-GC系统](../../Runtime/ART/03-GC系统/) 99 篇 | GenCC 相关 | 分代 GC 机制 | 2026-07-18 |
 | S08 | §3.6 AppFunctions | [AI_Native_X/03_AI_for_Stability](../../AI_Native_X/03_AI_for_Stability/) | 全部 | AI 协同稳定性 | 2026-07-18 |
 | S08 | §3.4 AnrHelper + §3.5 Perfetto | [Stability-Forensics](../Android_Framework/Stability-Forensics/) F01/F02 | 全部 | ANR/SWT 取证机制 | 2026-07-18 |
+| **S09 横切专题** | §3 Binder 死锁 | [S01-ANR](../../Android_Framework/Stability/S01-ANR.md) + [S04-SWT](../../Android_Framework/Stability/S04-SWT.md) + [S05-HANG](../../Android_Framework/Stability/S05-HANG.md) | §3 全部 | binder 死锁与 ANR/SWT/HANG 关联 | 2026-07-18 |
+| S09 | §4 IO 调度 | [S05-HANG](../../Android_Framework/Stability/S05-HANG.md) + [S07-KE](../../Android_Framework/Stability/S07-KE.md) + [S06-REBOOT](../../Android_Framework/Stability/S06-REBOOT.md) | §3 全部 | IO 卡顿与 HANG/KE/REBOOT 关联 | 2026-07-18 |
+| S09 | §5 GC 卡顿 | [S01-ANR](../../Android_Framework/Stability/S01-ANR.md) + [S02-JE](../../Android_Framework/Stability/S02-JE.md) + [Runtime/ART/03-GC系统](../../Runtime/ART/03-GC系统/) | §3 全部 | GC 卡顿与 ANR/JE 关联 + GenCC 机制 | 2026-07-18 |
+| S09 | §6 渲染卡顿 | [S01-ANR](../../Android_Framework/Stability/S01-ANR.md) + [S05-HANG](../../Android_Framework/Stability/S05-HANG.md) + [Runtime/ART](../../Runtime/ART/) | 全部 | Choreographer / SurfaceFlinger 机制 | 2026-07-18 |
+| S09 | §7 锁竞争 | [S01-ANR](../../Android_Framework/Stability/S01-ANR.md) + [S02-JE](../../Android_Framework/Stability/S02-JE.md) + [S04-SWT](../../Android_Framework/Stability/S04-SWT.md) | §3 全部 | 锁竞争与 ANR/JE/SWT 关联 | 2026-07-18 |
 
 ---
 

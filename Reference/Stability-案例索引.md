@@ -37,6 +37,8 @@
 | CASE-STAB-07-02 | S07 KE | AOSP Issue 252354175 binder rust 死锁 | 【公开 bugreport】 | 预留 |
 | **CASE-STAB-08-01** | **S08 演进全景** | **某社交 App 升级 AOSP 17 + K 6.18 前后 7 指标对比（ANR -33% / Crash -20% / HANG -60% / OOM -48% / REBOOT -40%）** | **【典型模式】** | 2026-07-18 完成 |
 | **CASE-STAB-08-02** | **S08 演进全景** | **某工具 App 升级引入 AppFunctions NE / 模型 OOM 风险** | **【公开 bugreport 模式】** | 2026-07-18 完成 |
+| **CASE-STAB-09-01** | **S09 横切专题** | **某 IM App 跨进程死锁 → ANR（binder 死锁）** | **【典型模式】** | 2026-07-18 完成 |
+| **CASE-STAB-09-02** | **S09 横切专题** | **某相册 App f2fs fsync 卡顿 → HANG 灰色地带（IO 调度）** | **【公开 bugreport 模式】** | 2026-07-18 完成 |
 
 ---
 
