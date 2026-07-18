@@ -316,42 +316,36 @@ def _ensure_series_overview(dir_path: Path, module: str | None) -> str:
     return "index.md"
 
 
-def generate_dir_pages(dir_path: Path, *, depth: int = 0) -> None:
-    """生成 .pages。
+def generate_module_pages(mod_dir: Path, module: str) -> None:
+    """module 层 .pages：本模块总览 + 子分类列表。
 
-    depth=0 模块层：总览 + 系列短名
-    depth>=1 系列/子模块：只挂「系列总览」，单篇不进侧栏
+    系列层不写 .pages —— 让 awesome-pages plugin 自动递归列出该系列单篇
+    （用户进入某系列时，侧栏只显示本系列的内容 + 子分类）。
     """
-    module = _module_name_for(dir_path)
-    subdirs = _list_nav_subdirs(dir_path)
     nav: list[tuple[str, str]] = []
 
-    if depth == 0:
-        if (dir_path / "index.md").is_file():
-            nav.append(("本模块总览", "index.md"))
-        for sub in subdirs:
-            nav.append((_short_title(module, sub.name, sub), sub.name))
-            generate_dir_pages(sub, depth=1)
-        write_pages_file(dir_path, nav)
-        return
+    # 1) 模块总览（README.md 优先；否则用 index.md）
+    if (mod_dir / "README.md").is_file():
+        nav.append(("本模块总览", "README.md"))
+    elif (mod_dir / "index.md").is_file():
+        nav.append(("本模块总览", "index.md"))
 
-    overview = _ensure_series_overview(dir_path, module)
-    nav.append(("系列总览", overview))
+    # 2) 子分类（按 MODULE_SERIES_ORDER 排序）
+    subdirs = _list_nav_subdirs(mod_dir)
+    for sub in subdirs:
+        nav.append((_short_title(module, sub.name, sub), sub.name))
 
-    # 仅系列第一层展开子目录（如 ART）；更深只保留总览入口
-    if depth == 1 and subdirs:
-        for sub in subdirs:
-            nav.append((_short_title(module, sub.name, sub), sub.name))
-            generate_dir_pages(sub, depth=2)
-    elif depth == 2 and subdirs:
-        for sub in subdirs:
-            nav.append((_short_title(module, sub.name, sub), sub.name))
-            generate_dir_pages(sub, depth=3)
-
-    write_pages_file(dir_path, nav)
+    write_pages_file(mod_dir, nav)
 
 
 def generate_pages_tree(docs_root: Path) -> None:
+    """新导航策略：
+
+    1. 顶层 .pages：8 大分类 tab（按 MODULE_TITLES 排序）
+    2. module 层 .pages：本模块总览 + 子分类列表
+    3. series 层不写 .pages：让 awesome-pages 自动递归列出所有单篇
+    4. 子系列层不写 .pages：让 awesome-pages 自动递归
+    """
     top_nav: list[tuple[str, str]] = [("首页", "index.md")]
     for mod in MODULE_DIRS:
         mod_dir = docs_root / mod
@@ -366,12 +360,116 @@ def generate_pages_tree(docs_root: Path) -> None:
                 build_module_index(mod, mod_dir),
                 encoding="utf-8",
             )
-        generate_dir_pages(mod_dir, depth=0)
+        # series 层不写 .pages（让 awesome-pages 自动递归）
+        generate_module_pages(mod_dir, mod)
     write_pages_file(docs_root, top_nav)
 
 
 def build_public_index() -> str:
     return build_public_readme(REPO_ROOT)
+
+
+def sanitize_filename(name: str) -> str:
+    """把文件名中的特殊字符替换为安全字符（避免 mkdocs 当目录分隔符）。
+
+    - 中文冒号 ： → 连字符 -
+    - 其他 URL 不安全字符 → 保持原样
+    """
+    return name.replace("：", "-")
+
+
+def collect_renamed_files(src_root: Path) -> dict[str, str]:
+    """收集所有被改名的文件 (旧名 → 新名)，用于修复 docs 内的引用链接。"""
+    mapping: dict[str, str] = {}
+    for path in src_root.rglob("*"):
+        if not path.is_file() or not should_copy(path):
+            continue
+        new_name = sanitize_filename(path.name)
+        if new_name != path.name:
+            mapping[path.name] = new_name
+    return mapping
+
+
+def fix_links_in_docs(docs_root: Path, name_map: dict[str, str]) -> int:
+    """根据 name_map 修复 docs 内所有 md 的引用链接（](old.md) → ](new.md)）。
+
+    同时处理全角：与半角：变体（源 README 可能用半角冒号引用全角冒号文件名）。
+    """
+    if not name_map:
+        return 0
+    # 展开 name_map：每个 old 名生成全角/半角两种变体
+    expanded_map: dict[str, str] = {}
+    for old, new in name_map.items():
+        expanded_map[old] = new
+        if "：" in old:
+            expanded_map[old.replace("：", ":")] = new
+        if ":" in old:
+            expanded_map[old.replace(":", "：")] = new
+    fixed_files = 0
+    # 按名字长度倒序排
+    for old, new in sorted(expanded_map.items(), key=lambda kv: -len(kv[0])):
+        old_escaped = re.escape(old)
+        for pattern, repl in [
+            (r"\]\(\.\./" + old_escaped, r"](" + new),
+            (r"\]\(\./" + old_escaped, r"](" + new),
+            (r"\]\(" + old_escaped, r"](" + new),
+        ]:
+            for md in docs_root.rglob("*.md"):
+                text = md.read_text(encoding="utf-8", errors="replace")
+                if re.search(pattern, text):
+                    new_text = re.sub(pattern, repl, text)
+                    md.write_text(new_text, encoding="utf-8")
+                    fixed_files += 1
+    return fixed_files
+
+
+def _ensure_series_index_md(src_sub: Path, dst_sub: Path) -> None:
+    """递归确保 series 目录有 index.md：
+    - 有 README.md → 复制为 index.md
+    - 没有 README.md 但有 .md → 自动生成 index.md（文件列表）
+    递归处理子目录。
+    """
+    if not dst_sub.exists():
+        return
+    index_md = dst_sub / "index.md"
+    if not index_md.is_file():
+        readme = src_sub / "README.md"
+        if readme.is_file():
+            try:
+                shutil.copy2(readme, index_md)
+            except FileNotFoundError:
+                pass
+        else:
+            # 没 README.md：自动生成 index.md
+            md_files = sorted(
+                [p for p in src_sub.iterdir() if p.is_file() and p.suffix.lower() == ".md"],
+                key=lambda p: natural_key(p.name),
+            )
+            if md_files:
+                lines = [
+                    f"# {src_sub.name} 系列总览",
+                    "",
+                    "本系列所有篇章：",
+                    "",
+                    "| # | 篇章 |",
+                    "|---|------|",
+                ]
+                for i, p in enumerate(md_files, 1):
+                    title = get_title_from_markdown(
+                        p.read_text(encoding="utf-8", errors="replace"), p.name
+                    )
+                    if len(title) > 56:
+                        title = title[:54] + "…"
+                    lines.append(f"| {i} | [{title}]({p.name}) |")
+                lines.append("")
+                try:
+                    index_md.write_text("\n".join(lines), encoding="utf-8")
+                except OSError:
+                    pass
+    # 递归到子目录
+    for sub in src_sub.iterdir():
+        if sub.is_dir() and not sub.name.startswith("."):
+            _ensure_series_index_md(sub, dst_sub / sub.name)
 
 
 def copy_tree(src: Path, dst: Path) -> int:
@@ -384,10 +482,16 @@ def copy_tree(src: Path, dst: Path) -> int:
         rel = path.relative_to(REPO_ROOT)
         if is_excluded(rel):
             continue
-        target = dst / path.relative_to(src)
+        # 文件名清洗：避免 mkdocs 把 ： 当作目录分隔符
+        new_name = sanitize_filename(path.name)
+        target = dst / path.relative_to(src).parent / new_name
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, target)
         count += 1
+    # 阶段 4：递归确保每个有 README.md 的 series 目录都有 index.md
+    for sub in src.iterdir():
+        if sub.is_dir() and not sub.name.startswith("."):
+            _ensure_series_index_md(sub, dst / sub.name)
     return count
 
 
@@ -395,6 +499,11 @@ def main() -> int:
     if DOCS_DIR.exists():
         shutil.rmtree(DOCS_DIR)
     DOCS_DIR.mkdir(parents=True)
+
+    # 阶段 3+：收集被改名的文件（避免 mkdocs 把 ： 当目录分隔符）
+    name_map = collect_renamed_files(REPO_ROOT)
+    if name_map:
+        print(f"  sanitized {len(name_map)} filenames: 冒号 → 连字符")
 
     total = 0
     skipped_meta = 0
@@ -449,6 +558,11 @@ def main() -> int:
             shutil.copy2(path, dst)
             total += 1
         print("  00-Meta/overrides/: header/footer copied into docs/overrides/")
+
+    # 修复 docs 内所有 md 的链接（同步新文件名）
+    if name_map:
+        n_fixed = fix_links_in_docs(DOCS_DIR, name_map)
+        print(f"  fixed links in {n_fixed} files (synced renamed files)")
 
     generate_pages_tree(DOCS_DIR)
     print(f"Prepared docs/ with {total} content files; skipped ~{skipped_meta} meta docs")
