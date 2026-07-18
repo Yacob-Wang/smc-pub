@@ -32,7 +32,7 @@ from content_policy import (  # noqa: E402
 )
 from public_readme import build_public_readme  # noqa: E402
 
-REPO_ROOT = _SCRIPTS.parent
+REPO_ROOT = _SCRIPTS.parent.parent  # 适配阶段 3 移到 00-Meta/scripts/（原 _SCRIPTS.parent 是仓库根）
 DOCS_DIR = REPO_ROOT / "docs"
 
 MODULE_DIRS = PUBLIC_MODULES
@@ -359,11 +359,13 @@ def generate_pages_tree(docs_root: Path) -> None:
             continue
         title = MODULE_TITLES.get(mod, mod)
         top_nav.append((title, mod))
-        # 模块落地页
-        (mod_dir / "index.md").write_text(
-            build_module_index(mod, mod_dir),
-            encoding="utf-8",
-        )
+        # 模块落地页：若已有 README.md（手写），不生成 index.md 以避免冲突
+        has_readme = any((mod_dir / name).is_file() for name in ("README.md", "readme.md"))
+        if not has_readme:
+            (mod_dir / "index.md").write_text(
+                build_module_index(mod, mod_dir),
+                encoding="utf-8",
+            )
         generate_dir_pages(mod_dir, depth=0)
     write_pages_file(docs_root, top_nav)
 
@@ -421,7 +423,8 @@ def main() -> int:
     print("  root: index.md (blog homepage)")
 
     # 站点静态资源（顶栏 / 首页样式等）
-    web_src = REPO_ROOT / "web"
+    # 阶段 3：web/ 和 overrides/ 都在 00-Meta/ 下
+    web_src = REPO_ROOT / "00-Meta" / "web"
     if web_src.is_dir():
         for path in web_src.rglob("*"):
             if not path.is_file():
@@ -431,7 +434,21 @@ def main() -> int:
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(path, dst)
             total += 1
-        print("  web/: assets copied into docs/")
+        print("  00-Meta/web/: assets copied into docs/")
+
+    overrides_src = REPO_ROOT / "00-Meta" / "overrides"
+    if overrides_src.is_dir():
+        # 保留 overrides/ 子目录结构（mkdocs.yml 用 custom_dir: overrides，
+        # 需要 docs/overrides/partials/header.html）
+        for path in overrides_src.rglob("*"):
+            if not path.is_file():
+                continue
+            rel = path.relative_to(overrides_src.parent)  # 保留 overrides/ 前缀
+            dst = DOCS_DIR / rel
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, dst)
+            total += 1
+        print("  00-Meta/overrides/: header/footer copied into docs/overrides/")
 
     generate_pages_tree(DOCS_DIR)
     print(f"Prepared docs/ with {total} content files; skipped ~{skipped_meta} meta docs")

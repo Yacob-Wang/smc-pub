@@ -15,7 +15,7 @@ site_dir: site
 
 theme:
   name: material
-  custom_dir: overrides
+  custom_dir: docs/overrides
   language: zh
   features:
     # 顶栏模块 Tab；侧栏只展示当前模块/系列，避免 500+ 篇堆在一起

@@ -32,10 +32,10 @@ jobs:
           cache-dependency-path: scripts/requirements-docs.txt
 
       - name: Install MkDocs
-        run: pip install -r scripts/requirements-docs.txt
+        run: pip install -r 00-Meta/scripts/requirements-docs.txt
 
       - name: Prepare docs/
-        run: python scripts/prepare_web_docs.py
+        run: python 00-Meta/scripts/prepare_web_docs.py
 
       - name: Build site
         run: mkdocs build --verbose

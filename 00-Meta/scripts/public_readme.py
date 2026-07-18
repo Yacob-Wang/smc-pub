@@ -31,7 +31,7 @@ hide:
 
 <div class="jk-hero" markdown="0">
   <h1>稳知库 · Stability Matrix Course</h1>
-  <p class="jk-hero__lead">面向 Android 稳定性架构师的系列技术博客。从 Linux 内核到 Framework、从运行时到应用层，按「定位 → 边界 → 核心机制 → 风险 → 诊断治理」组织。</p>
+  <p class="jk-hero__lead">面向 Android 稳定性架构师的系列技术博客。从 Linux 内核到 Framework、从运行时到应用层，按 AOSP 系统分层 + oncall 工作流双轴组织 — 8 大分类（项目地图 / 机制 / 症状 / 取证 / 工具 / 治理 / 案例 / 基础）。</p>
   <div class="jk-hero__meta">
     <span class="jk-chip jk-chip--accent">Author · JacobKing</span>
     <span class="jk-chip">AOSP 17 + android17-6.18</span>
@@ -40,7 +40,7 @@ hide:
 </div>
 
 <ol class="jk-steps" markdown="0">
-  <li><strong>选模块</strong><span>顶栏切换 Linux 内核 / 运行时 / Framework 等</span></li>
+  <li><strong>选模块</strong><span>顶栏切换 8 大分类（项目地图 / 机制 / 症状 / 取证 / 工具 / 治理 / 案例 / 基础）</span></li>
   <li><strong>进系列</strong><span>左侧打开「系列总览」，先看目录结构</span></li>
   <li><strong>读篇章</strong><span>从总览篇章表进入单篇，或用顶部搜索</span></li>
 </ol>
@@ -55,13 +55,23 @@ hide:
 
 | 问题 | 入口 |
 |------|------|
-| Native Crash | [Native Crash](Runtime/Native_Crash/) |
-| ANR | [ANR 检测](Android_Framework/ANR_Detection/)、[Input](Android_Framework/Input/) |
-| Binder | [Binder](Linux_Kernel/Binder/) |
-| OOM / 内存 | [内存管理](Linux_Kernel/Memory_Management/)、[ART](Runtime/ART/) |
-| Watchdog | [Watchdog](Android_Framework/Watchdog/) |
-| Socket / epoll | [Socket](Linux_Kernel/socket/)、[epoll](Linux_Kernel/epoll/) |
-| 端侧 AI | [AI Native](AI_Native_X/) |
+| **Native Crash** | [Native Crash](01-Mechanism/Runtime/Native_Crash/) |
+| **Java 异常 / ANR** | [ANR 症状](02-Symptom/S01-ANR/) · [ANR 取证](03-Forensics/F01-ANR/) · [ANR-Detection](04-Tool/ANR-Detection/) |
+| **Binder / IPC** | [Binder](01-Mechanism/Kernel/Binder/) |
+| **OOM / 内存** | [内存管理](01-Mechanism/Kernel/Memory_Management/) · [ART](01-Mechanism/Runtime/ART/) · [Hprof](04-Tool/Hprof/) |
+| **Watchdog / SWT** | [Watchdog](04-Tool/Watchdog/) · [SWT 取证](03-Forensics/F02-SWT/) |
+| **Socket / epoll** | [Socket](01-Mechanism/Kernel/socket/) · [epoll](01-Mechanism/Kernel/epoll/) |
+| **启动专项** | [S11 启动专项](02-Symptom/S11-Startup/) · [启动案例](06-Case/Startup/) · [Perfetto Boot Trace](04-Tool/Perfetto/) |
+| **AOSP 17 + K 6.18 演进** | [S08 演进全景](02-Symptom/S08-AOSP17-K618/) |
+| **性能 vs 稳定性** | [S09 横切专题](02-Symptom/S09-PerfVsStab/) |
+| **度量 + 门禁** | [S10 度量门禁](02-Symptom/S10-Measure/) · [APM](05-Governance/APM/) |
+| **OEM 厂商适配** | [OEM-BSP](05-Governance/OEM-BSP/) |
+| **跨平台 / HarmonyOS** | [CrossPlatform](05-Governance/CrossPlatform/) |
+| **低端机治理** | [LowEnd](05-Governance/LowEnd/) |
+| **端侧 AI / AI OS** | [AI Native](05-Governance/AI-Native/) · [AI for Stability](05-Governance/AI-Native/03_AI_for_Stability/) |
+| **AI 辅助调试** | [AI-Debug](05-Governance/AI-Debug/) |
+| **性能 vs 内存** | [PerfMem](05-Governance/PerfMem/) |
+| **安全 + 稳定性** | [Security](05-Governance/Security/) |
 
 {{: .jk-quick }}
 
