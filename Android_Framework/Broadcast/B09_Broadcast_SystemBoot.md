@@ -390,6 +390,8 @@ private void deliverToManifestReceiverLocked(BroadcastRecord r, ResolveInfo info
 
 ## 第四部分：实战案例
 
+**【CASE-BC-07】**
+
 ### 案例 1：BOOT_COMPLETED 收不到
 
 **现象**：
@@ -459,6 +461,8 @@ logcat:
 **验证**：
 - 修复后 BOOT_COMPLETED 接收成功率从 0 提升到 100%
 - 关键监控：Permission Denial 警告消失
+
+**【CASE-BC-08】**
 
 ### 案例 2：BOOT_COMPLETED 触发 Broadcast ANR
 

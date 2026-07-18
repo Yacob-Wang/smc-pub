@@ -373,6 +373,8 @@ public class MyReceiver extends BroadcastReceiver {
 - 修复后 Broadcast ANR 归零
 - 关键监控：onReceive 平均耗时 < 10ms
 
+**【CASE-BC-09】**
+
 ### 案例 2：有序广播 N × onReceive 耗时超阈值
 
 **现象**：

@@ -218,6 +218,8 @@ private void enforceBroadcastLimit(ProcessRecord app) {
 
 ## 四、实战案例
 
+**【CASE-BC-05】**
+
 ### 案例 1：AOSP 14 升级崩溃（RECEIVER_EXPORTED 漏声明）
 
 **现象**：
@@ -272,6 +274,8 @@ registerReceiver(myReceiver, filter, Context.RECEIVER_EXPORTED);
 **验证**：
 - 修复后 SecurityException 归零
 - 关键监控：AOSP 14 升级后崩溃率从 100% 降到 0
+
+**【CASE-BC-06】**
 
 ### 案例 2：隐式广播被禁
 

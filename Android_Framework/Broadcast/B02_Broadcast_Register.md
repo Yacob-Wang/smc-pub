@@ -562,6 +562,8 @@ registerReceiver(myReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
 - 修复后 SecurityException 归零
 - 关键监控：AOSP 14+ 升级后崩溃率从 100% 降到 0
 
+**【CASE-BC-10】**
+
 ### 案例 2：动态注册未注销导致 Activity 泄漏
 
 **现象**：

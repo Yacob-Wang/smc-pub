@@ -495,6 +495,8 @@ mService.updateOomAdj();
 
 ## 五、实战案例
 
+**【CASE-BC-01】**
+
 ### 案例 1：onReceive 同步 IO 导致 Broadcast ANR
 
 **现象**：
@@ -552,6 +554,8 @@ public class MyReceiver extends BroadcastReceiver {
 **验证**：
 - 修复后 Broadcast ANR 归零
 - 关键监控：onReceive 平均耗时 < 10ms
+
+**【CASE-BC-02】**
 
 ### 案例 2：静态注册冷启动慢导致首广播 ANR
 

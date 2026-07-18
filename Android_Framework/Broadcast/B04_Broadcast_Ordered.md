@@ -403,6 +403,8 @@ public final class PendingResult {
 
 ## 五、实战案例
 
+**【CASE-BC-03】**
+
 ### 案例 1：有序广播卡死（Receiver 未 finish）
 
 **现象**：
@@ -451,6 +453,8 @@ public void onReceive(Context context, Intent intent) {
 **验证**：
 - 修复后有序广播不再卡死
 - 关键监控：广播 ANR 次数从 5%/小时 降到 0%
+
+**【CASE-BC-04】**
 
 ### 案例 2：abortBroadcast 权限不足
 
