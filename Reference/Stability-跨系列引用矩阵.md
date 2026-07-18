@@ -63,6 +63,11 @@ Stability 系列（症状维度）= 横向问题分类
 | **S07 KE** | §3 全部 | [Linux_Kernel/Process](../../Linux_Kernel/Process/) | 全部 | Kernel panic / oops | 2026-07-18 |
 | S07 | §3.7 取证链路 | [Linux_Kernel/FS](../../Linux_Kernel/FS/) | pstore 相关 | pstore 机制 | 2026-07-18 |
 | S07 | §3.5 WARN/BUG | [Linux_Kernel/MM_v2](../../Linux_Kernel/Memory_Management/MM_v2/) | 全部 | 内存 BUG 触发 | 2026-07-18 |
+| **S08 演进全景** | §3 ART 17 硬变化 | [Runtime/ART](../../Runtime/ART/) 142 篇 | 全部 | ART 17 机制深挖 | 2026-07-18 |
+| S08 | §4 K 6.18 硬变化 | [Linux_Kernel](../../Linux_Kernel/) 全部 | 各子系统 | K 6.18 机制深挖 | 2026-07-18 |
+| S08 | §3.1 GenCC | [Runtime/ART/03-GC系统](../../Runtime/ART/03-GC系统/) 99 篇 | GenCC 相关 | 分代 GC 机制 | 2026-07-18 |
+| S08 | §3.6 AppFunctions | [AI_Native_X/03_AI_for_Stability](../../AI_Native_X/03_AI_for_Stability/) | 全部 | AI 协同稳定性 | 2026-07-18 |
+| S08 | §3.4 AnrHelper + §3.5 Perfetto | [Stability-Forensics](../Android_Framework/Stability-Forensics/) F01/F02 | 全部 | ANR/SWT 取证机制 | 2026-07-18 |
 
 ---
 
