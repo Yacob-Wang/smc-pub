@@ -582,6 +582,8 @@ private final void serviceTimeout(ProcessRecord app) {
 
 ## 五、实战案例
 
+**【CASE-SVC-03】**
+
 ### 案例 1：忘记 unbindService 导致 Activity 泄漏
 
 **现象**：
@@ -691,6 +693,8 @@ public class MainActivity extends AppCompatActivity {
 - 修复后 LeakCanary 报告 0 泄漏
 - 关键监控：`dumpsys activity service` 数量稳定
 - 关键监控：用户反复进出 100 次后，进程不增长
+
+**【CASE-SVC-04】**
 
 ### 案例 2：onServiceConnected 主线程同步操作
 

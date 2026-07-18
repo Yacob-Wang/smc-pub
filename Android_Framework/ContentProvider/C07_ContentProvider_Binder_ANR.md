@@ -276,6 +276,8 @@ public void writeToParcel(Parcel dest, int flags) {
 
 ## 五、实战案例
 
+**【CASE-CP-11】**
+
 ### 案例 1：Provider onCreate 同步初始化导致 publish 超时 ANR
 
 **现象**：
@@ -338,6 +340,8 @@ public class DataProvider extends ContentProvider {
 **验证**：
 - 修复后 publish 耗时从 12s 降到 5ms
 - 关键监控：ContentProvider ANR 次数从 5%/小时 降到 0
+
+**【CASE-CP-12】**
 
 ### 案例 2：MAX_QUERY_RESULTS 超限导致 IllegalArgumentException
 

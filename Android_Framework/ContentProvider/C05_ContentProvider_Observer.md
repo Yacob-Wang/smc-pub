@@ -355,6 +355,8 @@ public void notifyChange(Uri uri, IContentObserver observer, ...) {
 
 ## 五、实战案例
 
+**【CASE-CP-07】**
+
 ### 案例 1：未注销 ContentObserver 导致内存泄漏
 
 **现象**：
@@ -447,6 +449,8 @@ public class MyActivity extends AppCompatActivity {
 **验证**：
 - 修复后 LeakCanary 报告 0 泄漏
 - 关键监控：dumpsys meminfo ContentObserver 数量稳定
+
+**【CASE-CP-08】**
 
 ### 案例 2：onChange 同步 IO 阻塞导致 ANR
 

@@ -506,6 +506,8 @@ private void handleBindService(BindServiceData data) {
 
 ## 五、实战案例
 
+**【CASE-SVC-09】**
+
 ### 案例 1：未实现死亡链路导致功能失效
 
 **现象**：

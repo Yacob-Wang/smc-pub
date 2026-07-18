@@ -401,6 +401,8 @@ public void notify(...) {
 
 ## 五、实战案例
 
+**【CASE-SVC-05】**
+
 ### 案例 1：AOSP 14+ 漏声明 FGS 类型
 
 **现象**：
@@ -460,6 +462,8 @@ logcat:
 **验证**：
 - 修复后 FGS 启动正常
 - 关键监控：`ForegroundServiceTypeException` 次数从 100% 降到 0
+
+**【CASE-SVC-06】**
 
 ### 案例 2：5s 内未 startForeground
 

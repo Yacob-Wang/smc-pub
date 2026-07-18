@@ -474,6 +474,8 @@ public Bundle call(String method, String arg, Bundle extras) {
 
 ## 五、实战案例
 
+**【CASE-CP-03】**
+
 ### 案例 1：query 同步 IO 阻塞导致 ANR
 
 **现象**：
@@ -532,6 +534,8 @@ contentResolver.query(uri, projection, selection, args, sortOrder, cancellationS
 **验证**：
 - 修复后 query 耗时从 12s 降到 50ms
 - 关键监控：ContentProvider ANR 次数从 5%/小时 降到 0
+
+**【CASE-CP-04】**
 
 ### 案例 2：Cursor 未 close 导致 CursorWindow 泄漏
 

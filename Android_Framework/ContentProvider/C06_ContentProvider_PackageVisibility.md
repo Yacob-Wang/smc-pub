@@ -222,6 +222,8 @@ public ContentProviderHolder getContentProviderImpl(...) {
 
 ## 四、实战案例
 
+**【CASE-CP-09】**
+
 ### 案例 1：AOSP 11+ 包不可见
 
 **现象**：
@@ -294,6 +296,8 @@ logcat:
 **验证**：
 - 修复后跨 App ContentProvider 访问成功
 - 关键监控：SecurityException 次数从 100% 降到 0
+
+**【CASE-CP-10】**
 
 ### 案例 2：AOSP 12+ exported 漏声明
 

@@ -462,6 +462,8 @@ private final void serviceTimeout(ProcessRecord app) {
 
 ## 五、实战案例
 
+**【CASE-SVC-01】**
+
 ### 案例 1：onStartCommand 同步 IO 导致 Service ANR
 
 **现象**：
@@ -557,6 +559,8 @@ WorkManager.getInstance(this).enqueue(new OneTimeWorkRequest.Builder(MyWorker.cl
 - 修复后 24 小时线上 Service ANR 归零
 - 关键监控：`onStartCommand` 平均耗时从 850ms 降到 5ms
 - 关键监控：Service 启动总时长从 1500ms 降到 200ms
+
+**【CASE-SVC-02】**
 
 ### 案例 2：onCreate 业务初始化重导致 Service ANR
 

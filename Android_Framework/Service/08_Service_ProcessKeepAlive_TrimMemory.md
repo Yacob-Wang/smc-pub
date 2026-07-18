@@ -381,6 +381,8 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc) {
 
 ## 五、实战案例
 
+**【CASE-SVC-07】**
+
 ### 案例 1：后台 Service 被 LMK 杀掉
 
 **现象**：
@@ -435,6 +437,8 @@ PeriodicWorkRequest request = new PeriodicWorkRequest.Builder(
 **验证**：
 - 修复后 FGS 进程稳定
 - 关键监控：进程存活率从 30% 提升到 95%
+
+**【CASE-SVC-08】**
 
 ### 案例 2：onTrimMemory 抛异常
 

@@ -440,6 +440,8 @@ private void updateCachedProcessStates() {
 
 ## 第四部分：实战案例
 
+**【CASE-SVC-10】**
+
 ### 案例 1：Binder 线程池耗尽导致 ANR
 
 **现象**：
@@ -491,6 +493,8 @@ public void onStartCommand(Intent intent, int flags, int startId) {
 **验证**：
 - 修复后 ANR 归零
 - 关键监控：Binder 线程占用从 15/15 降到 3/15
+
+**【CASE-SVC-11】**
 
 ### 案例 2：TransactionTooLargeException
 

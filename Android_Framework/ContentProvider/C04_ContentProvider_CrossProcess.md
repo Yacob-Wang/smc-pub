@@ -386,6 +386,8 @@ private void closeInternal() {
 
 ## 五、实战案例
 
+**【CASE-CP-05】**
+
 ### 案例 1：URI 权限被拒导致跨 App 访问失败
 
 **现象**：
@@ -450,6 +452,8 @@ logcat:
 **验证**：
 - 修复后跨 App 访问成功
 - 关键监控：SecurityException 次数从 100% 降到 0
+
+**【CASE-CP-06】**
 
 ### 案例 2：跨进程 ContentProvider 冷启动慢
 

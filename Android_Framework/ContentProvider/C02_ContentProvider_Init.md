@@ -363,6 +363,8 @@ public final IContentProvider getProvider(ProviderInfo info, String authority) {
 
 ## 五、实战案例
 
+**【CASE-CP-01】**
+
 ### 案例 1：ContentProvider.onCreate 同步初始化导致冷启动慢
 
 **现象**：
@@ -457,6 +459,8 @@ public class DataProvider extends ContentProvider {
 - 修复后冷启动时间从 1500ms 降到 600ms
 - 关键监控：`LoadedApk.installProvider` 耗时从 1200ms 降到 5ms
 - 关键监控：冷启动总时长从 1500ms 降到 600ms
+
+**【CASE-CP-02】**
 
 ### 案例 2：多 Provider 串行导致冷启动慢
 
