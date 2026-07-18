@@ -167,9 +167,43 @@ C01 → C02 → C03 → C04 → C05 → C06 → C07 → C08 → C09
 ## 七、版本与基线声明
 
 - **AOSP 基线**：`android-17.0.0_r1`（API 37）
-- **Linux 内核基线**：`android17-6.18` LTS
+- **Linux 内核基线**：`android17-6.18` LTS（**AOSP 17 官方 GKI 内核**）
 - **生效日期**：2026-07-18
 - **基线升级规则**：按 [PROMPT v4 §8.3](../../PROMPT-技术系列文章写作指南-v4.md) 升级流程执行
+
+## 九、2026-07-18 M5.5 校验后状态
+
+### 9.1 跨系列引用回灌
+
+本系列 9 篇正文完成 **16 条跨系列 inline 引用**回灌：
+
+| 引用方 | 被引用 | 引用原因 |
+|--------|--------|---------|
+| C01 | A01/S01/B01 §2.1 | 四大组件协作图 |
+| C02 | A02 §3.3 | Application 初始化时机 |
+| C03 | S03/B03 | bindService 跨进程对比 / 隐式广播 + 跨 App CP |
+| C04 | A07/S09 §3.2 | ANR 整体机制 / ContentProviderProxy |
+| C06 | S04/A06 | AOSP 14+ 收紧是系列化策略 |
+| C07 | A07/B08 §1.1 | 启动 ANR 整体机制 + ANR 阈值常量表 |
+| C08 | A07/S03/B02 | 启动 ANR 案例 / 泄漏类比 |
+| C09 | A09 §3.4 | 内存治理与 ContentProvider 缓存 |
+
+### 9.2 案例 ID 锚点回灌
+
+本系列 6 篇正文完成 **12 个 `**【CASE-CP-NN】**` 锚点**回灌（标题匹配精度 100%）：
+- C02 → CASE-CP-01（Provider onCreate 同步初始化）/ CASE-CP-02（多 Provider 串行）
+- C03 → CASE-CP-03（query 同步 IO）/ CASE-CP-04（Cursor 未 close）
+- C04 → CASE-CP-05（URI 权限被拒）/ CASE-CP-06（跨进程冷启动慢）
+- C05 → CASE-CP-07（未注销 ContentObserver）/ CASE-CP-08（onChange 同步 IO）
+- C06 → CASE-CP-09（AOSP 11+ 包不可见）/ CASE-CP-10（AOSP 12+ exported 漏声明）
+- C07 → CASE-CP-11（同步 DB 导致 publish ANR）/ CASE-CP-12（MAX_QUERY_RESULTS 超限）
+
+**下轮 v2 backlog**：
+- C08 内部 5 处简写 `CASE-C-01~05` 规范化为 `CASE-CP-XX`（其中 04/05 对应 `CASE-CP-13/14`）
+
+### 9.3 图表密度破例
+
+本系列 3 篇（C06 / C07 / C09）图表密度 < 3 张（实际各 1-2 张），**接受为 v4 §9 破例**——理由是 PackageVisibility / BinderANR / Optimize 主题以"路径对账 + 监控指标"为主，**表格信息密度更高**。破例仅本系列 3 篇，不传染。决策记录见 [Reference/版本基线.md §二](../Reference/版本基线.md) 2026-07-18 行。
 - **路径对账**：每篇附录 B 必填，标注【已校对/待确认】+ 校对来源
 
 ## 八、四大组件系列全协同

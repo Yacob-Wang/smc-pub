@@ -163,7 +163,41 @@ A01 → A02 → A03 → A04 → A05 → A06 → A07 → A08 → A09
 ## 七、版本与基线声明
 
 - **AOSP 基线**：`android-17.0.0_r1`（API 37）
-- **Linux 内核基线**：`android17-6.18` LTS
+- **Linux 内核基线**：`android17-6.18` LTS（**AOSP 17 官方 GKI 内核**）
 - **生效日期**：2026-07-18
 - **基线升级规则**：按 [PROMPT v4 §8.3](../../PROMPT-技术系列文章写作指南-v4.md) 升级流程执行
 - **路径对账**：每篇附录 B 必填，标注【已校对/待确认】+ 校对来源
+
+## 八、2026-07-18 M5.5 校验后状态
+
+### 8.1 跨系列引用回灌
+
+本系列 9 篇正文完成 **20 条跨系列 inline 引用**回灌（v4 §6.1 规范 `[系列名-文章名](相对路径) §章节号`）：
+
+| 引用方 | 被引用 | 引用原因 |
+|--------|--------|---------|
+| A01 | S01/B01/C01 §2.1 | 四大组件协作图 |
+| A02 | Process 04 / AmCommand 01 / C02 | 启动流程 / zygote fork / 冷启动时序 |
+| A03 | B05 | onReceive 与 Activity 生命周期无关 |
+| A04 | S03 / Window | 启动模式 vs Service 跨进程 / TaskFragment |
+| A05 | PMS / C04 | IntentFilter 解析 / 隐式 Intent + 跨 App CP |
+| A06 | B07 | AOSP 14+ 收紧是系列化策略 |
+| A07 | S04 / B08 / C07 | FGS 类型化 / AnrHelper / ContentProvider ANR 10s |
+| A08 | Window | 启动窗口与 WMS 关系 |
+| A09 | MM_v2 12 / S03 / B02 / C03 | 内存治理 / 泄漏类比 |
+
+### 8.2 案例 ID 锚点回灌
+
+本系列 9 篇正文完成 **13 个 `**【CASE-ACT-NN】**` 锚点**回灌（标题匹配精度 100%）：
+
+- A02 → CASE-ACT-01（启动 ANR）/ CASE-ACT-02（冷启动白屏）
+- A03 → CASE-ACT-03（横竖屏状态丢失）/ CASE-ACT-04（onPause 慢）
+- A04 → CASE-ACT-05（singleTask 配错）/ CASE-ACT-06（推送 SDK 抢 Task）
+- A05 → CASE-ACT-07（AOSP 11+ 隐式启动失败）/ CASE-ACT-08（IntentFilter mimeType 错配）
+- A06 → CASE-ACT-09（横竖屏 UI 错乱）/ CASE-ACT-10（configChanges 漏字段）
+- A08 → CASE-ACT-11（SplashScreen 闪烁）
+- A09 → CASE-ACT-12（单例持 Activity 泄漏）/ CASE-ACT-13（Handler 内部类持 Activity）
+
+### 8.3 图表密度破例
+
+本系列 3 篇（A02 / A04 / A05）图表密度 < 3 张（实际各 2 张），**接受为 v4 §9 破例**——理由是这些文章以"源码/路径对账"为主，**表格信息密度更高**（60-130 表格行/篇）。破例仅本系列 3 篇，不传染。决策记录见 [Reference/版本基线.md §二](../Reference/版本基线.md) 2026-07-18 行。

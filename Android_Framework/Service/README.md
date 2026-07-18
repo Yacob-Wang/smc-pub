@@ -168,9 +168,41 @@ S01 → S02 → S03 → S04 → S05 → S06 → S07 → S08 → S09
 ## 七、版本与基线声明
 
 - **AOSP 基线**：`android-17.0.0_r1`（API 37）
-- **Linux 内核基线**：`android17-6.18` LTS
+- **Linux 内核基线**：`android17-6.18` LTS（**AOSP 17 官方 GKI 内核**）
 - **生效日期**：2026-07-18
 - **基线升级规则**：按 [PROMPT v4 §8.3](../../PROMPT-技术系列文章写作指南-v4.md) 升级流程执行
+
+## 九、2026-07-18 M5.5 校验后状态
+
+### 9.1 跨系列引用回灌
+
+本系列 9 篇正文完成 **15 条跨系列 inline 引用**回灌：
+
+| 引用方 | 被引用 | 引用原因 |
+|--------|--------|---------|
+| S01 | A01/B01/C01 §2.1 | 四大组件协作图 |
+| S02 | A02 | startService 是从 Activity 启动的父调用 |
+| S03 | Binder | bindService 走跨进程 Binder |
+| S04 | Window | FGS 通知在 NotificationManager |
+| S05 | Process 04 | WorkManager 涉及进程优先级 |
+| S06 | Binder | 死亡通知是 Binder 能力 |
+| S07 | A07/B08 §3 | ANR 整体机制（Service 是子类）+ AnrHelper |
+| S08 | Process 04 / A09 | onTrimMemory 与进程优先级 / 内存治理 |
+| S09 | A09 / Process 04 / C04 | 内存治理 / 进程上限 / 跨进程 Binder 限制 |
+
+### 9.2 案例 ID 锚点回灌
+
+本系列 5 篇正文完成 **11 个 `**【CASE-SVC-NN】**` 锚点**回灌（标题匹配精度 100%）：
+- S02 → CASE-SVC-01（onStartCommand 同步 IO）/ CASE-SVC-02（onCreate 业务初始化重）
+- S03 → CASE-SVC-03（忘记 unbindService）/ CASE-SVC-04（onServiceConnected 同步操作）
+- S04 → CASE-SVC-05（AOSP 14+ 漏声明 FGS 类型）/ CASE-SVC-06（5s 内未 startForeground）
+- S06 → CASE-SVC-09（未实现死亡链路）
+- **S08** → CASE-SVC-07（后台 Service 被 LMK 杀掉）/ CASE-SVC-08（onTrimMemory 抛异常）— **注：原任务清单误标 S09，按索引来源修正为 S08**
+- S09 → CASE-SVC-10（Binder 线程池耗尽）/ CASE-SVC-11（TransactionTooLargeException）
+
+### 9.3 图表密度破例
+
+本系列 2 篇（S05 / S09）图表密度 < 3 张（实际各 1-2 张），**接受为 v4 §9 破例**——理由是 WorkManager 演进和 Binder 限制主题以"路径对账"为主，**表格信息密度更高**。破例仅本系列 2 篇，不传染。决策记录见 [Reference/版本基线.md §二](../Reference/版本基线.md) 2026-07-18 行。
 - **路径对账**：每篇附录 B 必填，标注【已校对/待确认】+ 校对来源
 
 ## 八、Service 系列与 Activity / Broadcast 系列的协同
