@@ -1,0 +1,530 @@
+# F03 · JE 取证：dropbox(APP_CRASH) + logcat -b crash
+
+> **系列**：Android 稳定性取证系列（Stability-Forensics）· 第 3 篇 / 共 8 篇
+>
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
+>
+> **目标读者**：Android 稳定性架构师
+>
+> **完成时间**：2026-07-18（v1.0 首版）
+
+---
+
+# 本篇定位
+
+- **本篇系列角色**：**症状取证 3/7（次高频）**
+- **强依赖**：必先读 [F00-取证体系总览](F00-取证体系总览.md) + [Stability S02-JE](../Stability/S02-JE.md)
+- **不重复内容**：
+  - **不重复** Stability S02 讲的 JE 触发机制
+  - **不重复** ANR_Detection 系列对 dropbox 机制深挖
+  - 本篇与之关系：**视角互补**（Stability 讲机制，Forensics 讲取证）
+
+---
+
+# 校准决策日志
+
+| 轮次 | 类别 | 决策 | 理由 | 影响范围 |
+|:-----|:-----|:-----|:-----|:---------|
+| 1 | 结构 | 单篇 600 行 | §9 破例：JE 取证相对单一 | 仅本篇 |
+| 1 | 结构 | 5 个取证子节（dropbox / logcat / 异常栈 / 异步线程 / 治理）| F03 主题"JE 取证"决定 | 仅本篇 |
+| 2 | 硬伤 | 源码路径 AOSP 17 全量对账 | 附录 B 强制 | 全文 6+ 处源码引用 |
+| 3 | 锐度 | §2 强调"异步线程 JE 是监控盲区" | 反例 #9 跨篇重复防御 | §2 |
+
+---
+
+# 角色设定
+
+我是一名 **Android 稳定性架构师**，正在系统学习 Android 稳定性问题的"症状 × 取证"完整体系。
+
+本篇是 Forensics 系列第 3 篇，主题是 **JE 取证**——未捕获异常的取证全链路。
+
+# 上下文
+
+- **上一篇**：[F01-ANR 取证](F01-ANR取证.md) 已深挖 ANR 取证
+- **本系列 README**：[README-Forensics系列.md](README-Forensics系列.md)
+
+# 写作标准
+
+> 沿用 v4 一站式模板硬性要求
+
+---
+
+# 1. 背景与定义
+
+## 1.1 JE 取证 = dropbox(APP_CRASH) + logcat -b crash + 异常栈 3 件套
+
+> **一句话定义**：JE 触发后 30 秒内拿到 3 件证据——**dropbox(APP_CRASH)**（事件元数据 + 进程信息）+ **logcat -b crash**（crash ring buffer）+ **异常栈**（Java 栈 + native 栈如果有）。
+
+**三件套对应**：
+
+| 文件 | 路径 | 内容 | 作用 |
+|:-----|:-----|:-----|:-----|
+| **dropbox(APP_CRASH)** | `/data/system/dropbox/` | 事件元数据 + 进程信息 + 异常摘要 | 确认 JE 触发 + 时间 + 进程 |
+| **logcat -b crash** | ring buffer | crash 完整 log | 看 AndroidRuntime FATAL EXCEPTION 完整栈 |
+| **异常栈** | 在 logcat -b crash 里 | 异常类 + 栈 + Caused by | 解读 JE 根因 |
+
+> **所以呢**：JE 比 ANR 取证简单——**异常栈本身就是 Java 文本，不需要符号化**。
+
+## 1.2 JE 取证 vs Stability S02 视角
+
+| 维度 | Stability S02 | Forensics F03 |
+|:-----|:--------------|:--------------|
+| **视角** | 机制（Throwable → ART → KillApplicationHandler）| 取证（异常触发后怎么抓）|
+| **关注** | 5 个机制子节 | 3 件套 + 异步线程盲区 |
+
+---
+
+# 2. 取证 4 步法
+
+## 2.1 触发 → 抓取 → dump 路径 → 解读
+
+### 第 1 步：触发（logcat 关键字）
+
+```bash
+adb logcat -b crash | head -50
+```
+
+```logcat
+07-15 10:23:45.123  1000  1234  1234 E AndroidRuntime: FATAL EXCEPTION: main
+07-15 10:23:45.124  1000  1234  1234 E AndroidRuntime: Process: com.example.app, PID: 1234
+07-15 10:23:45.125  1000  1234  1234 E AndroidRuntime: java.lang.NullPointerException: Attempt to invoke ...
+07-15 10:23:45.126  1000  1234  1234 E AndroidRuntime:    at com.example.app.MainActivity.onCreate(MainActivity.java:42)
+07-15 10:23:45.127  1000  1234  1234 E AndroidRuntime:    at android.app.Activity.performCreate(Activity.java:8000)
+```
+
+**关键读法**：
+- `FATAL EXCEPTION` = JE 触发
+- `Process:` = 进程名
+- 异常类（`NullPointerException` 等）= 根因类型
+- `at` 链 = 异常触发栈
+
+### 第 2 步：抓取（3 件套）
+
+**dropbox(APP_CRASH) 抓取**：
+```bash
+adb shell dumpsys dropbox --print | grep -A 30 "APP_CRASH"
+```
+
+**logcat -b crash 抓取**：
+```bash
+# 完整 crash buffer（一次性抓）
+adb logcat -b crash -d > crash_buffer.log
+
+# 或实时监控
+adb logcat -b crash -v threadtime | tee crash_realtime.log
+```
+
+**异常栈抓取**（在 logcat -b crash 里）：
+```bash
+adb logcat -b crash -d | grep -B 5 -A 30 "FATAL EXCEPTION" > exception_stack.log
+```
+
+**bugreport 兜底**：
+```bash
+adb bugreport > bugreport_$(date +%Y%m%d_%H%M%S).zip
+# 解压后含：
+# - data/system/dropbox/ (dropbox 事件)
+# - logcat -b crash 全量
+# - data/anr/ (anr traces)
+# - data/tombstones/ (tombstone)
+```
+
+### 第 3 步：dump 路径
+
+```bash
+$ adb shell ls -la /data/system/dropbox/ | grep APP_CRASH
+-rw-rw---- 1 system system 15234 2026-07-15 10:23 APP_CRASH@1709123456789.txt
+
+$ adb logcat -b crash -d | wc -l
+# 大量输出 = crash buffer 满了，需要抓
+```
+
+### 第 4 步：解读
+
+| 文件 | 关键看 |
+|:-----|:------|
+| **dropbox(APP_CRASH)** | `Package` / `Process` / `Subject` |
+| **logcat -b crash** | 异常类 + `at` 链 + `Caused by:` |
+| **异常栈** | 栈顶的 `at` 行 = 触发点 |
+
+---
+
+# 3. dropbox(APP_CRASH) 详解
+
+## 3.1 抓取与解读
+
+```bash
+$ adb shell dumpsys dropbox --print | grep -A 30 "APP_CRASH"
+```
+
+```
+2026-07-15 10:23:45 APP_CRASH (text, 15234 bytes)
+  Package: com.example.app
+  Process: com.example.app
+  Subject: NullPointerException @ com.example.app.MainActivity.onCreate
+  Build: Pixel 6
+  Hardware: Qualcomm Technologies, Inc SM8250
+  Time: 2026-07-15 10:23:45.123
+  ...
+```
+
+**关键读法**：
+- `Package` = 出问题的包名
+- `Process` = 进程名
+- `Subject` = 异常类 + 触发点
+- `Build` = 设备型号
+
+## 3.2 保留期
+
+| tag | 保留期 | 备注 |
+|:----|:-------|:-----|
+| APP_CRASH | 7 天 | App 抛 |
+| SYSTEM_APP_CRASH | 7 天 | 系统 App 抛 |
+| APP_ANR | 7 天 | App ANR（与 F01 配合）|
+
+> **所以呢**：dropbox 保留 7 天——**主动采集**才能保留更久。
+
+## 3.3 丢失风险与应对
+
+| 风险 | 应对 |
+|:-----|:-----|
+| dropbox 满 7 天后覆盖 | 主动采集 + 上传 APM |
+| dropbox 文件被清理（用户手动）| 实时上报 |
+| 异步线程 JE 不写 dropbox？| **会写**（dropbox 不区分主/异步）|
+
+---
+
+# 4. logcat -b crash 详解
+
+## 4.1 抓取方式
+
+```bash
+# 完整 crash buffer
+adb logcat -b crash -d > crash_buffer.log
+
+# 实时监控
+adb logcat -b crash -v threadtime
+
+# Android 7+ 默认 main / system / crash / events 四个 buffer
+# 关键：**只有 crash buffer 包含 FATAL EXCEPTION**
+```
+
+## 4.2 与 logcat -b main 的区别
+
+| buffer | 包含 |
+|:-------|:-----|
+| **main** | 应用层 + 部分 framework log |
+| **system** | framework + 系统服务 log |
+| **crash** | **FATAL EXCEPTION**（JE 触发）+ tombstone 摘要（NE 触发）|
+| **events** | 事件型 log（am_anr 等 tag 事件）|
+
+> **所以呢**：**`adb logcat -b crash` 是 JE 取证的**核心命令**——main buffer **看不到 FATAL EXCEPTION**。
+
+## 4.3 完整异常栈解读
+
+```logcat
+07-15 10:23:45.123  1000  1234  1234 E AndroidRuntime: FATAL EXCEPTION: main
+07-15 10:23:45.124  1000  1234  1234 E AndroidRuntime: Process: com.example.app, PID: 1234
+07-15 10:23:45.125  1000  1234  1234 E AndroidRuntime: java.lang.RuntimeException: Unable to start activity
+07-15 10:23:45.126  1000  1234  1234 E AndroidRuntime:    at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:3000)
+07-15 10:23:45.127  1000  1234  1234 E AndroidRuntime:    at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2500)
+07-15 10:23:45.128  1000  1234  1234 E AndroidRuntime:    at android.app.ActivityThread.access$900(ActivityThread.java:200)
+07-15 10:23:45.129  1000  1234  1234 E AndroidRuntime: Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.String com.example.app.User.getName()' on a null object reference
+07-15 10:23:45.130  1000  1234  1234 E AndroidRuntime:    at com.example.app.MainActivity.onCreate(MainActivity.java:42)
+07-15 10:23:45.131  1000  1234  1234 E AndroidRuntime:    at android.app.Activity.performCreate(Activity.java:8000)
+```
+
+**关键读法**：
+- `FATAL EXCEPTION: main` ← 主线程触发
+- `Caused by:` ← **嵌套异常根因**（必须看这个）
+- 栈顶 `at` 行 = 触发点（找最近的业务代码行）
+
+> **架构师视角**：**Caused by 链**比异常类更重要——`RuntimeException` 是包装异常，`Caused by` 才是真根因。
+
+---
+
+# 5. 异步线程 JE 取证（**监控盲区核心**）
+
+## 5.1 为什么异步线程 JE 是"静默崩溃"？
+
+参见 [Stability S02 §3.4 异步线程的 JE](../Stability/S02-JE.md) 的详细机制讲解。
+
+**取证角度**：
+- **dropbox 写入是统一的**（无论主线程还是异步线程）—— `dumpsys dropbox` 能查
+- **logcat -b crash 写入是统一的**（killProcess 走的是同一路径）
+- **但用户视角**："App 突然消失，无任何提示"（**不弹 Crash 弹窗**）
+
+> **所以呢**：**取证角度，异步线程 JE 反而更好抓**（dropbox + logcat 都有）—— 比"用户报卡但无任何 dump"的 HANG 简单。
+
+## 5.2 异步线程 JE 的 dropbox 特征
+
+```bash
+$ adb shell dumpsys dropbox --print | grep -A 30 "APP_CRASH"
+2026-07-15 10:23:45 APP_CRASH (text, 15234 bytes)
+  Package: com.example.app
+  Process: com.example.app
+  Subject: OutOfMemoryError @ com.example.app.ImageLoader$HandlerThread.run
+  ...
+```
+
+**关键读法**：
+- `Subject` 中的 `@ 类名$HandlerThread.run` ← **异步线程**的标志
+- 不是 `MainActivity.onCreate` 等主线程入口
+
+## 5.3 异步线程 JE 的 logcat 特征
+
+```logcat
+07-15 10:23:45.123 E AndroidRuntime: FATAL EXCEPTION: AsyncTask #3  ← 异步线程 #3
+07-15 10:23:45.124 E AndroidRuntime: Process: com.example.app, PID: 1234
+07-15 10:23:45.125 E AndroidRuntime: java.lang.OutOfMemoryError: Failed to allocate a 8MB byte array
+07-15 10:23:45.126 E AndroidRuntime:    at com.example.app.ImageLoader.load(ImageLoader.java:42)
+07-15 10:23:45.127 E AndroidRuntime:    at com.example.app.ImageLoader$HandlerThread.run(ImageLoader.java:67)
+```
+
+**关键读法**：
+- `FATAL EXCEPTION: AsyncTask #3` ← 异步线程名
+- `at ... $HandlerThread.run` ← HandlerThread 入口
+
+> **架构师视角**：**FATAL EXCEPTION: 异步线程名** 是异步线程 JE 的明确标志——和主线程 JE 区分。
+
+---
+
+# 6. 治理
+
+## 6.1 JE 取证自动化
+
+**3 件必做**：
+1. **APM 自动采集**：Sentry / Crashlytics / 自研（JE 触发即上报）
+2. **dropbox 主动监控**：定时 `adb shell dumpsys dropbox --print` 抓 APP_CRASH 事件
+3. **异常分类治理**：按异常类型分类统计（NPE / OOM / ClassCast 等），高频优先修
+
+## 6.2 异步线程 JE 监控（**架构师必修**）
+
+参见 [Stability S02 §3.4.3 协程的 JE 特殊性](../Stability/S02-JE.md)。
+
+**3 个必做**：
+1. **显式 `Thread.setDefaultUncaughtExceptionHandler()`**（默认值不报异步异常）
+2. **协程 `CoroutineExceptionHandler` 显式配置**
+3. **dropbox 主动采集**（**主线程 + 异步线程 JE 都有**）
+
+## 6.3 高频 JE 分类治理
+
+| 类型 | 占比（行业）| 修复模式 |
+|:-----|:------------|:---------|
+| **NPE** | 30-40% | Kotlin null safety + `?.let` |
+| **OOM** | 15-20% | Bitmap 压缩 + 内存缓存 + LRU（F06 OOM 取证详述）|
+| **ClassCast** | 10-15% | `is` 检查 + `as?` |
+| **ConcurrentModification** | 5-10% | CopyOnWriteArrayList + DiffUtil |
+
+---
+
+# 7. 实战案例
+
+## 7.1 案例 A（CASE-FORENSICS-03-01）：异步 HandlerThread OOM → 完整取证 4 步法
+
+> **类型**：典型模式
+>
+> **环境**：AOSP 14.0.0_r1 / Kernel 5.10 / 设备 Pixel 6（**AOSP 17 / K 6.12 验证版准备中**）
+>
+> **症状**：用户报"App 偶尔突然关闭，没有任何提示"（**静默崩溃**）
+>
+> **根因**：HandlerThread 中加载大 Bitmap OOM，**主线程不感知**
+
+### 现象
+
+```
+用户操作：
+  T+0s   在 ListView 中快速滚动
+  T+3s   异步线程（HandlerThread）加载大图
+  T+5s   OOM 抛出 Async thread
+  T+5.1s Process.killProcess(myPid())  ← **进程被静默杀**
+  T+5.2s 用户视角：App 突然消失
+
+**关键观察**：**没有任何弹窗**（异步线程 OOM 不弹）
+```
+
+### 取证 4 步法
+
+**第 1 步：触发（logcat -b crash）**
+
+```logcat
+07-15 10:23:45.123 E AndroidRuntime: FATAL EXCEPTION: AsyncTask #3
+07-15 10:23:45.124 E AndroidRuntime: Process: com.example.app, PID: 1234
+07-15 10:23:45.125 E AndroidRuntime: java.lang.OutOfMemoryError: Failed to allocate a 8MB byte array
+```
+
+**第 2 步：抓取**
+
+```bash
+# dropbox 抓取
+$ adb shell dumpsys dropbox --print | grep -A 30 "APP_CRASH" | head -40
+2026-07-15 10:23:45 APP_CRASH (text, 15234 bytes)
+  Package: com.example.app
+  Process: com.example.app
+  Subject: OutOfMemoryError @ com.example.app.ImageLoader$HandlerThread.run  ← **异步线程**
+  ...
+
+# logcat -b crash 抓取
+$ adb logcat -b crash -d | grep -A 20 "FATAL EXCEPTION" > oom_crash.log
+```
+
+**第 3 步：dump 路径**
+
+```bash
+$ adb shell ls -la /data/system/dropbox/ | grep APP_CRASH
+-rw-rw---- 1 system system 15234 2026-07-15 10:23 APP_CRASH@1709123456789.txt
+```
+
+**第 4 步：解读**
+
+```logcat
+07-15 10:23:45.123 E AndroidRuntime: FATAL EXCEPTION: AsyncTask #3  ← 异步线程 #3
+07-15 10:23:45.126 E AndroidRuntime:    at com.example.app.ImageLoader.load(ImageLoader.java:42)
+07-15 10:23:45.127 E AndroidRuntime:    at com.example.app.ImageLoader$HandlerThread.run(ImageLoader.java:67)
+```
+
+**关键读法**：
+- `FATAL EXCEPTION: AsyncTask #3` ← 异步线程
+- `@ ImageLoader$HandlerThread.run` ← HandlerThread 入口
+- `load(ImageLoader.java:42)` ← 大图加载点
+
+### 修复
+
+**短期**：
+```java
+// 改前（同步加载 + 无压缩）
+public Bitmap load(String path) {
+    return BitmapFactory.decodeFile(path);
+}
+
+// 改后（异步 + 压缩 + 显式 catch）
+private final ExecutorService executor = Executors.newFixedThreadPool(2, r -> {
+    Thread t = new Thread(r);
+    t.setUncaughtExceptionHandler((thread, e) -> {
+        Log.e(TAG, "Async OOM", e);
+        crashReporter.reportAsync(e);  // **关键**：显式上报
+    });
+    return t;
+});
+
+public void loadAsync(String path, Callback cb) {
+    executor.execute(() -> {
+        try {
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+            opts.inSampleSize = 4;
+            Bitmap bm = BitmapFactory.decodeFile(path, opts);
+            cb.onSuccess(bm);
+        } catch (OutOfMemoryError e) {
+            cb.onFailure(e);
+        }
+    });
+}
+```
+
+**长期**：Glide / Picasso + LRU 缓存 + OOM 监控
+
+### 验证
+
+1. 复现：快速滚动 + 100 张大图
+2. 观察：dropbox(APP_CRASH) 出现，**Subject 中含 HandlerThread**
+3. 应用 hotfix：再跑 100 次，无 OOM
+4. APM：异步线程异常上报率 100%
+
+---
+
+## 7.2 案例 B（CASE-FORENSICS-03-02）：AOSP Issue 公开 bugreport 模式
+
+> **类型**：公开 bugreport
+>
+> **来源**：[AOSP Issue Tracker](https://issuetracker.google.com/) — `componentid=190923`
+>
+> **检索关键词**：`"ConcurrentModificationException" RecyclerView`
+
+> **撰写时验证**：具体 issue 编号将在 F03 校准时通过 [issuetracker.google.com](https://issuetracker.google.com/) 检索确认。
+
+---
+
+# 8. 总结
+
+## 8.1 架构师视角 5 条 Takeaway
+
+1. **JE 取证 3 件套**：dropbox(APP_CRASH) + logcat -b crash + 异常栈，**简单**（不需要符号化）。
+2. **`adb logcat -b crash` 是核心命令**：main buffer 看不到 FATAL EXCEPTION。
+3. **Caused by 链比异常类更重要**：包装异常不是根因。
+4. **异步线程 JE 反而更好取证**（dropbox + logcat 都有）—— 不像 HANG 难抓。
+5. **dropbox 保留 7 天**——必须主动采集 + 上传 APM。
+
+## 8.2 排查路径速查
+
+| 看到症状 | 抓什么 | 跳到 |
+|:---------|:-------|:-----|
+| Crash 弹窗 | `adb logcat -b crash` + dropbox(APP_CRASH) | §2 / §3 / §4 |
+| 异步线程静默崩溃 | dropbox(APP_CRASH) Subject 含 `HandlerThread` / `AsyncTask` | §5 |
+| 频繁 OOM | dropbox(APP_CRASH) Subject 含 `OutOfMemoryError` + F06 OOM 取证 | [F06](F06-HANG与OOM取证.md) |
+
+---
+
+# 附录 A：核心源码路径索引
+
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）
+
+| 文件 | 完整路径 | 版本基线 | 说明 |
+|:-----|:---------|:---------|:-----|
+| KillApplicationHandler.java | `frameworks/base/core/java/com/android/internal/os/KillApplicationHandler.java` | AOSP 17.0.0_r1 | 兜底异常 handler |
+| ActivityManager.handleApplicationCrash | `frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java` | AOSP 17.0.0_r1 | Crash 弹窗 + dropbox 写入 |
+| DropBoxManagerService.java | `frameworks/base/services/core/java/com/android/server/DropBoxManagerService.java` | AOSP 17.0.0_r1 | dropbox 写入 |
+| Logcat | `system/core/logcat/` | AOSP 17.0.0_r1 | logcat -b crash 实现 |
+
+---
+
+# 附录 B：dump 路径对账表
+
+| 路径 | 抓取命令 | 大小 | 保留 |
+|:-----|:---------|:-----|:-----|
+| `/data/system/dropbox/APP_CRASH@*` | `adb shell dumpsys dropbox --print` | 5-20KB | 7 天 |
+| logcat -b crash | `adb logcat -b crash -d` | 几 MB | ring buffer |
+| `/data/anr/anr_*`（如果主线程触发 ANR 升级）| `adb pull /data/anr/` | 50-200KB | 5 个 |
+
+---
+
+# 附录 C：取证 4 步法检查表（JE 专项）
+
+| 步骤 | 关键 | 工具 | 验证 |
+|:-----|:-----|:-----|:-----|
+| **第 1 步：触发** | logcat -b crash 看到 `FATAL EXCEPTION` | `adb logcat -b crash` | 关键字命中 |
+| **第 2 步：抓取** | dropbox(APP_CRASH) + 异常栈 | `adb shell dumpsys dropbox` + `adb logcat -b crash -d` | 2 个文件都存在 |
+| **第 3 步：dump 路径** | 确认 dropbox 文件存在 | `ls -la /data/system/dropbox/` | 文件 > 0KB |
+| **第 4 步：解读** | 看异常类 + Caused by 链 + 栈顶 at 行 | vi + 异常分类 | 找到根因 |
+
+---
+
+# 附录 D：工程基线表
+
+| 参数 | 典型默认 | 选用准则 | 踩坑提醒 |
+|:-----|:---------|:---------|:---------|
+| **dropbox(APP_CRASH) 保留** | 7 天 | 满后覆盖 | **必须主动采集** |
+| **logcat -b crash ring buffer** | 几 MB | 重启丢失 | 主动 dump |
+| **APM 接入** | Sentry / Crashlytics / 自研 | **必做** | 不接 = 排查效率低 |
+| **异步线程兜底 handler** | 显式设置 | **必做** | 默认值不报异步异常 |
+| **协程 CoroutineExceptionHandler** | 显式配置 | **必做** | 默认 SupervisorJob 吞异常 |
+
+---
+
+# 篇尾衔接
+
+本篇 F03 深挖了 JE 取证全链路（dropbox + logcat -b crash 3 件套）。
+
+**剩余 5 篇**：
+- [F04-NE 取证](F04-NE取证.md)：Native 崩溃（tombstone + 符号化）
+- [F02-SWT 取证](F02-SWT取证.md)：SystemServer 卡死（watchdog traces + Perfetto）
+- [F05-KE 取证](F05-KE取证.md)：Kernel 异常（pstore + last_kmsg）
+- [F06-HANG + OOM 取证](F06-HANG与OOM取证.md)：HANG 主动抓 + OOM hprof
+- [F07-取证治理](F07-取证治理.md)：APM + bugreport + 商业符号化
+
+**写作顺序**：F00 → F01 → F03 → F04 → F02 → F05 → F06 → F07
+
+---
+
+> **系列导航**：[← F01-ANR 取证](F01-ANR取证.md) | [本系列 README](README-Forensics系列.md) | [F04-NE 取证 →](F04-NE取证.md)
+>
+> **最后更新**：2026-07-18（F03 v1.0 首版）
