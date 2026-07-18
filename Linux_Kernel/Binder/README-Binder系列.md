@@ -1,209 +1,667 @@
-# 面向稳定性的 Binder 深度解析系列
+# 面向稳定性的 Binder 深度解析系列 · 系列总览（v2 · 适配 AOSP 17 + android17-6.18）
 
-## 为什么要写这个系列
+> **本系列定位**：面向资深 Android 稳定性架构师，把 "Binder"——这个 Android 系统**每秒承担数千次跨进程调用、ANR/Crash 的头号嫌疑犯**——从内核态驱动到 Framework 层，拆成 **13 篇可深读、可作为线上 Binder 问题排查底图**的长文。
+>
+> **本版（v2）的核心变化**（相对 v1 的 12 篇）：
+> - **基线升级**：AOSP `android-14.0.0_r1` + `android14-5.10/5.15` → **AOSP `android-17.0.0_r1`（API 37）+ `android17-6.18`（Linux 6.18 LTS）**
+> - **v1 12 篇已彻底删除**（2026-07-18 移入 Windows 回收站），**13 篇全部新写**，不保留 v1 任何段落
+> - **新增第 13 篇**：Rust Binder 专题——动机、内存安全保证、与 C 版兼容策略、迁移路径、厂商 GKI 影响
+> - **质量门升级**：每篇强制 3 轮校准（结构/硬伤/锐度）+ 决策日志 + v4 26 项清单全过 + 路径 100% 校对
+> - **独家内容**：6.18 Rust Binder / AOSP 17 端侧 AI 风险 / pidfds 扩展 / eBPF 加密签名 / sparse memory —— v1 完全没覆盖
+>
+> **目录位置**：`Linux_Kernel/Binder/`
+>
+> **作者决策日志**（v4 规范 §7 强制 · 用户 2026-07-17 决策升级 + 2026-07-18 推翻"保留 12 篇"策略改为"全部新写"）：
 
-Binder 是 Android 的"血管系统"。每一次 `startActivity()`、每一次 `getSystemService()`、每一次 `ContentResolver.query()`，底层都是一次 Binder 调用。**一个 Android 设备上每秒发生数千次 Binder 事务，任何一个环节出问题，都可能引发 ANR、Crash 或系统级雪崩。**
+| 轮次 | 类别 | 决策 | 理由 | 影响范围 | 是否传染 |
+|------|------|------|------|----------|----------|
+| 第 0 轮（立项） | 基线 | AOSP 14 + 5.10/5.15 → AOSP 17 + android17-6.18 | 用户明确："基于最新 AOSP 代码和 GKI 版本写"；android17-6.18 是 Android 17 平台官方首选 | 全部 13 篇 | 是（成为新默认） |
+| 第 0 轮（立项） | 重写策略 | **推翻"保留 12 篇 + 实质升级"策略** → **13 篇全部新写，v1 12 篇彻底删除**（2026-07-18 移入回收站）| 用户 2026-07-18 明确："删除旧的全部重写"+"确保新写质量比旧的高" | 全部 13 篇 | 是 |
+| 第 0 轮（立项） | 13 篇定位 | "Rust Binder 专题"独立成篇而非并入 02 | Rust Binder 设计动机/迁移策略/GKI 影响是架构师必须独立理解的"决策层"内容；并入 02 会冲淡 02 的"机制深潜"主轴 | 仅 13 篇 | 否 |
+| 第 0 轮（立项） | 02 篇范围 | 必含：Rust Binder 与 C 版并存、binder_alloc 6.18 稀疏内存、binderfs 6.18 成熟、`sheaves` 对 binder_buffer 影响 | 02 是变化最大的内核机制篇；Rust Binder 是 6.18 的标志性变化 | 仅 02 篇 | 否 |
+| 第 0 轮（立项） | 质量门 | 3 轮校准（结构/硬伤/锐度）+ 决策日志 + v4 26 项清单全过 + 路径 100% 校对 + 5 Takeaway + 4 附录 + 实战案例含 logcat/dmesg/版本号/复现 | 用户 2026-07-18 明确："确保新写质量比旧的高" | 全部 13 篇 | 是 |
+| 第 0 轮（立项） | 质量基线对比 | 不保留 v1 archive，新写全凭 6.18 文档 + v4 规范 + 26 项清单 + 3 轮校准 | 用户 2026-07-18 明确拒绝 archive 保留："彻底删除，重新写" | 全部 13 篇 | 否 |
+
+---
+
+## 1. 为什么要写这个系列
+
+### 1.1 Binder 在 Android 稳定性中的"血管系统"地位
+
+Binder 是 Android 系统的"血管系统"——每一次 `startActivity()`、每一次 `getSystemService()`、每一次 `ContentResolver.query()`，底层都是一次 Binder 调用。**一台 Android 设备每秒发生数千次 Binder 事务，任何一个环节出问题，都可能引发 ANR、Crash 或系统级雪崩。**
 
 对于稳定性架构师来说，Binder 的重要性在于：
 
-- **ANR 的头号嫌疑犯**：超过 40% 的 ANR 与 Binder 阻塞有关（主线程同步调用、线程池耗尽、嵌套死锁）
-- **Crash 的隐形杀手**：`TransactionTooLargeException`、`DeadObjectException`、`SecurityException` 都源于 Binder
-- **资源泄漏的温床**：Binder 引用泄漏、Proxy 对象泄漏可以在数天内拖垮 system_server
+| 维度 | 占比/影响 | 排查难度 |
+|------|----------|---------|
+| **ANR 头号嫌疑犯** | 线上 ANR 中 **40%+ 与 Binder 阻塞** 相关（主线程同步调用、线程池耗尽、嵌套死锁） | 高（需 ANR trace + debugfs + libbinder 栈交叉） |
+| **Crash 隐形杀手** | `TransactionTooLargeException`、`DeadObjectException`、`SecurityException` 都源于 Binder | 中（典型模式可速查） |
+| **资源泄漏温床** | Binder 引用泄漏、Proxy 对象泄漏可以在数天内拖垮 `system_server` | 高（需 debugfs 长期观测） |
+| **端侧 AI 新风险** | Android 17 引入 AppFunctions / 端侧 LLM，**新增高频 Binder 通路** | 新（2026 Q3 后） |
+| **Rust 化分水岭** | 6.18 Rust Binder 上主线，开启"两版并存"时代 | 新（2026 H2 起） |
 
-本系列的目标：**让你理解 Binder 从用户态到内核态的完整机制，能从 ANR trace / logcat / debugfs 中快速定位 Binder 相关问题的根因，并建立有效的监控与治理体系。**
+本系列的目标：**让你理解 Binder 从用户态到内核态的完整机制，能从 ANR trace / logcat / debugfs 中快速定位 Binder 相关问题的根因，并建立有效的监控与治理体系；同时吃透 Rust Binder 的设计动机与迁移路径，对 6.18+ 的 GKI 演进做出正确判断。**
 
-## 系列设计思路
+### 1.2 为什么现在写（2026 年 7 月）
+
+6.18 LTS（2025-12-03 确认支持到 2027 年底）+ AOSP 17（API 37，2026 Q2/Q3）组合，是 **Android 内核/Framework 双线齐升级** 的一个版本窗口。**对 Binder 系列的影响是结构性的**——
+
+| 变化 | 对本系列的影响 | 受影响篇 |
+|------|---------------|----------|
+| **Rust 版 Binder 上主线**（6.18）| 02 驱动篇"内容重写" + 新增 13-Rust Binder专题 | 02 + 13 |
+| **binderfs vendor 隔离成熟**（6.18）| 12 节点文件全景篇"binderfs"小节升级 | 12 |
+| **binder_alloc 稀疏内存模型默认**（6.18）| 04 内存模型篇"一次拷贝原理 + buffer 分配"小节升级 | 04 |
+| **sheaves 内存分配器**（6.18）| 04 内存模型篇涉及 `binder_buffer` 分配的影响需评估 | 04（待 02 重写时确认） |
+| **pidfds 扩展支持内核命名空间**（6.18）| 06 对象生命周期篇"死亡通知"小节增加 pidfds 用法 | 06 |
+| **AOSP 17 强制大屏自适应**| 03 调用旅程篇"WindowManager Binder 通路"小节更新 | 03 |
+| **AOSP 17 AppFunctions / 端侧 LLM**| 07 风险全景篇新增"端侧 AI Binder 通路"专章 | 07 |
+| **eBPF 加密签名**（6.18）| 08 诊断工具篇"可观测性"小节更新 | 08 |
+| **android-latest-release manifest**（2026 起推荐）| 所有源码路径引用以该 manifest 为准 | 全部 |
+
+**结论**：AOSP 14 时代（5.10/5.15）写的 Binder 文章**核心机制部分仍然成立**，但 6.18 Rust Binder + Android 17 端侧 AI 范式转移**必须重做**。这是本系列 v2 升级的核心驱动力。
+
+### 1.3 v1 12 篇已彻底删除，13 篇全部新写（v4 规范 §8 治理）
+
+按用户 2026-07-18 决策"删除旧的全部重写"：
+
+- **v1 12 篇已彻底删除**（移入 Windows 回收站，可恢复但本系列不引用）
+- **不保留 archive**——新写全凭 6.18 文档 + v4 规范 + 26 项清单 + 3 轮校准
+- **13 篇 = 12 篇主题（01-12）+ 1 篇 Rust Binder 专题（13）全部新写**
+- **13 篇共享同一份 README（本文件）作为导航与质量基线**
+- **质量保证**：v4 规范 26 项清单全过 + 3 轮校准 + 5 Takeaway + 4 附录 + 路径 100% 校对 + 实战案例含 logcat/dmesg/版本号/复现
+
+---
+
+## 2. 系列设计思路
+
+### 2.1 架构师思维链（v4 规范"第二步"硬要求）
 
 ```
-Binder 是什么？为什么 Android 不用标准 Linux IPC？（定位）
+Binder 是什么？为什么 Android 不用标准 Linux IPC？（定位）                  → 第 01 篇 总览
     ↓
-它在 Android 中的位置？Driver / Native / Framework / AIDL 各层如何协作？（边界与交互）
+驱动在内核中怎么实现？Rust 版与 C 版并存是怎么回事？（边界与交互）          → 第 02 篇 驱动
     ↓
-一次跨进程调用是怎么完成的？内存怎么拷贝？线程怎么调度？（核心机制）
+一次跨进程调用是怎么完成的？内存怎么拷贝？线程怎么调度？对象怎么回收？（核心机制）
+    → 第 03 篇 调用旅程
+    → 第 04 篇 内存模型
+    → 第 05 篇 线程模型
+    → 第 06 篇 对象生命周期
     ↓
-Binder 线程耗尽、缓冲区溢出、DeadObject、ANR 各是怎么发生的？（风险地图）
+Binder 会在什么地方出问题？（风险地图）                                     → 第 07 篇 风险全景
     ↓
-怎么查 Binder 问题？怎么建监控体系？（诊断与治理）
+出了问题我怎么查？怎么建监控体系？（诊断与治理）
+    → 第 08 篇 诊断工具
+    → 第 09 篇 debugfs 实战
+    → 第 10 篇 oneway 限流
+    → 第 11 篇 厂商方案
+    → 第 12 篇 节点文件全景
+    ↓
+6.18 Rust 版 Binder 专题：动机 / 内存安全 / 迁移 / GKI 影响               → 第 13 篇 Rust Binder
+```
+
+### 2.2 13 篇依赖图
+
+```
+                        ┌─────────────────────┐
+                        │ 01 总览 (全局观)     │
+                        │ → 是什么/为什么/在哪 │
+                        └──────────┬──────────┘
+                                   ▼
+                        ┌─────────────────────┐
+                        │ 02 驱动 (v2 重写)   │
+                        │ → 数据结构/入口/一次  │
+                        │   拷贝/BC-BR 协议    │
+                        │ → **6.18 Rust 并存** │
+                        └──────────┬──────────┘
+                                   ▼
+                  ┌────────────────┼────────────────┐
+                  ▼                ▼                ▼
+        ┌──────────────────┐ ┌──────────┐ ┌──────────────────┐
+        │ 03 调用旅程        │ │ 04 内存   │ │ 05 线程           │
+        │ → Proxy 到 Stub   │ │ → mmap  │ │ → 线程池/优先级   │
+        │ → Parcel/BC/BR   │ │ → buffer │ │ → maxThreads 15  │
+        └────────┬─────────┘ └────┬─────┘ └──────┬───────────┘
+                 │                │               │
+                 └────────────────┼───────────────┘
+                                  ▼
+                        ┌─────────────────────┐
+                        │ 06 对象生命周期       │
+                        │ → 引用计数/死亡通知   │
+                        │ → ServiceManager     │
+                        │ → **6.18 pidfds 扩展**│
+                        └──────────┬──────────┘
+                                   ▼
+                        ┌─────────────────────┐
+                        │ 07 风险全景 (横切)    │
+                        │ → ANR/Crash/泄漏     │
+                        │ → **AOSP17 端侧 AI** │
+                        └──────────┬──────────┘
+                                   ▼
+                  ┌────────────────┼────────────────┐
+                  ▼                ▼                ▼
+        ┌──────────────────┐ ┌──────────┐ ┌──────────────────┐
+        │ 08 诊断工具        │ │ 09 debugfs│ │ 10 oneway 限流   │
+        │ → dumpsys/Systrace│ │ → 节点字段│ │ → 4 道防线/限流  │
+        └────────┬─────────┘ └────┬─────┘ └──────┬───────────┘
+                 │                │               │
+                 └────────────────┼───────────────┘
+                                  ▼
+                        ┌─────────────────────┐
+                        │ 11 厂商方案调研       │
+                        │ → Google/芯片/OEM/   │
+                        │   互联网大厂          │
+                        └──────────┬──────────┘
+                                   ▼
+                        ┌─────────────────────┐
+                        │ 12 节点文件全景       │
+                        │ → debugfs+binderfs   │
+                        │ → **6.18 binderfs   │
+                        │    vendor 隔离成熟** │
+                        └─────────────────────┘
+
+        ════════════════════════════════════════════════════════
+        第 13 篇 · Rust Binder 专题（横切 · 与 02 强耦合）
+        ════════════════════════════════════════════════════════
+                        ┌─────────────────────┐
+                        │ 13 Rust Binder       │
+                        │ → 6.18 上主线        │
+                        │ → C 版并存策略       │
+                        │ → 内存安全保证       │
+                        │ → 迁移路径 / GKI 影响│
+                        │ → 性能对比 / 未来    │
+                        └─────────────────────┘
+                          ↑ 强依赖 02 §1-2 数据结构
+                          ↑ 强依赖 12 §5 binderfs
+```
+
+**强依赖关系**（按 v4 规范 §3 "本篇定位"硬要求）：
+- **02 → 01**：02 必须先读过 01 才能懂"驱动在四层架构中的位置"
+- **03/04/05/06** 横向依赖 02
+- **07** 横向依赖 03-06
+- **08/09/10** 横向依赖 03-07
+- **11/12** 横向依赖 08/09
+- **13 → 02 + 12**：13 必须在 02 数据结构 + 12 binderfs 之后读
+- **13 → 06**：13 复用 06 的对象生命周期
+
+### 2.3 跨系列引用矩阵（v4 规范 §8 硬要求 · 治理对象）
+
+| 本系列文章 | 引用其他系列 | 引用文章 | 引用原因 |
+|---|---|---|---|
+| 01 总览 | epoll | [01-epoll 总览](../epoll/01-epoll总览与核心机制.md) | Binder 驱动用 epoll 监听 `/dev/binder` |
+| 01 总览 | socket | [01-socket 总览](../socket/01-socket总览.md) | Linux 标准 IPC 对比 |
+| 02 驱动 | Process | [02-task_struct 全景拆解](../Process/02-task_struct全景拆解.md) | binder_proc 中的 `task_struct *tsk` |
+| 02 驱动 | Memory_Management | [06-SLAB 分配器](../../Memory_Management/MM_v2/06-SLAB分配器.md) | binder_buffer 分配依赖 slab（**6.18 后需评估 sheaves**）|
+| 02 驱动 | epoll | [01-epoll 总览](../epoll/01-epoll总览与核心机制.md) | binder_poll 实现 |
+| 03 调用旅程 | Android_Framework/Input | [01-Input 系统总览](../../Android_Framework/Input/01-Input系统总览.md) | Input 通路依赖 Binder |
+| 03 调用旅程 | Android_Framework/Window | [02-Window Manager 架构](../../Android_Framework/Window/02-WindowManager架构.md) | WindowManagerBinder 通路 |
+| 04 内存模型 | Memory_Management | [04-进程内存地图](../../Memory_Management/MM_v2/04-进程内存地图.md) | binder_mmap 区域在进程内存地图中的位置 |
+| 05 线程模型 | Process | [05-调度器与 CFS](../Process/05-调度器与CFS.md) | Binder 优先级继承涉及调度 |
+| 05 线程模型 | Android_Framework/ANR | （待定）| Watchdog 检测线程耗尽 |
+| 06 对象生命周期 | Android_Framework/ServiceManager | （待定）| ServiceManager 演进历史 |
+| 07 风险全景 | Android_Framework/Stability | [README-Stability 系列](../../Android_Framework/Stability/README-Stability系列.md) | 稳定性全景中 Binder 占比 |
+| 08 诊断工具 | Tools/Tracing | [20-Trace 抓取方法全面指南](../../../Tools/Tracing/20-Trace抓取方法全面指南.md) | Perfetto/Systrace 抓 Binder trace |
+| 12 节点文件 | DM | [12-Binder 节点文件 vs DM 节点文件](../DM/07-Android篇.md) | 横向对比两套节点文件体系 |
+| 13 Rust Binder | Process | [08-Rust 进程管理内核模块](../Process/08-Rust进程管理内核模块.md)（待写）| Rust 内核模块的通用模式 |
+| 13 Rust Binder | AI_Native_X | [01-AI Native Runtime](../../AI_Native_X/01_AI_Native_Runtime/README.md) | Android 17 端侧 LLM 的 Binder 通路 |
+
+---
+
+## 3. 13 篇规划（v4 规范"第二步"产出）
+
+> **每篇必含字段**：本篇定位 / 强依赖 / 承接自 / 衔接去 / 不重复内容 / 重点 / 章节表 / 预估 / v2 升级决策（按需）
+
+---
+
+### 第 01 篇 · 总览 —— Binder 是什么、为什么需要它
+
+| 字段 | 内容 |
+|---|---|
+| **本篇系列角色** | **全局观**（1/13）|
+| **强依赖** | 无（系列开篇）|
+| **承接自** | 无 |
+| **衔接去** | 第 02 篇 驱动 |
+| **不重复内容** | 不深入 5 个数据结构（→ 02）；不深入调用链细节（→ 03）；不深入内存/线程（→ 04/05）|
+| **重点** | Binder 是什么、为什么不用 Linux 标准 IPC、四层架构、ServiceManager 角色、Proxy/Stub 模式 |
+| **稳定性关联** | 建立"Binder 是 Android 血管系统"的架构直觉 |
+
+**章节表**：
+
+| # | 章节 | 核心源码路径 | 内核版本基线 | 稳定性关联 |
+|---|---|---|---|---|
+| 1.1 | Binder 是什么：面向对象 IPC 机制 | — | AOSP 17 + 6.18 | 理解 Binder ≠ 字节流 |
+| 1.2 | 为什么不用 Linux 标准 IPC | — | AOSP 17 + 6.18 | 拷贝次数/安全性/C-S 模型对比 |
+| 1.3 | Binder 四层架构全景 | `drivers/android/binder.c`、`frameworks/native/libs/binder/`、`frameworks/base/core/java/android/os/`、`aidl/` | AOSP 17 + 6.18 | 出问题时快速定位 |
+| 1.4 | AOSP 17 + 6.18 硬变化概览 | — | AOSP 17 + 6.18 | v2 升级版核心价值 |
+| 1.5 | AIDL 与 Proxy/Stub | `BpBinder.cpp`、`Binder.cpp` | AOSP 17 | Proxy 泄漏入口 |
+| 1.6 | ServiceManager：0 号 handle 的特殊角色 | `frameworks/native/cmds/servicemanager/` | AOSP 17 | 整个系统的"单点" |
+| 1.7 | 核心源码目录速查 | 多个目录 | AOSP 17 + 6.18 | 排查时的"导航地图" |
+
+**预估**：~9000 字 / 5 张 ASCII Art 图 / 4 附录 / 1 个实战案例
+
+**v2 升级决策**：
+- **基线刷新**：版本号、源码路径、ServiceManager Android 17 演进
+- **新增 1.4**：AOSP 17 + 6.18 硬变化概览（指向 02/13 篇）
+
+---
+
+### 第 02 篇 · 驱动 —— 内核中的 IPC 引擎（v2 内容重写）
+
+| 字段 | 内容 |
+|---|---|
+| **本篇系列角色** | **核心机制**（2/13）· 数据结构 + 入口 + 一次拷贝 + BC/BR 协议 |
+| **强依赖** | 第 01 篇 §1.3 四层架构 |
+| **承接自** | 01 已讲"是什么/为什么"，本篇展开"内核怎么实现" |
+| **衔接去** | 第 03-06 篇横向展开（调用旅程/内存/线程/对象）|
+| **不重复内容** | 不重复 01 的四层架构；不重复 03 的调用链；不重复 04 的 buffer 内部算法 |
+| **重点** | 5 大核心数据结构 + 3 大入口 + 一次拷贝 + BC/BR 命令 + **6.18 Rust 版与 C 版并存** |
+
+**章节表**：
+
+| # | 章节 | 核心源码路径 | 内核版本基线 | 稳定性关联 |
+|---|---|---|---|---|
+| 2.1 | 驱动的本质：misc device | `drivers/android/binder.c` | AOSP 17 + 6.18 | 设备模型基础 |
+| 2.2 | **6.18 变化**：Rust 版 Binder 与 C 版并存 | `drivers/android/binder.c` (C) + **Rust 实现（路径待 v2 校对）** | 6.18 独占 | **本篇最大重写点** |
+| 2.3 | 三个 Binder 设备的分离 | `drivers/android/binder.c` | AOSP 17 + 6.18 | Treble 架构 |
+| 2.4 | 5 大核心数据结构 | `drivers/android/binder_internal.h` | AOSP 17 + 6.18 | debugfs 输出解读基础 |
+| 2.5 | 三大入口：`binder_open`/`binder_mmap`/`binder_ioctl` | `drivers/android/binder.c` | AOSP 17 + 6.18 | mmap 失败 = 进程无法用 Binder |
+| 2.6 | 一次拷贝原理（物理页 + vm_area_struct + binder_alloc） | `drivers/android/binder_alloc.c` | AOSP 17 + 6.18 | 性能优势根基 |
+| 2.7 | **6.18 变化**：binder_alloc 稀疏内存模型默认 | `drivers/android/binder_alloc.c` | 6.18 独占 | 大进程 buffer 占用变化 |
+| 2.8 | BC/BR 命令协议完整表 | `include/uapi/linux/android/binder.h` | AOSP 17 + 6.18 | 识别 trace 中 Binder 命令 |
+| 2.9 | 实战案例 + 总结 + 附录 | — | — | — |
+
+**预估**：~12000 字 / 6 张 ASCII Art 图 / 2 个实战案例 / 4 附录
+
+**v2 升级决策**（破例记录）：
+| 破例项 | 破例内容 | 破例理由 | 影响范围 | 是否传染 |
+|---|---|---|---|---|
+| 内容重写 | 本篇是本系列唯一"内容重写"篇 | 6.18 Rust 版 Binder 是结构性变化；`binder_internal.h` 中 Rust 侧结构定义需重新讲解 | 仅本篇 | 否 |
+| 图表 | 6 张图（规则 4-6）| 数据结构关系 + Rust/C 双栈对比 + 命令表共 6 张 | 仅本篇 | 否 |
+| Rust 路径标注 | 部分 Rust 文件路径标"待 v2 校对" | 6.18 Rust Binder 部分路径在 `android17-6.18` 稳定后才完整公开 | 仅本篇 | 否 |
+
+---
+
+### 第 03 篇 · 调用旅程 —— 从 Proxy 到 Stub
+
+| 字段 | 内容 |
+|---|---|
+| **本篇系列角色** | **核心机制**（3/13）· 完整调用链 |
+| **强依赖** | 第 01-02 篇 |
+| **承接自** | 02 已讲数据结构，本篇走通一次 `transact → reply` 完整路径 |
+| **衔接去** | 第 04-06 篇横向展开 |
+| **不重复内容** | 不重复 02 的数据结构字段定义 |
+| **重点** | Java → JNI → Native → Kernel → Server 的端到端时序 + Parcel 序列化 + oneway 行为 |
+
+**预估**：~11000 字 / 5 张 ASCII Art 图 / 1 个实战案例 / 4 附录
+
+**v2 升级决策**：基线刷新 + 3.6 oneway 章节引用 10 篇的限流方案 + 3.7 AOSP 17 大屏自适应 WindowManager 通路更新
+
+---
+
+### 第 04 篇 · 内存模型 —— mmap、一次拷贝与缓冲区管理
+
+| 字段 | 内容 |
+|---|---|
+| **本篇系列角色** | **核心机制**（4/13）· 内存 |
+| **强依赖** | 第 02 篇 §2.6 一次拷贝 |
+| **承接自** | 02 已讲一次拷贝原理，本篇展开 binder_alloc 内部算法 |
+| **衔接去** | 第 05-06 篇 |
+| **不重复内容** | 不重复 02 的一次拷贝物理页映射 |
+| **重点** | binder_mmap 深度解析 + 缓冲区分配/释放算法 + async buffer 隔离 + TransactionTooLargeException |
+
+**预估**：~11000 字 / 5 张 ASCII Art 图 / 1 个实战案例 / 4 附录
+
+**v2 升级决策**：
+- **基线刷新**：binder_alloc 路径
+- **6.18 变化**：稀疏内存模型对 buffer 分配的影响（与 02 §2.7 配合）
+- **6.18 待评估**：`sheaves` 内存分配器对 `binder_buffer` 的影响（标注"v2 重写时确认"）
+
+---
+
+### 第 05 篇 · 线程模型 —— 线程池、并发与阻塞
+
+| 字段 | 内容 |
+|---|---|
+| **本篇系列角色** | **核心机制**（5/13）· 线程 |
+| **强依赖** | 第 02 篇 `binder_thread` 数据结构 |
+| **承接自** | 02 已讲 `binder_thread` 定义，本篇展开线程状态机 + 调度 + 阻塞 |
+| **衔接去** | 第 06-07 篇 |
+| **不重复内容** | 不重复 02 的数据结构字段 |
+| **重点** | 线程池设计 + 动态扩展 + 状态机 + 选择策略 + 优先级继承 + 线程耗尽 ANR |
+
+**预估**：~10000 字 / 4 张 ASCII Art 图 / 1 个实战案例 / 4 附录
+
+**v2 升级决策**：基线刷新 + 5.5 优先级继承小节引用 Process 系列 + 5.6 ANR 章节引用 Android_Framework/ANR 系列
+
+---
+
+### 第 06 篇 · 对象生命周期 —— 引用计数、死亡通知与 ServiceManager
+
+| 字段 | 内容 |
+|---|---|
+| **本篇系列角色** | **核心机制**（6/13）· 对象生命周期 |
+| **强依赖** | 第 01-05 篇 |
+| **承接自** | 05 已讲线程处理事务，本篇讲线程处理引用计数与死亡通知 |
+| **衔接去** | 第 07 篇 风险全景 |
+| **不重复内容** | 不重复 02 的数据结构（除本篇需要的引用计数字段）|
+| **重点** | 引用计数模型 + BC 引用命令 + 死亡通知 + DeadObjectException + ServiceManager 演进 + **6.18 pidfds 扩展** |
+
+**预估**：~13000 字 / 5 张 ASCII Art 图 / 1 个实战案例 / 4 附录
+
+**v2 升级决策**：
+- **基线刷新**：ServiceManager AOSP 17 演进
+- **6.18 新增**：§6.7 pidfds 扩展支持内核命名空间（死亡通知的新机制）
+- **AOSP 17 新增**：§6.8 AppFunctions 服务的特殊生命周期（与端侧 LLM 关联）
+
+---
+
+### 第 07 篇 · 风险全景 —— ANR、Crash 与资源泄漏
+
+| 字段 | 内容 |
+|---|---|
+| **本篇系列角色** | **风险地图**（7/13）· 横切专题 |
+| **强依赖** | 第 01-06 篇全部 |
+| **承接自** | 03-06 已讲核心机制，本篇给"风险地图" |
+| **衔接去** | 第 08-12 篇诊断治理 |
+| **不重复内容** | 不重复 03-06 的机制讲解 |
+| **重点** | 6 类 Binder 相关 ANR + 4 类 Crash + 3 类资源泄漏 + **AOSP 17 端侧 AI 新风险** |
+
+**预估**：~9000 字 / 4 张 ASCII Art 图 / 6 类问题速查表 / 4 附录
+
+**v2 升级决策**：
+- **基线刷新**
+- **AOSP 17 新增**：§7.7 端侧 LLM Binder 通路风险（高频 AI 调用 → 线程耗尽 / TransactionTooLarge）
+- **6.18 新增**：§7.8 Rust Binder 兼容性风险（Hook 框架 / 第三方监控在 Rust 栈上的可见性）
+
+---
+
+### 第 08 篇 · 诊断工具与治理体系
+
+| 字段 | 内容 |
+|---|---|
+| **本篇系列角色** | **诊断与治理**（8/13）|
+| **强依赖** | 第 01-07 篇 |
+| **承接自** | 07 已给风险地图，本篇给"能查能治能防"完整体系 |
+| **衔接去** | 第 09-12 篇 |
+| **不重复内容** | 不重复 09 的 debugfs 节点字段；不重复 10 的 oneway 限流细节 |
+| **重点** | debugfs 接口 + dumpsys + Systrace/Perfetto + ANR trace 解读 + 监控建设 + 治理最佳实践 + **6.18 eBPF 加密签名的影响** |
+
+**预估**：~12000 字 / 5 张 ASCII Art 图 / 4 附录
+
+**v2 升级决策**：
+- **基线刷新**
+- **6.18 新增**：§8.5 eBPF 加密签名对可观测性的影响（需要内核侧 bpf_token 配合）
+
+---
+
+### 第 09 篇 · debugfs 日志解读实战
+
+| 字段 | 内容 |
+|---|---|
+| **本篇系列角色** | **诊断实战**（9/13）· 横切 |
+| **强依赖** | 第 02-08 篇 |
+| **承接自** | 08 已给工具地图，本篇是 debugfs 节点字段逐项字典 |
+| **衔接去** | 第 10-12 篇 |
+| **不重复内容** | 不重复 08 的工具介绍；不重复 12 的节点文件全景（12 是更高维度）|
+| **重点** | proc 节点逐字段详解 + 6 类误区 + 2 个实战案例 |
+
+**预估**：~7000 字 / 3 张 ASCII Art 图 / 2 个实战案例 / 4 附录
+
+**v2 升级决策**：基线刷新 + §3 字段表更新（如 6.18 新增字段）
+
+---
+
+### 第 10 篇 · oneway 限流与防护方案
+
+| 字段 | 内容 |
+|---|---|
+| **本篇系列角色** | **诊断与治理**（10/13）· 横切专题 |
+| **强依赖** | 第 03-08 篇 |
+| **承接自** | 03 已讲 oneway 调用，本篇专门讲"如何防止 oneway 滥发" |
+| **衔接去** | 第 11-12 篇 |
+| **不重复内容** | 不重复 03 的 oneway 调用流程 |
+| **重点** | 4 道防线 + 4 类场景 + AOSP/Qualcomm 现有能力 + 分层防护方案 + 2 个实战 |
+
+**预估**：~7000 字 / 3 张 ASCII Art 图 / 2 个实战案例 / 4 附录
+
+**v2 升级决策**：基线刷新 + 引用 AOSP 17 + 6.18 的最新 oneway 检测能力
+
+---
+
+### 第 11 篇 · 厂商预防与治理方案调研报告
+
+| 字段 | 内容 |
+|---|---|
+| **本篇系列角色** | **治理调研**（11/13）· 横切 |
+| **强依赖** | 第 01-10 篇 |
+| **承接自** | 08-10 已给诊断/限流方案，本篇调研"Google/芯片商/OEM/大厂/应用层"五方已有能力 |
+| **衔接去** | 第 12 篇 |
+| **不重复内容** | 不重复 08-10 的工具与方案 |
+| **重点** | 4 角色分层 + 8 类方案选型陷阱 + 分层防护矩阵 + 实战案例 |
+
+**预估**：~7000 字 / 3 张图（含分层防护矩阵）/ 1 个实战案例 / 4 附录
+
+**v2 升级决策**：基线刷新 + 11.2 新增"6.18 Rust Binder 对厂商方案的影响"（Hook 框架、eBPF 监控可观测性变化）
+
+---
+
+### 第 12 篇 · 节点文件全景与问题实战
+
+| 字段 | 内容 |
+|---|---|
+| **本篇系列角色** | **诊断实战**（12/13）· 节点文件体系 |
+| **强依赖** | 第 02-09 篇 |
+| **承接自** | 09 已讲 proc 节点字段，本篇给所有节点文件 + binderfs 全景 |
+| **衔接去** | 第 13 篇 Rust Binder |
+| **不重复内容** | 不重复 09 的 proc 字段字典 |
+| **重点** | 6 个 debugfs 节点 + binderfs 机制 + **6.18 binderfs vendor 隔离成熟** + 2 个实战 |
+
+**预估**：~10000 字 / 5 张 ASCII Art 图 / 2 个实战案例 / 4 附录
+
+**v2 升级决策**：
+- **基线刷新**
+- **6.18 新增**：§5.4 binderfs vendor 域隔离在 6.18 的成熟度（vendor 进程独立实例）
+- **6.18 新增**：§5.5 binderfs 与 Rust Binder 的关系（Rust 实现是否仍走 binderfs 入口）
+
+---
+
+### 第 13 篇 · Rust Binder 专题（v2 新增）
+
+| 字段 | 内容 |
+|---|---|
+| **本篇系列角色** | **横切专题**（13/13）· Rust Binder 决策层 |
+| **强依赖** | 第 02 篇 §2.2 数据结构 + 第 12 篇 §5 binderfs + 第 06 篇对象生命周期 |
+| **承接自** | 02 已讲"Rust 与 C 并存"，本篇独立成专题深入决策层 |
+| **衔接去** | 无（系列收官）|
+| **不重复内容** | 不重复 02 §2.2 的 C 版数据结构；不重复 12 §5 的 binderfs 机制 |
+| **重点** | 6.18 Rust Binder 设计动机 + 内存安全保证 + 与 C 版兼容策略 + 迁移路径 + 厂商 GKI 影响 + 性能对比 + 未来展望 |
+
+**章节表**：
+
+| # | 章节 | 核心源码路径 | 内核版本基线 | 稳定性关联 |
+|---|---|---|---|---|
+| 13.1 | 为什么 Google 要把 C 版 Binder 移植到 Rust | `drivers/android/binder.c` (C) + Rust 实现 | AOSP 17 + 6.18 | 决策背景 |
+| 13.2 | 6.18 Rust Binder 设计与架构 | `drivers/android/`（Rust 文件）| 6.18 独占 | **本篇核心** |
+| 13.3 | 内存安全保证：编译时 + 运行时 | Rust kernel crate + bindings | 6.18 独占 | Google 数据：内存安全漏洞密度降 1000x |
+| 13.4 | 与 C 版 Binder 的兼容策略 | `kernel::bindings` + `compat_ioctl` | 6.18 独占 | 长期并存的工程问题 |
+| 13.5 | 关键优化案例：RCU 同步开销（Alice Ryhl 补丁）| Rust Binder RCU 路径 | 6.18 独占 | 性能数据 |
+| 13.6 | 迁移路径：从 C 到 Rust 的渐进策略 | AOSP GKI 演进计划 | AOSP 17 + 6.18 | 厂商 GKI 决策 |
+| 13.7 | 厂商 GKI 影响：Hook 框架 / 监控 / 调试 | 第三方模块兼容性 | AOSP 17 + 6.18 | 生态影响 |
+| 13.8 | 性能对比：C vs Rust | 公开 benchmark 数据 | 6.18 独占 | 性能基线 |
+| 13.9 | 未来展望：完全 Rust 化的可能性 | LKML 公告 | 6.18+ | 架构师视角 |
+| 13.10 | 实战案例 + 总结 + 附录 | — | — | — |
+
+**预估**：~14000 字 / 6 张 ASCII Art 图（含 C vs Rust 架构对比 + RCU 时序）/ 2 个实战案例 / 4 附录
+
+**v2 升级决策**（破例记录）：
+| 破例项 | 破例内容 | 破例理由 | 影响范围 | 是否传染 |
+|---|---|---|---|---|
+| 独立成篇 | 从 02 分离成独立 13 篇 | Rust Binder 设计动机/迁移/GKI 影响是架构师决策层内容；并入 02 会冲淡 02 的"机制深潜"主轴 | 仅本篇 | 否 |
+| 图表 | 6 张图（规则 4-6）| 13.2 Rust 架构 + 13.3 内存安全时序 + 13.5 RCU 优化 + 13.6 迁移路径图 共 6 张 | 仅本篇 | 否 |
+| 章节数 | 10 章节（规则 5-7）| 主题独立完整需要更多章节 | 仅本篇 | 否 |
+| 依赖 06 | 本篇复用 06 对象生命周期 | Rust Binder 实现对象生命周期是核心内容 | 06 | 是（06 需在 13 之前完成）|
+
+---
+
+## 4. 阅读建议（v4 规范"第三步"产出）
+
+### 4.1 时间有限优先阅读（30 + 60 + 30 = 2 小时）
+
+1. **§01 总览**（30 分钟）— 建立全局观
+2. **§02 驱动 §2.2 + §2.7-2.8**（60 分钟）— 6.18 Rust 版与 C 版并存是本系列最大价值
+3. **§07 风险全景 §7.7-7.8**（30 分钟）— 6.18 + AOSP 17 新风险速查
+
+### 4.2 系统学习推荐顺序
+
+```
+01（总览）→ 02（驱动）→ 03/04/05/06（核心机制并行）→ 07（风险）→ 08/09/10（诊断治理）→ 11（厂商）→ 12（节点）→ 13（Rust 专题收官）
+```
+
+### 4.3 每篇设计逻辑（v4 规范"第三步"硬要求）
+
+```
+背景与定义（是什么、为什么需要它、解决什么问题）
+    → 架构与交互（在系统中的位置、与驱动/Framework/App 的关系）
+        → 核心机制与源码（关键数据结构、核心流程、6.18/AOSP 17 硬变化）
+            → 稳定性风险点（会在哪里出问题、什么日志特征、什么排查入口）
+                → 实战案例（线上真实问题的排查过程，含 logcat/dmesg/版本号/复现/修复）
+                    → 总结（5 条架构师视角 Takeaway）
+                        → 4 附录（源码索引 / 路径对账 / 量化自检 / 工程基线）
 ```
 
 ---
 
-## 第一篇章：建立全局观（1 篇）
+## 5. 质量基线（v4 规范"第三步"产出）
 
-> 核心问题：Binder 是什么？为什么 Android 需要自己的 IPC？它的四层架构如何协作？
+### 5.1 全系列工程默认值表（v4 规范 #16 硬要求）
 
-### [01-Binder 总览：Android IPC 的核心骨架](01-Binder总览.md)
+| 参数 | 典型默认 | 选用准则 | 踩坑提醒 |
+|---|---|---|---|
+| Binder mmap 区域大小 | 1MB（最大 4MB）| 默认足够；大 buffer 应用（高频 AI 调用）需评估 | 太小 → TransactionTooLarge；太大 → 物理内存压力 |
+| App 进程 Binder 线程池上限 | 15（maxThreads = 15）| AOSP 默认；高频服务可调到 30-31 | 超过 31 在 6.18 上可能触发系统限制 |
+| system_server Binder 线程池上限 | 31 | AOSP 默认 | 不可随意调高，会导致 system_server 启动失败 |
+| async buffer（oneway 半区）| 256KB | AOSP 默认；高频 oneway 需评估 | 满 → oneway 调用阻塞 |
+| 同步 buffer | 768KB | AOSP 默认 | 与 async buffer 隔离 |
+| 单次事务大小上限 | 1MB（mmap 区域 - 8KB metadata）| 包含 Parcel + Binder 对象 | 超过 → TransactionTooLargeException |
+| 死亡通知超时 | 立即 | 无超时；驱动主动通知 | 失效原因往往是 linkToDeath 未注册 |
+| Rust Binder RCU 同步 | 6.18 起按需触发 | 进程用 epoll 才升级到 RCU 同步 | 普通进程不付出 RCU 代价 |
+| Binder 调试开关（debugfs）| 6.18 默认开启 | 性能敏感场景需 `echo 0 > /sys/module/binder/parameters/debug_mask` | 全开有 1-3% 性能损耗 |
+| Rust Binder 调试开关 | 6.18 默认静默 | 需 `binder_debug_mask=4` 等显式开启 | 与 C 版独立控制 |
 
-| 章节 | 内容 | 核心源码路径 | 稳定性关联 |
-| :--- | :--- | :--- | :--- |
-| **1. Binder 是什么** | Android 特有的 IPC 机制；基于 OpenBinder 演化；跨进程通信 + 身份验证 + 引用计数三位一体 | — | 理解 Binder 不仅仅是"传数据" |
-| **2. 为什么不用 Linux 标准 IPC** | pipe/socket/shared memory/signal 的局限性对比（拷贝次数、安全性、面向对象能力、C/S 模型支持） | — | Binder 设计选择背后的稳定性考量 |
-| **3. Binder 四层架构** | Kernel Driver → libbinder (Native) → android.os.Binder (Java) → AIDL 的职责划分与协作 | `drivers/android/binder.c`、`frameworks/native/libs/binder/`、`frameworks/base/core/java/android/os/` | 出问题时快速定位在哪一层 |
-| **4. Binder 在系统中的角色** | AMS/WMS/PMS 等 SystemServer 服务的通信基础；App 与系统的唯一桥梁；每秒数千次事务 | — | Binder 是 Android 的"单点瓶颈" |
-| **5. AIDL 与 Proxy/Stub** | 接口定义到代码生成；BpBinder/BBinder/BinderProxy/Binder 的对应关系 | `frameworks/native/libs/binder/BpBinder.cpp` | Proxy 泄漏的入口 |
-| **6. ServiceManager** | 0 号 Binder handle；addService/getService 流程；从 C 到 AIDL 的演进 | `frameworks/native/cmds/servicemanager/` | ServiceManager 挂掉 = 系统崩溃 |
-| **7. 核心源码目录** | debuggerd、binder driver、libbinder、Java Binder、AIDL 等目录速查 | 多个目录 | 排查问题时的"导航地图" |
+### 5.2 跨系列一致性约束（v4 规范 §8 硬要求）
 
----
+| 约束项 | 规则 | 适用范围 |
+|---|---|---|
+| 术语 | "Binder 驱动"统一用全称，不用"binder drv"等别名 | 全部 13 篇 |
+| 路径 | 一律使用 `drivers/android/...` 或 `frameworks/...`，不省略 | 全部 13 篇 |
+| 版本标注 | 每段源码必须标注 `AOSP 17` 或 `android17-6.18` 基线 | 全部 13 篇 |
+| 跨篇引用 | 必须用 Markdown 链接 `[标题](文件名.md)`，不用"见上篇" | 全部 13 篇 |
+| 数据后必有"所以呢" | v4 反例 #11 防范 | 全部 13 篇 |
+| 每章三件套 | 是什么/源码/风险 | 全部 13 篇 |
+| Takeaway 数量 | 每篇 5 条（含 1-2 条指向 6.18/AOSP 17 硬变化）| 全部 13 篇 |
+| 附录 4 件套 | A 源码索引 / B 路径对账 / C 量化自检 / D 工程基线 | 全部 13 篇 |
 
-## 第二篇章：核心机制深潜（5 篇）
+### 5.3 文档约定
 
-> 核心问题：Binder 驱动如何工作？一次调用的完整路径是什么？内存怎么管理？线程怎么调度？对象怎么回收？
-
-### [02-Binder 驱动：内核中的 IPC 引擎](02-Binder驱动.md)
-
-| 章节 | 内容 | 核心源码路径 | 稳定性关联 |
-| :--- | :--- | :--- | :--- |
-| **1. 驱动的本质** | misc device（`/dev/binder`）；通过 `ioctl` 提供 IPC 服务；与普通字符设备的区别 | `drivers/android/binder.c` | Binder 驱动是整个 IPC 的基石 |
-| **2. 核心数据结构** | `binder_proc`、`binder_thread`、`binder_node`、`binder_ref`、`binder_transaction` 的定义与关系 | `drivers/android/binder_internal.h` | 理解 debugfs 输出的前提 |
-| **3. 三大入口** | `binder_open`（打开设备）、`binder_mmap`（映射内存）、`binder_ioctl`（收发事务）的源码走读 | `drivers/android/binder.c` | mmap 失败 → 进程无法使用 Binder |
-| **4. 一次拷贝的实现** | 用户空间和内核空间映射同一段物理页；`copy_from_user` 直接写到目标进程的映射区 | `drivers/android/binder_alloc.c` | 理解为什么 Binder 比 socket 更高效 |
-| **5. BC/BR 命令协议** | Binder Command（用户→驱动）和 Binder Return（驱动→用户）的完整命令表 | `include/uapi/linux/android/binder.h` | 从 trace 中识别 Binder 命令的前提 |
-
-### [03-一次 Binder 调用的完整旅程：从 Proxy 到 Stub](03-一次Binder调用的完整旅程.md)
-
-| 章节 | 内容 | 核心源码路径 | 稳定性关联 |
-| :--- | :--- | :--- | :--- |
-| **1. 调用链全景** | Client → BinderProxy → IPCThreadState → ioctl → Driver → IPCThreadState → BBinder → Server 的完整 ASCII 架构图 | — | 精确定位阻塞发生在哪个环节 |
-| **2. Java 层** | `BinderProxy.transact()` → JNI `android_os_BinderProxy_transact()` | `frameworks/base/core/jni/android_util_Binder.cpp` | Java 层的异常封装逻辑 |
-| **3. Native 层** | `IPCThreadState::transact()` → `writeTransactionData()` → `waitForResponse()` → `talkWithDriver()` | `frameworks/native/libs/binder/IPCThreadState.cpp` | `waitForResponse` 是同步调用的阻塞点 |
-| **4. Kernel 层** | `binder_transaction()` 的完整事务处理：查找目标、分配 buffer、拷贝数据、唤醒目标线程 | `drivers/android/binder.c` | 事务处理中的锁竞争风险 |
-| **5. Parcel 序列化** | `Parcel::writeStrongBinder()` / `flatten_binder()` — Binder 对象如何跨进程传递 | `frameworks/native/libs/binder/Parcel.cpp` | Parcel 过大 → TransactionTooLargeException |
-| **6. oneway vs 同步** | oneway 不等待返回；共享 async buffer；oneway 队列化行为 | `drivers/android/binder.c` | oneway 打满导致后续调用阻塞 |
-
-### [04-Binder 内存模型：mmap、一次拷贝与缓冲区管理](04-Binder内存模型.md)
-
-| 章节 | 内容 | 核心源码路径 | 稳定性关联 |
-| :--- | :--- | :--- | :--- |
-| **1. 一次拷贝原理** | 传统 IPC 两次拷贝 vs Binder 一次拷贝的对比图解 | — | Binder 性能优势的根基 |
-| **2. binder_mmap 深度解析** | `vm_area_struct` + `binder_alloc` 的物理页管理；每进程默认 1MB 映射 | `drivers/android/binder_alloc.c` | 映射大小决定了 buffer 上限 |
-| **3. 缓冲区分配** | `binder_alloc_buf`：空闲链表、best-fit 算法、buffer 碎片化 | `drivers/android/binder_alloc.c` | 碎片化导致 "有空间但分配失败" |
-| **4. 缓冲区释放** | `BC_FREE_BUFFER` 的时机和意义；泄漏 buffer 的后果 | `drivers/android/binder_alloc.c` | buffer 未及时释放 → 可用空间持续缩小 |
-| **5. async buffer 机制** | oneway 事务独占半区（默认 512KB）；同步 / 异步隔离策略 | `drivers/android/binder_alloc.c` | async buffer 满 → oneway 调用阻塞 |
-| **6. TransactionTooLargeException** | 触发条件、常见场景（大 Bitmap / 大 Bundle / SavedState）、源码层面的抛出路径 | `frameworks/native/libs/binder/IPCThreadState.cpp` | Android 最常见的 Binder Crash 之一 |
-
-### [05-Binder 线程模型：线程池、并发与阻塞](05-Binder线程模型.md)
-
-| 章节 | 内容 | 核心源码路径 | 稳定性关联 |
-| :--- | :--- | :--- | :--- |
-| **1. 线程池设计** | `ProcessState::startThreadPool()` 启动主线程；`joinThreadPool()` 进入消息循环 | `frameworks/native/libs/binder/ProcessState.cpp` | 线程池初始化时机 |
-| **2. 动态扩展** | `BR_SPAWN_LOOPER` 驱动通知创建新线程；`maxThreads` 上限（App 默认 15+1） | `drivers/android/binder.c` | 超过 maxThreads 后新请求排队 |
-| **3. 线程状态机** | `BINDER_LOOPER_STATE_ENTERED` / `REGISTERED` / `EXITED` / `WAITING` | `drivers/android/binder_internal.h` | 从 debugfs 读取线程状态 |
-| **4. 线程选择策略** | 优先唤醒发起方线程（减少上下文切换）；空闲线程列表 | `drivers/android/binder.c` | 理解"为什么线程 A 发起调用但线程 B 处理" |
-| **5. 优先级继承** | nice / cgroup / schedpolicy 的跨进程传递；优先级反转问题 | `drivers/android/binder.c` | 低优先级线程持锁 → 高优先级 Binder 调用等锁 → ANR |
-| **6. 线程耗尽与 ANR** | 所有 Binder 线程被占满的场景分析；Watchdog 的检测机制 | `frameworks/base/services/core/java/com/android/server/Watchdog.java` | Binder 线程耗尽是 system_server ANR 的首要原因 |
-
-### [06-Binder 对象生命周期：引用计数、死亡通知与 ServiceManager](06-Binder对象生命周期.md)
-
-| 章节 | 内容 | 核心源码路径 | 稳定性关联 |
-| :--- | :--- | :--- | :--- |
-| **1. 引用计数模型** | `binder_node` 上的强/弱引用计数；`binder_ref` 的创建与销毁 | `drivers/android/binder.c` | 引用计数错误 → 对象过早释放或泄漏 |
-| **2. BC 引用命令** | `BC_ACQUIRE` / `BC_RELEASE` / `BC_INCREFS` / `BC_DECREFS` 的语义和时机 | `drivers/android/binder.c` | 用户态 / 内核态引用计数不一致的隐患 |
-| **3. 死亡通知** | `linkToDeath()` / `unlinkToDeath()`；driver 发送 `BR_DEAD_BINDER` 的时机 | `drivers/android/binder.c` | 死亡通知不及时 → 持有无效引用 → 后续调用超时 |
-| **4. DeadObjectException** | 远端进程死亡 → driver 返回错误 → IPCThreadState 抛出异常的链路 | `frameworks/native/libs/binder/IPCThreadState.cpp` | 未捕获 DeadObjectException → App Crash |
-| **5. ServiceManager** | 0 号 handle 的特殊性；addService/getService 流程；allowIsolated 策略 | `frameworks/native/cmds/servicemanager/` | ServiceManager 是系统的"单点" |
-| **6. ServiceManager 演进** | 从 C 实现到 AIDL 实现（Android 11+）；VINTF / Lazy HAL 的变化 | `frameworks/native/cmds/servicemanager/` | 版本迁移中的兼容性风险 |
+- **源码引用格式**：`路径:行号`（如 `drivers/android/binder.c:1234`）
+- **图编号**：单篇内用 §1.1, §1.2, ... ；跨篇引用用 "[02 §2.6]"
+- **Takeaway 格式**：`1. 核心结论 · 一句话理由 · 指向 [相关章节]`
+- **破例标注**：v4 规范 §9 硬要求，所有破例必须在文末"破例决策记录"表中登记
 
 ---
 
-## 第三篇章：诊断实战与治理（5 篇）
+## 6. 附录
 
-> 核心问题：Binder 出了问题怎么查？怎么建监控体系？怎么做到"能查→能治→能防"？
+### 附录 A：13 篇新写计划（v4 规范 §8 治理 · 必含 · 无 v1 映射）
 
-### [07-Binder 稳定性风险全景：ANR、Crash 与资源泄漏](07-Binder稳定性风险全景.md)
+> **说明**：v1 12 篇已彻底删除，本表是 13 篇全新写计划。**无 v1 映射、无基线刷新、无内容重写**——全部从零开始。
 
-| 章节 | 内容 | 稳定性关联 |
-| :--- | :--- | :--- |
-| **1. Binder 相关 ANR** | 主线程同步调用阻塞、system_server 线程耗尽、Binder 嵌套死锁的分类与特征 | ANR trace 中 Binder 阻塞栈的识别方法 |
-| **2. TransactionTooLargeException** | 数据超 1MB / buffer 碎片化 / Intent 大数据 / SavedState 膨胀的场景与排查 | 最常见的 Binder Crash |
-| **3. DeadObjectException** | 远端进程被 kill / LMK 回收 / system_server 重启的场景 | 进程生命周期管理的基础 |
-| **4. SecurityException** | 权限不足的 Binder 调用；UID/PID 校验机制 | 跨进程权限的安全边界 |
-| **5. Binder 资源泄漏** | Binder 引用泄漏、Proxy 对象泄漏（`Too many Binder proxies`）、binder_node 泄漏 | 长期运行后的 system_server OOM |
-| **6. 每种问题的模式识别** | 典型 ANR trace / logcat / Tombstone 特征的速查表 | 5 分钟内定位 Binder 问题类型 |
+| 篇号 | 文件名 | 主题 | 核心新内容（v1 没有的）| 预估行数 | 预估图数 | 案例数 |
+|------|--------|------|------------------------|---------|---------|--------|
+| 01 | `01-Binder总览.md` | 全局观 | AOSP 17 ServiceManager 演进、§1.4 6.18 硬变化概览 | ~9000 字 | 5 | 1 |
+| 02 | `02-Binder驱动.md` | 内核机制 | **§2.2 Rust 与 C 版并存**、§2.7 sparse memory、§2.8 binderfs 6.18 | ~12000 字 | 6 | 2 |
+| 03 | `03-一次Binder调用的完整旅程.md` | 调用链 | AOSP 17 WindowManager 通路、oneway 限流新视角 | ~11000 字 | 5 | 1 |
+| 04 | `04-Binder内存模型.md` | 内存 | sparse memory、sheaves 评估、TransactionTooLarge 6.18 案例 | ~11000 字 | 5 | 1 |
+| 05 | `05-Binder线程模型.md` | 线程 | AOSP 17 线程池上限变化、优先级继承新机制 | ~10000 字 | 4 | 1 |
+| 06 | `06-Binder对象生命周期.md` | 对象 | **§6.7 pidfds 6.18 扩展**、**§6.8 AppFunctions 生命周期** | ~13000 字 | 5 | 1 |
+| 07 | `07-Binder稳定性风险全景.md` | 风险全景 | **§7.7 AOSP 17 端侧 AI Binder 风险**、**§7.8 Rust 兼容性风险** | ~9000 字 | 4 | 6 类问题速查 |
+| 08 | `08-Binder诊断工具与治理体系.md` | 诊断 | **§8.5 eBPF 加密签名 6.18 影响**、Perfetto 新事件 | ~12000 字 | 5 | 4 附录 |
+| 09 | `09-Binder-debugfs日志解读实战.md` | debugfs 实战 | 6.18 节点字段更新 | ~7000 字 | 3 | 2 |
+| 10 | `10-Binder-oneway限流与防护方案.md` | oneway 限流 | AOSP 17 + 6.18 限流能力、Qualcomm 6.18 patch | ~7000 字 | 3 | 2 |
+| 11 | `11-Binder厂商预防与治理方案调研报告.md` | 厂商调研 | **§11.2 Rust Binder 对厂商方案影响** | ~7000 字 | 3 | 1 |
+| 12 | `12-Binder节点文件全景与问题实战.md` | 节点全景 | **§5.4 binderfs vendor 隔离成熟**、**§5.5 binderfs 与 Rust Binder** | ~10000 字 | 5 | 2 |
+| 13 | `13-Rust Binder专题.md` | **Rust Binder 专题** | **整篇新写**：动机/内存安全/迁移/GKI/性能/未来 | ~14000 字 | 6 | 2 |
+| **合计** | | | | **~133000 字** | **59 张** | **17 个案例** |
 
-### [08-Binder 诊断工具与治理体系](08-Binder诊断工具与治理体系.md)
+### 附录 B：源码基线对账表（v4 规范 #14 硬要求）
 
-| 章节 | 内容 | 稳定性关联 |
-| :--- | :--- | :--- |
-| **1. debugfs 接口** | `/sys/kernel/debug/binder/` 下 state / stats / transactions / proc 的解读 | 内核视角的 Binder 状态快照 |
-| **2. dumpsys 系列** | `dumpsys activity service`、`dumpsys binder` 的输出解读 | Framework 视角的服务状态 |
-| **3. Systrace/Perfetto** | Binder transaction 的可视化；跨进程延迟瓶颈识别 | 性能分析的主力工具 |
-| **4. ANR trace 解读** | `waiting to lock`、`Binder:xxx_x` 线程状态、`outgoing transaction` | ANR 根因分析的核心技能 |
-| **5. 监控体系建设** | Binder 线程使用率、buffer 使用率、慢调用统计、耗时分布 | 从被动排查到主动预警 |
-| **6. 治理最佳实践** | UI 线程禁止同步调用（StrictMode）、Intent 瘦身、oneway 回调生命周期管理、Proxy 监控（Android 10+ `setBinderProxyCountEnabled`） | 从"能查"到"能治"到"能防" |
+| 序号 | 类别 | v1 旧基线 | v2 新基线 | 校对来源 |
+|---|---|---|---|---|
+| 1 | 应用层 Framework | AOSP `android-14.0.0_r1` | AOSP `android-17.0.0_r1`（API 37）| 用户 2026-07-17 决策 |
+| 2 | Linux 内核 | `android14-5.10/5.15` | `android17-6.18`（Linux 6.18 LTS）| 用户 2026-07-17 决策 + 6.18 LTS 2025-12-03 确认 |
+| 3 | manifest 分支 | `refs/heads/android14-release` | `android-latest-release`（2026 起推荐）| AOSP 官方 2026 起推荐 |
+| 4 | Binder C 驱动 | `drivers/android/binder.c` | 同路径 | 无变化（保留）|
+| 5 | Binder Alloc | `drivers/android/binder_alloc.c` | 同路径 | 无变化（保留）|
+| 6 | Binder Internal | `drivers/android/binder_internal.h` | 同路径 | 无变化（保留）|
+| 7 | Binder fs | `drivers/android/binderfs.c` | 同路径 | 无变化（保留）|
+| 8 | **Rust Binder** | — | `drivers/android/`（具体文件路径**待 v2 重写 02 时校对**）| 6.18 上主线，Alice Ryhl 主导；具体路径需在 `android17-6.18` 稳定后确认 |
+| 9 | uapi 头文件 | `include/uapi/linux/android/binder.h` | 同路径 | 无变化（保留）|
+| 10 | libbinder | `frameworks/native/libs/binder/` | 同路径 | 无变化（保留）|
+| 11 | ServiceManager | `frameworks/native/cmds/servicemanager/` | 同路径（AIDL 形式）| Android 11+ 已迁移到 AIDL |
+| 12 | Java Binder | `frameworks/base/core/java/android/os/` | 同路径 | 无变化（保留）|
 
-### [09-Binder debugfs 日志解读实战：v3 模板重写版](09-Binder-debugfs日志解读实战.md)
+**校对策略**：
+- **C 版路径（1-7、9-12）**：v1 旧文已经使用，v2 沿用即可
+- **Rust Binder 路径（8）**：标注"待校对"，在 v2 重写 02 驱动篇时通过 `android-latest-release` manifest 实际拉取确认
+- **所有路径**：附录 A 之外的引用必须在每篇 v2 文章的"附录 B 路径对账表"中逐条标注【已校对 / 待确认】
 
-| 章节 | 内容 | 稳定性关联 |
-| :--- | :--- | :--- |
-| **1. 背景与定义** | 为什么需要逐字段读懂 proc 快照；proc 节点在 debugfs 家族中的位置 | 区分驱动视角与用户态视角 |
-| **2. 架构与交互** | proc 节点在内核中的生成机制（seq_file 接口）；延迟创建；权限模型 | 理解"为什么 cat 是快照" |
-| **3. 核心机制：逐字段详解** | proc/context、thread（l / need_return / tr）、incoming transaction（from/to/code/flags/elapsed/node/size/offset）、buffer（size/active）的逐字段字典 + flags 拆解 + 驱动/用户态视角差异 | 读懂任意一份 proc 快照 |
-| **4. 风险地图** | proc 节点解读中的 6 类常见误区（tr 0 不等于空闲、need_return 1 不等于异常等） | 防止误判 |
-| **5. 实战案例 A** | system_server 线程池被某 App 打满：用 proc 快照反推 from/code/elapsed → 调用方栈 → AIDL 接口 → 修复 + 回归指标 | 完整从 proc 到根因的实战路径 |
-| **6. 实战案例 B** | debugfs 配合 ANR trace 的双视角定位：`finishDrawing` 阻塞 5s+ → system_server 慢路径锁竞争 | 客户端 + 服务端双视角交叉验证 |
-| **7. 总结** | 5 条架构师 Takeaway + 排查路径速查树 | 现场取证"5 分钟定位"流程 |
+### 附录 C：v2 重写工作流（决策日志续）
 
-### [10-Binder oneway 限流与防护方案：v3 模板重写版](10-Binder-oneway限流与防护方案.md)
+按 v4 规范 §7 校准机制，13 篇 v2 重写采用 3 轮校准节奏：
 
-| 章节 | 内容 | 稳定性关联 |
-| :--- | :--- | :--- |
-| **1. 背景与定义** | oneway 的"反直觉"风险（客户端无阻塞但服务端仍占线程）；4 道防线；4 类问题场景 | 厘清"oneway 不等于安全替代品" |
-| **2. 架构与交互** | oneway 与同步调用的对比图；async buffer 隔离机制；线程池共享 | 理解 oneway 的服务端视角 |
-| **3. 核心机制：oneway 滥发的检测与限流** | AOSP per-PID 检测 + debug 告警（Martijn Coenen LKML 补丁）；Qualcomm BR_ONEWAY_SPAM_SUSPECT 打栈；课程方案 per-UID 限流 + BR_FAILED_REPLY 定位 | 区分"已有 vs 设计建议" |
-| **4. 风险地图** | 8 类 oneway 防护问题（数量超限、async 接近满、UID 独大、嵌套死锁等） | 防止误判 |
-| **5. 分层防护方案** | 内核（检测 / 限流）+ Framework（监控 / Proxy 水位）+ Server（onTransact 节流）+ App（频控 / 重试） | 从检测到限流的完整选项 |
-| **6. 实战案例 A** | IM App 通知到达触发 system_server 雪崩：oneway 高频 + Bitmap payload + Server 慢路径 → 修复 | 客户端 + 服务端联动 |
-| **7. 实战案例 B** | oneway 中嵌套同步调用形成死锁 | oneway 反模式的根因案例 |
-| **8. 总结** | 5 条架构师 Takeaway + 防护方案选型矩阵 | 选型决策依据 |
+| 轮次 | 目标 | 触发 | 动作 | 不动 |
+|------|------|------|------|------|
+| **第 1 轮 · 结构** | 让骨架立住 | 26 项清单扫描后 | 缺本篇定位 / 总结 / 附录 → 补；章节顺序乱 → 调整；跨篇重复 → 改引用 | 细节、风格 |
+| **第 2 轮 · 硬伤** | 经得起查 | 路径对账 / 量化自检 / API 版本核对后 | 路径幻觉 → 重查或删；量化没依据 → 补来源；API 签名不对 → 重读源码 | 风格、措辞 |
+| **第 3 轮 · 锐度** | 读完有收获 | 通读全文，凭"读起来是否废话"判断 | 数据堆砌 → 加"所以呢"；AI 自嗨 → 删"非常精妙"；模糊量化 → 改具体数字；冗余 → 合并 | 骨架、硬伤 |
 
-### [11-Binder 厂商预防与治理方案调研报告：v3 模板重写版](11-Binder厂商预防与治理方案调研报告.md)
+**工作流纪律**：
+- 每篇 3 轮决策日志必须在文末记录（v4 规范 §7 强制）
+- 破例必须登记（v4 规范 §9 强制）
+- 每篇完成后更新本 README 附录 A 的"实际升级内容"列
 
-| 章节 | 内容 | 稳定性关联 |
-| :--- | :--- | :--- |
-| **1. 背景与定义** | 为什么需要按角色梳理；4 个角色（Google / 芯片商 / OEM / 大厂 / 应用层）；预防 vs 治理二维划分 | 厘清角色边界与可信度 |
-| **2. Google / AOSP** | BinderCallsStats、Proxy 水位与杀进程、oneway 检测、statsd、线程池配置 | 官方能力基线 |
-| **3. 芯片 / 方案商** | Qualcomm（BR_ONEWAY_SPAM_SUSPECT）、MediaTek（Binder 驱动定制、MTK_BINDER_DEBUG、RT_PRIO_INHERIT） | 方案商提供的能力边界 |
-| **4. 终端 OEM** | 小米 / OPPO / vivo / 华为 / 三星 / 车机：公开信息有限，归纳已知与推断 | 厂商方案调研结论 |
-| **5. 互联网大厂** | 字节 / 阿里 / 腾讯 ANR 治理中的 Binder 分析、慢调用与归因 | 应用侧治理实践 |
-| **6. 应用层 / 第三方** | Binder Hook 监控、TransactionTooLarge 防护、Proxy 自检 | 可落地的应用层手段 |
-| **7. 风险地图** | 8 类方案选型陷阱（期望错位、混淆公开 vs 内部、混淆能力 vs 产品等） | 防止调研误判 |
-| **8. 分层防护矩阵** | 从内核到应用层的完整防护层级图 + 推荐组合 | 选型决策树 |
-| **9. 实战案例** | 某 OEM 终端稳定性体系建设 + 大厂应用层 ANR 治理（典型模式） | 横向对标参考 |
-| **10. 总结与建议** | 按角色归纳表、方案缺口、实施建议（先吃透 AOSP / 治理优先 / 明确角色边界） | 选型与自研参考 |
+### 附录 D：与其他系列的引用约定（v4 规范 §8 治理）
 
-### [12-Binder 节点文件全景与问题实战：从 debugfs/binderfs 到根因定位](12-Binder节点文件全景与问题实战.md)
+- **被本系列引用**：所有跨系列引用在 02-13 篇"本篇定位"段显式声明
+- **本系列被引用**：Memory_Management / Process / IO / Window / Input 等系列若需引用 Binder，本 README 附录 A 是统一入口
+- **术语表**：与 [Reference/术语表.md](../../../Reference/术语表.md) 对齐（待建，列入 2026 H2 治理计划）
 
-| 章节 | 内容 | 稳定性关联 |
-| :--- | :--- | :--- |
-| **1. 背景** | Binder 诊断视角的内核态入口；节点文件不止 `/proc/<pid>` 一个 | 厘清 debugfs 与 binderfs 的诊断定位 |
-| **2. 架构** | debugfs + binderfs 在 Binder 体系中的位置；版本基线（AOSP 14 / Kernel 5.10/5.15） | 横向诊断通道不替代四层 IPC 主体 |
-| **3. 核心机制（一）：6 个 debugfs 节点文件全景** | `state` / `stats` / `proc/<pid>` / `transactions` / `transaction_log` / `failed_transaction_log` 各自的字段、生成函数、选用准则 | 节点文件金字塔自顶向下覆盖所有诊断场景 |
-| **4. 核心机制（二）：节点文件在内核中的生成机制** | `binder_debugfs_init` 时序；`seq_file` 单读一次遍历一张快照；`proc/<pid>` 节点的延迟创建；权限模型 | 理解"为什么 cat 是快照"和"为什么找不到 proc 文件" |
-| **5. binderfs 文件系统** | 为什么需要 binderfs；核心结构；与 debugfs 的关系；Android 8.0+ 强制要求 | vendor 域隔离实例化，避免 vendor 进程共享 `/dev/binder` |
-| **6. 风险地图** | 节点文件读不到/读不全/解析错误的 8 类常见问题 | 现场取证时的"快查手册" |
-| **7. 实战案例 A** | system_server ANR：用 `transactions` + `proc/<pid>` + `stats` 联合定位 `com.example.weather:push` 高频同步广播 | 完整闭环：ANR → debugfs → 客户端栈 → 代码根因 → 修复 + 回归指标 |
-| **8. 实战案例 B** | TransactionTooLargeException：用 `failed_transaction_log` 取证 `com.example.photoeditor` Intent extras 含 Bitmap | 驱动视角的"原汁原味失败证据"，比 logcat 更直接 |
-| **9. 总结** | 节点文件选型矩阵 + 5 条架构师 Takeaway | 排查时按场景选节点，不要找万能节点 |
+### 附录 E：13 篇新写时间表（用户决策 2026-07-18"全部重写" · 仅供参考）
 
-> **本篇定位**：与 [09](09-Binder-debugfs日志解读实战.md) 是"专精 vs 全景"关系——
-> 09 是"一份 proc 节点的逐字段字典"，本篇是"所有节点文件 + 内核生成机制 + binderfs + 实战案例跑通"。
-> 强烈建议两篇顺序阅读：先读 09 入门，再读本篇做收口。
+按用户 2026-07-18 决策"删除旧的全部重写"+"质量比旧的高"——13 篇全部新写：
+
+| 阶段 | 内容 | 预计时间 |
+|------|------|----------|
+| 阶段 0（已完成）| 本 README 起草 + 12 旧文删除 + 决策日志更新 | — |
+| 阶段 1 | 02 驱动篇新写（含 Rust Binder 基础 + sparse memory）| 2-2.5 小时 |
+| 阶段 2 | 13 Rust Binder 专题新写（10 章节，独家内容）| 2-3 小时 |
+| 阶段 3 | 01/06/07/12 篇新写（含 AOSP 17 关键硬变化）| 4-5 小时（4 篇）|
+| 阶段 4 | 03/04/05/08 篇新写 | 4-5 小时（4 篇）|
+| 阶段 5 | 09/10/11 篇新写 | 3-4 小时（3 篇）|
+| 阶段 6 | 全系列跨篇引用闭环 + 3 轮校准 + 26 项清单 | 3-4 小时 |
+| **合计** | | **18-23 小时** |
+
+**说明**：
+- 阶段 1/2 是奠基（02 + 13 是结构性新内容），必须先做
+- 阶段 3 优先 01/06/07/12 是因为这 4 篇承载了 v2 的核心新内容（总览硬变化 / pidfds / 端侧 AI / binderfs 成熟）
+- 每篇新写时**强制过 3 道质量门**（开工前/中/后），见 §3 顶部"v2 升级决策"行
+- 阶段 6 的 3 轮校准可能触发"重写部分章节"，预留缓冲时间
 
 ---
 
-## 阅读建议
+## 7. 本篇 README 自身的元信息
 
-**如果你时间有限，优先阅读：**
-1. **01 总览** — 建立全局观，理解 Binder 四层架构和在系统中的角色。
-2. **07 稳定性风险全景** — 实战价值最高，直接提升 Binder 问题的排查效率。
-3. **05 线程模型** — 理解 Binder 线程耗尽导致 ANR 的机制。
-
-**如果你要系统学习，按顺序阅读 01 → 08。** 每篇文章的设计逻辑是：
-```
-背景与定义（是什么、为什么需要它）
-    → 架构与交互（在系统中的位置、上下游关系）
-        → 核心机制与源码（关键数据结构、核心流程）
-            → 稳定性风险点（会在哪里出问题）
-                → 实战案例（线上真实问题的排查过程）
-```
+- **本 README 状态**：v2 已拍板（用户 2026-07-18 决策"删除旧的全部重写"），准备进入阶段 1（02 驱动新写）
+- **作者决策日志**：见顶部表格
+- **v1 12 篇状态**：**已彻底删除**（2026-07-18 移入 Windows 回收站，**本系列不引用、不恢复、不保留 archive**）
+- **破例**：本文 13 章 §13 单元已登记 4 条破例（独立成篇、图表 6 张、章节 10 个、依赖 06），影响范围仅本系列
+- **下一步**：阶段 1（02 驱动新写）→ 阶段 2（13 Rust Binder 专题）→ 阶段 3-5 → 阶段 6（3 轮校准）
