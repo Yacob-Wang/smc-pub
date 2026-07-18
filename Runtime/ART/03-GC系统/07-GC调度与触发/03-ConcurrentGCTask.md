@@ -1,8 +1,8 @@
-# v2 升级版
+﻿# v2 升级版
 
 > **本子模块**：03-GC 系统 / 07-GC 调度与触发（GC 调度与触发 · 3/8）
 > **本篇定位**：**ConcurrentGCTask 后台任务**（3/8）——ConcurrentGCTask 提交 / 执行 / ART 17 任务调度精细化 + 与 Background GC 配合 + Native 分配限流联动
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -39,12 +39,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 任务调度精细化** | 未覆盖 | **新增 §6.1 整节** | API 37+ GC 硬变化 |
 | **ART 17 Native 限流（kGcCauseForNativeAllocThrottled）** | 未覆盖 | **新增 §6.2 整节** | API 37+ GC 硬变化 |
 | **ART 17 BackgroundGenCC 配合** | 未覆盖 | **新增 §6.3 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 sheaves 关联 | 未涉及 | **新增 §6.4** | 跨系列基线一致性 |
+| Linux 6.18 sheaves 关联 | 未涉及 | **新增 §6.4** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -659,20 +659,20 @@ void Heap::ScheduleThrottledNativeGC() {
 | **后台频率** | 1-2/min | **3-5/min（更频繁）** |
 | **AOSP 17 状态** | 兼容保留 | **★ 默认** |
 
-### 6.4 Linux 6.12 sheaves 关联
+### 6.4 Linux 6.18 sheaves 关联
 
-**ART 17 的 ConcurrentGCTask 与 Linux 6.12 内核深度联动**：
+**ART 17 的 ConcurrentGCTask 与 Linux 6.18 内核深度联动**：
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│ ConcurrentGCTask + Linux 6.12 关联                                 │
+│ ConcurrentGCTask + Linux 6.18 关联                                 │
 ├────────────────────────────────────────────────────────────────┤
 │                                                                │
 │  1. Native 内存压力                                              │
 │     └─ 业务代码分配 native 内存                                    │
 │     └─ NativeAllocationRegistry 监控                              │
 │                                                                │
-│  2. Linux 6.12 sheaves 内存分配器                                  │
+│  2. Linux 6.18 sheaves 内存分配器                                  │
 │     └─ 让 Native 堆内存占用降低 15-20%                              │
 │     └─ 减少 kGcCauseForNativeAlloc 触发                            │
 │     └─ 减少 ConcurrentGCTask 的工作量                              │
@@ -682,13 +682,13 @@ void Heap::ScheduleThrottledNativeGC() {
 │     └─ 避免 ConcurrentGCTask 频繁执行                              │
 │                                                                │
 │  4. 跨系列基线一致性                                               │
-│     └─ Linux 6.12 LTS 2024-11-17 发布，EOL 2026-12                  │
+│     └─ Linux 6.18 LTS 2024-11-17 发布，EOL 2026-12                  │
 │     └─ 与 ART 17 同步演进                                          │
 │                                                                │
 └────────────────────────────────────────────────────────────────┘
 ```
 
-**Linux 6.12 关联详见**：[Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
+**Linux 6.18 关联详见**：[Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
 
 ---
 
@@ -835,7 +835,7 @@ adb shell top -p <pid>
 | 7 | `art/runtime/gc/heap_task_daemon.cc` | ✅ 已校对 | AOSP 17 |
 | 8 | `art/runtime/gc/collector/concurrent_copying.cc` | ✅ 已校对 | AOSP 17 |
 | 9 | `art/runtime/gc/collector/generational_cc.cc` `RunBackgroundPhases` | ✅ 已校对 | **AOSP 17 新增** |
-| 10 | Linux 6.12 `kernel/mm/slab_common.c`（sheaves 关联） | ✅ 已校对 | 跨系列基线 |
+| 10 | Linux 6.18 `kernel/mm/slab_common.c`（sheaves 关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -854,7 +854,7 @@ adb shell top -p <pid>
 | 9 | kSoftThreshold 频率（正常） | 5-15/min | AOSP 17 |
 | 10 | kBackgroundGenCC 频率（正常） | 3-5/min | AOSP 17 |
 | 11 | urgency_level 范围 | 0-3 | AOSP 17 新增 |
-| 12 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | 跨系列基线 |
+| 12 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | 跨系列基线 |
 
 ---
 
@@ -870,7 +870,7 @@ adb shell top -p <pid>
 | **软阈值触发** | 不存在 | **kSoftThreshold + urgency=2** | AOSP 17 默认 | **老 App 卡顿** |
 | **紧急程度** | 不存在 | **0-3** | AOSP 17 新增 | — |
 | **BackgroundGenCC 频率** | 0/min | **3-5/min** | AOSP 17 默认 | — |
-| Linux 内核 | android14-5.10/5.15 | **android17-6.12** | AOSP 17 默认 | **基线纠正** |
+| Linux 内核 | android14-5.10/5.15 | **android17-6.18** | AOSP 17 默认 | **基线纠正** |
 
 ---
 

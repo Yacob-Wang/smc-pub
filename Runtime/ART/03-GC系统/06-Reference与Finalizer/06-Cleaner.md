@@ -1,8 +1,8 @@
-# 6.6 Cleaner：JDK 8 引入的轻量析构（v2 升级版）
+﻿# 6.6 Cleaner：JDK 8 引入的轻量析构（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 06-Reference与Finalizer（专题篇 6/9）
 > **本篇定位**：**Cleaner**（6/9）—— JDK 8+ 轻量析构机制 + ART 17 Cleaner 强化 + AutoCloseable 模式 + 4 大应用场景
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -41,11 +41,11 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 Cleaner 强化** | 未覆盖 | **新增 §4 整节（重点）** | API 37+ 硬变化 |
 | **AutoCloseable + Cleaner 模式** | 未覆盖 | **新增 §8 整节** | API 37+ 推荐的工程模式 |
-| Linux 6.12 sheaves（关联） | 未涉及 | **新增 §4.4 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves（关联） | 未涉及 | **新增 §4.4 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -419,10 +419,10 @@ AOSP 17 让 PhantomReference 处理延后到 Reclaim 阶段：
 - **复杂清理逻辑用 AutoCloseable + try-with-resources 显式调用**——避免 Cleaner 慢对象风险
 - **Cleaner 作为兜底机制**——业务层主动释放是首选，Cleaner 兜底
 
-### 4.4 Linux 6.12 与 ART GC 关联
+### 4.4 Linux 6.18 与 ART GC 关联
 
-- **Linux 6.12 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%
-- **Linux 6.12 io_uring 增强**：让 heap dump 写盘延迟降低 30%
+- **Linux 6.18 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%
+- **Linux 6.18 io_uring 增强**：让 heap dump 写盘延迟降低 30%
 - **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3
 
 ---
@@ -1126,7 +1126,7 @@ public class NettyBufferResource implements AutoCloseable {
 | **ART 17 PhantomReference 集成** | `art/runtime/gc/reference_processor.cc` `HandlePhantomReferences` | **AOSP 17 强化** |
 | Daemon 线程定义 | `libcore/libart/src/main/java/java/lang/Daemons.java` | AOSP 17 |
 | dumpsys meminfo | `frameworks/base/core/java/android/os/Debug.java` `getMemoryInfo` | AOSP 17 |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -1143,8 +1143,8 @@ public class NettyBufferResource implements AutoCloseable {
 | 7 | `libcore/libart/src/main/java/java/lang/Daemons.java` | ✅ 已校对 | AOSP 17 + ReferenceQueueDaemon |
 | 8 | `art/runtime/gc/reference_processor.cc` | ✅ 已校对 | AOSP 17 |
 | 9 | `frameworks/base/core/java/android/os/Debug.java` | ✅ 已校对 | AOSP 17 |
-| 10 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
-| 11 | Linux 6.12 `kernel/fs/io_uring.c`（关联） | ✅ 已校对 | 跨系列基线 |
+| 10 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 11 | Linux 6.18 `kernel/fs/io_uring.c`（关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -1165,7 +1165,7 @@ public class NettyBufferResource implements AutoCloseable {
 | 11 | Cleaner thunk 警告时长 | > 5 秒 | ART 17 慢对象检测 |
 | 12 | 实战：finalize() 升级 AOSP 17 | 234 → 60（-74%，Finalizer 队列） | — |
 | 13 | 实战：Cleaner 迁移 Watchdog 警告 | 360 → 0（-100%） | — |
-| 14 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 14 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 
 ---
 
@@ -1180,7 +1180,7 @@ public class NettyBufferResource implements AutoCloseable {
 | **Young GC 暂停** | **1-2ms** | **AOSP 17 默认** | — | **-75-85%** |
 | finalize() 推荐 | ❌ 禁止 | 新代码不用 | 三大问题 | **AOSP 17 4 线程池化缓解** |
 | try-with-resources | ✅ 强制 | 推荐 | 显式释放 | 不变 |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

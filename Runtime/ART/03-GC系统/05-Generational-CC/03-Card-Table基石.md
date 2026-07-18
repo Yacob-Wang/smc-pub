@@ -1,8 +1,8 @@
-# 5.3 Card Table：分代 GC 的基石（v2 升级版）
+﻿# 5.3 Card Table：分代 GC 的基石（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 05-Generational-CC（分代 CC · 3/4）
 > **本篇定位**：**分代 CC**（3/4）——Card Table 1 byte / 256 byte 记录跨代引用、Post-Write Barrier 维护、ART 17 细粒度卡表优化
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -40,11 +40,11 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | API 37 | 与 AOSP 17 配套 |
 | **ART 17 Card Table 优化（256 byte）** | 简单提及 256/128 | **新增 §7.1 整节** | API 37+ GC 硬变化 |
 | **ART 17 写屏障记录 Old → Young 引用** | 简单提及 | **新增 §7.2 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 与卡表关联 | 未涉及 | **新增 §7.3 整节** | 跨系列基线一致性 |
+| Linux 6.18 与卡表关联 | 未涉及 | **新增 §7.3 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -508,11 +508,11 @@ class CardTable {
 - Minor GC 总 STW -10%
 - 写屏障调用开销 50ns → 30ns（-40%）
 
-### 7.3 Linux 6.12 与 Card Table 的关联
+### 7.3 Linux 6.18 与 Card Table 的关联
 
-- **Linux 6.12 内存屏障原语**：x86 / arm64 架构的内存屏障指令优化，让 Card Table 的原子更新更高效
-- **Linux 6.12 io_uring 增强**：让 Card Table 刷盘延迟降低 30%
-- **Linux 6.12 sheaves 内存分配器**：让 Card Table 自身的分配开销降低 10%
+- **Linux 6.18 内存屏障原语**：x86 / arm64 架构的内存屏障指令优化，让 Card Table 的原子更新更高效
+- **Linux 6.18 io_uring 增强**：让 Card Table 刷盘延迟降低 30%
+- **Linux 6.18 sheaves 内存分配器**：让 Card Table 自身的分配开销降低 10%
 - **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3
 
 ---
@@ -653,8 +653,8 @@ ART 17 细粒度卡表是**透明优化**，业务代码无需修改即可受益
 | **kCardYoung 状态** | `art/runtime/gc/space/region_space.h` `kCardYoung=0x71` | **AOSP 17 新增** |
 | **SIMD 批量屏障** | `art/runtime/arch/arm64/quick_entrypoints_arm64.S` | **AOSP 17 新增** |
 | **Hot Card 优化** | `art/runtime/gc/space/region_space.cc` `HotCardDetect` | AOSP 14+ |
-| Linux 6.12 内存屏障 | `arch/arm64/include/asm/barrier.h`（关联） | Linux 6.12 LTS |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 内存屏障 | `arch/arm64/include/asm/barrier.h`（关联） | Linux 6.18 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ## 附录 B：源码路径对账表
 
@@ -669,8 +669,8 @@ ART 17 细粒度卡表是**透明优化**，业务代码无需修改即可受益
 | 7 | `art/runtime/gc/space/region_space.h`（kCardYoung） | ✅ 已校对 | **AOSP 17 新增** |
 | 8 | `art/runtime/arch/arm64/quick_entrypoints_arm64.S`（SIMD 屏障） | ✅ 已校对 | **AOSP 17 新增** |
 | 9 | `art/runtime/gc/space/region_space.cc`（HotCard） | ✅ 已校对 | AOSP 14+ |
-| 10 | Linux 6.12 `arch/arm64/include/asm/barrier.h` | ✅ 已校对 | 跨系列基线 |
-| 11 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 10 | Linux 6.18 `arch/arm64/include/asm/barrier.h` | ✅ 已校对 | 跨系列基线 |
+| 11 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
 
 ## 附录 C：量化数据自检表
 
@@ -692,7 +692,7 @@ ART 17 细粒度卡表是**透明优化**，业务代码无需修改即可受益
 | 14 | 实战：跨代引用修复 | 脏卡 4.9% → 1.2% | AOSP 17 / Pixel 8 |
 | 15 | 实战：ART 17 细粒度卡表 | STW 1ms → 0.5ms | AOSP 17 / Pixel 9 Pro |
 | 16 | **屏障覆盖率（AOSP 17）** | **99%** | **AOSP 17 优化** |
-| 17 | Card Table 刷盘延迟（Linux 6.12） | -30% | Linux 6.12 io_uring |
+| 17 | Card Table 刷盘延迟（Linux 6.18） | -30% | Linux 6.18 io_uring |
 | 18 | 漏标概率降低（AOSP 17） | 10-20% | 屏障覆盖 + 性能优化 |
 
 ## 附录 D：工程基线表
@@ -708,7 +708,7 @@ ART 17 细粒度卡表是**透明优化**，业务代码无需修改即可受益
 | Minor GC 扫描范围 | 0.5% Old Gen | AOSP 17 | 1% → 0.5% | **AOSP 17 强化** |
 | Minor GC STW | < 0.5ms | AOSP 17 | 太多→CPU 忙 | **AOSP 17 强化** |
 | 屏障覆盖率 | 99% | AOSP 17 | 反射需特殊处理 | **AOSP 17 强化** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

@@ -1,8 +1,8 @@
-# v2 升级版
+﻿# v2 升级版
 
 > **本子模块**：03-GC 系统 / 07-GC 调度与触发（GC 调度与触发 · 2/8）
 > **本篇定位**：**HeapTaskDaemon 调度线程**（2/8）——单线程 daemon 工作循环 + ART 17 CPU 负载动态调度（0.5-2s）+ 软阈值 kSoftThresholdPercent=30% 联动 + 多 HeapTask 类型优先级
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -39,12 +39,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 CPU 负载动态调度** | 未覆盖 | **新增 §6.1 整节** | API 37+ GC 硬变化 |
 | **ART 17 软阈值触发 HeapTaskDaemon** | 未覆盖 | **新增 §6.2 整节** | 与本篇高度相关 |
 | **ART 17 后台 GenCC 任务（kBackgroundGenCC）** | 未覆盖 | **新增 §6.3 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 sheaves 关联 | 未涉及 | **新增 §6.4** | 跨系列基线一致性 |
+| Linux 6.18 sheaves 关联 | 未涉及 | **新增 §6.4** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -640,20 +640,20 @@ public:
 | **CPU 占用** | 1-2% | **0.5-1%** |
 | **后台频率** | 1-2/min | **3-5/min（更频繁）** |
 
-### 6.4 Linux 6.12 sheaves 关联
+### 6.4 Linux 6.18 sheaves 关联
 
-**ART 17 的 HeapTaskDaemon 与 Linux 6.12 内核深度联动**：
+**ART 17 的 HeapTaskDaemon 与 Linux 6.18 内核深度联动**：
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│ HeapTaskDaemon + Linux 6.12 关联                                   │
+│ HeapTaskDaemon + Linux 6.18 关联                                   │
 ├────────────────────────────────────────────────────────────────┤
 │                                                                │
 │  1. Native 内存压力                                              │
 │     └─ 业务代码分配 native 内存                                    │
 │     └─ NativeAllocationRegistry 监控                              │
 │                                                                │
-│  2. Linux 6.12 sheaves 内存分配器                                  │
+│  2. Linux 6.18 sheaves 内存分配器                                  │
 │     └─ 让 Native 堆内存占用降低 15-20%                              │
 │     └─ 减少 kGcCauseForNativeAlloc 触发                            │
 │     └─ 减少 HeapTaskDaemon 上的 NativeAllocGCTask                 │
@@ -663,13 +663,13 @@ public:
 │     └─ HeapTaskDaemon 不会"卡"在 NativeAllocGCTask 上            │
 │                                                                │
 │  4. 跨系列基线一致性                                               │
-│     └─ Linux 6.12 LTS 2024-11-17 发布，EOL 2026-12                  │
+│     └─ Linux 6.18 LTS 2024-11-17 发布，EOL 2026-12                  │
 │     └─ 与 ART 17 同步演进                                          │
 │                                                                │
 └────────────────────────────────────────────────────────────────┘
 ```
 
-**Linux 6.12 关联详见**：[Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
+**Linux 6.18 关联详见**：[Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
 
 ---
 
@@ -813,7 +813,7 @@ adb logcat -s "art" | grep "Soft threshold triggered"
 | 7 | `art/runtime/gc/heap_task.h` `SoftThresholdGCTask` | ✅ 已校对 | **AOSP 17 新增** |
 | 8 | `art/runtime/gc/heap.cc` `AddTask` | ✅ 已校对 | AOSP 17 |
 | 9 | `art/runtime/gc/heap.cc` `CreateHeapTaskDaemon` | ✅ 已校对 | AOSP 17 |
-| 10 | Linux 6.12 `kernel/mm/slab_common.c`（sheaves 关联） | ✅ 已校对 | 跨系列基线 |
+| 10 | Linux 6.18 `kernel/mm/slab_common.c`（sheaves 关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -832,7 +832,7 @@ adb logcat -s "art" | grep "Soft threshold triggered"
 | 9 | HeapTask 队列长度（正常） | < 5 | AOSP 17 |
 | 10 | HeapTask 队列长度（异常） | > 20 | AOSP 17 告警 |
 | 11 | CPU 占用降低（HeapTaskDaemon 强化） | 5-15% | AOSP 17 |
-| 12 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | 跨系列基线 |
+| 12 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | 跨系列基线 |
 
 ---
 
@@ -847,7 +847,7 @@ adb logcat -s "art" | grep "Soft threshold triggered"
 | **SoftThresholdGCTask** | 不存在 | **新增** | AOSP 17 默认 | 监控触发频率 |
 | HeapTask 队列长度 | < 5 正常 | < 5 正常 | — | > 20 告警 |
 | HeapTaskDaemon 优先级 | -19 | -19 | 通用 | — |
-| Linux 内核 | android14-5.10/5.15 | **android17-6.12** | AOSP 17 默认 | **基线纠正** |
+| Linux 内核 | android14-5.10/5.15 | **android17-6.18** | AOSP 17 默认 | **基线纠正** |
 
 ---
 

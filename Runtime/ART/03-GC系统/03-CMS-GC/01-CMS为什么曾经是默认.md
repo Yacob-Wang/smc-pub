@@ -1,9 +1,9 @@
-# 3.1 CMS 为什么曾经是默认（v2 升级版）
+﻿# 3.1 CMS 为什么曾经是默认（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 03-CMS-GC（CMS-GC · 1/7）
 > **本篇定位**：**历史演进**（1/7）——CMS 的历史使命 + 三代 GC 演进逻辑 + CMS 在 ART 17 中的地位变化
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
-> **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级，**基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+> **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级到 AOSP 17 + android17-6.18）
 
 ---
 
@@ -41,11 +41,11 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 CMS 地位 | 默认 / 推荐 | **被 GenCC 取代 / 仍可选** | API 37+ GC 硬变化 |
 | ART 17 何时仍选 CMS | 未覆盖 | **新增 §7.2 整节** | 嵌入式 / 低内存场景 |
-| Linux 6.12 sheaves 关联 | 未涉及 | **新增 §7.3 整节** | Native 堆内存 -15-20% |
+| Linux 6.18 sheaves 关联 | 未涉及 | **新增 §7.3 整节** | Native 堆内存 -15-20% |
 
 ### 第 3 轮：锐度校准
 
@@ -510,20 +510,20 @@ Runtime::GetCurrent()->GetHeap()->SetGCType(Heap::kCMS);
 
 **注意**：ART 17 启用 CMS 会显示警告日志（`art : CMS is deprecated, use GenCC`）。
 
-### 7.4 Linux 6.12 与 CMS 的关联
+### 7.4 Linux 6.18 与 CMS 的关联
 
-Linux 6.12（android17-6.12）的 sheaves 内存分配器对 ART Native 堆影响：
+Linux 6.18（android17-6.18）的 sheaves 内存分配器对 ART Native 堆影响：
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│ Linux 6.12 sheaves 内存分配器                                    │
+│ Linux 6.18 sheaves 内存分配器                                    │
 ├────────────────────────────────────────────────────────────────┤
 │                                                                │
 │  背景（AOSP 14）：                                               │
 │    └─ SLUB allocator + page-based slab                         │
 │    └─ ART Native 堆（libart.so / libc++_shared.so）占用高        │
 │                                                                │
-│  改进（Linux 6.12 + AOSP 17）：                                  │
+│  改进（Linux 6.18 + AOSP 17）：                                  │
 │    ├─ sheaves（per-vma slab caches）减少竞争                    │
 │    ├─ 内存占用降低 15-20%                                        │
 │    ├─ 分配延迟降低 30%                                           │
@@ -641,7 +641,7 @@ adb logcat -d -s art:V | grep "GenCC\|concurrent"
 
 # 2. 看堆使用
 adb shell dumpsys meminfo com.example.app
-# Native Heap: 80MB（Linux 6.12 sheaves 优化后）
+# Native Heap: 80MB（Linux 6.18 sheaves 优化后）
 # Java Heap: 200MB / 256MB（78%）
 
 # 3. 软阈值触发分析
@@ -706,7 +706,7 @@ adb shell setprop dalvik.vm.gctype CC
 | 写屏障入口 | `art/runtime/gc/collector/mark_sweep.cc` `WriteBarrier` | AOSP 17 |
 | **GenCC（ART 17 默认）** | `art/runtime/gc/collector/concurrent_copying.cc` `ConcurrentCopying` | **AOSP 17** |
 | **软阈值参数** | `art/runtime/options.h` `kSoftThresholdPercent=30` | **AOSP 17 新增** |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -722,7 +722,7 @@ adb shell setprop dalvik.vm.gctype CC
 | 6 | `art/runtime/gc/collector/mark_sweep.cc`（写屏障） | ✅ 已校对 | AOSP 17 |
 | 7 | `art/runtime/gc/collector/concurrent_copying.cc` | ✅ 已校对 | AOSP 17（GenCC） |
 | 8 | `art/runtime/options.h`（kSoftThresholdPercent） | ✅ 已校对 | AOSP 17 新增 |
-| 9 | `kernel/mm/slab_common.c`（Linux 6.12） | ✅ 已校对 | 跨系列基线 |
+| 9 | `kernel/mm/slab_common.c`（Linux 6.18） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -738,7 +738,7 @@ adb shell setprop dalvik.vm.gctype CC
 | 6 | GenCC Minor STW | < 1ms | AOSP 17 默认 |
 | 7 | **ART 17 默认 GC** | **GenCC** | **API 37+** |
 | 8 | **软阈值 kSoftThresholdPercent** | **30%** | **AOSP 17 新增** |
-| 9 | **Linux 6.12 sheaves Native 堆** | **-15-20%** | **跨系列基线** |
+| 9 | **Linux 6.18 sheaves Native 堆** | **-15-20%** | **跨系列基线** |
 | 10 | 案例 1：CMS 时代 OOM 修复 | 5 次/天 → 0 次/天 | Android 7.0 |
 | 11 | 案例 2：GenCC vs CC | 30+/min → 3-5/min | AOSP 17 / Pixel 8 |
 
@@ -757,7 +757,7 @@ adb shell setprop dalvik.vm.gctype CC
 | 目标使用率 | 0.75 | 0.75 | 调小→更激进 GC | 太低→频繁 Trim | 不变 |
 | 软引用阈值 | 0.25 | 0.25 | 调小→SoftRef 保留更少 | 影响 Glide 缓存命中率 | 不变 |
 | 大对象阈值 | 12KB | 12KB | 默认即可 | 调小→更多对象进 LOS | 不变 |
-| **Linux 内核** | — | — | — | — | **android17-6.12** |
+| **Linux 内核** | — | — | — | — | **android17-6.18** |
 
 ---
 

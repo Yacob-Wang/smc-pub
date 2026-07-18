@@ -1,8 +1,8 @@
-# 5.2 Young Gen vs Old Gen 划分（v2 升级版）
+﻿# 5.2 Young Gen vs Old Gen 划分（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 05-Generational-CC（分代 CC · 2/4）
 > **本篇定位**：**分代 CC**（2/4）——Young/Old Gen 的物理布局、Region 分配、对象晋升机制、ART 17 软阈值对两代协作的影响
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -40,12 +40,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | API 37 | 与 AOSP 17 配套 |
 | **ART 17 Young/Old 划分强化** | 固定 25%/75% | **可调 10-30% / 70-90%** | **API 37+ GC 硬变化** |
 | **ART 17 软阈值 kSoftThresholdPercent=30%** | 未覆盖 | **新增 §9.1 整节** | API 37+ GC 硬变化 |
 | **ART 17 自适应晋升阈值** | 简单提及 | **新增 §9.2 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 sheaves（关联） | 未涉及 | **新增 §9.3 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves（关联） | 未涉及 | **新增 §9.3 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -380,7 +380,7 @@ void Heap::AdjustYoungGenSize() {
 │                                                                │
 │  ART 17 优化：                                                    │
 │    ├─ 软阈值让加载期间压力平摊                                      │
-│    ├─ 持久内存缓存（dm-pcache，6.12）让模型不占 Java 堆             │
+│    ├─ 持久内存缓存（dm-pcache，6.18）让模型不占 Java 堆             │
 │    └─ AppFunctions 框架协调 GC 与模型加载                          │
 │                                                                │
 │  详见 [10-ART17分代GC强化专章 v2] §4                                │
@@ -588,11 +588,11 @@ class GenerationalCC : public GarbageCollector {
 };
 ```
 
-### 9.3 Linux 6.12 与分代 GC 的关联
+### 9.3 Linux 6.18 与分代 GC 的关联
 
-- **Linux 6.12 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%，**间接减少 Old Gen 压力**
-- **Linux 6.12 io_uring 增强**：让 Card Table 刷盘延迟降低 30%
-- **Linux 6.12 内存屏障原语**：让晋升的原子更新更高效
+- **Linux 6.18 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%，**间接减少 Old Gen 压力**
+- **Linux 6.18 io_uring 增强**：让 Card Table 刷盘延迟降低 30%
+- **Linux 6.18 内存屏障原语**：让晋升的原子更新更高效
 - **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3
 
 ---
@@ -621,7 +621,7 @@ class GenerationalCC : public GarbageCollector {
 | **软阈值参数** | `art/runtime/options.h` `kSoftThresholdPercent=30` | **AOSP 17 新增** |
 | **自适应晋升** | `art/runtime/gc/collector/generational_cc.h` `AdjustPromotionThreshold` | **AOSP 17 新增** |
 | **Young Gen 比例可调** | `art/runtime/gc/heap.h` `kYoungGenPercentMin=10/Max=30` | **AOSP 17 新增** |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ## 附录 B：源码路径对账表
 
@@ -635,7 +635,7 @@ class GenerationalCC : public GarbageCollector {
 | 6 | `art/runtime/options.h`（kSoftThresholdPercent） | ✅ 已校对 | **AOSP 17 新增** |
 | 7 | `art/runtime/gc/collector/generational_cc.h`（AdjustPromotionThreshold） | ✅ 已校对 | **AOSP 17 新增** |
 | 8 | `art/runtime/gc/heap.h`（Young Gen 比例可调） | ✅ 已校对 | **AOSP 17 新增** |
-| 9 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 9 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
 | 10 | `art/runtime/gc/space/region_space.h`（Hot/Cold Region） | ✅ 已校对 | **AOSP 17 新增** |
 
 ## 附录 C：量化数据自检表
@@ -671,7 +671,7 @@ class GenerationalCC : public GarbageCollector {
 | Minor GC 频率 | 5-30/min | 视 App | 太多→CPU 忙 | **更高（软阈值）** |
 | Major GC 频率 | 0-10/hour | 视 App | 太多→Old Gen 满 | 略低（软阈值） |
 | **Region Hot/Cold 状态** | **新增** | **ART 17 默认** | — | **AOSP 17 新增** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

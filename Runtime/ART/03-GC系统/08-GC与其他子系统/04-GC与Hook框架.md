@@ -1,8 +1,8 @@
-# 8.4 GC × Hook 框架（v2 升级版）
+﻿# 8.4 GC × Hook 框架（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 08-GC与其他子系统（横切专题 · 4/8）
 > **本篇定位**：**横切专题**（4/8）——Hook 框架与 GC 的协作：**ART 17 重要变化**——类去重对插件隔离的破坏 / 反射改 final 失效 / newHook API
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -46,14 +46,14 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **类去重对插件隔离的破坏** | **未覆盖** | **新增 §7.1 整节** | **AOSP 17 破坏性变化** |
 | **反射改 final 失效** | **未覆盖** | **新增 §7.2 整节** | **AOSP 17 重要变化** |
 | **newHook API** | **未覆盖** | **新增 §7.3 整节** | **AOSP 17 新 API** |
 | **ReadBarrier 强化** | **未覆盖** | **新增 §7.4 整节** | **AOSP 17 兼容性** |
 | **ArtMethod 保护** | **未覆盖** | **新增 §7.5 整节** | **AOSP 17 安全性** |
-| Linux 6.12 sheaves 关联 | 未涉及 | 新增 §7.6 整节 | 跨系列基线一致性 |
+| Linux 6.18 sheaves 关联 | 未涉及 | 新增 §7.6 整节 | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -756,11 +756,11 @@ void ConcurrentCopying::VisitArtMethod(ArtMethod* method) {
 }
 ```
 
-### 7.6 Linux 6.12 sheaves 与 Native 堆
+### 7.6 Linux 6.18 sheaves 与 Native 堆
 
-- **Linux 6.12 sheaves 内存分配器**：让 Native 堆内存占用降低 15-20%
+- **Linux 6.18 sheaves 内存分配器**：让 Native 堆内存占用降低 15-20%
 - **跨系列引用**：详见 [Linux_Kernel/MM/06-MM-调优-sheaves](../../../Linux_Kernel/MM/06-MM-调优-sheaves.md)（待升级 v2）
-- **实战影响**：Hook 框架的 native 内存（trampoline、stub）受 Linux 6.12 内存压力减轻
+- **实战影响**：Hook 框架的 native 内存（trampoline、stub）受 Linux 6.18 内存压力减轻
 
 ---
 
@@ -954,7 +954,7 @@ auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - star
 | 字节码层 Hook | `external/whalebook/` | AOSP 17 兼容 |
 | LSPosed | `external/lsposed/` | 1.9+ |
 | Frida | `external/frida/` | 16+ |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -973,7 +973,7 @@ auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - star
 | 9 | `external/whalebook/` | ✅ 已校对 | AOSP 17 兼容 |
 | 10 | `external/lsposed/` | ✅ 已校对 | 1.9+ |
 | 11 | `external/frida/` | ✅ 已校对 | 16+ |
-| 12 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 12 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -995,7 +995,7 @@ auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - star
 | 12 | 案例 3：反射改 final 失效 | 0% → 100% 测试通过 | AOSP 17 / Pixel 8 |
 | 13 | 案例 4：ArtMethod 保护 abort | Frida 14 abort → Frida 16 100% | AOSP 17 / Pixel 8 |
 | 14 | 案例 5：newHook 性能基准 | 50ms vs 80ms | AOSP 17 / Pixel 8 |
-| 15 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 15 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 
 ---
 
@@ -1010,7 +1010,7 @@ auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - star
 | **newHook API** | **AOSP 17 官方** | **新项目首选** | 兼容性最好 | **AOSP 17 新增** |
 | **ArtMethod 保护** | **开启** | **不可关闭** | 非法修改 → abort | **AOSP 17 新增** |
 | ClassLoader 去重 | 默认开启 | 插件化必须 opt-in | 5MB 内存代价 | **AOSP 17 新增** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

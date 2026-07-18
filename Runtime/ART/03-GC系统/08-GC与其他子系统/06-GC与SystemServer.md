@@ -1,8 +1,8 @@
-# 8.6 GC × System Server 进程（v2 升级版）
+﻿# 8.6 GC × System Server 进程（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 08-GC与其他子系统（横切专题 · 6/8）
 > **本篇定位**：**横切专题**（6/8）——SystemServer 进程的特殊 GC 策略 + ART 17 SystemServer GC 调优（与 Zygote fork 配合 / 启动期 GC 优化）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -44,14 +44,14 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | SystemServer 特殊配置 | API 24- | **扩展到 AOSP 17** | API 37+ 强化 |
 | ART 17 SystemServer 与 Zygote fork 配合 | 未覆盖 | **新增 §7.1 整节** | API 37+ 启动性能硬变化 |
 | ART 17 启动期 GC 优化 | 未覆盖 | **新增 §7.2 整节** | API 37+ 启动性能硬变化 |
 | ART 17 SystemServer GC 调优（GenCC 强化） | 未覆盖 | **新增 §7.3 整节** | API 37+ GC 行为硬变化 |
 | ART 17 SystemServer OOM 风险治理 | 未覆盖 | **新增 §7.4 整节** | API 37+ 稳定性硬变化 |
-| Linux 6.12 sheaves 关联 | 未涉及 | **新增 §7.5 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves 关联 | 未涉及 | **新增 §7.5 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -205,7 +205,7 @@ System Server 的内存特点（AOSP 17 视角）：
    - .so 库（SystemUI 等）
    - 大量 Bitmap（壁纸、启动器图标等）
    - native heap 占用大
-   - Linux 6.12 sheaves 让 Native 堆 -15-20%
+   - Linux 6.18 sheaves 让 Native 堆 -15-20%
 ```
 
 ### 3.3 System Server OOM 的后果
@@ -713,9 +713,9 @@ public class SystemServerMemoryMonitor {
 }
 ```
 
-### 7.5 Linux 6.12 sheaves 与 Native 堆
+### 7.5 Linux 6.18 sheaves 与 Native 堆
 
-- **Linux 6.12 sheaves 内存分配器**：让 Native 堆内存占用降低 15-20%
+- **Linux 6.18 sheaves 内存分配器**：让 Native 堆内存占用降低 15-20%
 - **跨系列引用**：详见 [Linux_Kernel/MM/06-MM-调优-sheaves](../../../Linux_Kernel/MM/06-MM-调优-sheaves.md)（待升级 v2）
 - **实战影响**：SystemServer 的 Native 堆（.so 库 / Bitmap）压力进一步降低
 
@@ -889,7 +889,7 @@ public class OomAlertMonitor {
 | **Heap OOM warning** | `art/runtime/gc/heap.cc` `Heap::HandleSystemServerOOM` | **AOSP 17 强化** |
 | **cmd art metrics** | `art/cmd/cmd_art.cc` | AOSP 17 |
 | onTrimMemory 调用 | `frameworks/base/core/java/android/content/ComponentCallbacks.java` | AOSP 17 |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -902,8 +902,8 @@ public class OomAlertMonitor {
 | 3 | `art/runtime/gc/heap.cc` | ✅ 已校对 | AOSP 17（启动期 hint + critical thread） |
 | 4 | `art/cmd/cmd_art.cc` | ✅ 已校对 | AOSP 17 |
 | 5 | `art/runtime/jni/jni_internal.cc` | ✅ 已校对 | AOSP 17 |
-| 6 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
-| 7 | Linux 6.12 `kernel/mm/slub.c`（关联） | ✅ 已校对 | 跨系列基线 |
+| 6 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 7 | Linux 6.18 `kernel/mm/slub.c`（关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -924,7 +924,7 @@ public class OomAlertMonitor {
 | 11 | 案例 1：启动期 hint 代价 | +200ms 启动耗时 | OEM 升级实测 |
 | 12 | 案例 1：稳态期 OOM 频率 | -90% | GenCC 强化收益 |
 | 13 | 案例 2：OOM 治理后 | 1-2/周 → 0/月 | onTrimMemory 监听 |
-| 14 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 14 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 
 ---
 
@@ -940,7 +940,7 @@ public class OomAlertMonitor {
 | onTrimMemory 实现 | 必须 | 缓存清理 | TRIM_MEMORY_RUNNING_CRITICAL 必实现 | 强化 |
 | **OOM warning 监听** | **必须** | **5s 提前预警** | **错过窗口无法挽救** | **AOSP 17 强化** |
 | onSystemServerMemoryPressure | 必须 | OEM 定制服务 | 监听 level >= TRIM_MEMORY_RUNNING_MODERATE | 强化 |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

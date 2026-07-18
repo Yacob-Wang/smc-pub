@@ -1,8 +1,8 @@
-# v2 升级版
+﻿# v2 升级版
 
 > **本子模块**：03-GC 系统 / 07-GC 调度与触发（GC 调度与触发 · 7/8）
 > **本篇定位**：**Background GC 与 Foreground GC 优先级**（7/8）——HeapTaskDaemon 调度 + ART 17 强化（Background 调度策略 / 前台响应延迟 / 与 kBackgroundGenCC 联动）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -41,13 +41,13 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 kBackgroundGenCC | 未覆盖 | **新增 §6 整节** | API 37+ GC 硬变化 |
 | ART 17 HeapTaskDaemon 动态间隔 | 未涉及 | **新增 §6.1** | CPU 忙时 2s / 闲时 0.5s |
 | ART 17 软阈值与 Background 联动 | 未涉及 | **新增 §6.2** | kSoftThreshold 与后台 GC 配合 |
 | ART 17 前台响应延迟 < 1ms | 未涉及 | **新增 §6.3** | 软阈值联动 |
-| Linux 6.12 sheaves/sched_ext 联动 | 未涉及 | **新增 §6.4** | 跨系列基线 |
+| Linux 6.18 sheaves/sched_ext 联动 | 未涉及 | **新增 §6.4** | 跨系列基线 |
 
 ### 第 3 轮：锐度校准
 
@@ -746,13 +746,13 @@ std::chrono::milliseconds Heap::CalculateNextCheckInterval() {
 └────────────────────────────────────────────────────────────────────┘
 ```
 
-### 6.5 ★ Linux 6.12 sched_ext 联动（Background 调度效率）
+### 6.5 ★ Linux 6.18 sched_ext 联动（Background 调度效率）
 
-ART 17 的 Background GC 调度与 Linux 6.12 内核深度联动：
+ART 17 的 Background GC 调度与 Linux 6.18 内核深度联动：
 
 ```
 ┌────────────────────────────────────────────────────────────────────┐
-│ Linux 6.12 sched_ext 联动（AOSP 17）                                 │
+│ Linux 6.18 sched_ext 联动（AOSP 17）                                 │
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
 │  1. Background GC 调度                                                │
@@ -760,19 +760,19 @@ ART 17 的 Background GC 调度与 Linux 6.12 内核深度联动：
 │     └─ 在 CPU 忙时让出 CPU 给业务                                      │
 │     └─ 在 CPU 闲时积极触发后台 GC                                      │
 │                                                                    │
-│  2. Linux 6.12 sched_ext 新特性                                       │
+│  2. Linux 6.18 sched_ext 新特性                                       │
 │     └─ 可插拔调度器（sched_ext）                                       │
 │     └─ 细粒度 CPU 亲和性控制                                          │
 │     └─ ★ ART 17 配合：Background GC 线程绑定小核                      │
 │                                                                    │
 │  3. 跨系列基线一致性                                                   │
-│     └─ Linux 6.12 LTS 2024-11-17 发布，EOL 2026-12                  │
+│     └─ Linux 6.18 LTS 2024-11-17 发布，EOL 2026-12                  │
 │     └─ 与 ART 17 同步演进                                             │
 │                                                                    │
 └────────────────────────────────────────────────────────────────────┘
 ```
 
-**Linux 6.12 关联详见**：[Linux_Kernel/Process/07-进程调度器](../../../Linux_Kernel/Process/07-进程调度器.md) §5。
+**Linux 6.18 关联详见**：[Linux_Kernel/Process/07-进程调度器](../../../Linux_Kernel/Process/07-进程调度器.md) §5。
 
 ---
 
@@ -889,7 +889,7 @@ adb logcat -d -s "art" | grep "Next check interval" | head -10
 2. **★ kBackgroundGenCC 是 ART 17 后台调度的"轻量化"** —— 比传统 kGcCauseBackground 更频繁但更轻量，**STW < 1ms**。详见 [01-9种GcCause](01-9种GcCause.md) §2.11 + [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §2。
 3. **★ 软阈值 kSoftThreshold 与 Background 联动是 ART 17 的"灵魂"** —— 软阈值（30%）在 Foreground 触发（业务线程同步），kBackgroundGenCC 在 Background 异步，**双管齐下让 STW < 1ms**。**老 App 不适应可能卡顿**。详见 [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §2.2。
 4. **★ 动态调度间隔是 ART 17 的"智能调节器"** —— CPU 闲时 0.5s / 中等 1s / 忙时 2s，**CPU 开销降低 20-30%**。详见 [02-HeapTaskDaemon](02-HeapTaskDaemon.md) 详解 HeapTaskDaemon 调度。
-5. **★ Linux 6.12 sched_ext 联动是 Background 调度的"加速器"** —— Background GC 线程绑定小核，**在 CPU 忙时让出 CPU 给业务**。详见 [Linux_Kernel/Process/07-进程调度器](../../../Linux_Kernel/Process/07-进程调度器.md) §5。
+5. **★ Linux 6.18 sched_ext 联动是 Background 调度的"加速器"** —— Background GC 线程绑定小核，**在 CPU 忙时让出 CPU 给业务**。详见 [Linux_Kernel/Process/07-进程调度器](../../../Linux_Kernel/Process/07-进程调度器.md) §5。
 
 ---
 
@@ -922,7 +922,7 @@ adb logcat -d -s "art" | grep "Next check interval" | head -10
 | 7 | `art/runtime/gc/heap_task.h` `BackgroundGenCCTask` | ✅ 已校对 | **AOSP 17 新增** |
 | 8 | `art/runtime/gc/heap_task_daemon.cc` | ✅ 已校对 | AOSP 17 |
 | 9 | `art/runtime/gc/heap_task.h` `HeapTask` | ✅ 已校对 | AOSP 17 |
-| 10 | Linux 6.12 `kernel/sched/ext.c`（sched_ext 关联） | ✅ 已校对 | 跨系列基线 |
+| 10 | Linux 6.18 `kernel/sched/ext.c`（sched_ext 关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -943,7 +943,7 @@ adb logcat -d -s "art" | grep "Next check interval" | head -10
 | 11 | Background GC STW | < 5ms | — |
 | 12 | **kBackgroundGenCC STW** ★ | **< 1ms** | **AOSP 17** |
 | 13 | 软阈值与 Background 联动频率 | 视 App | AOSP 17 |
-| 14 | Linux 6.12 sched_ext 调度效率 | +10-15% | 跨系列基线 |
+| 14 | Linux 6.18 sched_ext 调度效率 | +10-15% | 跨系列基线 |
 
 ---
 
@@ -958,7 +958,7 @@ adb logcat -d -s "art" | grep "Next check interval" | head -10
 | **动态调度间隔** | 不存在 | **新增** | AOSP 17 默认 | **CPU 负载联动** |
 | HeapTaskDaemon 调度 | 静态 | **动态唤醒** | AOSP 17 默认 | — |
 | 后台 GC 线程亲和性 | 任意核 | **小核** | AOSP 17 推荐 | **sched_ext 联动** |
-| Linux 内核 | android14-5.10/5.15 | **android17-6.12** | AOSP 17 默认 | **基线纠正** |
+| Linux 内核 | android14-5.10/5.15 | **android17-6.18** | AOSP 17 默认 | **基线纠正** |
 | 后台 GC CPU 开销 | 基线 | **-20-30%** | AOSP 17 强化 | **动态调度** |
 | **软阈值占比（健康）** ★ | — | **30-60%** | AOSP 17 优秀 | **< 20% 参数未生效** |
 

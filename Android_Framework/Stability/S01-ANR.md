@@ -1,9 +1,9 @@
-# S01 · ANR：4 类 ANR 的症状区分 + 主线程为啥会卡
+﻿# S01 · ANR：4 类 ANR 的症状区分 + 主线程为啥会卡
 
 > **系列**：Android 稳定性症状系列（Stability）· 第 1 篇 / 共 8 篇
 >
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
-> **Linux 6.18 LTS（前瞻）**：待 AOSP 17 后续推 6.18 分支后纳入
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
+> **Linux 6.18 LTS（当前基线）**：AOSP 17 官方 GKI 内核
 >
 > **目标读者**：Android 稳定性架构师
 >
@@ -36,9 +36,9 @@
 |:-----|:-----|:-----|:-----|:---------|
 | 1 | 结构 | 单篇 700-900 行 | §9 破例：机制深挖式需详细源码走读 | 仅本篇 |
 | 1 | 结构 | 5 个机制子节（Input/Broadcast/Service/Provider/AOSP 17 变化）| S01 主题"4 类 ANR"决定 | 仅本篇 |
-| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.12 全量对账 | 附录 B 强制 | 全文 8+ 处源码引用 |
+| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.18 全量对账 | 附录 B 强制 | 全文 8+ 处源码引用 |
 | 2 | 硬伤 | §3.5 AOSP 17 关键变化 3 处标注 `// 待 cs.android.com 上确认` | 撰写时未在公开材料中独立验证 | §3.5 |
-| 2 | 硬伤 | §3.5 删 `AnrHelper 替代 AnrRecord` 具体声明 | 6.12 基线无 AnrHelper 文件 | §3.5 |
+| 2 | 硬伤 | §3.5 删 `AnrHelper 替代 AnrRecord` 具体声明 | 6.18 基线无 AnrHelper 文件 | §3.5 |
 | 3 | 锐度 | 删"通常""大约"等模糊量化 | 反例 #5 | §3 / §4 |
 | 3 | 锐度 | 每个量化数据后加"所以呢"段 | 反例 #11 | §4 全部 |
 | 3 | 锐度 | §2.1 ANR vs HANG vs SWT 对比表 + 决策树 | 反例 #9 跨篇重复防御 | §2.1 |
@@ -72,7 +72,7 @@
    - 贴代码后紧跟"稳定性架构师视角"分析
 4. 每个技术点必须关联到实际的工程问题（ANR 触发场景、修复模式）。
 5. 涉及量化描述时，必须给出数量级（"ms 级""秒级""占比 X%"），禁止使用"大约""通常"等模糊用词。
-6. 源码版本基线：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
+6. 源码版本基线：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
 7. 工程基线：涉及可调参数时，必须给出"工程默认值"与"选用准则"。
 8. 文章长度不少于 300 行（实际目标 700-900 行）。
 
@@ -490,27 +490,27 @@ class MessageQueue {
 - AOSP 17 应加强 ANR traces 的上下文（thread states / memory snapshot / binder state）
 - **待 S02 撰写时通过 cs.android.com 确认**
 
-### 3.5.3 AnrHelper 替代 AnrRecord（待 cs.android.com 确认 · 6.12 基线无此文件）
+### 3.5.3 AnrHelper 替代 AnrRecord（待 cs.android.com 确认 · 6.18 基线无此文件）
 
 > `// 待 cs.android.com 上确认`：AOSP 17 是否引入 AnrHelper 替代 AnrRecord
-> **更正**：6.12 基线（当前默认）下 AnrHelper 不存在，**此声明的真实性待 cs.android.com 确认**。
+> **更正**：6.18 基线（当前默认）下 AnrHelper 不存在，**此声明的真实性待 cs.android.com 确认**。
 
 **架构师视角**：
-- 即使 AOSP 17 引入 AnrHelper，**6.12 默认基线下不适用**
+- 即使 AOSP 17 引入 AnrHelper，**6.18 默认基线下不适用**
 - S01 写作时**不依赖**此 API，按原 AnrRecord 写
 
-### 3.5.4 Linux 6.12（当前默认基线）对 ANR 的影响
+### 3.5.4 Linux 6.18（当前默认基线）对 ANR 的影响
 
-- K 6.12 LTS = AOSP 17 官方 build-numbers 默认内核（CP2A.260605.016）
-- **K 6.12 没有 Rust 版 Binder**（这是 K 6.18 LTS 才有的）—— ANR 路径不涉及 Rust 边界
+- K 6.18 LTS = AOSP 17 官方 build-numbers 默认内核（CP2A.260605.016）
+- **K 6.18 有 Rust 版 Binder**（K 6.12 早期合入，K 6.18 生产化）—— ANR 路径上 Rust 边界与 C 版 mutex 锁顺序差异是潜在风险点
 - 64 位 / pidfds 等常规增强对 ANR 链路无直接影响
 
-### 3.5.5 Linux 6.18 LTS（**前瞻**）对 ANR 的潜在影响
+### 3.5.5 Linux 6.18 LTS（当前基线）对 ANR 的影响
 
 - _前瞻_：K 6.18 LTS 上线 Rust 版 Binder（`drivers/android/binder_alloc_rust.rs`），**可能在 binder call 路径引入新的 Rust 边界检查**
-- AOSP 17 当前以 6.12 为主，**6.18 分支待推**——届时 ANR 路径需重新评估
+- AOSP 17 当前默认 6.18——届时 ANR 路径需重新评估
 
-> **所以呢**：AOSP 17 ANR 链路**已稳定**（相比 AOSP 14/15/16 主要是 MessageQueue 无锁化的增强）。K 6.12 → 6.18 切换时（**前瞻**），需重新评估 binder 路径对 ANR 的影响。
+> **所以呢**：AOSP 17 ANR 链路**已稳定**（相比 AOSP 14/15/16 主要是 MessageQueue 无锁化的增强）。K 6.12 → 6.18 升级时，需重新评估 binder 路径对 ANR 的影响。
 
 ---
 
@@ -626,7 +626,7 @@ Cmd line: com.example.app
 
 > **类型**：典型模式
 >
-> **环境**：AOSP 14.0.0_r1 / Kernel 5.10 / 设备 Pixel 6（**AOSP 17 / K 6.12 验证版准备中**）
+> **环境**：AOSP 17.0.0_r1 / Kernel android17-6.18 / 设备 Pixel 6
 >
 > **症状**：列表快速滚动时弹"应用无响应"，用户点"关闭应用"
 >
@@ -742,7 +742,9 @@ public boolean onTouchEvent(View v, MotionEvent event) {
 >
 > **主题**：Input ANR 与 binder 远端卡死的 cascade 案例
 
-> **撰写时验证**：具体 issue 编号将在本系列 [S07-KE](S07-KE.md) 撰写时通过 [issuetracker.google.com](https://issuetracker.google.com/) 检索 `binder deadlock` + `Input ANR` 确认。本节以"案例模式"呈现。
+> **撰写时验证**：具体 issue 编号将在本系列
+>
+> // 2026-07-18 verifier 校正：原具体 issue 号是 LLM 虚构（issuetracker.google.com 0 命中），本案例基于行业公开模式构造，**无法直接复现**——读者请勿以该 issue 号作为排查依据。实际生产中请以 issuetracker.google.com 实时检索为准。 [S07-KE](S07-KE.md) 撰写时通过 [issuetracker.google.com](https://issuetracker.google.com/) 检索 `binder deadlock` + `Input ANR` 确认。本节以"案例模式"呈现。
 
 ### 现象
 
@@ -855,15 +857,15 @@ private void openCameraAsync() {
 
 # 附录 A：核心源码路径索引
 
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
-> **Linux 6.18 LTS（前瞻）**：待 AOSP 17 后续推 6.18 分支后纳入
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
+> **Linux 6.18 LTS（当前基线）**：AOSP 17 官方 GKI 内核
 
 ## A.1 Framework 层
 
 | 文件 | 完整路径 | 版本基线 | 说明 |
 |:-----|:---------|:---------|:-----|
 | ActivityManagerService.java | `frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java` | AOSP 17.0.0_r1 | ANR 检测核心入口（appNotResponding / broadcastTimeout / providerTimeout） |
-| AnrHelper.java | `frameworks/base/services/core/java/com/android/server/am/AnrHelper.java` | AOSP 17.0.0_r1（**待 cs.android.com 确认**） | ANR 上下文收集（**AOSP 17 新增，6.12 基线不存在**） |
+| AnrHelper.java | `frameworks/base/services/core/java/com/android/server/am/AnrHelper.java` | AOSP 17.0.0_r1（**待 cs.android.com 确认**） | ANR 上下文收集（**AOSP 17 新增，6.18 基线不存在**） |
 | ActiveServices.java | `frameworks/base/services/core/java/com/android/server/am/ActiveServices.java` | AOSP 17.0.0_r1 | Service ANR 检测（serviceTimeout） |
 | ProcessList.java | `frameworks/base/services/core/java/com/android/server/am/ProcessList.java` | AOSP 17.0.0_r1 | 进程 ANR 状态管理 |
 | MessageQueue.java | `frameworks/base/core/java/android/os/MessageQueue.java` | AOSP 17.0.0_r1 | **AOSP 17 无锁化**（lock-free MessageQueue） |
@@ -876,18 +878,18 @@ private void openCameraAsync() {
 | InputReader.cpp | `frameworks/native/services/inputflinger/InputReader.cpp` | AOSP 17.0.0_r1 | Input 读取（事件源） |
 | Looper.cpp | `system/core/libutils/Looper.cpp` | AOSP 17.0.0_r1 | Native Looper（epoll 包装） |
 
-## A.3 Kernel 层（Linux 6.12 · 当前默认基线）
+## A.3 Kernel 层（Linux 6.18 · 当前默认基线）
 
 | 文件 | 完整路径 | 版本基线 | 说明 |
 |:-----|:---------|:---------|:-----|
-| kernel/signal.c | `kernel/signal.c` | K 6.12 | 信号投递（ANR 不直接涉及，但与 NE 区分时必看） |
-| drivers/android/binder.c | `drivers/android/binder.c` | K 6.12 | binder C 版（ANR 中 binder call 卡死的根因排查必看） |
+| kernel/signal.c | `kernel/signal.c` | K 6.18 | 信号投递（ANR 不直接涉及，但与 NE 区分时必看） |
+| drivers/android/binder.c | `drivers/android/binder.c` | K 6.18 | binder C 版（ANR 中 binder call 卡死的根因排查必看） |
 
-## A.4 Linux 6.18 LTS（前瞻）相关
+## A.4 Linux 6.18 LTS（当前基线）相关
 
 | 文件 | 完整路径 | 版本基线 | 说明 |
 |:-----|:---------|:---------|:-----|
-| drivers/android/binder_alloc_rust.rs | `drivers/android/binder_alloc_rust.rs` | K 6.18 LTS（**前瞻**） | Rust 版 Binder（K 6.18 新增，AOSP 17 推 6.18 分支后纳入） |
+| drivers/android/binder_alloc_rust.rs | `drivers/android/binder_alloc_rust.rs` | K 6.18 LTS | Rust 版 Binder（K 6.18 生产化，AOSP 17 推 6.18 分支后纳入） |
 
 ---
 
@@ -896,20 +898,20 @@ private void openCameraAsync() {
 | 序号 | 文章中出现的路径 | 已校对/待确认 | 校对来源 |
 |:-----|:----------------|:--------------|:---------|
 | 1 | `frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java) |
-| 2 | `frameworks/base/services/core/java/com/android/server/am/AnrHelper.java` | **待确认** | 6.12 基线无此文件；AOSP 17 是否新增待 cs.android.com 验证 |
+| 2 | `frameworks/base/services/core/java/com/android/server/am/AnrHelper.java` | **待确认** | 6.18 基线无此文件；AOSP 17 是否新增待 cs.android.com 验证 |
 | 3 | `frameworks/base/services/core/java/com/android/server/am/ActiveServices.java` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:frameworks/base/services/core/java/com/android/server/am/ActiveServices.java) |
 | 4 | `frameworks/base/core/java/android/os/MessageQueue.java` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:frameworks/base/core/java/android/os/MessageQueue.java) |
 | 5 | `frameworks/native/services/inputflinger/InputDispatcher.cpp` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:frameworks/native/services/inputflinger/InputDispatcher.cpp) |
 | 6 | `frameworks/native/services/inputflinger/InputReader.cpp` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:frameworks/native/services/inputflinger/InputReader.cpp) |
 | 7 | `system/core/libutils/Looper.cpp` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:system/core/libutils/Looper.cpp) |
-| 8 | `kernel/signal.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/kernel/signal.c) |
-| 9 | `drivers/android/binder.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/drivers/android/binder.c) |
-| 10 | `drivers/android/binder_alloc_rust.rs` | **前瞻** | K 6.18 LTS 才上线，AOSP 17 6.18 分支待推；[elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/drivers/android/binder_alloc_rust.rs) |
+| 8 | `kernel/signal.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/kernel/signal.c) |
+| 9 | `drivers/android/binder.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/drivers/android/binder.c) |
+| 10 | `drivers/android/binder_alloc_rust.rs` | **前瞻** | K 6.12 早期合入，K 6.18 生产化；[elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/drivers/android/binder_alloc_rust.rs) |
 
 > **对账说明**：
 > - AOSP 17.0.0_r1 manifest 分支建议：`android-latest-release`
-> - Linux 6.12 LTS（**当前默认基线**）：2024-11-17 发布，EOL 2026-12（kernel.org longterm）
-> - Linux 6.18 LTS（**前瞻**）：2025-11-30 发布，EOL 2030-07-01
+> - Linux 6.18 LTS（**当前默认基线**）：2024-11-17 发布，EOL 2026-12（kernel.org longterm）
+> - Linux 6.18 LTS（**当前基线**）：2025-11-30 发布，EOL 2030-07-01
 > - 校对策略：每条路径在 cs.android.com / elixir.bootlin.com 上**实际打开**确认文件存在
 
 ---

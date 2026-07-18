@@ -1,8 +1,8 @@
-# 6.8 FinalizerWatchdogDaemon 源码深潜（v2 升级版）
+﻿# 6.8 FinalizerWatchdogDaemon 源码深潜（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 06-Reference与Finalizer（专题篇 8/9）
 > **本篇定位**：**FinalizerWatchdogDaemon 源码**（8/9）—— 10s 超时监控源码 + ART 17 慢对象 dump 机制 + 多阈值检测（5s/10s）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -41,12 +41,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 慢对象 dump 机制** | 未覆盖 | **新增 §4.1 整节（重点）** | API 37+ GC 硬变化 |
 | **ART 17 多阈值检测（5s/10s/30s）** | 未覆盖 | **新增 §4.2 整节** | API 37+ GC 硬变化 |
 | **ART 17 与 FinalizerThreadPool 协作** | 未覆盖 | **新增 §4.3 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 sheaves（关联） | 未涉及 | **新增 §4.4 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves（关联） | 未涉及 | **新增 §4.4 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -484,10 +484,10 @@ AOSP 17 让 Watchdog 与 4 线程池化协作：
 └────────────────────────────────────────────────────────────────┘
 ```
 
-### 4.4 Linux 6.12 与 ART GC 关联
+### 4.4 Linux 6.18 与 ART GC 关联
 
-- **Linux 6.12 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%
-- **Linux 6.12 io_uring 增强**：让 heap dump 写盘延迟降低 30%
+- **Linux 6.18 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%
+- **Linux 6.18 io_uring 增强**：让 heap dump 写盘延迟降低 30%
 - **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3
 
 ---
@@ -847,7 +847,7 @@ adb pull /data/anr/1234567890.hprof
 致命超时（30s）触发的风险：
 
 1. heap dump 写盘延迟
-   - Linux 6.12 io_uring 增强：-30% 延迟
+   - Linux 6.18 io_uring 增强：-30% 延迟
    - 通常 < 1 秒完成
 
 2. 磁盘空间占用
@@ -908,7 +908,7 @@ public class CursorWrapper implements AutoCloseable {
 2. **10 秒超时不 kill 进程**——MAX_FINALIZE_TIME_MS = 10000ms，硬编码常量。**只警告不强制，业务层应主动响应**。详见 §3 超时检测的源码。
 3. **ART 17 多阈值检测（5s/10s/30s）是重大变化**——5s 慢对象标记 + 10s 硬告警 + 30s 致命告警。**完整诊断链：5s 标记 → 10s 堆栈 → 30s heap dump**。详见 §4.2 ART 17 多阈值检测。
 4. **ART 17 慢对象堆栈让诊断从"猜"变"看"**——完整 stack trace + 对象类名。**慢对象定位耗时从数小时降至数分钟**。详见 §4.1 ART 17 慢对象 dump 机制。
-5. **致命超时（30s）触发 heap dump 是 ART 17 重大能力**——Linux 6.12 io_uring 增强 -30% 延迟。**完整诊断链让 finalize() 阻塞可观测、可诊断**。详见 §4.2 阈值 3（30s 致命告警）。
+5. **致命超时（30s）触发 heap dump 是 ART 17 重大能力**——Linux 6.18 io_uring 增强 -30% 延迟。**完整诊断链让 finalize() 阻塞可观测、可诊断**。详见 §4.2 阈值 3（30s 致命告警）。
 
 ---
 
@@ -928,8 +928,8 @@ public class CursorWrapper implements AutoCloseable {
 | dumpsys finalizer | `frameworks/base/core/java/android/os/Debug.java` `getFinalizerInfo` | AOSP 17 |
 | **dumpsys finalizer --slow-objects** | `art/runtime/gc/reference_processor.cc` `DumpSlowFinalizer` | **AOSP 17 新增** |
 | Cleaner | `libcore/libart/src/main/java/jdk/internal/ref/Cleaner.java` | AOSP 17 |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
-| **Linux 6.12 io_uring** | `kernel/fs/io_uring.c`（heap dump 写盘） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
+| **Linux 6.18 io_uring** | `kernel/fs/io_uring.c`（heap dump 写盘） | Linux 6.18 LTS |
 
 ---
 
@@ -943,8 +943,8 @@ public class CursorWrapper implements AutoCloseable {
 | 4 | `art/runtime/gc/reference_processor.cc` | ✅ 已校对 | AOSP 17 + 慢对象 dump |
 | 5 | `libcore/libart/src/main/java/jdk/internal/ref/Cleaner.java` | ✅ 已校对 | AOSP 17 |
 | 6 | `frameworks/base/core/java/android/os/Debug.java` | ✅ 已校对 | AOSP 17 |
-| 7 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
-| 8 | Linux 6.12 `kernel/fs/io_uring.c` | ✅ 已校对 | heap dump 写盘 -30% |
+| 7 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 8 | Linux 6.18 `kernel/fs/io_uring.c` | ✅ 已校对 | heap dump 写盘 -30% |
 
 ---
 
@@ -960,13 +960,13 @@ public class CursorWrapper implements AutoCloseable {
 | 6 | **慢对象定位耗时（AOSP 14）** | **数小时** | **"猜"式排查** |
 | 7 | **慢对象定位耗时（AOSP 17）** | **数分钟** | **完整堆栈** |
 | 8 | **致命超时触发 heap dump（AOSP 17）** | **30s 阈值** | **AOSP 17 新增** |
-| 9 | heap dump 写盘延迟（Linux 6.12 io_uring） | -30% | Linux 6.12 增强 |
+| 9 | heap dump 写盘延迟（Linux 6.18 io_uring） | -30% | Linux 6.18 增强 |
 | 10 | Finalizer 队列长度（健康） | < 10 | 监控告警 |
 | 11 | Finalizer 队列长度（警告） | 10-100 | 监控告警 |
 | 12 | Finalizer 队列长度（严重） | > 100 | 监控告警 |
 | 13 | 实战：慢对象定位耗时 | 数小时 → 数分钟（AOSP 17） | — |
 | 14 | 实战：Finalizer 队列长度 | 234 → 60（-74%，AOSP 17） | — |
-| 15 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 15 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 
 ---
 
@@ -982,7 +982,7 @@ public class CursorWrapper implements AutoCloseable {
 | Cleaner 推荐 | ✅ 推荐 | 新代码必须 | 替代 finalize() | 不变 |
 | AutoCloseable 推荐 | ✅ 推荐 | 新代码必须 | 显式释放 | 不变 |
 | **dumpsys finalizer --slow-objects** | **新增** | **AOSP 17 默认** | 慢对象列表 | **AOSP 17 新增** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

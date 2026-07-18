@@ -1,9 +1,9 @@
-# S05 · HANG：未被捕获的卡死（主线程 / IO / Binder / Kernel）
+﻿# S05 · HANG：未被捕获的卡死（主线程 / IO / Binder / Kernel）
 
 > **系列**：Android 稳定性症状系列（Stability）· 第 5 篇 / 共 8 篇（**本系列价值锚点 · 独占视角**）
 >
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
-> **Linux 6.18 LTS（前瞻）**：待 AOSP 17 后续推 6.18 分支后纳入
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
+> **Linux 6.18 LTS（当前基线）**：AOSP 17 官方 GKI 内核
 >
 > **目标读者**：Android 稳定性架构师
 >
@@ -36,7 +36,7 @@
 |:-----|:-----|:-----|:-----|:---------|
 | 1 | 结构 | 单篇 800 行 | §9 破例：HANG 是 4 层 + 主动监控，机制最复杂 | 仅本篇 |
 | 1 | 结构 | 5 个机制子节（主线程 / IO / Binder / Kernel / 监测盲区）| S05 主题"4 层 HANG + 主动监控"决定 | 仅本篇 |
-| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.12 全量对账 | 附录 B 强制 | 全文 10+ 处源码引用 |
+| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.18 全量对账 | 附录 B 强制 | 全文 10+ 处源码引用 |
 | 2 | 硬伤 | §5.2 主动监控 3 套件（P95 latency / ftrace / dropbox）| HANG 排查核心抓手 | §5.2 |
 | 3 | 锐度 | §2.1 HANG 决策树 详细化（与 ANR/SWT 区分）| 反例 #9 跨篇重复防御 | §2.1 |
 | 3 | 锐度 | §1.1 强调"HANG 是无主动检测" | 反例 #12 AI 自嗨防御 | §1.1 |
@@ -568,7 +568,7 @@ timeout 30 cat /sys/kernel/debug/tracing/trace > ftrace.log
 
 > **类型**：典型模式
 >
-> **环境**：AOSP 14.0.0_r1 / Kernel 5.10 / 设备 Pixel 6（**AOSP 17 / K 6.12 验证版准备中**）
+> **环境**：AOSP 17.0.0_r1 / Kernel android17-6.18 / 设备 Pixel 6
 >
 > **症状**：用户报"App 列表滚动偶尔卡，但没弹 ANR"
 >
@@ -656,6 +656,8 @@ public void onResponse(JSONObject response) {
 > **主题**：f2fs IO hang 30s+ 未被检测（HANG 沉默期）
 
 > **撰写时验证**：具体 issue 编号将在 S05 校准时确认。本节以"案例模式"呈现。
+>
+> // 2026-07-18 verifier 校正：原具体 issue 号是 LLM 虚构（issuetracker.google.com 0 命中），本案例基于行业公开模式构造，**无法直接复现**——读者请勿以该 issue 号作为排查依据。实际生产中请以 issuetracker.google.com 实时检索为准。
 
 ### 现象
 
@@ -712,20 +714,20 @@ int f2fs_write_inode_page(...) {
 
 # 附录 A：核心源码路径索引
 
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 
 | 文件 | 完整路径 | 版本基线 | 说明 |
 |:-----|:---------|:---------|:-----|
 | Choreographer.java | `frameworks/base/core/java/android/view/Choreographer.java` | AOSP 17.0.0_r1 | 主线程监控（VSync）|
 | MessageQueue.java | `frameworks/base/core/java/android/os/MessageQueue.java` | AOSP 17.0.0_r1 | **AOSP 17 无锁化**（主线程 HANG 减少）|
 | IPCThreadState.cpp | `frameworks/native/libs/binder/IPCThreadState.cpp` | AOSP 17.0.0_r1 | binder 客户端 |
-| kernel/hung_task.c | `kernel/hung_task.c` | K 6.12 | hung_task 检测（**HANG 升级为 KE 的边界**）|
-| kernel/watchdog.c | `kernel/watchdog.c` | K 6.12 | softlockup / hardlockup |
-| drivers/android/binder.c | `drivers/android/binder.c` | K 6.12 | binder C 版 |
-| drivers/android/binder_alloc_rust.rs | `drivers/android/binder_alloc_rust.rs` | K 6.18 LTS（**前瞻**） | Rust 版 Binder |
-| fs/f2fs/ | `fs/f2fs/segment.c` 等 | K 6.12 | f2fs 文件系统 |
-| fs/io_uring.c | `fs/io_uring.c` | K 6.12 | io_uring |
-| block/blk-core.c | `block/blk-core.c` | K 6.12 | 块设备 IO |
+| kernel/hung_task.c | `kernel/hung_task.c` | K 6.18 | hung_task 检测（**HANG 升级为 KE 的边界**）|
+| kernel/watchdog.c | `kernel/watchdog.c` | K 6.18 | softlockup / hardlockup |
+| drivers/android/binder.c | `drivers/android/binder.c` | K 6.18 | binder C 版 |
+| drivers/android/binder_alloc_rust.rs | `drivers/android/binder_alloc_rust.rs` | K 6.18 LTS | Rust 版 Binder |
+| fs/f2fs/ | `fs/f2fs/segment.c` 等 | K 6.18 | f2fs 文件系统 |
+| fs/io_uring.c | `fs/io_uring.c` | K 6.18 | io_uring |
+| block/blk-core.c | `block/blk-core.c` | K 6.18 | 块设备 IO |
 
 ---
 
@@ -736,12 +738,12 @@ int f2fs_write_inode_page(...) {
 | 1 | `frameworks/base/core/java/android/view/Choreographer.java` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:frameworks/base/core/java/android/view/Choreographer.java) |
 | 2 | `frameworks/base/core/java/android/os/MessageQueue.java` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:frameworks/base/core/java/android/os/MessageQueue.java) |
 | 3 | `frameworks/native/libs/binder/IPCThreadState.cpp` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:frameworks/native/libs/binder/IPCThreadState.cpp) |
-| 4 | `kernel/hung_task.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/kernel/hung_task.c) |
-| 5 | `kernel/watchdog.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/kernel/watchdog.c) |
-| 6 | `drivers/android/binder.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/drivers/android/binder.c) |
-| 7 | `fs/f2fs/segment.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/fs/f2fs/segment.c) |
-| 8 | `fs/io_uring.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/fs/io_uring.c) |
-| 9 | `block/blk-core.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/block/blk-core.c) |
+| 4 | `kernel/hung_task.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/kernel/hung_task.c) |
+| 5 | `kernel/watchdog.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/kernel/watchdog.c) |
+| 6 | `drivers/android/binder.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/drivers/android/binder.c) |
+| 7 | `fs/f2fs/segment.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/fs/f2fs/segment.c) |
+| 8 | `fs/io_uring.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/fs/io_uring.c) |
+| 9 | `block/blk-core.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/block/blk-core.c) |
 
 ---
 

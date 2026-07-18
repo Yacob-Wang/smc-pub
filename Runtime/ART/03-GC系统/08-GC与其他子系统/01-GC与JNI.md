@@ -1,8 +1,8 @@
-# 8.1 GC × JNI：Critical 区的阻塞问题（v2 升级版）
+﻿# 8.1 GC × JNI：Critical 区的阻塞问题（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 08-GC与其他子系统（横切专题 · 1/8）
 > **本篇定位**：**横切专题**（1/8）——GC 与 JNI Critical 区的协作：为什么 Critical 区阻塞 GC + ART 17 Slot Pool 强化 + 实战治理
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -19,7 +19,7 @@
 | **ART 17 Critical 区检测强化** | ✓ 整节新增 | — |
 | **ART 17 JNI 异常处理与 Critical 区协同** | ✓ 整节新增 | — |
 | Global Ref 治理 | — | [02-GC与JNI-GlobalRef v2](02-GC与JNI-GlobalRef.md) 专章 |
-| Linux 6.12 sheaves 与 Native 堆 | — | [10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) §7 |
+| Linux 6.18 sheaves 与 Native 堆 | — | [10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) §7 |
 
 **承接自**：本篇是 [01-可达性分析 v2](../01-基础理论/01-可达性分析.md) 12 种 GC Root 系列的"JNI 侧 Root 治理"——**JNI Critical 区的对象是临时 GC Root（pin）**。
 
@@ -42,12 +42,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 Slot Pool 优化（Critical 区） | 未覆盖 | **新增 §7.1 整节** | API 37+ JNI 内存硬变化 |
 | ART 17 Critical 区检测强化 | 未覆盖 | **新增 §7.2 整节** | API 37+ 稳定性硬变化 |
 | ART 17 异常处理与 Critical 区协同 | 未覆盖 | **新增 §7.3 整节** | API 37+ 稳定性硬变化 |
-| Linux 6.12 sheaves 关联 | 未涉及 | **新增 §7.4 整节** | 跨系列基线一致性（Native 堆降低 15-20%） |
+| Linux 6.18 sheaves 关联 | 未涉及 | **新增 §7.4 整节** | 跨系列基线一致性（Native 堆降低 15-20%） |
 
 ### 第 3 轮：锐度校准
 
@@ -613,11 +613,11 @@ void critical_with_exception(JNIEnv* env, jbyteArray array) {
 
 详见 [01-JNI 完整解析 v2](../../05-JNI/01-JNI完整解析.md) §4.3。
 
-### 7.4 Linux 6.12 sheaves 与 Native 堆
+### 7.4 Linux 6.18 sheaves 与 Native 堆
 
-- **Linux 6.12 sheaves 内存分配器**：让 Native 堆内存占用降低 15-20%
+- **Linux 6.18 sheaves 内存分配器**：让 Native 堆内存占用降低 15-20%
 - **跨系列引用**：详见 [Linux_Kernel/MM/06-MM-调优-sheaves](../../../Linux_Kernel/MM/06-MM-调优-sheaves.md)（待升级 v2）
-- **实战影响**：Critical 区使用的本地 buffer（C 栈分配）受 Linux 6.12 内存压力减轻
+- **实战影响**：Critical 区使用的本地 buffer（C 栈分配）受 Linux 6.18 内存压力减轻
 
 ---
 
@@ -769,7 +769,7 @@ adb shell cmd art metrics | grep "critical_section"
 | **AOSP 17 Slot Pool** | `art/runtime/jni/jni_env.cc` `SlotPool` | **AOSP 17 新增** |
 | **AOSP 17 GenCC 空间** | `art/runtime/gc/space/gen_space.cc` `GenSpace` | **AOSP 17 新增** |
 | **AOSP 17 Critical 检测** | `art/runtime/jni/jni_internal.cc` `VerifyCriticalSection` | **AOSP 17 新增** |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -784,8 +784,8 @@ adb shell cmd art metrics | grep "critical_section"
 | 5 | `art/runtime/gc/collector/concurrent_copying.cc` | ✅ 已校对 | AOSP 17 |
 | 6 | `art/runtime/jni/jni_env.cc` | ✅ 已校对 | AOSP 17 新增 Slot Pool |
 | 7 | `art/runtime/gc/space/gen_space.cc` | ✅ 已校对 | AOSP 17 新增 |
-| 8 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
-| 9 | Linux 6.12 `kernel/mm/slub.c`（关联） | ✅ 已校对 | 跨系列基线 |
+| 8 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 9 | Linux 6.18 `kernel/mm/slub.c`（关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -804,7 +804,7 @@ adb shell cmd art metrics | grep "critical_section"
 | 9 | **Critical 区超时检测阈值** | **1s（开发期）** | **AOSP 17 新增** |
 | 10 | 案例 1：图片处理卡顿 | 100ms → < 100us（-99.9%） | AOSP 14 / Pixel 6 |
 | 11 | 案例 2：GenCC Full GC 退化 | 2/min → 0.1/min（-95%） | AOSP 17 / Pixel 8 |
-| 12 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 12 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 
 ---
 
@@ -819,7 +819,7 @@ adb shell cmd art metrics | grep "critical_section"
 | DirectByteBuffer | 大数组 | 推荐 | 不受 GC 影响 | 推荐 |
 | **Slot Pool 大小** | **4KB / 线程** | **AOSP 17 默认** | **调整会显著影响高频 JNI 性能** | **AOSP 17 新增** |
 | **Critical 区检测** | **开启** | **生产可选关闭** | **开发期建议开启** | **AOSP 17 新增** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

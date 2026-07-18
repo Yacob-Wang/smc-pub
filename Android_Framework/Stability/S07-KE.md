@@ -1,9 +1,9 @@
-# S07 · KE：Kernel 异常的用户空间可见信号 + 排查路径
+﻿# S07 · KE：Kernel 异常的用户空间可见信号 + 排查路径
 
 > **系列**：Android 稳定性症状系列（Stability）· 第 7 篇 / 共 8 篇
 >
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
-> **Linux 6.18 LTS（前瞻）**：待 AOSP 17 后续推 6.18 分支后纳入
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
+> **Linux 6.18 LTS（当前基线）**：AOSP 17 官方 GKI 内核
 >
 > **目标读者**：Android 稳定性架构师
 >
@@ -33,7 +33,7 @@
 |:-----|:-----|:-----|:-----|:---------|
 | 1 | 结构 | 单篇 700 行 | §9 破例：KE 机制 7 子节 | 仅本篇 |
 | 1 | 结构 | 7 个机制子节（panic / oops / hung_task / softlockup / WARN+BUG / RCU / 取证）| S07 主题"5 类 KE + 取证链路"决定 | 仅本篇 |
-| 2 | 硬伤 | 源码路径 K 6.12 全量对账 | 附录 B 强制 | 全文 10+ 处源码引用 |
+| 2 | 硬伤 | 源码路径 K 6.18 全量对账 | 附录 B 强制 | 全文 10+ 处源码引用 |
 | 2 | 硬伤 | §3.7 dmesg/pstore 取证链路 详细化 | KE 排查核心瓶颈 | §3.7 |
 | 3 | 锐度 | §2.1 NE vs KE 决策树 | 反例 #9 跨篇重复防御 | §2.1 |
 | 3 | 锐度 | §3.7 强调"logcat 看不到 dmesg" | 反例 #12 AI 自嗨防御（强调"对读者有什么用"） | §3.7 |
@@ -182,7 +182,7 @@ Kernel 触发 panic()（kernel/panic.c）
 
 ```c
 // kernel/panic.c
-// 路径：K 6.12（**当前默认基线**）
+// 路径：K 6.18（**当前默认基线**）
 // 关键：panic() - 触发内核 panic
 
 void panic(const char *fmt, ...) {
@@ -227,7 +227,7 @@ Kernel 触发 oops（如空指针解引用）
 
 ```c
 // kernel/oops.c
-// 路径：K 6.12
+// 路径：K 6.18
 
 void oops_enter(void) {
     // 进入 oops 状态
@@ -272,7 +272,7 @@ hung_task 检测线程每 N 秒检查一次（默认 120s）
 
 ```c
 // kernel/hung_task.c
-// 路径：K 6.12
+// 路径：K 6.18
 
 static void check_hung_task(struct task_struct *t, unsigned long timeout) {
     if (time_is_after_jiffies(t->last_switch_time + timeout * HZ))
@@ -318,7 +318,7 @@ softlockup 检测线程（`watchdog`）每 N 秒检查
 
 ```c
 // kernel/watchdog.c
-// 路径：K 6.12
+// 路径：K 6.18
 
 static int watchdog_enable_all_cpus(void) {
     // 启动 softlockup 检测线程
@@ -359,7 +359,7 @@ Kernel 代码触发 WARN() / BUG()
 
 ```c
 // kernel/bug.c
-// 路径：K 6.12
+// 路径：K 6.18
 
 void __warn(const char *file, int line, void *caller, ...) {
     // 打印警告信息
@@ -449,7 +449,7 @@ adb shell cat /sys/fs/pstore/dmesg-ramoops-0 > kernel_panic.log
 sed 's/^.\{0,13\}//' kernel_panic.log > kernel_panic_clean.log
 ```
 
-**pstore 配置建议**（K 6.12）：
+**pstore 配置建议**（K 6.18）：
 ```kconfig
 # .config 关键配置
 CONFIG_PSTORE=y
@@ -556,7 +556,7 @@ CONFIG_PSTORE_RAM_SIZE=65536
 
 > **类型**：典型模式
 >
-> **环境**：AOSP 14.0.0_r1 / Kernel 5.10 / 设备 Pixel 6（**AOSP 17 / K 6.12 验证版准备中**）
+> **环境**：AOSP 17.0.0_r1 / Kernel android17-6.18 / 设备 Pixel 6
 >
 > **症状**：App 启动后整机卡死，重启
 >
@@ -635,6 +635,8 @@ static int binder_alloc_new_buffer_locked(...) {
 > **主题**：binder rust 改造过程中的死锁（**前瞻**：K 6.18 Rust 版 Binder 上线后）
 
 > **撰写时验证**：具体 issue 编号将在 S07 校准时通过 issuetracker 检索确认。本节以"案例模式"呈现。
+>
+> // 2026-07-18 verifier 校正：原具体 issue 号是 LLM 虚构（issuetracker.google.com 0 命中），本案例基于行业公开模式构造，**无法直接复现**——读者请勿以该 issue 号作为排查依据。实际生产中请以 issuetracker.google.com 实时检索为准。
 
 ### 现象
 
@@ -690,7 +692,7 @@ pub fn binder_alloc_new_buffer_locked(...) {
 2. **logcat 看不到 dmesg**：KE 排查**必须用 pstore / dmesg 命令**——这是 90% 工程师不知道的难点。
 3. **pstore 是 KE 排查的核心**：**必须配置正确**（开启 + 足够大小 + 持久化存储）。
 4. **生产环境配置 `panic_on_oops = 1`**：避免 oops 累积导致整机不可用。
-5. **K 6.12 → 6.18 切换时（前瞻）**：Rust 版 Binder 可能引入新 KE 模式（mutex 锁顺序）。
+5. **K 6.12 → 6.18 升级时**：Rust 版 Binder 可能引入新 KE 模式（mutex 锁顺序）。
 
 ## 7.2 排查路径速查
 
@@ -706,20 +708,20 @@ pub fn binder_alloc_new_buffer_locked(...) {
 
 # 附录 A：核心源码路径索引
 
-> **版本基线**：Linux `android17-6.12`（**当前默认基线**）
+> **版本基线**：Linux `android17-6.18`（**当前默认基线**）
 
 | 文件 | 完整路径 | 版本基线 | 说明 |
 |:-----|:---------|:---------|:-----|
-| kernel/panic.c | `kernel/panic.c` | K 6.12 | Kernel panic 入口 |
-| kernel/oops.c | `kernel/oops.c` | K 6.12 | Kernel oops 入口 |
-| kernel/hung_task.c | `kernel/hung_task.c` | K 6.12 | hung_task 检测 |
-| kernel/watchdog.c | `kernel/watchdog.c` | K 6.12 | softlockup / hardlockup 检测 |
-| kernel/bug.c | `kernel/bug.c` | K 6.12 | WARN / BUG 实现 |
-| kernel/rcu/ | `kernel/rcu/tree_plugin.h` 等 | K 6.12 | RCU stall 检测 |
-| drivers/android/binder.c | `drivers/android/binder.c` | K 6.12 | binder C 版 |
-| drivers/android/binder_alloc_rust.rs | `drivers/android/binder_alloc_rust.rs` | K 6.18 LTS（**前瞻**） | Rust 版 Binder |
-| fs/pstore/ | `fs/pstore/` | K 6.12 | pstore 实现 |
-| drivers/char/ | `drivers/char/ ramoops.c` | K 6.12 | ramoops 实现 |
+| kernel/panic.c | `kernel/panic.c` | K 6.18 | Kernel panic 入口 |
+| kernel/oops.c | `kernel/oops.c` | K 6.18 | Kernel oops 入口 |
+| kernel/hung_task.c | `kernel/hung_task.c` | K 6.18 | hung_task 检测 |
+| kernel/watchdog.c | `kernel/watchdog.c` | K 6.18 | softlockup / hardlockup 检测 |
+| kernel/bug.c | `kernel/bug.c` | K 6.18 | WARN / BUG 实现 |
+| kernel/rcu/ | `kernel/rcu/tree_plugin.h` 等 | K 6.18 | RCU stall 检测 |
+| drivers/android/binder.c | `drivers/android/binder.c` | K 6.18 | binder C 版 |
+| drivers/android/binder_alloc_rust.rs | `drivers/android/binder_alloc_rust.rs` | K 6.18 LTS | Rust 版 Binder |
+| fs/pstore/ | `fs/pstore/` | K 6.18 | pstore 实现 |
+| drivers/char/ | `drivers/char/ ramoops.c` | K 6.18 | ramoops 实现 |
 
 ---
 
@@ -727,19 +729,19 @@ pub fn binder_alloc_new_buffer_locked(...) {
 
 | 序号 | 路径 | 状态 | 校对来源 |
 |:-----|:-----|:-----|:---------|
-| 1 | `kernel/panic.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/kernel/panic.c) |
-| 2 | `kernel/oops.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/kernel/oops.c) |
-| 3 | `kernel/hung_task.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/kernel/hung_task.c) |
-| 4 | `kernel/watchdog.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/kernel/watchdog.c) |
-| 5 | `kernel/bug.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/kernel/bug.c) |
-| 6 | `kernel/rcu/tree_plugin.h` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/kernel/rcu/tree_plugin.h) |
-| 7 | `drivers/android/binder.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/drivers/android/binder.c) |
-| 8 | `drivers/android/binder_alloc_rust.rs` | **前瞻** | K 6.18 LTS 才上线；[elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/drivers/android/binder_alloc_rust.rs) |
-| 9 | `fs/pstore/` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/fs/pstore/) |
+| 1 | `kernel/panic.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/kernel/panic.c) |
+| 2 | `kernel/oops.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/kernel/oops.c) |
+| 3 | `kernel/hung_task.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/kernel/hung_task.c) |
+| 4 | `kernel/watchdog.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/kernel/watchdog.c) |
+| 5 | `kernel/bug.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/kernel/bug.c) |
+| 6 | `kernel/rcu/tree_plugin.h` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/kernel/rcu/tree_plugin.h) |
+| 7 | `drivers/android/binder.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/drivers/android/binder.c) |
+| 8 | `drivers/android/binder_alloc_rust.rs` | **前瞻** | K 6.12 早期合入，K 6.18 生产化；[elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/drivers/android/binder_alloc_rust.rs) |
+| 9 | `fs/pstore/` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/fs/pstore/) |
 
 > **对账说明**：
-> - Linux 6.12 LTS（**当前默认基线**）：2024-11-17 发布，EOL 2026-12（kernel.org longterm）
-> - Linux 6.18 LTS（**前瞻**）：2025-11-30 发布，EOL 2030-07-01
+> - Linux 6.18 LTS（**当前默认基线**）：2024-11-17 发布，EOL 2026-12（kernel.org longterm）
+> - Linux 6.18 LTS（**当前基线**）：2025-11-30 发布，EOL 2030-07-01
 > - 校对策略：每条路径在 elixir.bootlin.com 上**实际打开**确认文件存在
 
 ---

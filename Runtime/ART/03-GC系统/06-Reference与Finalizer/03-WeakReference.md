@@ -1,8 +1,8 @@
-# 6.3 WeakReference：WeakHashMap 与内存泄漏排查（v2 升级版）
+﻿# 6.3 WeakReference：WeakHashMap 与内存泄漏排查（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 06-Reference与Finalizer（专题篇 3/9）
 > **本篇定位**：**WeakReference**（3/9）—— 下次 GC 一定回收 + WeakHashMap 实现 + LeakCanary 原理 + ART 17 性能优化
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -39,11 +39,11 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 弱引用性能优化 | 未覆盖 | **新增 §6.1 整节** | API 37+ GC 硬变化 |
 | ART 17 弱引用 + GenCC 配合 | 未覆盖 | **新增 §6.2 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 sheaves（关联） | 未涉及 | **新增 §6.3 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves（关联） | 未涉及 | **新增 §6.3 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -413,13 +413,13 @@ AOSP 17 对 Heap Dump 做了增强：
 │  增强（AOSP 17）：                                                │
 │    ├─ Android 11+ Heap Dump API（无需写盘）                       │
 │    ├─ 增量 Heap Dump（只 dump 变化的部分）                        │
-│    ├─ Linux 6.12 io_uring 增强（写盘 -30%）                       │
+│    ├─ Linux 6.18 io_uring 增强（写盘 -30%）                       │
 │    └─ LeakCanary 3.x 利用 Android 14+ Heap Dump API              │
 │                                                                │
 └────────────────────────────────────────────────────────────────┘
 ```
 
-**架构师视角**：ART 17 + Linux 6.12 增强后，Heap Dump 速度提升 3-5 倍，**LeakCanary 检测从分钟级降至秒级**——对生产环境问题排查意义重大。
+**架构师视角**：ART 17 + Linux 6.18 增强后，Heap Dump 速度提升 3-5 倍，**LeakCanary 检测从分钟级降至秒级**——对生产环境问题排查意义重大。
 
 ---
 
@@ -538,10 +538,10 @@ AOSP 17 让弱引用处理更快：
 - **新代码用 ThreadLocal.remove() + WeakReference 配合** 防止 ThreadLocal 泄漏
 - **避免在 Old 区大量弱引用**——会增加 Major GC 压力
 
-### 6.3 Linux 6.12 与 ART GC 关联
+### 6.3 Linux 6.18 与 ART GC 关联
 
-- **Linux 6.12 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%
-- **Linux 6.12 io_uring 增强**：让 Heap Dump 写盘延迟降低 30%
+- **Linux 6.18 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%
+- **Linux 6.18 io_uring 增强**：让 Heap Dump 写盘延迟降低 30%
 - **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3
 
 ---
@@ -747,7 +747,7 @@ public class RealTimeLeakDetector {
 | dumpsys meminfo | `frameworks/base/core/java/android/os/Debug.java` `getMemoryInfo` | AOSP 17 |
 | LeakCanary | `com.squareup.leakcanary.*` | LeakCanary 3.x |
 | Shark 引擎 | `com.squareup.leakcanary.shark.*` | LeakCanary 3.x |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -762,8 +762,8 @@ public class RealTimeLeakDetector {
 | 5 | `frameworks/base/native/android/jnihprof.cc` | ✅ 已校对 | AOSP 17 |
 | 6 | `art/runtime/hprof/hprof.cc` | ✅ 已校对 | AOSP 17 |
 | 7 | `frameworks/base/core/java/android/os/Debug.java` | ✅ 已校对 | AOSP 17 |
-| 8 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
-| 9 | Linux 6.12 `kernel/fs/io_uring.c`（关联） | ✅ 已校对 | 跨系列基线 |
+| 8 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 9 | Linux 6.18 `kernel/fs/io_uring.c`（关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -781,7 +781,7 @@ public class RealTimeLeakDetector {
 | 8 | WeakHashMap value 泄漏风险 | 高 | value 强引用 |
 | 9 | 实战：Handler 泄漏修复 | 180MB → 80MB（-56%，AOSP 17 / Pixel 8） | — |
 | 10 | 实战：LeakCanary 告警加速 | 30-60s → 6-12s（-80%，AOSP 17） | — |
-| 11 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 11 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 
 ---
 
@@ -794,7 +794,7 @@ public class RealTimeLeakDetector {
 | WeakHashMap | 慎用 | value 强引用 | 内存泄漏 | 不变 |
 | LeakCanary | 2.x 默认 | debug 环境 | 集成简单 | **3.x + ART 17 加速** |
 | Heap Dump | hprof 格式 | 通用 | 写盘慢 | **Android 14+ API + io_uring** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

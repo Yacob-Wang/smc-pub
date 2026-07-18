@@ -1,8 +1,8 @@
-# 4.5 Region Space 在 CC GC 中的角色（v2 升级版）
+﻿# 4.5 Region Space 在 CC GC 中的角色（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 04-CC-GC（CC-GC · 5/8）
 > **本篇定位**：**CC-GC Region Space 角色**（5/8）——Region 是 CC GC 的物理基础；Region 状态机、CC GC 在 Region 上的工作流；ART 17 Region 强化（GenCC 演进 / Young-Old Region 划分 / Region Pool CAS 优化）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -42,12 +42,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 GenCC 演进** | 未覆盖 | **新增 §7.1 整节**：Young/Old Region 划分 | API 37+ GC 硬变化 |
 | **ART 17 RegionPool CAS 优化** | 未覆盖 | **新增 §7.2 整节**：从全局锁 → CAS → 进一步无锁化 | API 37+ GC 硬变化 |
 | **ART 17 kRegionSize 调整** | 未覆盖 | **新增 §7.3 整节**：256KB → 256KB-1MB 弹性 | API 37+ GC 硬变化 |
-| **Linux 6.12 sheaves** | 未涉及 | **新增 §7.4**：Native 堆 -15-20% 间接降低 Region Pool 压力 | 跨系列基线一致性 |
+| **Linux 6.18 sheaves** | 未涉及 | **新增 §7.4**：Native 堆 -15-20% 间接降低 Region Pool 压力 | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -635,9 +635,9 @@ static constexpr bool kAllowRegionSizeAutoTune = true;  // AOSP 17 新增
 - 老 App 通过 `dalvik.vm.heap.region.size` 强制设置 1m → ART 17 仍生效（向后兼容）
 - 但 ART 17 自动调优可能与你的设置冲突 → 建议先观察默认行为再调
 
-### 7.4 Linux 6.12 sheaves 与 Region Pool（关联）
+### 7.4 Linux 6.18 sheaves 与 Region Pool（关联）
 
-**Linux 6.12 sheaves**（2024-11-17 发布）：
+**Linux 6.18 sheaves**（2024-11-17 发布）：
 
 - **Native 堆内存占用降低 15-20%**（sheaves 减少 VMA 元数据）
 - **Region Pool 的 Native 辅助结构**（Region 数组、Mark Bitmap）受益
@@ -855,7 +855,7 @@ try {
 | **kRegionSize（ART 17）**| `art/runtime/options.h` `kDefaultRegionSize` | **AOSP 17 常量化** |
 | **GenerationType 枚举（ART 17）**| `art/runtime/gc/space/region_space.h` | **AOSP 17 新增** |
 | LOS（Large Object Space）| `art/runtime/gc/space/large_object_space.h` | AOSP 17 |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -871,7 +871,7 @@ try {
 | 6 | `art/runtime/options.h`（kDefaultRegionSize） | ✅ 已校对 | **AOSP 17 新增** |
 | 7 | `art/runtime/gc/space/region_space.h`（GenerationType 枚举） | ✅ 已校对 | **AOSP 17 新增** |
 | 8 | `art/runtime/gc/space/large_object_space.h` | ✅ 已校对 | AOSP 17 |
-| 9 | `kernel/mm/slab_common.c`（Linux 6.12 sheaves） | ✅ 已校对 | 跨系列基线 |
+| 9 | `kernel/mm/slab_common.c`（Linux 6.18 sheaves） | ✅ 已校对 | 跨系列基线 |
 | 10 | `art/runtime/gc/collector/concurrent_copying.cc`（CopyObject） | ✅ 已校对 | AOSP 17 |
 
 ---
@@ -892,7 +892,7 @@ try {
 | 10 | **Young Region Pool（ART 17）** | **独立** | **AOSP 17 新增** |
 | 11 | **Old Region Pool（ART 17）** | **独立** | **AOSP 17 新增** |
 | 12 | **晋升阈值 kPromotionThreshold** | **4 次** | **AOSP 17 默认** |
-| 13 | Native 堆内存（Linux 6.12 sheaves）| -15-20% | AOSP 17 + Linux 6.12 |
+| 13 | Native 堆内存（Linux 6.18 sheaves）| -15-20% | AOSP 17 + Linux 6.18 |
 | 14 | 实战：视频编辑 App Region 调优 | OOM 3/天 → 0/天 | AOSP 17 / Pixel 9 |
 
 ---
@@ -910,7 +910,7 @@ try {
 | **GenerationType** | **kRegionTypeYoung / kRegionTypeOld** | **AOSP 17** | — | **AOSP 17 新增** |
 | **晋升阈值** | **kPromotionThreshold=4** | **AOSP 17 默认** | — | **AOSP 17 新增** |
 | LOS 阈值 | 12 KB | 默认 | — | 不变 |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 | TLAB 行为 | bump pointer | Region TLAB | TLAB 满才换 Region | 不变 |
 
 ---

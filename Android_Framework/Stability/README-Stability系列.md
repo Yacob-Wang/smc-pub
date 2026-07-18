@@ -1,4 +1,4 @@
-# Android 稳定性症状系列（Stability）
+﻿# Android 稳定性症状系列（Stability）
 
 > **目标读者**：Android 稳定性架构师
 >
@@ -6,7 +6,7 @@
 >
 > **核心问题**：ANR / JE / NE / SWT / HANG / REBOOT / KE 7 大类症状
 >
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS）
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS）
 
 ---
 
@@ -187,7 +187,7 @@ Zygote 拉起 SystemServer 失败 → REBOOT 反复
 
 ### 3.4 S03「NE：6 种信号 → 症状 → tombstone 解读路径」
 
-| 章节 | 内容 | 核心源码（AOSP 17 / K 6.12） |
+| 章节 | 内容 | 核心源码（AOSP 17 / K 6.18） |
 | :--- | :--- | :--- |
 | §1 定位 | NE 的本质：kernel 投递致命信号 → debuggerd → tombstone | 概念 |
 | §2 边界 | NE vs KE | 对比表 |
@@ -200,7 +200,7 @@ Zygote 拉起 SystemServer 失败 → REBOOT 反复
 | §3.6 SIGSYS | seccomp 拦截 | seccomp 路径 |
 | §3.7 tombstone 16 段结构 | registers → memory map | `system/core/debuggerd/libdebuggerd/tombstone.cpp` |
 | §3.8 栈回溯与符号化 | FP/PC/CFI unwind + addr2line | unwind 原理 |
-| §3.9 AOSP 17 / K 6.12 变化 | Rust Binder 上主线 | `drivers/android/binder_alloc_rust.rs` |
+| §3.9 AOSP 17 / K 6.18 变化 | Rust Binder 上主线 | `drivers/android/binder_alloc_rust.rs` |
 | §4 风险地图 | 高频场景 + 关键字 | 关键字表 |
 | §5 治理 | dropbox(TOMBSTONE) + 符号化 + APM | 监控链路 |
 | §6 实战案例 | CASE-STAB-03-01/02 | 案例索引 |
@@ -226,7 +226,7 @@ Zygote 拉起 SystemServer 失败 → REBOOT 反复
 
 ### 3.6 S05「HANG：未被捕获的卡死」（**本系列独占视角**）
 
-| 章节 | 内容 | 核心源码（AOSP 17 / K 6.12） |
+| 章节 | 内容 | 核心源码（AOSP 17 / K 6.18） |
 | :--- | :--- | :--- |
 | §1 定位 | HANG 的本质：功能失效但未被任何超时机制捕获 | 概念 |
 | §2 边界 | HANG vs ANR vs SWT 决策树 | **详细决策树** |
@@ -243,7 +243,7 @@ Zygote 拉起 SystemServer 失败 → REBOOT 反复
 
 ### 3.7 S06「REBOOT：重启源分类、cascade 链路、pstore / dump 体系」
 
-| 章节 | 内容 | 核心源码（AOSP 17 / K 6.12） |
+| 章节 | 内容 | 核心源码（AOSP 17 / K 6.18） |
 | :--- | :--- | :--- |
 | §1 定位 | REBOOT 的本质：非预期的进程或系统重启 | 概念 |
 | §2 边界 | REBOOT vs SWT（结果 vs 原因） | 对比表 |
@@ -260,7 +260,7 @@ Zygote 拉起 SystemServer 失败 → REBOOT 反复
 
 ### 3.8 S07「KE：Kernel 异常的用户空间可见信号 + 排查路径」
 
-| 章节 | 内容 | 核心源码（K 6.12） |
+| 章节 | 内容 | 核心源码（K 6.18） |
 | :--- | :--- | :--- |
 | §1 定位 | KE 的本质：kernel 检测到不可恢复/可恢复错误 | 概念 |
 | §2 边界 | KE vs NE（内核空间 vs 用户空间） | 对比表 |
@@ -401,12 +401,12 @@ Phase 4（结果类：SWT / REBOOT）
 ## 9. 基础版本基线声明（v4 §8 强制）
 
 - **Framework/应用层**：AOSP `android-17.0.0_r1`（API 37）
-- **Linux 内核**：`android17-6.12`（Linux 6.12 LTS，2025-11-30 发布，EOL 2030-07-01）
+- **Linux 内核**：`android17-6.18`（Linux 6.18 LTS，2025-11-30 发布，EOL 2030-07-01）
 - **AOSP manifest 分支建议**：`android-latest-release`
 - **AOSP 17 关键变化**（写作时主动覆盖）：
   - ART 17：分代 GC 强化、无锁 MessageQueue（API 37+）
   - AppFunctions / AI Agent OS 集成对 ANR 的新影响
-- **Linux 6.12 关键变化**（写作时主动覆盖）：
+- **Linux 6.18 关键变化**（写作时主动覆盖）：
   - Rust 版 Binder 上主线（与 C 版并存）
   - sheaves 内存分配
   - eBPF 加密签名
@@ -443,7 +443,7 @@ Phase 4（结果类：SWT / REBOOT）
 ### 10.3 行业资料
 
 - Android Source：[cs.android.com/android-17.0.0_r1](https://cs.android.com/android-17.0.0_r1)
-- Linux Kernel：[elixir.bootlin.com/linux/v6.12](https://elixir.bootlin.com/linux/v6.12)
+- Linux Kernel：[elixir.bootlin.com/linux/v6.18](https://elixir.bootlin.com/linux/v6.18)
 - AOSP Issue Tracker：[issuetracker.google.com/issues?q=componentid:190923](https://issuetracker.google.com/)
 
 ---

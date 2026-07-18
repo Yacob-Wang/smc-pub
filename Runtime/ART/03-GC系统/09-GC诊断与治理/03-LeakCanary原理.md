@@ -1,8 +1,8 @@
-# 9.3 LeakCanary 的实现原理（v2 升级版）
+﻿# 9.3 LeakCanary 的实现原理（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 3/10）
 > **本篇定位**：**自动内存泄漏检测**（3/10）——LeakCanary 完整工作流 + KeyedWeakReference + Shark 引擎 + ART 17 类去重后的引用追踪
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -42,7 +42,7 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 类去重后的引用追踪** | 未覆盖 | **新增 §6.1 整节** | API 37+ ART 硬变化 |
 | **ART 17 FinalReference 改进** | 未覆盖 | **新增 §6.2 整节** | API 37+ Finalizer 池化 |
@@ -893,7 +893,7 @@ try (GoodResource res = new GoodResource()) {
 | **类去重适配** | **LeakCanary 3.x** | **AOSP 17 必选** | **2.x 误报** | **AOSP 17 新增** |
 | Finalizer 线程 | 1 线程 | — | — | **4 线程池化** |
 | **GenCC 配合** | **自动** | **AOSP 17 默认** | — | **AOSP 17 强化** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

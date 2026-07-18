@@ -1,8 +1,8 @@
-# 6.4 FinalReference：finalize() 的本质（v2 升级版）
+﻿# 6.4 FinalReference：finalize() 的本质（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 06-Reference与Finalizer（专题篇 4/9）
 > **本篇定位**：**FinalReference**（4/9）—— finalize() 机制 + Finalizer 线程池化 + Watchdog 10s 超时 + Cleaner 替代方案
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -39,12 +39,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 Finalizer 线程池化（4 线程）** | 未覆盖 | **新增 §6.1 整节（重点）** | API 37+ GC 硬变化 |
 | **ART 17 优先级调度** | 未覆盖 | **新增 §6.2 整节** | API 37+ GC 硬变化 |
 | **ART 17 慢对象提前标记** | 未覆盖 | **新增 §6.3 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 sheaves（关联） | 未涉及 | **新增 §6.4 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves（关联） | 未涉及 | **新增 §6.4 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -557,10 +557,10 @@ adb shell setprop dalvik.vm.finalizer.thread.count 8
 - **新代码用 Cleaner 替代**——更可控、更可预测
 - **遗留代码用 AutoCloseable 重构**——分阶段迁移
 
-### 6.4 Linux 6.12 与 ART GC 关联
+### 6.4 Linux 6.18 与 ART GC 关联
 
-- **Linux 6.12 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%
-- **Linux 6.12 io_uring 增强**：让 heap dump 写盘延迟降低 30%
+- **Linux 6.18 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%
+- **Linux 6.18 io_uring 增强**：让 heap dump 写盘延迟降低 30%
 - **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3
 
 ---
@@ -887,7 +887,7 @@ public class ManagedResource {
 | Cleaner | `libcore/libart/src/main/java/jdk/internal/ref/Cleaner.java` | AOSP 17 |
 | DirectByteBuffer | `libcore/ojluni/src/main/java/java/nio/DirectByteBuffer.java` | AOSP 17 |
 | dumpsys finalizer | `frameworks/base/core/java/android/os/Debug.java` `getFinalizerInfo` | AOSP 17 |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -903,8 +903,8 @@ public class ManagedResource {
 | 6 | `libcore/libart/src/main/java/jdk/internal/ref/Cleaner.java` | ✅ 已校对 | AOSP 17 |
 | 7 | `libcore/ojluni/src/main/java/java/nio/DirectByteBuffer.java` | ✅ 已校对 | AOSP 17 |
 | 8 | `frameworks/base/core/java/android/os/Debug.java` | ✅ 已校对 | AOSP 17 |
-| 9 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
-| 10 | Linux 6.12 `kernel/fs/io_uring.c`（关联） | ✅ 已校对 | 跨系列基线 |
+| 9 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 10 | Linux 6.18 `kernel/fs/io_uring.c`（关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -923,7 +923,7 @@ public class ManagedResource {
 | 9 | DirectByteBuffer 数量（严重） | > 1000 | 监控告警 |
 | 10 | 实战：finalize() 链式阻塞升级 | 30000s → 7500s（-75%，AOSP 17） | — |
 | 11 | 实战：Finalizer 队列长度 | 234 → 60（-74%，AOSP 17） | — |
-| 12 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 12 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 
 ---
 
@@ -937,7 +937,7 @@ public class ManagedResource {
 | Finalizer 优先级 | MIN_PRIORITY | AOSP 17 默认 | 业务线程不被影响 | **AOSP 17 强化** |
 | Cleaner 推荐 | ✅ 推荐 | 新代码必须 | 替代 finalize() | 不变 |
 | AutoCloseable 推荐 | ✅ 推荐 | 新代码必须 | 显式释放 | 不变 |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

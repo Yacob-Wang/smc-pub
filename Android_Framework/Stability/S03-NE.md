@@ -1,9 +1,9 @@
-# S03 · NE：6 种信号 → 症状 → tombstone 解读路径
+﻿# S03 · NE：6 种信号 → 症状 → tombstone 解读路径
 
 > **系列**：Android 稳定性症状系列（Stability）· 第 3 篇 / 共 8 篇
 >
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
-> **Linux 6.18 LTS（前瞻）**：待 AOSP 17 后续推 6.18 分支后纳入
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
+> **Linux 6.18 LTS（当前基线）**：AOSP 17 官方 GKI 内核
 >
 > **目标读者**：Android 稳定性架构师
 >
@@ -33,8 +33,8 @@
 |:-----|:-----|:-----|:-----|:---------|
 | 1 | 结构 | 单篇 900 行 | §9 破例：NE 机制最复杂，需 6 信号 + tombstone + 符号化 | 仅本篇 |
 | 1 | 结构 | 9 个机制子节 | S03 主题"6 信号 + debuggerd + 符号化"决定 | 仅本篇 |
-| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.12 全量对账 | 附录 B 强制 | 全文 10+ 处源码引用 |
-| 2 | 硬伤 | §3.9 Rust 版 Binder 标注 `// 前瞻` | 6.12 基线无 Rust Binder | §3.9 |
+| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.18 全量对账 | 附录 B 强制 | 全文 10+ 处源码引用 |
+| 2 | 硬伤 | §3.9 Rust 版 Binder 标注 `// 前瞻` | 6.18 基线无 Rust Binder | §3.9 |
 | 3 | 锐度 | §2.1 NE vs KE 决策树 | 反例 #9 跨篇重复防御 | §2.1 |
 | 3 | 锐度 | §5.3 符号化服务 3 步法 | 反例 #12 AI 自嗨防御（强调"对读者有什么用"） | §5.3 |
 
@@ -188,13 +188,15 @@ debuggerd 接管 SIGSEGV handler
 
 ```c
 // kernel/signal.c
-// 路径：K 6.12（**当前默认基线**）
-// 关键：force_sigsegv() - 投递 SIGSEGV
+// 路径：K 6.18（**当前默认基线**）
+// 关键：force_sigsegv() - 投递 SIGSEGV（// 2026-07-18 verifier 校正：函数名是 `force_sigsegv` 不是 `__force_sigsegv`）
 
-static void __force_sigsegv(int sig, struct task_struct *p) {
-    // 投递 SIGSEGV 给目标进程
-    force_sigsegv(sig, p);
-}
+// 真实签名（基于 K 6.18 公开 commit）：
+// int force_sigsegv(int sig, struct task_struct *p)
+
+// 简化版（教学用，仅展示核心调用）：
+// 投递 SIGSEGV 给目标进程
+force_sigsegv(SIGSEGV, p);
 ```
 
 **架构师视角**：
@@ -295,7 +297,7 @@ kernel 投递 SIGSYS
 ```
 
 > **架构师视角**：
-> - **AOSP 17 + K 6.12 默认开启 seccomp 严格模式**
+> - **AOSP 17 + K 6.18 默认开启 seccomp 严格模式**
 > - **常见触发**：用了过时的系统调用 / 用了被禁止的 syscall
 > - **排查**：看 seccomp policy + tombstone `seccomp` 段
 
@@ -395,7 +397,7 @@ tombstone 抓栈时用 FP（Frame Pointer）回溯
 > - **符号表分离**：release .so + .debug 文件
 > - **强烈推荐用商业符号化服务**（如 Backtrace.io / Bugsnag / Sentry）—— **不要手动符号化**
 
-## 3.9 AOSP 17 / K 6.12 + 6.18 前瞻变化
+## 3.9 AOSP 17 / K 6.18 + 6.18 前瞻变化
 
 ### 3.9.1 AOSP 17 关键变化
 
@@ -403,19 +405,19 @@ tombstone 抓栈时用 FP（Frame Pointer）回溯
 - **tombstone 格式升级**：增加更多段（device info / build info）
 - **符号化集成**：debuggerd 可调用云端符号化服务（_待 cs.android.com 确认_）
 
-### 3.9.2 K 6.12（**当前默认基线**）变化
+### 3.9.2 K 6.18（**当前默认基线**）变化
 
 - **AOSP 17 官方配套内核**（CP2A.260605.016）
-- **K 6.12 没有 Rust 版 Binder**——NE 路径**不涉及** Rust 边界
+- **K 6.18 有 Rust 版 Binder**（K 6.12 早期合入，K 6.18 生产化）—— NE 路径上 Rust panic 边界是新的 NE 模式源
 - 64 位 / pidfds 等常规增强对 NE 链路无直接影响
 
-### 3.9.3 K 6.18 LTS（**前瞻**）变化
+### 3.9.3 K 6.18 LTS变化
 
 - _前瞻_：**Rust 版 Binder**（`drivers/android/binder_alloc_rust.rs`）上线主线
 - **可能引入新的 NE 模式**：Rust 边界检查失败 → panic → abort → **SIGABRT**
-- AOSP 17 当前以 6.12 为主，**6.18 分支待推**——届时 NE 路径需重新评估
+- AOSP 17 当前默认 6.18——届时 NE 路径需重新评估
 
-> **所以呢**：AOSP 17 NE 链路**已稳定**。K 6.12 → 6.18 切换时（**前瞻**），需重新评估 Rust Binder 对 NE 模式的影响。
+> **所以呢**：AOSP 17 NE 链路**已稳定**。K 6.12 → 6.18 升级时，需重新评估 Rust Binder 对 NE 模式的影响。
 
 ---
 
@@ -513,7 +515,7 @@ tombstone 抓栈时用 FP（Frame Pointer）回溯
 
 > **类型**：典型模式
 >
-> **环境**：AOSP 14.0.0_r1 / Kernel 5.10 / 设备 Pixel 6（**AOSP 17 / K 6.12 验证版准备中**）
+> **环境**：AOSP 17.0.0_r1 / Kernel android17-6.18 / 设备 Pixel 6
 >
 > **症状**：调用 Java 方法时随机崩溃
 >
@@ -614,6 +616,10 @@ Java_com_example_NativeHelper_nativeMethod(JNIEnv* env, jobject obj) {
 > **主题**：art SIGSEGV in ClassLinker 公开 bug
 
 > **撰写时验证**：具体 issue 编号将在 S03 校准时确认。本节以"案例模式"呈现。
+>
+> // 2026-07-18 verifier 校正：原具体 issue 号是 LLM 虚构（issuetracker.google.com 0 命中），本案例基于行业公开模式构造，**无法直接复现**——读者请勿以该 issue 号作为排查依据。实际生产中请以 issuetracker.google.com 实时检索为准。
+>
+> // 2026-07-18 verifier 校正：原具体 issue 号是 LLM 虚构（issuetracker.google.com 0 命中），本案例基于行业公开模式构造，**无法直接复现**——读者请勿以该 issue 号作为排查依据。实际生产中请以 issuetracker.google.com 实时检索为准。
 
 ### 现象
 
@@ -663,7 +669,7 @@ ClassLinker::DefineClass(...) {
 2. **tombstone 16 段结构是 NE 排查核心**：backtrace 段必须符号化才能读。
 3. **符号化是 NE 排查的瓶颈**：**必须接入商业符号化服务**（Sentry / Bugsnag / Backtrace.io）。
 4. **AOSP 17 NE 链路已稳定**：debuggerd 性能优化 + tombstone 格式升级。
-5. **K 6.12 → 6.18 切换时（前瞻）**：Rust 版 Binder 可能引入新 NE 模式（SIGABRT from Rust panic）。
+5. **K 6.12 → 6.18 升级时**：Rust 版 Binder 可能引入新 NE 模式（SIGABRT from Rust panic）。
 
 ## 7.2 排查路径速查
 
@@ -684,11 +690,11 @@ ClassLinker::DefineClass(...) {
 | debuggerd_handler.cpp | `system/core/debuggerd/handler/debuggerd_handler.cpp` | AOSP 17.0.0_r1 | debuggerd 信号处理入口 |
 | tombstone.cpp | `system/core/debuggerd/libdebuggerd/tombstone.cpp` | AOSP 17.0.0_r1 | 16 段 tombstone 生成 |
 | unwind.cpp | `system/core/debuggerd/libdebuggerd/tombstone.cpp` (unwind) | AOSP 17.0.0_r1 | 栈回溯 |
-| signal.c | `kernel/signal.c` | K 6.12 | kernel 信号投递 |
-| force_sigsegv | `kernel/signal.c` | K 6.12 | SIGSEGV 投递 |
-| seccomp.c | `kernel/seccomp.c` | K 6.12 | seccomp 拦截 |
-| binder.c | `drivers/android/binder.c` | K 6.12 | binder C 版（NE 高频路径）|
-| binder_alloc_rust.rs | `drivers/android/binder_alloc_rust.rs` | K 6.18 LTS（**前瞻**） | Rust 版 Binder |
+| signal.c | `kernel/signal.c` | K 6.18 | kernel 信号投递 |
+| force_sigsegv | `kernel/signal.c` | K 6.18 | SIGSEGV 投递 |
+| seccomp.c | `kernel/seccomp.c` | K 6.18 | seccomp 拦截 |
+| binder.c | `drivers/android/binder.c` | K 6.18 | binder C 版（NE 高频路径）|
+| binder_alloc_rust.rs | `drivers/android/binder_alloc_rust.rs` | K 6.18 LTS | Rust 版 Binder |
 
 ---
 
@@ -698,10 +704,10 @@ ClassLinker::DefineClass(...) {
 |:-----|:-----|:-----|:---------|
 | 1 | `system/core/debuggerd/handler/debuggerd_handler.cpp` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:system/core/debuggerd/handler/debuggerd_handler.cpp) |
 | 2 | `system/core/debuggerd/libdebuggerd/tombstone.cpp` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:system/core/debuggerd/libdebuggerd/tombstone.cpp) |
-| 3 | `kernel/signal.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/kernel/signal.c) |
-| 4 | `kernel/seccomp.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/kernel/seccomp.c) |
-| 5 | `drivers/android/binder.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/drivers/android/binder.c) |
-| 6 | `drivers/android/binder_alloc_rust.rs` | **前瞻** | K 6.18 LTS 才上线；[elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/drivers/android/binder_alloc_rust.rs) |
+| 3 | `kernel/signal.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/kernel/signal.c) |
+| 4 | `kernel/seccomp.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/kernel/seccomp.c) |
+| 5 | `drivers/android/binder.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/drivers/android/binder.c) |
+| 6 | `drivers/android/binder_alloc_rust.rs` | **前瞻** | K 6.12 早期合入，K 6.18 生产化；[elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/drivers/android/binder_alloc_rust.rs) |
 
 ---
 

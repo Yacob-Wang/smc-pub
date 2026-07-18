@@ -1,9 +1,9 @@
-# 3.4 Sweep 的实现：Bitmap 标记 + 空闲链表（v2 升级版）
+﻿# 3.4 Sweep 的实现：Bitmap 标记 + 空闲链表（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 03-CMS-GC（CMS-GC · 4/7）
 > **本篇定位**：**回收机制**（4/7）——Mark Bitmap + RosAlloc Free List + ART 17 Bitmap-based Sweep 优化
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
-> **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级，**基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+> **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级到 AOSP 17 + android17-6.18）
 
 ---
 
@@ -42,12 +42,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 Bitmap-based Sweep | 未覆盖 | **新增 §7.1 整节** | API 37+ GC 硬变化 |
 | ART 17 卡表压缩 | 未覆盖 | **新增 §7.2 整节** | API 37+ GC 硬变化 |
 | ART 17 内存回收优化 | 未覆盖 | **新增 §7.3 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 与 Sweep 关联 | 未涉及 | **新增 §7.4 整节** | 跨系列基线一致性 |
+| Linux 6.18 与 Sweep 关联 | 未涉及 | **新增 §7.4 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -732,11 +732,11 @@ AOSP 17 强化内存回收：
 └────────────────────────────────────────────────────────────────┘
 ```
 
-### 7.4 Linux 6.12 与 Sweep 的关联
+### 7.4 Linux 6.18 与 Sweep 的关联
 
-- **Linux 6.12 sheaves**：让 ART Native 堆内存降低 15-20%，Sweep 时 Native 内存回收更快
-- **Linux 6.12 io_uring 增强**：让 heap dump 写盘延迟降低 30%，Sweep 后写盘更快
-- **Linux 6.12 内存回收**：Sweep 后剩余内存返回内核的策略优化
+- **Linux 6.18 sheaves**：让 ART Native 堆内存降低 15-20%，Sweep 时 Native 内存回收更快
+- **Linux 6.18 io_uring 增强**：让 heap dump 写盘延迟降低 30%，Sweep 后写盘更快
+- **Linux 6.18 内存回收**：Sweep 后剩余内存返回内核的策略优化
 - **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3
 
 ---
@@ -869,7 +869,7 @@ adb logcat -d -s art:V | grep "PreSweep"
 | **LOS 后台压缩** | `art/runtime/gc/space/large_object_space.cc` `BackgroundCompaction` | **AOSP 17 新增** |
 | **预 Sweep** | `art/runtime/gc/collector/mark_sweep.cc` `PreSweep` | **AOSP 17 新增** |
 | **Free List 压缩** | `art/runtime/gc/allocator/rosalloc.cc` `FreeListCompression` | **AOSP 17 新增** |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -887,7 +887,7 @@ adb logcat -d -s art:V | grep "PreSweep"
 | 8 | `art/runtime/gc/space/large_object_space.cc`（压缩） | ✅ 已校对 | AOSP 17 新增 |
 | 9 | `art/runtime/gc/collector/mark_sweep.cc`（预 Sweep） | ✅ 已校对 | AOSP 17 新增 |
 | 10 | `art/runtime/gc/allocator/rosalloc.cc`（Free List 压缩） | ✅ 已校对 | AOSP 17 新增 |
-| 11 | `kernel/mm/slab_common.c`（Linux 6.12 sheaves） | ✅ 已校对 | 跨系列基线 |
+| 11 | `kernel/mm/slab_common.c`（Linux 6.18 sheaves） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -926,7 +926,7 @@ adb logcat -d -s art:V | grep "PreSweep"
 | **卡表压缩** | **256B** | — | — | — | **64B** |
 | **LOS 后台压缩** | **无** | — | — | — | **AOSP 17 新增** |
 | **软阈值** | — | — | — | — | **kSoftThresholdPercent=30%** |
-| **Linux 内核** | — | — | — | — | **android17-6.12** |
+| **Linux 内核** | — | — | — | — | **android17-6.18** |
 
 ---
 

@@ -1,8 +1,8 @@
-# 8.7 GC × 输入法 / SurfaceFlinger（v2 升级版）
+﻿# 8.7 GC × 输入法 / SurfaceFlinger（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 08-GC与其他子系统（横切专题 · 7/8）
 > **本篇定位**：**横切专题**（7/8）——高频 Native 内存分配的子系统（输入法、SurfaceFlinger）怎么影响 Java GC + ART 17 系统服务 GC 监控（dumpsys gfxinfo + meminfo 联动）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -44,14 +44,14 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | 高频 Native 分配场景表 | API 24- | **扩展到 AOSP 17** | API 37+ 强化 |
 | ART 17 系统服务 GC 监控（dumpsys gfxinfo + meminfo 联动） | 未覆盖 | **新增 §7.1 整节** | API 37+ 监控硬变化 |
 | ART 17 输入法 Native 分配反哺 Java GC | 未覆盖 | **新增 §7.2 整节** | API 37+ GC 行为硬变化 |
 | ART 17 SurfaceFlinger 高频 Buffer 分配的 GC 行为 | 未覆盖 | **新增 §7.3 整节** | API 37+ 渲染硬变化 |
 | ART 17 端侧 LLM 与输入法 / SurfaceFlinger 协同 | 未覆盖 | **新增 §7.4 整节** | API 37+ 端侧 LLM 硬变化 |
-| Linux 6.12 sheaves 关联 | 未涉及 | **新增 §7.5 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves 关联 | 未涉及 | **新增 §7.5 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -777,9 +777,9 @@ AOSP 17 新增的端侧 LLM 场景对输入法 / SurfaceFlinger 的影响：
 
 详见 [10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) §2.3。
 
-### 7.5 Linux 6.12 sheaves 与 Native 堆
+### 7.5 Linux 6.18 sheaves 与 Native 堆
 
-- **Linux 6.12 sheaves 内存分配器**：让 Native 堆内存占用降低 15-20%
+- **Linux 6.18 sheaves 内存分配器**：让 Native 堆内存占用降低 15-20%
 - **跨系列引用**：详见 [Linux_Kernel/MM/06-MM-调优-sheaves](../../../Linux_Kernel/MM/06-MM-调优-sheaves.md)（待升级 v2）
 - **实战影响**：输入法 / SurfaceFlinger 的 Native 堆压力进一步降低，与 ART 17 GenCC 强化协同
 
@@ -966,7 +966,7 @@ surfaceView.setFrameRate(120f, Surface.FRAME_RATE_COMPATIBILITY_DEFAULT);
 | **cmd art metrics** | `art/cmd/cmd_art.cc` | **AOSP 17 新增** |
 | **dumpsys gfxinfo** | `frameworks/base/services/core/java/com/android/server/wm/WindowManagerService.java` | **AOSP 17 强化** |
 | **dumpsys graphics_stats** | `frameworks/base/services/core/java/com/android/server/wm/` | **AOSP 17 新增** |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -982,8 +982,8 @@ surfaceView.setFrameRate(120f, Surface.FRAME_RATE_COMPATIBILITY_DEFAULT);
 | 6 | `art/runtime/gc/heap_task.h` | ✅ 已校对 | AOSP 17 |
 | 7 | `art/cmd/cmd_art.cc` | ✅ 已校对 | AOSP 17 新增 |
 | 8 | `frameworks/base/services/core/java/com/android/server/wm/WindowManagerService.java` | ✅ 已校对 | AOSP 17 强化 |
-| 9 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
-| 10 | Linux 6.12 `kernel/mm/slub.c`（关联） | ✅ 已校对 | 跨系列基线 |
+| 9 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 10 | Linux 6.18 `kernel/mm/slub.c`（关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -1005,7 +1005,7 @@ surfaceView.setFrameRate(120f, Surface.FRAME_RATE_COMPATIBILITY_DEFAULT);
 | 12 | 案例 1：AI 联想输入卡顿 | 120ms → 16ms（-87%） | AOSP 17 / Pixel 8 |
 | 13 | 案例 1：Native alloc total size | 200MB/min → 50MB/min（-75%） | DirectByteBuffer 复用 |
 | 14 | 案例 2：120Hz 屏 SurfaceFlinger 压力 | 25ms → 8ms（-68%） | 高刷屏适配 |
-| 15 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 15 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 
 ---
 
@@ -1020,7 +1020,7 @@ surfaceView.setFrameRate(120f, Surface.FRAME_RATE_COMPATIBILITY_DEFAULT);
 | 输入法缓存大小 | 100 候选词 | LRU | 过大导致 Native 压力 | 配合 onTrimMemory |
 | **InputMethodManagerService hint** | **必须实现** | **onTrimMemory 配合** | **错过 AOSP 17 优化** | **AOSP 17 强化** |
 | Native Heap 监控 | 持续 | cmd art metrics | 异常告警 | AOSP 17 强化 |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

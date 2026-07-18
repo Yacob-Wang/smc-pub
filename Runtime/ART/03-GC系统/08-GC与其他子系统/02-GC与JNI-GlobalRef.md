@@ -1,8 +1,8 @@
-# 8.2 GC × JNI：Global Reference 的 GC 责任（v2 升级版）
+﻿# 8.2 GC × JNI：Global Reference 的 GC 责任（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 08-GC与其他子系统（横切专题 · 2/8）
 > **本篇定位**：**横切专题**（2/8）——JNI Global Ref 的 GC Root 责任 + 泄漏治理 + ART 17 Reference Table 压缩 20%
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -19,7 +19,7 @@
 | **ART 17 DeleteGlobalRef 检测强化** | ✓ 整节新增 | — |
 | **ART 17 WeakGlobalRef 强化** | ✓ 整节新增 | — |
 | JNI Critical 区治理 | — | [01-GC与JNI v2](01-GC与JNI.md) 专章 |
-| Linux 6.12 sheaves 与 Native 堆 | — | [10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) §7 |
+| Linux 6.18 sheaves 与 Native 堆 | — | [10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) §7 |
 
 **承接自**：[01-GC与JNI v2](01-GC与JNI.md) 详述 JNI Critical 区的 pin 机制——**Critical 区是"临时 GC Root"（pin），Global Ref 是"长期 GC Root"**。本篇**深入 Global Ref 的 GC 责任**。
 
@@ -42,12 +42,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 Reference Table 压缩 | 未覆盖 | **新增 §7.1 整节** | API 37+ JNI 内存硬变化（20%） |
 | ART 17 DeleteGlobalRef 检测强化 | 未覆盖 | **新增 §7.2 整节** | API 37+ 稳定性硬变化 |
 | ART 17 WeakGlobalRef 强化 | 未覆盖 | **新增 §7.3 整节** | API 37+ 性能硬变化 |
-| Linux 6.12 sheaves 关联 | 未涉及 | **新增 §7.4 整节** | 跨系列基线一致性（Native 堆降低 15-20%） |
+| Linux 6.18 sheaves 关联 | 未涉及 | **新增 §7.4 整节** | 跨系列基线一致性（Native 堆降低 15-20%） |
 
 ### 第 3 轮：锐度校准
 
@@ -721,11 +721,11 @@ env->RegisterWeakRefListener(weak_ref, listener);
 
 **架构师视角**：Weak Ref 通知让"对象消失 → 资源清理"链路更可靠，**避免业务代码长期持有"幽灵对象"的引用**。
 
-### 7.4 Linux 6.12 sheaves 与 Native 堆
+### 7.4 Linux 6.18 sheaves 与 Native 堆
 
-- **Linux 6.12 sheaves 内存分配器**：让 Native 堆内存占用降低 15-20%
+- **Linux 6.18 sheaves 内存分配器**：让 Native 堆内存占用降低 15-20%
 - **跨系列引用**：详见 [Linux_Kernel/MM/06-MM-调优-sheaves](../../../Linux_Kernel/MM/06-MM-调优-sheaves.md)（待升级 v2）
-- **实战影响**：Global Ref 表是 Native 堆分配，Linux 6.12 内存压力减轻
+- **实战影响**：Global Ref 表是 Native 堆分配，Linux 6.18 内存压力减轻
 
 ---
 
@@ -873,7 +873,7 @@ AOSP 17 (新机器):
 | **AOSP 17 Weak Ref 通知** | `art/runtime/jni/jni_internal.cc` `RegisterWeakRefListener` | **AOSP 17 新增** |
 | dumpsys JNI 信息 | `frameworks/base/core/java/android/os/Debug.java` `getJniGlobalRefCount` | AOSP 17 |
 | **AOSP 17 ART metrics** | `art/runtime/jni/jni_metrics.cc` | **AOSP 17 新增** |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -888,7 +888,7 @@ AOSP 17 (新机器):
 | 5 | `art/runtime/gc/heap.cc` | ✅ 已校对 | AOSP 17 |
 | 6 | `frameworks/base/core/java/android/os/Debug.java` | ✅ 已校对 | AOSP 17 |
 | 7 | `art/runtime/jni/jni_metrics.cc` | ✅ 已校对 | AOSP 17 新增 |
-| 8 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 8 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -907,7 +907,7 @@ AOSP 17 (新机器):
 | 9 | **AOSP 17 DeleteGlobalRef 检测** | **开发期** | **生产可选关闭** |
 | 10 | 案例 1：第三方 SDK 泄漏 | 12345 → 50（-99.6%） | AOSP 14 / Pixel 6 |
 | 11 | 案例 2：AOSP 17 压缩收益 | 800KB → 640KB | 系统级 App |
-| 12 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 12 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 
 ---
 
@@ -922,7 +922,7 @@ AOSP 17 (新机器):
 | Lock | 读写锁 | 默认 | 高并发场景用 | **分段锁** |
 | Weak Ref 通知 | 关闭 | 按需 | 频繁通知影响性能 | **AOSP 17 新增** |
 | **DeleteGlobalRef 检测** | **开发期开启** | **生产可选关闭** | **开启有助于发现 bug** | **AOSP 17 新增** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

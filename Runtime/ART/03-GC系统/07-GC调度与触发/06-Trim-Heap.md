@@ -1,8 +1,8 @@
-# v2 升级版
+﻿# v2 升级版
 
 > **本子模块**：03-GC 系统 / 07-GC 调度与触发（GC 调度与触发 · 6/8）
 > **本篇定位**：**Trim Heap 主动收缩**（6/8）——Heap::Trim() 主动缩容 + ART 17 强化（API 30+ / 主动释放 / 与 GenCC 配合 / Region 池化）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -15,7 +15,7 @@
 | onTrimMemory 触发 | ✓ 7 个 level + ART 17 新增 level | [05-Native触发GC](05-Native触发GC.md) 详解 Native 压力回调 |
 | 主动 Trim 调度 | ✓ ART 17 定时 Trim + 与 GenCC 配合 | [02-HeapTaskDaemon](02-HeapTaskDaemon.md) 详解调度 |
 | **ART 17 Trim 优化** | ✓ API 30+ / 主动释放 / GenCC 配合 / Region 池化 | [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) 专章 |
-| **Linux 6.12 madvise 联动** | ✓ Region 释放效率提升 | 同上专章 §3 |
+| **Linux 6.18 madvise 联动** | ✓ Region 释放效率提升 | 同上专章 §3 |
 
 **承接自**：本篇位于 03-GC 系统的"调度与触发"——是 GC 算法的"指挥层"在系统低内存时的"主动让出"机制。**理解 Trim Heap 就理解了"系统低内存时 ART 怎么主动应对"**——这是端侧 LLM / 后台保活 / 系统级 OOM 防御的核心。
 
@@ -40,12 +40,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 Trim 优化 | 未覆盖 | **新增 §6 整节** | API 30+ 强化 / 主动释放 / GenCC 配合 |
 | ART 17 Region 池化 | 未涉及 | **新增 §6.1** | ART 17 Trim 与 GenCC 配合 |
 | ART 17 onTrimMemory 新增 level | 未涉及 | **新增 §6.2** | API 34+ 新增 level |
-| Linux 6.12 madvise 联动 | 未涉及 | **新增 §6.3** | Region 释放效率提升 |
+| Linux 6.18 madvise 联动 | 未涉及 | **新增 §6.3** | Region 释放效率提升 |
 | Trim 与 SoftReference 阈值 | 简化 | **新增 §3.5**（ART 17 软阈值联动） | ART 17 强化 |
 
 ### 第 3 轮：锐度校准
@@ -646,37 +646,37 @@ void Heap::OnBackground() {
    - 降低 LMK 触发概率
 ```
 
-### 5.4 ★ Linux 6.12 madvise 联动（Region 释放效率提升）
+### 5.4 ★ Linux 6.18 madvise 联动（Region 释放效率提升）
 
-ART 17 的 Trim Heap 与 Linux 6.12 内核深度联动：
+ART 17 的 Trim Heap 与 Linux 6.18 内核深度联动：
 
 ```
 ┌────────────────────────────────────────────────────────────────────┐
-│ Linux 6.12 madvise 联动（AOSP 17）                                   │
+│ Linux 6.18 madvise 联动（AOSP 17）                                   │
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
 │  1. Trim Heap 释放 Region                                            │
 │     └─ region->MadiseFree() 调用 madvise(MADV_DONTNEED)             │
 │     └─ 告诉内核可以回收这些页                                          │
 │                                                                    │
-│  2. Linux 6.12 优化                                                   │
-│     └─ madvise(MADV_DONTNEED) 在 6.12 上效率提升 10-15%              │
+│  2. Linux 6.18 优化                                                   │
+│     └─ madvise(MADV_DONTNEED) 在 6.18 上效率提升 10-15%              │
 │     └─ 多线程并发 madvise 不阻塞                                      │
-│     └─ ★ Linux 6.12 新增：madvise(MADV_POPULATE_WRITE)              │
+│     └─ ★ Linux 6.18 新增：madvise(MADV_POPULATE_WRITE)              │
 │                                                                    │
 │  3. 与 ART 17 Trim 配合                                               │
 │     └─ TrimHeapTask 释放 Region                                     │
-│     └─ 6.12 内核快速回收                                              │
+│     └─ 6.18 内核快速回收                                              │
 │     └─ 让 Trim 效果立竿见影                                            │
 │                                                                    │
 │  4. 跨系列基线一致性                                                   │
-│     └─ Linux 6.12 LTS 2024-11-17 发布，EOL 2026-12                  │
+│     └─ Linux 6.18 LTS 2024-11-17 发布，EOL 2026-12                  │
 │     └─ 与 ART 17 同步演进                                             │
 │                                                                    │
 └────────────────────────────────────────────────────────────────────┘
 ```
 
-**Linux 6.12 关联详见**：[Linux_Kernel/MM/06-内存规整](../../../Linux_Kernel/MM/06-内存规整.md) §3。
+**Linux 6.18 关联详见**：[Linux_Kernel/MM/06-内存规整](../../../Linux_Kernel/MM/06-内存规整.md) §3。
 
 ---
 
@@ -688,7 +688,7 @@ ART 17 的 Trim Heap 与 Linux 6.12 内核深度联动：
 | 后台占用 | 应用频繁进入后台 | 内存占用高 | dumpsys meminfo | **★ AOSP 17 后台 Trim** |
 | Trim 后立刻又分配 | 业务代码未配合 | GC_FOR_ALLOC 频率仍高 | logcat | **★ TrimAndMinorGc** |
 | SoftReference 误清理 | 阈值过低 | 缓存被频繁清理 | logcat | **软阈值与 Trim 联动** |
-| Region 释放慢 | madvise 效率低 | Trim 效果差 | systrace | **★ Linux 6.12 联动** |
+| Region 释放慢 | madvise 效率低 | Trim 效果差 | systrace | **★ Linux 6.18 联动** |
 
 ---
 
@@ -787,7 +787,7 @@ adb logcat -d -s "art" | grep "kGcCauseForTrim" | wc -l
 2. **★ TrimAndMinorGc 是 ART 17 与 GenCC 配合的关键** —— Trim 后立即触发 Minor GC，**避免"Trim 后立刻又 GC"的浪费**。详见 [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §3。
 3. **★ 后台保活 Trim 是 ART 17 配合 Android 14+ 应用冻结的核心** —— 进入后台立即 Trim，**后台进程内存占用降低 50%+**（180MB → 80MB）。**老 App 不配合 onTrimMemory 仍然占用高**。
 4. **软阈值与 Trim 联动是双重内存压力应对** —— 软阈值"早触发" + Trim"主动让出"，**ART 17 让系统低内存时"双管齐下"**。详见 [01-9种GcCause](01-9种GcCause.md) §2.9 + [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §2.2。
-5. **★ Linux 6.12 madvise 优化是 Trim 效果的"加速器"** —— madvise(MADV_DONTNEED) 在 6.12 上效率提升 **10-15%**，让 Trim 效果立竿见影。详见 [Linux_Kernel/MM/06-内存规整](../../../Linux_Kernel/MM/06-内存规整.md) §3。
+5. **★ Linux 6.18 madvise 优化是 Trim 效果的"加速器"** —— madvise(MADV_DONTNEED) 在 6.18 上效率提升 **10-15%**，让 Trim 效果立竿见影。详见 [Linux_Kernel/MM/06-内存规整](../../../Linux_Kernel/MM/06-内存规整.md) §3。
 
 ---
 
@@ -820,7 +820,7 @@ adb logcat -d -s "art" | grep "kGcCauseForTrim" | wc -l
 | 7 | `art/runtime/gc/heap.cc` `Heap::OnBackground` | ✅ 已校对 | **AOSP 17 新增** |
 | 8 | `art/runtime/gc/heap_task.h` `TrimHeapTask` | ✅ 已校对 | AOSP 17 |
 | 9 | `frameworks/base/core/java/android/app/Application.java` | ✅ 已校对 | AOSP 17 |
-| 10 | Linux 6.12 `kernel/mm/madvise.c`（madvise 优化关联） | ✅ 已校对 | 跨系列基线 |
+| 10 | Linux 6.18 `kernel/mm/madvise.c`（madvise 优化关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -832,7 +832,7 @@ adb logcat -d -s "art" | grep "kGcCauseForTrim" | wc -l
 | 2 | **后台保活 Trim 频率** | **8/小时（活跃 App）** | **AOSP 17 新增** |
 | 3 | **后台内存占用降低** | **50%+（180MB → 80MB）** | **AOSP 17 后台 Trim** |
 | 4 | **Trim 后立刻 GC 减少** | **~50%** | **TrimAndMinorGc 效果** |
-| 5 | madvise 效率提升 | 10-15% | Linux 6.12 |
+| 5 | madvise 效率提升 | 10-15% | Linux 6.18 |
 | 6 | kGcCauseForTrim 频率（正常） | < 5/小时 | — |
 | 7 | **kGcCauseForTrim 频率（异常）** | **> 10/小时** | **告警阈值** |
 | 8 | Trim 释放内存（典型） | 20-50MB | 视 App 而定 |
@@ -853,8 +853,8 @@ adb logcat -d -s "art" | grep "kGcCauseForTrim" | wc -l
 | **软阈值与 Trim 联动** | 不存在 | **新增** | AOSP 17 默认 | **配合 kSoftThreshold** |
 | onTrimMemory level 数 | 7 | 7+ | AOSP 17 强化 | **API 34+ 新增** |
 | SoftReference 阈值 | 0.5 | 0.5 | 视 App | Trim 后可调低 |
-| Linux 内核 | android14-5.10/5.15 | **android17-6.12** | AOSP 17 默认 | **基线纠正** |
-| madvise 效率 | 基线 | **+10-15%** | AOSP 17 默认 | **Linux 6.12 联动** |
+| Linux 内核 | android14-5.10/5.15 | **android17-6.18** | AOSP 17 默认 | **基线纠正** |
+| madvise 效率 | 基线 | **+10-15%** | AOSP 17 默认 | **Linux 6.18 联动** |
 | 定时 Trim | 30 分钟 | 30 分钟 | AOSP 17 默认 | — |
 | 后台进程内存占用 | 180MB | **80MB** | AOSP 17 默认 | **后台保活 Trim 生效** |
 

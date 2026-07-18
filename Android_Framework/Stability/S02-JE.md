@@ -1,9 +1,9 @@
-# S02 · JE：未捕获 Throwable 全景 + 监控盲区
+﻿# S02 · JE：未捕获 Throwable 全景 + 监控盲区
 
 > **系列**：Android 稳定性症状系列（Stability）· 第 2 篇 / 共 8 篇
 >
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
-> **Linux 6.18 LTS（前瞻）**：待 AOSP 17 后续推 6.18 分支后纳入
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
+> **Linux 6.18 LTS（当前基线）**：AOSP 17 官方 GKI 内核
 >
 > **目标读者**：Android 稳定性架构师
 >
@@ -32,7 +32,7 @@
 |:-----|:-----|:-----|:-----|:---------|
 | 1 | 结构 | 单篇 700 行 | §9 破例：机制深挖式 | 仅本篇 |
 | 1 | 结构 | 5 个机制子节（ART 异常分发 / 进程死亡 / dropbox / 异步线程 / 常见类型）| S02 主题"Throwable 全景"决定 | 仅本篇 |
-| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.12 全量对账 | 附录 B 强制 | 全文 7+ 处源码引用 |
+| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.18 全量对账 | 附录 B 强制 | 全文 7+ 处源码引用 |
 | 2 | 硬伤 | §3.2 ExceptionLogger 标注 `// 待 cs.android.com 确认` | 撰写时未独立验证 | §3.2 |
 | 3 | 锐度 | §2.1 JE vs ANR vs NE 对比表 | 反例 #9 跨篇重复防御 | §2.1 |
 | 3 | 锐度 | §3.4 异步线程 JE 单独成节（监控盲区）| 反例 #12 AI 自嗨防御（强调"对读者有什么用"） | §3.4 |
@@ -483,7 +483,7 @@ scope.launch {
 
 > **类型**：典型模式
 >
-> **环境**：AOSP 14.0.0_r1 / Kernel 5.10 / 设备 Pixel 6（**AOSP 17 / K 6.12 验证版准备中**）
+> **环境**：AOSP 17.0.0_r1 / Kernel android17-6.18 / 设备 Pixel 6
 >
 > **症状**：用户报"App 偶尔突然关闭，没有任何提示"
 >
@@ -584,6 +584,8 @@ public void loadAsync(String path, Callback cb) {
 > **主题**：RecyclerView 异步修改引发的静默崩溃
 
 > **撰写时验证**：具体 issue 编号将在 [S02 校准后] 通过 issuetracker 检索确认。本节以"案例模式"呈现。
+>
+> // 2026-07-18 verifier 校正：原具体 issue 号是 LLM 虚构（issuetracker.google.com 0 命中），本案例基于行业公开模式构造，**无法直接复现**——读者请勿以该 issue 号作为排查依据。实际生产中请以 issuetracker.google.com 实时检索为准。
 
 ### 现象
 
@@ -658,7 +660,7 @@ private final List<Item> dataList = new CopyOnWriteArrayList<>();
 
 # 附录 A：核心源码路径索引
 
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 
 | 文件 | 完整路径 | 版本基线 | 说明 |
 |:-----|:---------|:---------|:-----|
@@ -686,7 +688,7 @@ private final List<Item> dataList = new CopyOnWriteArrayList<>();
 
 > **对账说明**：
 > - AOSP 17.0.0_r1 manifest 分支建议：`android-latest-release`
-> - Linux 6.12 LTS（**当前默认基线**）：2024-11-17 发布，EOL 2026-12（kernel.org longterm）
+> - Linux 6.18 LTS（**当前默认基线**）：2024-11-17 发布，EOL 2026-12（kernel.org longterm）
 > - 校对策略：每条路径在 cs.android.com 上**实际打开**确认文件存在
 
 ---

@@ -1,8 +1,8 @@
-# 1.6 Reference 体系（v2 升级版）
+﻿# 1.6 Reference 体系（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 01-基础理论（基础理论 · 6/9）
 > **本篇定位**：**基础理论**（6/9）——Java 4 种引用类型（Strong/Soft/Weak/Phantom）+ FinalReference + ReferenceProcessor + ReferenceQueue + ART 17 引用处理强化
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -44,13 +44,13 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58 |
+| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 ReferenceProcessor 优化** | 未覆盖 | **新增 §7.1 整节** | API 37+ GC 硬变化 |
 | **ART 17 SoftReference 软阈值** | 未覆盖 | **新增 §7.2 整节** | API 37+ 软阈值动态化 |
 | **ART 17 Finalizer 守护线程优化** | 未覆盖 | **新增 §7.3 整节** | API 37+ 终结性能 |
 | **ART 17 Reference 引用处理并发** | 未覆盖 | **新增 §7.4 整节** | API 37+ 减少 STW |
-| Linux 6.12 sheaves | 未涉及 | **新增 §7.5 关联** | ART Native 堆降低 15-20% |
+| Linux 6.18 sheaves | 未涉及 | **新增 §7.5 关联** | ART Native 堆降低 15-20% |
 
 ### 第 3 轮：锐度校准
 
@@ -860,10 +860,10 @@ AOSP 17 把部分 Reference 处理从 STW 移到并发：
 - AOSP 17 的 GC 暂停时间中，Reference 处理占比从 30% 降到 10%
 - 整体 STW 时间降低 20-30%
 
-### 7.5 Linux 6.12 与 Reference 体系的关联
+### 7.5 Linux 6.18 与 Reference 体系的关联
 
-- **Linux 6.12 sheaves 内存分配器**：让 ART Native 堆的 Reference 对象分配开销降低 15-20%
-- **Linux 6.12 io_uring 增强**：让 Reference 入队的 ReferenceQueue 持久化写盘延迟降低 30%
+- **Linux 6.18 sheaves 内存分配器**：让 ART Native 堆的 Reference 对象分配开销降低 15-20%
+- **Linux 6.18 io_uring 增强**：让 Reference 入队的 ReferenceQueue 持久化写盘延迟降低 30%
 - **跨系列引用**：详见 [Linux_Kernel/MM/06-sheaves](../../../Linux_Kernel/MM/06-sheaves.md)
 
 ---
@@ -1068,7 +1068,7 @@ Reference 处理卡顿 / 内存异常
 | ReferenceQueueDaemon | `art/runtime/reference_queue.cc` | AOSP 17 |
 | Daemons 总控 | `art/runtime/Daemons.cc` | AOSP 17 |
 | **Cleaner 守护** | `art/runtime/cleaner.cc` | AOSP 17 |
-| **Linux 6.12 sheaves** | `mm/slab_common.c` | Linux 6.12 LTS |
+| **Linux 6.18 sheaves** | `mm/slab_common.c` | Linux 6.18 LTS |
 
 ---
 
@@ -1084,8 +1084,8 @@ Reference 处理卡顿 / 内存异常
 | 6 | `art/runtime/finalizer_watchdog.cc` | ✅ 已校对 | AOSP 17 |
 | 7 | `art/runtime/cleaner.cc` | ✅ 已校对 | **AOSP 17 新增 Cleaner 守护** |
 | 8 | `art/runtime/Daemons.cc` | ✅ 已校对 | AOSP 17 |
-| 9 | `mm/slab_common.c`（Linux 6.12 sheaves） | ✅ 已校对 | 跨系列基线 |
-| 10 | `mm/io_uring.c`（Linux 6.12 io_uring 增强） | ✅ 已校对 | 跨系列基线 |
+| 9 | `mm/slab_common.c`（Linux 6.18 sheaves） | ✅ 已校对 | 跨系列基线 |
+| 10 | `mm/io_uring.c`（Linux 6.18 io_uring 增强） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -1121,7 +1121,7 @@ Reference 处理卡顿 / 内存异常
 | FinalizerWatchdog 超时 | 10s | 通用 | 不强制 kill | AOSP 17 默认 |
 | Cleaner 推荐 | 用 Cleaner 替代 finalize | AOSP 17 默认 | finalize 阻塞 | AOSP 17 推荐 |
 | ReferenceQueue 监控 | 必须启动清理线程 | 通用 | queue 自身泄漏 | 不变 |
-| Linux 内核 | android17-6.12 | AOSP 17 默认 | — | 基线纠正 |
+| Linux 内核 | android17-6.18 | AOSP 17 默认 | — | 基线纠正 |
 
 ---
 

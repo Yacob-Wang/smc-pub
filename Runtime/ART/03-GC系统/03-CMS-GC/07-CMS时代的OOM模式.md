@@ -1,9 +1,9 @@
-# 3.7 CMS 时代 OOM 模式 + ART 17 OOM 处理（v2 升级版）
+﻿# 3.7 CMS 时代 OOM 模式 + ART 17 OOM 处理（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 03-CMS-GC（CMS-GC · 7/7）
 > **本篇定位**：**稳定性风险**（7/7）——CMS 时代 5 大 OOM 模式 + 排查方法论 + ART 17 OOM 处理（GenCC Young GC 优先 / Full GC 罕见 / LOS OOM 概率降低 60-80%）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
-> **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级，**基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+> **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级到 AOSP 17 + android17-6.18）
 
 ---
 
@@ -43,12 +43,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 GenCC Young GC 优先 | 未覆盖 | **新增 §8.1 整节** | API 37+ GC 硬变化 |
 | ART 17 Full GC 罕见 | 未覆盖 | **新增 §8.2 整节** | API 37+ GC 硬变化 |
 | ART 17 LOS OOM 降低 60-80% | 未覆盖 | **新增 §8.3 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 sheaves 关联 | 未涉及 | **新增 §8.4 整节** | Native 堆内存 -15-20% |
+| Linux 6.18 sheaves 关联 | 未涉及 | **新增 §8.4 整节** | Native 堆内存 -15-20% |
 
 ### 第 3 轮：锐度校准
 
@@ -493,9 +493,9 @@ void LargeObjectSpace::Compact() {
 | **模式 5：混合 OOM** | ~15% | < 3% | **降低 80%** |
 | **总体 OOM 概率** | 100%（基线）| **20-40%** | **降低 60-80%** |
 
-### 8.4 Linux 6.12 与 ART OOM 的关联
+### 8.4 Linux 6.18 与 ART OOM 的关联
 
-Linux 6.12（android17-6.12）的 sheaves 内存分配器间接影响 ART OOM：
+Linux 6.18（android17-6.18）的 sheaves 内存分配器间接影响 ART OOM：
 - Native 堆（libart.so / libc++_shared.so）内存占用降 15-20%
 - 分配延迟降低 30%
 - 减少 Native 侧 OOM（Native OOM 触发杀进程）
@@ -633,7 +633,7 @@ adb shell setprop dalvik.vm.gctype GenCC
 | RosAlloc | `art/runtime/gc/allocator/rosalloc.h` / `.cc` | AOSP 17 |
 | LOS | `art/runtime/gc/space/large_object_space.h` / `.cc` | AOSP 17 |
 | dumpsys meminfo | `frameworks/base/core/java/android/os/Debug.java` | AOSP 17 |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -650,7 +650,7 @@ adb shell setprop dalvik.vm.gctype GenCC
 | 7 | `art/runtime/gc/allocator/rosalloc.h` / `.cc` | ✅ 已校对 | AOSP 17 |
 | 8 | `art/runtime/gc/space/large_object_space.h` / `.cc` | ✅ 已校对 | AOSP 17 |
 | 9 | `frameworks/base/core/java/android/os/Debug.java` | ✅ 已校对 | AOSP 17 |
-| 10 | `kernel/mm/slab_common.c`（Linux 6.12） | ✅ 已校对 | 跨系列基线 |
+| 10 | `kernel/mm/slab_common.c`（Linux 6.18） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -676,7 +676,7 @@ adb shell setprop dalvik.vm.gctype GenCC
 | 16 | 软阈值 | kSoftThresholdPercent=30% | AOSP 17 新增 |
 | 17 | 案例 1：CMS 混合 OOM 修复 | 12次/天 → 0次/天 | Android 7.0 / Pixel 2 XL |
 | 18 | 案例 2：GenCC vs CMS | 12次/天 → 0次/天 | AOSP 17 / Pixel 8 |
-| 19 | Linux 6.12 sheaves Native 堆 | -15-20% | 跨系列基线 |
+| 19 | Linux 6.18 sheaves Native 堆 | -15-20% | 跨系列基线 |
 
 ---
 
@@ -699,7 +699,7 @@ adb shell setprop dalvik.vm.gctype GenCC
 | 目标利用率 | 0.75 | 0.75 | 调小→更激进 GC | 不变 |
 | 软引用阈值 | 0.25 | 0.25 | 调小→SoftRef 保留更少 | 不变 |
 | 大对象阈值 | 12KB | 12KB | 默认即可 | 不变 |
-| **Linux 内核** | — | **android17-6.12** | AOSP 17 默认 | **基线纠正** |
+| **Linux 内核** | — | **android17-6.18** | AOSP 17 默认 | **基线纠正** |
 
 ---
 

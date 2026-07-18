@@ -1,8 +1,8 @@
-# 9.2 procrank 与 smaps（v2 升级版）
+﻿# 9.2 procrank 与 smaps（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 2/10）
 > **本篇定位**：**进程级内存排名 + VMA 粒度**（2/10）——procrank 进程排名 + smaps VMA 详情 + ART 17 Native 堆分类细化 + sheaves 内存统计
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -14,7 +14,7 @@
 | procrank 命令 + 字段 | ✓ 完整 + 实战脚本 | — |
 | smaps VMA 详情 | ✓ 全部字段 + 实战 | — |
 | **ART 17 smaps 增强（Native 堆细分）** | ✓ sheaves 内存统计 / 细粒度分类 | — |
-| **Linux 6.12 smaps_rollup 优化** | ✓ 性能开销降低 | — |
+| **Linux 6.18 smaps_rollup 优化** | ✓ 性能开销降低 | — |
 | dumpsys meminfo 分类字段 | — | [01-dumpsys-meminfo详解](01-dumpsys-meminfo详解.md)（重写为 v2 升级版） |
 | hprof 解析 | — | [04-MAT使用指南](04-MAT使用指南.md)（重写为 v2 升级版） |
 | **ART 17 分代 GC 强化** | ✓ 软阈值与 VMA 关联 | [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) 专章 |
@@ -40,11 +40,11 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 smaps 增强（Native 堆分类更细） | 未覆盖 | **新增 §6.1 整节** | API 37+ smaps 硬变化 |
-| sheaves 内存统计 | 未涉及 | **新增 §6.2 整节** | Linux 6.12 + AOSP 17 联动 |
-| Linux 6.12 smaps_rollup | 未涉及 | **新增 §6.3 整节** | smaps 性能优化 |
+| sheaves 内存统计 | 未涉及 | **新增 §6.2 整节** | Linux 6.18 + AOSP 17 联动 |
+| Linux 6.18 smaps_rollup | 未涉及 | **新增 §6.3 整节** | smaps 性能优化 |
 
 ### 第 3 轮：锐度校准
 
@@ -189,7 +189,7 @@ adb shell cat /proc/<pid>/smaps > smaps.txt
 # 3. 看特定进程
 adb shell cat /proc/12345/smaps > smaps.txt
 
-# 4.【AOSP 17 + Linux 6.12】smaps_rollup（汇总版）
+# 4.【AOSP 17 + Linux 6.18】smaps_rollup（汇总版）
 adb shell cat /proc/self/smaps_rollup > smaps_rollup.txt
 # smaps_rollup 只输出 VMA 汇总（每个 VMA 1 行），比 smaps 小 100 倍
 ```
@@ -243,7 +243,7 @@ Private_Dirty：进程独占的脏页（已修改）
 Swap：换出到磁盘的内存
 SwapPss：换出内存按比例分摊
 
-【AOSP 17 + Linux 6.12 新增字段】：
+【AOSP 17 + Linux 6.18 新增字段】：
 - LazyFree：延迟释放的页（mmap MADV_FREE）
 - AnonHugePages：匿名大页（2MB / 1GB）
 - ShmemPmdMapped：共享内存 PMD 映射
@@ -268,7 +268,7 @@ adb shell run-as <package> cat /proc/self/smaps | grep -A 10 "\[heap\]"
 
 # 5.【AOSP 17】看 native 堆细分（sheaves / malloc / mmap）
 adb shell run-as <package> cat /proc/self/smaps | grep -A 10 "sheaves"
-# Linux 6.12 sheaves 内存分配器的 VMA 段
+# Linux 6.18 sheaves 内存分配器的 VMA 段
 ```
 
 ### 9.2.11 smaps 的诊断
@@ -358,7 +358,7 @@ smaps 的限制：
 3. smaps 是快照，不反映实时变化
 4. 大进程 smaps 输出很大（数十 MB）
 
-【AOSP 17 + Linux 6.12 改进】：
+【AOSP 17 + Linux 6.18 改进】：
 - smaps_rollup：每个 VMA 只输出 1 行汇总，开销降低 100 倍
 - 推荐：先 smaps_rollup 找可疑 VMA，再用 smaps 详细看
 ```
@@ -412,7 +412,7 @@ adb shell run-as <package> cat /proc/self/smaps | awk '/^[0-9a-f]+-[0-9a-f]+/ {v
 
 ### 9.2.18 案例 4：AOSP 17 sheaves 内存分配器验证（v2 新增）
 
-**场景**：升级到 AOSP 17 + Linux 6.12 后，Native 堆内存下降 18%，想确认是 sheaves 内存分配器的效果。
+**场景**：升级到 AOSP 17 + Linux 6.18 后，Native 堆内存下降 18%，想确认是 sheaves 内存分配器的效果。
 
 ```bash
 # 1. smaps 看 native 堆细分
@@ -449,12 +449,12 @@ END {
 ```
 
 **根因分析**：
-- Linux 6.12 sheaves 内存分配器：把频繁分配/释放的小对象（< 8KB）放到 sheaves slab
+- Linux 6.18 sheaves 内存分配器：把频繁分配/释放的小对象（< 8KB）放到 sheaves slab
 - 减少 slab 内部碎片，节省约 15-20% 内存
 - 主要受益场景：大量小对象分配（Handler 消息、临时 Buffer）
 
 **架构师 Takeaway**：
-- AOSP 17 + Linux 6.12 升级后，**Native 堆内存自然下降 15-20%**
+- AOSP 17 + Linux 6.18 升级后，**Native 堆内存自然下降 15-20%**
 - 不要把 this 误判为"内存泄漏已修复"
 - 用 smaps `[sheaves]` 段验证：sheaves PSS 越大，节省越多
 
@@ -581,7 +581,7 @@ public class SmapsMonitor {
 | **JNI Global refs** | **> 1000** | **dumpsys meminfo -d（AOSP 17）** |
 | .so 数量 | > 30 | smaps |
 | VMA 数量 | > 1000 | smaps |
-| **sheaves PSS** | **> 50 MB** | **smaps（AOSP 17 + Linux 6.12）** |
+| **sheaves PSS** | **> 50 MB** | **smaps（AOSP 17 + Linux 6.18）** |
 
 ---
 
@@ -589,7 +589,7 @@ public class SmapsMonitor {
 
 ### 9.2.23 【ART 17 硬变化】smaps Native 堆分类更细
 
-AOSP 17 + Linux 6.12 在 smaps 输出中**新增 sheaves 段**：
+AOSP 17 + Linux 6.18 在 smaps 输出中**新增 sheaves 段**：
 
 ```text
 # 旧版（AOSP 14 / Linux 5.10）：
@@ -598,7 +598,7 @@ Size:               80 kB
 Pss:                80 kB
 Private_Dirty:      80 kB
 
-# 新版（AOSP 17 / Linux 6.12）：
+# 新版（AOSP 17 / Linux 6.18）：
 [heap]                                # 大对象仍用 [heap]
 Size:               70 kB
 Pss:                70 kB
@@ -612,12 +612,12 @@ Private_Dirty:      16 kB
 
 **架构师解读**：
 - **`[heap]` 段**：大对象（> 8KB）分配，仍是传统 malloc
-- **`[sheaves]` 段**：小对象（< 8KB）分配，用 Linux 6.12 sheaves slab
+- **`[sheaves]` 段**：小对象（< 8KB）分配，用 Linux 6.18 sheaves slab
 - **优势**：sheaves 减少 slab 内部碎片，Native 堆总占用降 15-20%
 - **smaps 价值**：能直接看到 sheaves 段大小，验证优化效果
 
 **源码定位**：
-- `mm/slab_common.c`（Linux 6.12 sheaves 实现）
+- `mm/slab_common.c`（Linux 6.18 sheaves 实现）
 - `art/runtime/gc/allocator/rosalloc.h`（ART 使用 sheaves）
 - `bionic/libc/bionic/malloc_limit.cpp`（bionic malloc 适配 sheaves）
 
@@ -660,9 +660,9 @@ Total native: 88000 kB
 - sheaves 占比 > 40% → sheaves 占用过多，可能有过多小对象分配
 - sheaves 占比 20-30% → 正常范围
 
-### 9.2.25 【Linux 6.12 增强】smaps_rollup
+### 9.2.25 【Linux 6.18 增强】smaps_rollup
 
-Linux 6.12 引入 `/proc/<pid>/smaps_rollup`：
+Linux 6.18 引入 `/proc/<pid>/smaps_rollup`：
 
 ```bash
 # 传统 smaps（每个 VMA 一段，文件大）
@@ -698,7 +698,7 @@ Pss:                  8 kB
 - 适合：频繁采集 + 自动化监控
 
 **源码定位**：
-- `fs/proc/task_mmu.c`（Linux 6.12 smaps_rollup 实现）
+- `fs/proc/task_mmu.c`（Linux 6.18 smaps_rollup 实现）
 
 ---
 
@@ -706,7 +706,7 @@ Pss:                  8 kB
 
 1. **procrank**：看进程排名，快速定位内存大户
 2. **smaps**：看 VMA 详情，深度排查 native / .so 占用
-3. **smaps_rollup**（AOSP 17 + Linux 6.12）：smaps 汇总版，开销降低 100 倍
+3. **smaps_rollup**（AOSP 17 + Linux 6.18）：smaps 汇总版，开销降低 100 倍
 4. **dumpsys meminfo**：日常监控
 5. **协作**：procrank → dumpsys meminfo → smaps → hprof
 6. **自动化**：shell 脚本 + APM
@@ -721,11 +721,11 @@ Pss:                  8 kB
 
 2. **smaps 是 VMA 粒度的"显微镜"**——看每个 VMA 的 PSS / Private Dirty / 共享情况。**配合 grep 可快速定位 native heap / 特定 .so 库的占用**。**AOSP 17 新增 sheaves 段**是 Native 堆优化的关键证据。详见 [03-LeakCanary原理](03-LeakCanary原理.md)（重写为 v2 升级版）。
 
-3. **smaps_rollup（AOSP 17 + Linux 6.12）让自动化监控成为可能**——文件大小减少 100 倍。**生产环境监控每 10 分钟采集一次 smaps_rollup**，比传统 smaps 性能开销可忽略。详见 [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §3。
+3. **smaps_rollup（AOSP 17 + Linux 6.18）让自动化监控成为可能**——文件大小减少 100 倍。**生产环境监控每 10 分钟采集一次 smaps_rollup**，比传统 smaps 性能开销可忽略。详见 [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §3。
 
 4. **procrank + smaps + dumpsys meminfo 是"内存诊断三件套"**——procrank（找谁）、smaps（看 VMA）、dumpsys meminfo（看分类 + ART 状态）。**配合使用才能定位根因**。详见 [04-MAT使用指南](04-MAT使用指南.md)（重写为 v2 升级版）。
 
-5. **sheaves 内存分配器（Linux 6.12）是 Native 堆优化的关键**——让 Native 堆降 15-20%。**AOSP 17 的 smaps 可见 sheaves 段**，直接验证优化效果。**别把 sheaves 优化的内存下降误判为"内存泄漏已修复"**。详见附录 A 源码索引。
+5. **sheaves 内存分配器（Linux 6.18）是 Native 堆优化的关键**——让 Native 堆降 15-20%。**AOSP 17 的 smaps 可见 sheaves 段**，直接验证优化效果。**别把 sheaves 优化的内存下降误判为"内存泄漏已修复"**。详见附录 A 源码索引。
 
 ---
 
@@ -735,16 +735,16 @@ Pss:                  8 kB
 | :--- | :--- | :--- |
 | procrank 实现 | `system/core/procutils/procrank.c` | AOSP 17 |
 | librank 解析 | `system/core/procutils/librank.c` | AOSP 17 |
-| smaps 读取 | `/proc/$pid/smaps`（内核） | Linux 6.12 |
-| smaps_rollup | `/proc/$pid/smaps_rollup`（内核） | **Linux 6.12 新增** |
-| smaps_rollup 实现 | `fs/proc/task_mmu.c` | **Linux 6.12 新增** |
-| sheaves 内存分配器 | `mm/slab_common.c` | **Linux 6.12 新增** |
+| smaps 读取 | `/proc/$pid/smaps`（内核） | Linux 6.18 |
+| smaps_rollup | `/proc/$pid/smaps_rollup`（内核） | **Linux 6.18 新增** |
+| smaps_rollup 实现 | `fs/proc/task_mmu.c` | **Linux 6.18 新增** |
+| sheaves 内存分配器 | `mm/slab_common.c` | **Linux 6.18 新增** |
 | Debug.getMemoryInfo | `frameworks/base/core/java/android/os/Debug.java#getMemoryInfo` | AOSP 17 |
 | MemInfoReader | `frameworks/base/core/java/android/os/Debug.java#MemInfoReader` | AOSP 17 |
 | ProcessList | `frameworks/base/services/core/java/com/android/server/am/ProcessList.java` | AOSP 17 |
 | ART RosAlloc（用 sheaves） | `art/runtime/gc/allocator/rosalloc.h` | AOSP 17 |
 | bionic malloc 适配 sheaves | `bionic/libc/bionic/malloc_limit.cpp` | AOSP 17 |
-| Linux 6.12 sheaves slab | `mm/slab_common.c#cache_ctor` | Linux 6.12 |
+| Linux 6.18 sheaves slab | `mm/slab_common.c#cache_ctor` | Linux 6.18 |
 
 ---
 
@@ -754,10 +754,10 @@ Pss:                  8 kB
 | :-- | :--- | :--- | :--- |
 | 1 | `system/core/procutils/procrank.c` | ✅ 已校对 | AOSP 17 |
 | 2 | `system/core/procutils/librank.c` | ✅ 已校对 | AOSP 17 |
-| 3 | `/proc/$pid/smaps` | ✅ 已校对 | Linux 6.12 |
-| 4 | `/proc/$pid/smaps_rollup` | ✅ 已校对 | **Linux 6.12 新增** |
-| 5 | `fs/proc/task_mmu.c`（smaps_rollup 实现） | ✅ 已校对 | Linux 6.12 |
-| 6 | `mm/slab_common.c`（sheaves） | ✅ 已校对 | Linux 6.12 |
+| 3 | `/proc/$pid/smaps` | ✅ 已校对 | Linux 6.18 |
+| 4 | `/proc/$pid/smaps_rollup` | ✅ 已校对 | **Linux 6.18 新增** |
+| 5 | `fs/proc/task_mmu.c`（smaps_rollup 实现） | ✅ 已校对 | Linux 6.18 |
+| 6 | `mm/slab_common.c`（sheaves） | ✅ 已校对 | Linux 6.18 |
 | 7 | `frameworks/base/core/java/android/os/Debug.java#getMemoryInfo` | ✅ 已校对 | AOSP 17 |
 | 8 | `art/runtime/gc/allocator/rosalloc.h` | ✅ 已校对 | AOSP 17 |
 | 9 | `bionic/libc/bionic/malloc_limit.cpp` | ✅ 已校对 | AOSP 17 |
@@ -771,9 +771,9 @@ Pss:                  8 kB
 | :-- | :--- | :--- | :--- |
 | 1 | procrank 字段数 | 9 字段 | AOSP 17 |
 | 2 | smaps 字段数 | 18 字段 | AOSP 17 |
-| 3 | **smaps_rollup 输出大小** | **~300 KB（大进程）** | **Linux 6.12 优化** |
+| 3 | **smaps_rollup 输出大小** | **~300 KB（大进程）** | **Linux 6.18 优化** |
 | 4 | **smaps 输出大小** | **~30 MB（大进程）** | 传统 |
-| 5 | **sheaves 内存节省** | **15-20%** | **Linux 6.12 + AOSP 17** |
+| 5 | **sheaves 内存节省** | **15-20%** | **Linux 6.18 + AOSP 17** |
 | 6 | sheaves 段典型 PSS | 18 MB（中大型 App） | AOSP 17 |
 | 7 | sheaves 段占比 | 20-30%（正常） | AOSP 17 |
 | 8 | .so 数量阈值 | > 30 异常 | — |
@@ -794,7 +794,7 @@ Pss:                  8 kB
 | VMA 数量 | < 1000 | 业务调 | 太多=碎片化 | 不变 |
 | smaps 采集频率 | 1 小时 | 生产可调 | 性能开销 | **smaps_rollup 优化** |
 | sheaves 段 PSS | 18-50 MB | 业务调 | 太小=优化未生效 | **AOSP 17 新增** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

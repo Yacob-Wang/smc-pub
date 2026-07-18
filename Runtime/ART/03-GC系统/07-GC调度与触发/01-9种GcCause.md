@@ -1,8 +1,8 @@
-# v2 升级版
+﻿# v2 升级版
 
 > **本子模块**：03-GC 系统 / 07-GC 调度与触发（GC 调度与触发 · 1/8）
 > **本篇定位**：**GcCause 枚举与触发条件**（1/8）——9 种 GcCause 完整定义 + ART 17 扩展（kSoftThreshold / kYoungGenerationCollect / kBackgroundGenCC）+ 触发场景 → GC 策略映射
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -39,11 +39,11 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 GcCause 扩展（kSoftThreshold 等） | 未覆盖 | **新增 §6 整节** | API 37+ GC 硬变化 |
 | ART 17 软阈值 kSoftThresholdPercent=30% | 未覆盖 | **新增 §6.2** | 与本篇高度相关 |
-| Linux 6.12 sheaves（关联 Native） | 未涉及 | **新增 §6.3** | 跨系列基线一致性 |
+| Linux 6.18 sheaves（关联 Native） | 未涉及 | **新增 §6.3** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -642,20 +642,20 @@ AOSP 17 在 GcCause 枚举上做了**3 个核心扩展**：
 - **软阈值让 ART 17 永远"走在内存压力前面"** —— 这与 v1 时代的"被动应对"是根本转变
 - **代价**：CPU 占用略增（5-15% 范围内），但用户感知更好（卡顿减少 20-30%）
 
-### 6.3 Native 分配联动（Linux 6.12 sheaves 关联）
+### 6.3 Native 分配联动（Linux 6.18 sheaves 关联）
 
-ART 17 的 Native 分配监控与 Linux 6.12 内核深度联动：
+ART 17 的 Native 分配监控与 Linux 6.18 内核深度联动：
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│ Native 分配联动（AOSP 17 + Linux 6.12）                              │
+│ Native 分配联动（AOSP 17 + Linux 6.18）                              │
 ├────────────────────────────────────────────────────────────────┤
 │                                                                │
 │  1. Native 内存压力                                              │
 │     └─ 业务代码分配 native 内存（Bitmap / NIO / JNI）              │
 │     └─ NativeAllocationRegistry 监控                              │
 │                                                                │
-│  2. Linux 6.12 sheaves 内存分配器                                   │
+│  2. Linux 6.18 sheaves 内存分配器                                   │
 │     └─ 让 Native 堆内存占用降低 15-20%                              │
 │     └─ 减少 kGcCauseForNativeAlloc 触发                            │
 │                                                                │
@@ -664,13 +664,13 @@ ART 17 的 Native 分配监控与 Linux 6.12 内核深度联动：
 │     └─ 避免 GC 线程空转                                            │
 │                                                                │
 │  4. 跨系列基线一致性                                               │
-│     └─ Linux 6.12 LTS 2024-11-17 发布，EOL 2026-12                  │
+│     └─ Linux 6.18 LTS 2024-11-17 发布，EOL 2026-12                  │
 │     └─ 与 ART 17 同步演进                                          │
 │                                                                │
 └────────────────────────────────────────────────────────────────┘
 ```
 
-**Linux 6.12 关联详见**：[Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
+**Linux 6.18 关联详见**：[Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
 
 ---
 
@@ -804,7 +804,7 @@ adb logcat -d -s "art" | grep "Cause=" | awk -F'Cause=' '{print $2}' | sort | un
 | 6 | `art/runtime/gc/heap_task_daemon.cc` | ✅ 已校对 | AOSP 17 |
 | 7 | `art/runtime/gc/collector/generational_cc.cc` | ✅ 已校对 | AOSP 17 |
 | 8 | `art/runtime/gc/heap.cc` `RequestConcurrentGC` | ✅ 已校对 | AOSP 17 |
-| 9 | Linux 6.12 `kernel/mm/slab_common.c`（sheaves 关联） | ✅ 已校对 | 跨系列基线 |
+| 9 | Linux 6.18 `kernel/mm/slab_common.c`（sheaves 关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -823,7 +823,7 @@ adb logcat -d -s "art" | grep "Cause=" | awk -F'Cause=' '{print $2}' | sort | un
 | 9 | HeapTaskDaemon 检查间隔（CPU 闲时） | 0.5s | AOSP 17 |
 | 10 | HeapTaskDaemon 检查间隔（CPU 忙时） | 2s | AOSP 17 动态 |
 | 11 | kGcCauseForAlloc 频率降低 | 50%+ | AOSP 17 vs v1 |
-| 12 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | 跨系列基线 |
+| 12 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | 跨系列基线 |
 
 ---
 
@@ -838,7 +838,7 @@ adb logcat -d -s "art" | grep "Cause=" | awk -F'Cause=' '{print $2}' | sort | un
 | kGcCauseForAlloc 默认策略 | kMajorGc | **kMinorGc** | AOSP 17 默认 | 失败再 Major |
 | **kBackgroundGenCC** | 不存在 | **新增** | AOSP 17 默认 | 监控频率 |
 | **kGcCauseForNativeAllocThrottled** | 不存在 | **新增** | AOSP 17 限流 | — |
-| Linux 内核 | android14-5.10/5.15 | **android17-6.12** | AOSP 17 默认 | **基线纠正** |
+| Linux 内核 | android14-5.10/5.15 | **android17-6.18** | AOSP 17 默认 | **基线纠正** |
 
 ---
 

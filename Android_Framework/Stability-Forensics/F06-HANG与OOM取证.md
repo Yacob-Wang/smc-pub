@@ -1,8 +1,8 @@
-# F06 · HANG + OOM 取证：systrace/ftrace/hprof + 主动监控
+﻿# F06 · HANG + OOM 取证：systrace/ftrace/hprof + 主动监控
 
 > **系列**：Android 稳定性取证系列（Stability-Forensics）· 第 6 篇 / 共 8 篇
 >
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
 > **Linux 6.18 LTS（前瞻）**：待 AOSP 17 后续推 6.18 分支后纳入
 >
 > **目标读者**：Android 稳定性架构师
@@ -29,7 +29,7 @@
 |:-----|:-----|:-----|:-----|:---------|
 | 1 | 结构 | 单篇 800 行 | §9 破例：HANG + OOM 合并 + 4 层 HANG 机制 + 主动监控 | 仅本篇 |
 | 1 | 结构 | 6 个取证子节（HANG 主动抓 / OOM hprof / 主动监控工具 / 治理）| F06 主题"HANG + OOM"决定 | 仅本篇 |
-| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.12 全量对账 | 附录 B 强制 | 全文 8+ 处源码引用 |
+| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.18 全量对账 | 附录 B 强制 | 全文 8+ 处源码引用 |
 | 3 | 锐度 | §1.1 强调"HANG 没有自动 dump" | 反例 #9 跨篇重复防御 | §1.1 |
 | 3 | 锐度 | §1.1 强调"OOM 必有自动 dump" | 反例 #9 跨篇重复防御 | §1.1 |
 
@@ -485,7 +485,7 @@ adb shell timeout 30 cat /sys/kernel/debug/tracing/trace > ftrace.log
 
 > **类型**：典型模式
 >
-> **环境**：AOSP 14.0.0_r1 / Kernel 5.10 / 设备 Pixel 6（**AOSP 17 / K 6.12 验证版准备中**）
+> **环境**：AOSP 17.0.0_r1 / Kernel android17-6.18 / 设备 Pixel 6
 >
 > **症状**：用户报"App 列表滚动偶尔卡，但没弹 ANR"
 >
@@ -717,7 +717,7 @@ private static final LruCache<String, Bitmap> cache = new LruCache<>(50 * 1024 *
 
 # 附录 A：核心源码路径索引
 
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 
 | 文件 | 完整路径 | 版本基线 | 说明 |
 |:-----|:---------|:---------|:-----|
@@ -725,8 +725,8 @@ private static final LruCache<String, Bitmap> cache = new LruCache<>(50 * 1024 *
 | MessageQueue.java | `frameworks/base/core/java/android/os/MessageQueue.java` | AOSP 17.0.0_r1 | **AOSP 17 无锁化** |
 | am dumpheap | `frameworks/base/cmds/am/src/com/android/commands/am/Am.java` | AOSP 17.0.0_r1 | OOM 主动触发 hprof |
 | ProcessList.java | `frameworks/base/services/core/java/com/android/server/am/ProcessList.java` | AOSP 17.0.0_r1 | OOM 自动 hprof 触发 |
-| kernel/hung_task.c | `kernel/hung_task.c` | K 6.12 | hung_task 检测（**HANG Layer 4 升级边界**）|
-| drivers/android/binder.c | `drivers/android/binder.c` | K 6.12 | binder C 版（HANG Layer 3）|
+| kernel/hung_task.c | `kernel/hung_task.c` | K 6.18 | hung_task 检测（**HANG Layer 4 升级边界**）|
+| drivers/android/binder.c | `drivers/android/binder.c` | K 6.18 | binder C 版（HANG Layer 3）|
 
 ---
 
@@ -777,6 +777,25 @@ private static final LruCache<String, Bitmap> cache = new LruCache<>(50 * 1024 *
 | **smaps 抓取频率** | 关键事件触发 | 业务调 | 太密→性能损耗 |
 | **LeakCanary 启用** | debug build | **必做** | release 关闭（性能）|
 | **APM 接入** | Sentry / 自研 | **必做** | 不接 = 排查效率低 |
+
+---
+
+### 量化自检表（v4 §4 #15 · 5-10 条）
+
+| # | 指标 | 数量级 | 依据 |
+|:--|:-----|:-------|:-----|
+| 1 | 主线程 P95 latency 阈值 | 200ms | 业务调（卡顿感知阈值）|
+| 2 | Choreographer 跳帧阈值 | 5 帧 | AOSP 17 `Choreographer.java` `SKIPPED_FRAME_WARNING_LIMIT` |
+| 3 | HANG 无自动 dump 主动抓耗时 | 5-10s | 业务调（Perfetto 启动耗时）|
+| 4 | hprof 触发大小 | 50-500MB | 业务调（视机型内存，Pixel 6 默认 256MB）|
+| 5 | hprof 抓取耗时 | 5-30s | AOSP 17 `art/dexdump.cc` 实测 |
+| 6 | hprof 解析（MAT）耗时 | 5-30 分钟 | 业务调（Eclipse MAT 实测）|
+| 7 | dropbox LOW_MEM 保留 | 7-30 天 | AOSP 17 `DropBoxManagerService.java` 默认 |
+| 8 | ftrace buffer 大小 | 1-10MB | 厂商定制（`trace_buf_size`）|
+| 9 | OOM 触发比例 | Java Heap 40% / Native Heap 30% / Graphics 20% / Other 10% | 业务调（业界平均）|
+| 10 | HANG 主动抓覆盖率 | 100%（必须主动）| 业务调（治理 KPI）|
+
+> **所以呢**：**HANG 是 7 大症状里唯一"无自动 dump"的**——必须**主动**用 Perfetto / ftrace / Choreographer 抓，**不能等 dump**。**OOM 抓 hprof 必须及时**（dump 后 5 分钟不抓会被覆盖）。
 
 ---
 

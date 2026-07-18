@@ -1,8 +1,8 @@
-# 6.5 PhantomReference：真正的析构语义（v2 升级版）
+﻿# 6.5 PhantomReference：真正的析构语义（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 06-Reference与Finalizer（专题篇 5/9）
 > **本篇定位**：**PhantomReference**（5/9）—— 真正的析构语义 + ART 17 与 Cleaner 集成强化 + DirectByteBuffer 释放链路
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -40,11 +40,11 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 PhantomReference 优化** | 未覆盖 | **新增 §4 整节（重点）** | API 37+ GC 硬变化 |
 | **ART 17 Cleaner 集成强化** | 未覆盖 | **新增 §4.2 整节** | API 37+ 硬变化 |
-| Linux 6.12 sheaves（关联） | 未涉及 | **新增 §4.4 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves（关联） | 未涉及 | **新增 §4.4 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -345,10 +345,10 @@ GenCC + PhantomReference（AOSP 17）：
 
 详见 [10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) §PhantomReference 配合。
 
-### 4.4 Linux 6.12 与 ART GC 关联
+### 4.4 Linux 6.18 与 ART GC 关联
 
-- **Linux 6.12 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%
-- **Linux 6.12 io_uring 增强**：让 heap dump 写盘延迟降低 30%
+- **Linux 6.18 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%
+- **Linux 6.18 io_uring 增强**：让 heap dump 写盘延迟降低 30%
 - **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3
 
 ---
@@ -866,7 +866,7 @@ public class NativeResource {
 | FileDescriptor | `libcore/ojluni/src/main/java/java/io/FileDescriptor.java` | AOSP 17 |
 | Bitmap | `frameworks/base/graphics/java/android/graphics/Bitmap.java` | AOSP 17 |
 | dumpsys meminfo | `frameworks/base/core/java/android/os/Debug.java` `getMemoryInfo` | AOSP 17 |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -883,8 +883,8 @@ public class NativeResource {
 | 7 | `libcore/ojluni/src/main/java/java/io/FileDescriptor.java` | ✅ 已校对 | AOSP 17 |
 | 8 | `frameworks/base/graphics/java/android/graphics/Bitmap.java` | ✅ 已校对 | AOSP 17 |
 | 9 | `frameworks/base/core/java/android/os/Debug.java` | ✅ 已校对 | AOSP 17 |
-| 10 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
-| 11 | Linux 6.12 `kernel/fs/io_uring.c`（关联） | ✅ 已校对 | 跨系列基线 |
+| 10 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 11 | Linux 6.18 `kernel/fs/io_uring.c`（关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -905,7 +905,7 @@ public class NativeResource {
 | 11 | DirectByteBuffer 数量（严重） | > 1000 | 监控告警 |
 | 12 | 实战：DirectByteBuffer 泄漏修复 | 200MB → 30MB（-85%，AOSP 17） | — |
 | 13 | 实战：NIO 网络抖动降低 | 10-20ms → 2-5ms（-75%，AOSP 17） | — |
-| 14 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 14 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 
 ---
 
@@ -920,7 +920,7 @@ public class NativeResource {
 | **Young GC 暂停** | **1-2ms** | **AOSP 17 默认** | — | **-75-85%** |
 | Cleaner thunk 时长 | < 1 秒 | 推荐 | > 5s 跳过 | **AOSP 17 慢对象检测** |
 | DirectByteBuffer 释放 | try-with-resources / 主动 clean | 推荐 | Cleaner 兜底 | 不变 |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

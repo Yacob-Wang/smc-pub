@@ -1,8 +1,8 @@
-# 8.3 GC × Zygote：fork 后的 GC 状态（v2 升级版）
+﻿# 8.3 GC × Zygote：fork 后的 GC 状态（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 08-GC与其他子系统（横切专题 · 3/8）
 > **本篇定位**：**横切专题**（3/8）——Zygote fork 后的 GC 状态 + ART 17 Zygote Space 优化 + Class 共享 + GC Root 减少
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -42,12 +42,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 Zygote Space 优化 | 未覆盖 | **新增 §7.1 整节** | API 37+ 启动性能硬变化 |
 | ART 17 Class 共享 + GC Root 减少 | 未覆盖 | **新增 §7.2 整节** | API 37+ 内存硬变化 |
 | ART 17 第一次 GC 加速 | 未覆盖 | **新增 §7.3 整节** | API 37+ 启动性能硬变化 |
-| Linux 6.12 sheaves 关联 | 未涉及 | **新增 §7.4 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves 关联 | 未涉及 | **新增 §7.4 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -638,11 +638,11 @@ AOSP 17 通过 3 个机制加速第一次 GC：
 
 **架构师视角**：第一次 GC 减半（50ms → 25ms）对**冷启动性能**至关重要。**App 启动时间优化 25ms**。
 
-### 7.4 Linux 6.12 sheaves 与 Native 堆
+### 7.4 Linux 6.18 sheaves 与 Native 堆
 
-- **Linux 6.12 sheaves 内存分配器**：让 Native 堆内存占用降低 15-20%
+- **Linux 6.18 sheaves 内存分配器**：让 Native 堆内存占用降低 15-20%
 - **跨系列引用**：详见 [Linux_Kernel/MM/06-MM-调优-sheaves](../../../Linux_Kernel/MM/06-MM-调优-sheaves.md)（待升级 v2）
-- **实战影响**：Zygote fork 后 Native 堆分配（MarkBitmap / CardTable）受 Linux 6.12 内存压力减轻
+- **实战影响**：Zygote fork 后 Native 堆分配（MarkBitmap / CardTable）受 Linux 6.18 内存压力减轻
 
 ### 7.5 ART 17 ClassLoader 去重对 Hook 框架的影响
 
@@ -815,7 +815,7 @@ Runtime.getRuntime().disableClassLoaderDedup();
 | **ClassLoader 去重表** | `art/runtime/class_linker.cc` | **AOSP 17 强化** |
 | ActivityThread | `frameworks/base/core/java/android/app/ActivityThread.java` | AOSP 17 |
 | ZygoteInit | `frameworks/base/core/java/com/android/internal/os/ZygoteInit.java` | AOSP 17 |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -833,7 +833,7 @@ Runtime.getRuntime().disableClassLoaderDedup();
 | 8 | `art/runtime/class_linker.cc` | ✅ 已校对 | AOSP 17 强化 |
 | 9 | `frameworks/base/core/java/android/app/ActivityThread.java` | ✅ 已校对 | AOSP 17 |
 | 10 | `frameworks/base/core/java/com/android/internal/os/ZygoteInit.java` | ✅ 已校对 | AOSP 17 |
-| 11 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 11 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -852,7 +852,7 @@ Runtime.getRuntime().disableClassLoaderDedup();
 | 9 | COW 复制代价 | ~50 MB / 次 | 触发写入时 |
 | 10 | 案例 1：启动 GC 优化 | 50ms → 30ms（-40%） | AOSP 14 / Pixel 6 |
 | 11 | 案例 2：插件化修复 | 30% → 100% 成功率 | AOSP 17 / Pixel 8 |
-| 12 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 12 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 
 ---
 
@@ -866,7 +866,7 @@ Runtime.getRuntime().disableClassLoaderDedup();
 | 第一次 GC STW | 25ms | AOSP 17 | 不可控 | **从 50ms 优化到 25ms** |
 | ClassLoader 去重 | 默认开启 | 普通 App 默认 | **插件化必须 opt-in** | **AOSP 17 新增** |
 | GC 预热策略 | 子线程预热 | 推荐 | 主线程预热会卡顿 | **AOSP 17 自动预热** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

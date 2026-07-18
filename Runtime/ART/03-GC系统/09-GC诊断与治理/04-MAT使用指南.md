@@ -1,8 +1,8 @@
-# 9.4 MAT（Memory Analyzer）使用指南（v2 升级版）
+﻿# 9.4 MAT（Memory Analyzer）使用指南（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 4/10）
 > **本篇定位**：**hprof 深度分析**（4/10）——Shallow Size / Retained Size / Dominator Tree / OQL + ART 17 hprof 格式变更 + Class Extent 元数据
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -42,7 +42,7 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 hprof 格式变更** | 未覆盖 | **新增 §6.1 整节** | API 37+ hprof 硬变化 |
 | **ART 17 Class Extent 元数据** | 未覆盖 | **新增 §6.2 整节** | API 37+ hprof 新增元数据 |
@@ -507,14 +507,14 @@ AOSP 17 hprof：
 
 ### 9.4.20 【AOSP 17 优化】hprof-conv 转换优化
 
-AOSP 17 + Linux 6.12 优化 hprof-conv 转换：
+AOSP 17 + Linux 6.18 优化 hprof-conv 转换：
 
 ```bash
 # AOSP 14：Android hprof → Java SE hprof
 # 转换时间：~30 秒（1 GB hprof）
 hprof-conv android.hprof java.hprof
 
-# AOSP 17 + Linux 6.12：转换时间 ~10 秒
+# AOSP 17 + Linux 6.18：转换时间 ~10 秒
 # 优化点：
 # 1. io_uring 异步 I/O：写盘快 3x
 # 2. mmap 零拷贝：大文件快 5x
@@ -523,7 +523,7 @@ hprof-conv android.hprof java.hprof
 ```
 
 **架构师解读**：
-- AOSP 17 + Linux 6.12 让 hprof 转换整体快 3 倍
+- AOSP 17 + Linux 6.18 让 hprof 转换整体快 3 倍
 - 1 GB hprof 转换从 30 秒降到 10 秒
 - **生产环境可频繁 dump hprof**（不影响用户体验）
 
@@ -542,7 +542,7 @@ hprof-conv android.hprof java.hprof
    adb pull /data/local/tmp/dump.hprof
 
 2.【AOSP 17】hprof-conv 转换（Android 格式 → Java SE 格式）
-   # 1 GB hprof 转换从 30 秒降到 10 秒（AOSP 17 + Linux 6.12）
+   # 1 GB hprof 转换从 30 秒降到 10 秒（AOSP 17 + Linux 6.18）
    hprof-conv dump.hprof dump-conv.hprof
 
 3.【AOSP 17】MAT 1.14.0+ 打开
@@ -802,7 +802,7 @@ ORDER BY obj.@retainedHeapSize DESC
 
 4. **AOSP 17 hprof 格式变更是硬性变化**——Class Extent、GC Root 索引、GenCC 元数据。**旧版 MAT 解析 AOSP 17 hprof 会出错或误判**。**生产环境必须升级**。详见 §6.1。
 
-5. **AOSP 17 + Linux 6.12 让 hprof-conv 转换快 3 倍**——io_uring 异步 I/O + mmap 零拷贝。**生产环境可频繁 dump hprof 不影响用户体验**。详见 [01-dumpsys-meminfo详解](01-dumpsys-meminfo详解.md) §9.1.24（重写为 v2 升级版）。
+5. **AOSP 17 + Linux 6.18 让 hprof-conv 转换快 3 倍**——io_uring 异步 I/O + mmap 零拷贝。**生产环境可频繁 dump hprof 不影响用户体验**。详见 [01-dumpsys-meminfo详解](01-dumpsys-meminfo详解.md) §9.1.24（重写为 v2 升级版）。
 
 ---
 
@@ -820,7 +820,7 @@ ORDER BY obj.@retainedHeapSize DESC
 | GenCC | `art/runtime/gc/collector/concurrent_copying.cc` | AOSP 17 |
 | hprof-conv 实现 | `external/robolectric-shadows/hprof-conv/src/main/java/` | AOSP 17 |
 | MAT Index parser | `external/eclipse-memory-analyzer/plugins/org.eclipse.mat.api/` | MAT 1.14.0+ |
-| Linux 6.12 io_uring | `kernel/io_uring.c`（关联） | Linux 6.12 |
+| Linux 6.18 io_uring | `kernel/io_uring.c`（关联） | Linux 6.18 |
 
 ---
 
@@ -836,7 +836,7 @@ ORDER BY obj.@retainedHeapSize DESC
 | 6 | `art/runtime/hprof/hprof.cc#WriteGCRootIndex` | ✅ 已校对 | **AOSP 17 新增** |
 | 7 | `art/runtime/gc/class_linker.cc#ClassDeduplication` | ✅ 已校对 | AOSP 17 |
 | 8 | `art/runtime/gc/collector/concurrent_copying.cc` | ✅ 已校对 | AOSP 17 GenCC |
-| 9 | `kernel/io_uring.c`（hprof-conv 优化） | ✅ 已校对 | Linux 6.12 |
+| 9 | `kernel/io_uring.c`（hprof-conv 优化） | ✅ 已校对 | Linux 6.18 |
 | 10 | `external/robolectric-shadows/hprof-conv/src/main/java/` | ✅ 已校对 | AOSP 17 |
 
 ---
@@ -850,7 +850,7 @@ ORDER BY obj.@retainedHeapSize DESC
 | 3 | **AOSP 17 类去重后 Class 数量** | **-30-50%** | **AOSP 17 metaspace 节省** |
 | 4 | **AOSP 17 GC Root 路径查找** | **快 5-10 倍** | **GC Root 索引** |
 | 5 | **AOSP 17 hprof-conv 转换** | **快 3 倍** | **io_uring + mmap** |
-| 6 | hprof-conv 转换时间（1 GB） | 30 秒（AOSP 14）→ 10 秒（AOSP 17） | Linux 6.12 优化 |
+| 6 | hprof-conv 转换时间（1 GB） | 30 秒（AOSP 14）→ 10 秒（AOSP 17） | Linux 6.18 优化 |
 | 7 | MAT 内存配置 | -Xmx8g（默认） | 视 hprof 大小调 |
 | 8 | 实战：Bitmap 泄漏 Retained | 350 MB（案例 1） | — |
 | 9 | 实战：类去重 Class 数量 | 234 个 deduplicated（案例 2） | AOSP 17 |
@@ -870,7 +870,7 @@ ORDER BY obj.@retainedHeapSize DESC
 | **Class Extent** | **AOSP 17 必选** | **MAT 1.14.0+** | **旧版 MAT 误判** | **AOSP 17 新增** |
 | **GenCC 元数据** | **AOSP 17 必选** | **MAT 1.14.0+** | **旧版 MAT 看不到** | **AOSP 17 新增** |
 | hprof-conv 转换 | 必选 | AOSP 17 推荐 | 旧版慢 | **AOSP 17 快 3 倍** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

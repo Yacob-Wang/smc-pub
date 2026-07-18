@@ -1,8 +1,8 @@
-# 2.6 分配器 3：Concurrent Allocator（v2 升级版）
+﻿# 2.6 分配器 3：Concurrent Allocator（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 02-Heap 与分配器（分配器 · 6/8）
 > **本篇定位**：**Concurrent 分配器**（6/8）——CC GC / GenCC 时代，业务线程怎么在 GC 并发标记 + 复制过程中安全分配对象：to-space 分配 + TLAB 切 to-space + 新对象灰色保护 + 读屏障协同 + ART 17 锁优化
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -43,13 +43,13 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 Concurrent 分配器强化 | 未覆盖 | **新增 §7.1 整节** | API 37+ GC 硬变化（与 GenCC 配合） |
 | ART 17 锁优化（CAS 替代全局锁） | 未覆盖 | **新增 §7.2 整节** | API 17 GC 硬变化（Region Pool CAS） |
 | ART 17 后台预分配 | 未覆盖 | **新增 §7.3 整节** | API 17 GC 硬变化（RegionPrefetcher） |
 | 新对象灰色保护 | 简述 | **新增 §4.5 整节**（含代码） | v4 反例 #8 修复 |
-| Linux 6.12 MGLRU（关联） | 未涉及 | **新增 §7.4 关联** | 跨系列基线一致性 |
+| Linux 6.18 MGLRU（关联） | 未涉及 | **新增 §7.4 关联** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -292,7 +292,7 @@ mirror::Object* RegionSpace::Alloc(Thread* self, size_t num_bytes, ...) {
 }
 ```
 
-### 2.6.12 读屏障对新对象的处理
+### 2.6.18 读屏障对新对象的处理
 
 ```cpp
 // 业务线程读 new_obj.field 时
@@ -548,10 +548,10 @@ class RegionPrefetcher : public Thread {
 
 详见 [10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) §3.4。
 
-### 7.4 Linux 6.12 与 Concurrent Allocator 的关联
+### 7.4 Linux 6.18 与 Concurrent Allocator 的关联
 
-- **Linux 6.12 futex 增强**：让 CAS 退避策略的 `sched_yield()` 更高效
-- **Linux 6.12 MGLRU**：让 to-space 切换时的内存回收延迟降低 30%
+- **Linux 6.18 futex 增强**：让 CAS 退避策略的 `sched_yield()` 更高效
+- **Linux 6.18 MGLRU**：让 to-space 切换时的内存回收延迟降低 30%
 - **跨系列引用**：详见 [Linux_Kernel/MM/02-内存回收机制](../../../Linux_Kernel/MM/02-内存回收机制.md) §3
 
 ---
@@ -771,7 +771,7 @@ Concurrent Allocator 异常（分配慢 / CPU 高 / OOM）
 | **CAS 退避策略** | `art/runtime/gc/space/region_space.cc` `cas_fail_count_` | **AOSP 17 新增** |
 | **新对象 SetGray** | `art/runtime/gc/space/region_space.cc` `Alloc` | AOSP 14+ |
 | 软阈值参数 | `art/runtime/options.h` `kSoftThresholdPercent=30` | **AOSP 17 新增** |
-| Linux 6.12 futex | `kernel/futex.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 futex | `kernel/futex.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -787,8 +787,8 @@ Concurrent Allocator 异常（分配慢 / CPU 高 / OOM）
 | 6 | `art/runtime/options.h`（kSoftThresholdPercent） | ✅ 已校对 | **AOSP 17 新增** |
 | 7 | `art/runtime/gc/space/region_space.cc`（RegionPrefetcher） | ✅ 已校对 | **AOSP 17 新增** |
 | 8 | `art/runtime/gc/space/region_space.cc`（CAS 退避） | ✅ 已校对 | **AOSP 17 新增** |
-| 9 | `kernel/futex.c`（Linux 6.12） | ✅ 已校对 | 跨系列基线 |
-| 10 | `mm/mglru/`（Linux 6.12） | ✅ 已校对 | 跨系列基线 |
+| 9 | `kernel/futex.c`（Linux 6.18） | ✅ 已校对 | 跨系列基线 |
+| 10 | `mm/mglru/`（Linux 6.18） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -827,7 +827,7 @@ Concurrent Allocator 异常（分配慢 / CPU 高 / OOM）
 | to-space 切换 STW | < 1ms | 通用 | 切换抖动 | 不变 |
 | 新对象灰色保护 | SetGray() | CC GC 必须 | 不变 | 不变 |
 | 软阈值 kSoftThresholdPercent | 30% | AOSP 17 默认 | 太低→GC 频繁 | AOSP 17 新增 |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

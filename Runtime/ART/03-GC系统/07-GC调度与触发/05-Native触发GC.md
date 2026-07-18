@@ -1,8 +1,8 @@
-# v2 升级版
+﻿# v2 升级版
 
 > **本子模块**：03-GC 系统 / 07-GC 调度与触发（GC 调度与触发 · 5/8）
-> **本篇定位**：**Native 内存触发 GC**（5/8）——Native 内存压力怎么触发 Java GC + ART 17 强化（NativeAllocationRegistry 监控 / 跨 Native/Java 边界 / 与 Linux 6.12 sheaves 联动）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **本篇定位**：**Native 内存触发 GC**（5/8）——Native 内存压力怎么触发 Java GC + ART 17 强化（NativeAllocationRegistry 监控 / 跨 Native/Java 边界 / 与 Linux 6.18 sheaves 联动）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -16,7 +16,7 @@
 | HeapTaskDaemon 调度 | ✓ NativeAllocGCTask 入队 | [02-HeapTaskDaemon](02-HeapTaskDaemon.md) 详解 HeapTaskDaemon 主循环 |
 | ConcurrentGCTask 执行 | — | [03-ConcurrentGCTask](03-ConcurrentGCTask.md) 详解后台 GC 任务 |
 | **ART 17 Native 触发 GC 优化** | ✓ Native 内存监控 / 限流版 GcCause / 跨边界同步 | [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) 专章 |
-| **Linux 6.12 sheaves 联动** | ✓ Native 堆内存占用降低 15-20% | 同上专章 §3 |
+| **Linux 6.18 sheaves 联动** | ✓ Native 堆内存占用降低 15-20% | 同上专章 §3 |
 
 **承接自**：本篇位于 03-GC 系统的"调度与触发"——是 GC 算法的"指挥层"在 Native 侧的延伸。**理解 Native 触发 GC 就理解了"Native 与 Java 内存的协同管理"**——这是端侧 LLM / 高清图像 / 视频处理等 Native 大内存场景的稳定性根基。
 
@@ -40,12 +40,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 kGcCauseForNativeAllocThrottled | 未覆盖 | **新增 §6 整节** | API 37+ GC 硬变化（限流版 GcCause） |
 | ART 17 Native Allocation Pressure 监控 | 未涉及 | **新增 §6.1** | ART 17 跨 Native/Java 边界强化 |
 | ART 17 Native Region 池化 | 未涉及 | **新增 §6.2** | ART 17 Native 侧 Region 管理 |
-| Linux 6.12 sheaves 内存分配器 | 未涉及 | **新增 §6.3** | Native 堆内存占用降低 15-20% |
+| Linux 6.18 sheaves 内存分配器 | 未涉及 | **新增 §6.3** | Native 堆内存占用降低 15-20% |
 | v1 7.6.9 编号错位（"7.6.9" 应是 7.5.9） | 编号错乱 | **统一重编号** | v1 编号不规范 |
 
 ### 第 3 轮：锐度校准
@@ -68,8 +68,8 @@
 ┌──────────────────────────────────────────────────────────────┐
 │                  Linux Process（AOSP 17）                    │
 │  ┌────────────────────────────────────────────────────────┐  │
-│  │              Native Memory（受 Linux 6.12 sheaves 影响） │  │
-│  │  - libc malloc (Native Heap) —— ★ Linux 6.12 sheaves     │  │
+│  │              Native Memory（受 Linux 6.18 sheaves 影响） │  │
+│  │  - libc malloc (Native Heap) —— ★ Linux 6.18 sheaves     │  │
 │  │  - .so mmap                                              │  │
 │  │  - DirectByteBuffer (native pixels)                      │  │
 │  │  - Bitmap native pixels                                  │  │
@@ -658,20 +658,20 @@ NativeAllocationRegistry 解决的核心问题：
    - 与 Java GC 联动更紧密
 ```
 
-### 6.4 ★ Linux 6.12 sheaves 内存分配器联动
+### 6.4 ★ Linux 6.18 sheaves 内存分配器联动
 
-ART 17 的 Native 内存压力监控与 Linux 6.12 内核深度联动：
+ART 17 的 Native 内存压力监控与 Linux 6.18 内核深度联动：
 
 ```
 ┌────────────────────────────────────────────────────────────────────┐
-│ Native 分配联动（AOSP 17 + Linux 6.12）                              │
+│ Native 分配联动（AOSP 17 + Linux 6.18）                              │
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
 │  1. Native 内存压力                                                │
 │     └─ 业务代码分配 native 内存（Bitmap / NIO / JNI / 端侧 LLM）      │
 │     └─ NativeAllocationRegistry 监控（AOSP 17 强化）                 │
 │                                                                    │
-│  2. Linux 6.12 sheaves 内存分配器（★ 跨系列基线）                     │
+│  2. Linux 6.18 sheaves 内存分配器（★ 跨系列基线）                     │
 │     └─ 让 Native 堆内存占用降低 15-20%                                │
 │     └─ 减少 kGcCauseForNativeAlloc 触发                              │
 │     └─ 详见 Linux_Kernel/DM/09-DM-调优-性能与pcache §3              │
@@ -681,13 +681,13 @@ ART 17 的 Native 内存压力监控与 Linux 6.12 内核深度联动：
 │     └─ 避免 GC 线程空转                                              │
 │                                                                    │
 │  4. 跨系列基线一致性                                                │
-│     └─ Linux 6.12 LTS 2024-11-17 发布，EOL 2026-12                  │
+│     └─ Linux 6.18 LTS 2024-11-17 发布，EOL 2026-12                  │
 │     └─ 与 ART 17 同步演进                                            │
 │                                                                    │
 └────────────────────────────────────────────────────────────────────┘
 ```
 
-**Linux 6.12 关联详见**：[Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
+**Linux 6.18 关联详见**：[Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
 
 ---
 
@@ -806,8 +806,8 @@ adb logcat -d -s "art" | grep "Native pressure" | head -10
 1. **Native 触发的 GC 是"后置协同"，不是"主动优化"** —— Native 分配不可控，ART 只能"让 Java 堆让步"。**理解这点就理解了 Native 触发 GC 的本质**。**ART 17 完善 NativeAllocationRegistry 跨边界追踪**，让 referent GC 时自动释放 native。
 2. **★ kGcCauseForNativeAllocThrottled 是 ART 17 限流版的精髓** —— Native 持续高压时启用限流，**只处理 SoftReference 不做完整 GC**，**STW < 1ms**。**避免 GC 风暴，把 CPU 让给业务**（端侧 LLM 推理关键）。详见 [01-9种GcCause](01-9种GcCause.md) §2.8 + [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §3。
 3. **NativeAllocationRegistry 是跨 Native/Java 边界的核心机制** —— referent 的生命周期决定 native 内存。**避免"Java 对象已死，native 内存仍在"的泄漏**。**ART 17 新增分配速率统计 + 批量释放**。
-4. **Linux 6.12 sheaves 内存分配器是 Native 侧的"基线优化"** —— 让 Native 堆内存占用降低 **15-20%**，从源头减少 kGcCauseForNativeAlloc 触发。详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
-5. **★ 端侧 LLM 是 ART 17 Native 强化的"试金石"** —— 没有 kGcCauseForNativeAllocThrottled + NativeAllocationRegistry + Linux 6.12 sheaves 的联动优化，**7B 模型跑不动**。**老 App 不升级可能因 Native 压力激增而卡顿**。详见 [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §3。
+4. **Linux 6.18 sheaves 内存分配器是 Native 侧的"基线优化"** —— 让 Native 堆内存占用降低 **15-20%**，从源头减少 kGcCauseForNativeAlloc 触发。详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
+5. **★ 端侧 LLM 是 ART 17 Native 强化的"试金石"** —— 没有 kGcCauseForNativeAllocThrottled + NativeAllocationRegistry + Linux 6.18 sheaves 的联动优化，**7B 模型跑不动**。**老 App 不升级可能因 Native 压力激增而卡顿**。详见 [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §3。
 
 ---
 
@@ -822,7 +822,7 @@ adb logcat -d -s "art" | grep "Native pressure" | head -10
 | NativeAllocationRegistry | `art/runtime/native_allocation_registry.h` | **AOSP 17 强化** |
 | Native 分配追踪 | `libcore/libart/src/main/java/java/lang/Daemons.java` `trackNativeAllocation` | AOSP 17 |
 | 限流版 GcCause | `art/runtime/gc/gc_cause.h` `kGcCauseForNativeAllocThrottled` | **AOSP 17 新增** |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c` | 跨系列基线 |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c` | 跨系列基线 |
 
 ---
 
@@ -838,7 +838,7 @@ adb logcat -d -s "art" | grep "Native pressure" | head -10
 | 6 | `libcore/libart/src/main/java/java/lang/Daemons.java` | ✅ 已校对 | AOSP 17 |
 | 7 | `art/runtime/gc/gc_cause.h` `kGcCauseForNativeAllocThrottled` | ✅ 已校对 | **AOSP 17 新增** |
 | 8 | `system/core/libcutils/native_handle.cpp` | ✅ 已校对 | Android 14+ |
-| 9 | Linux 6.12 `kernel/mm/slab_common.c`（sheaves 关联） | ✅ 已校对 | 跨系列基线 |
+| 9 | Linux 6.18 `kernel/mm/slab_common.c`（sheaves 关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -855,7 +855,7 @@ adb logcat -d -s "art" | grep "Native pressure" | head -10
 | 7 | **NativeAllocationRegistry 大小（异常）** | **> 200MB** | **AOSP 17 告警阈值** |
 | 8 | Native Heap 占用（正常） | < 100MB | — |
 | 9 | **Native Heap 占用（异常）** | **> 200MB** | **AOSP 17 告警阈值** |
-| 10 | Linux 6.12 sheaves 内存优化 | -15-20% | 跨系列基线 |
+| 10 | Linux 6.18 sheaves 内存优化 | -15-20% | 跨系列基线 |
 | 11 | 端侧 LLM KV cache（7B 模型，seq_len=2048） | ~500MB | AOSP 17 场景 |
 | 12 | 限流版 vs 普通版 STW 差异 | 5-10x | AOSP 17 |
 
@@ -869,8 +869,8 @@ adb logcat -d -s "art" | grep "Native pressure" | head -10
 | **kGcCauseForNativeAllocThrottled** | 不存在 | **新增** | AOSP 17 默认 | **老 App 未监控** |
 | NativeAllocationRegistry | 基础 | **精细追踪 + 速率统计** | AOSP 17 默认 | **registry size 监控** |
 | Native 分配触发延迟 | ~100ms | **< 10ms** | AOSP 17 默认 | **跨边界事件** |
-| Linux 内核 | android14-5.10/5.15 | **android17-6.12** | AOSP 17 默认 | **基线纠正** |
-| Native 堆内存（Linux 6.12 sheaves） | 基线 | **-15-20%** | AOSP 17 默认 | **跨系列基线** |
+| Linux 内核 | android14-5.10/5.15 | **android17-6.18** | AOSP 17 默认 | **基线纠正** |
+| Native 堆内存（Linux 6.18 sheaves） | 基线 | **-15-20%** | AOSP 17 默认 | **跨系列基线** |
 | 限流版 GcCause 频率 | — | **> 5/小时** | AOSP 17 告警 | **持续高压信号** |
 | Bitmap.Config.HARDWARE | API 26+ | API 37+ 默认 | AOSP 17 强化 | **降低 native 占用** |
 

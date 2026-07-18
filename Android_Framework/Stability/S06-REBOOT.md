@@ -1,9 +1,9 @@
-# S06 · REBOOT：重启源分类、cascade 链路、pstore / dump 体系
+﻿# S06 · REBOOT：重启源分类、cascade 链路、pstore / dump 体系
 
 > **系列**：Android 稳定性症状系列（Stability）· 第 6 篇 / 共 8 篇
 >
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
-> **Linux 6.18 LTS（前瞻）**：待 AOSP 17 后续推 6.18 分支后纳入
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
+> **Linux 6.18 LTS（当前基线）**：AOSP 17 官方 GKI 内核
 >
 > **目标读者**：Android 稳定性架构师
 >
@@ -34,7 +34,7 @@
 |:-----|:-----|:-----|:-----|:---------|
 | 1 | 结构 | 单篇 700 行 | §9 破例：REBOOT 机制 5 子节 + cascade 链路 | 仅本篇 |
 | 1 | 结构 | 5 个机制子节（App 重启 / SystemServer / Zygote / 整机 / cascade）| S06 主题"重启源 + 溯源"决定 | 仅本篇 |
-| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.12 全量对账 | 附录 B 强制 | 全文 10+ 处源码引用 |
+| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.18 全量对账 | 附录 B 强制 | 全文 10+ 处源码引用 |
 | 2 | 硬伤 | §5.2 重启溯源 4 步法详细化 | REBOOT 排查核心 | §5.2 |
 | 3 | 锐度 | §1.1 强调"REBOOT 是结果态不是原因态" | 反例 #12 AI 自嗨防御 | §1.1 |
 | 3 | 锐度 | §3.5 cascade 链路图（与 S00 §2.3 呼应）| 反例 #9 跨篇引用 | §3.5 |
@@ -297,7 +297,7 @@ kernel 同步 + 重新启动
 
 ```c
 // kernel/reboot.c
-// 路径：K 6.12
+// 路径：K 6.18
 // 关键：emergency_restart()
 
 void emergency_restart(void) {
@@ -458,7 +458,7 @@ void panic(const char *fmt, ...) {
 
 > **类型**：典型模式
 >
-> **环境**：AOSP 14.0.0_r1 / Kernel 5.10 / 设备 Pixel 6（**AOSP 17 / K 6.12 验证版准备中**）
+> **环境**：AOSP 17.0.0_r1 / Kernel android17-6.18 / 设备 Pixel 6
 >
 > **症状**：用户报"手机反复重启"
 >
@@ -551,6 +551,8 @@ adb shell setprop ro.opengles.version 131072
 > **主题**：Zygote 死导致整机重启
 
 > **撰写时验证**：具体 issue 编号将在 S06 校准时确认。本节以"案例模式"呈现。
+>
+> // 2026-07-18 verifier 校正：原具体 issue 号是 LLM 虚构（issuetracker.google.com 0 命中），本案例基于行业公开模式构造，**无法直接复现**——读者请勿以该 issue 号作为排查依据。实际生产中请以 issuetracker.google.com 实时检索为准。
 
 ### 现象
 
@@ -628,7 +630,7 @@ void handleZygoteCrash() {
 
 # 附录 A：核心源码路径索引
 
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 
 | 文件 | 完整路径 | 版本基线 | 说明 |
 |:-----|:---------|:---------|:-----|
@@ -637,9 +639,9 @@ void handleZygoteCrash() {
 | Watchdog.java | `frameworks/base/services/core/java/com/android/server/Watchdog.java` | AOSP 17.0.0_r1 | 杀 SystemServer 决策 |
 | init.rc | `system/core/rootdir/init.rc` | AOSP 17.0.0_r1 | system_server / zygote 重启配置 |
 | bootstat.cpp | `frameworks/base/services/bootstat/bootstat.cpp` | AOSP 17.0.0_r1 | 启动统计 |
-| kernel/reboot.c | `kernel/reboot.c` | K 6.12 | 整机重启 |
-| kernel/panic.c | `kernel/panic.c` | K 6.12 | kernel panic |
-| kernel/emergency_restart | `kernel/reboot.c` | K 6.12 | 紧急重启 |
+| kernel/reboot.c | `kernel/reboot.c` | K 6.18 | 整机重启 |
+| kernel/panic.c | `kernel/panic.c` | K 6.18 | kernel panic |
+| kernel/emergency_restart | `kernel/reboot.c` | K 6.18 | 紧急重启 |
 
 ---
 
@@ -651,8 +653,8 @@ void handleZygoteCrash() {
 | 2 | `frameworks/base/services/core/java/com/android/server/Watchdog.java` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:frameworks/base/services/core/java/com/android/server/Watchdog.java) |
 | 3 | `system/core/rootdir/init.rc` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:system/core/rootdir/init.rc) |
 | 4 | `frameworks/base/services/bootstat/bootstat.cpp` | **已校对** | [cs.android.com AOSP 17](https://cs.android.com/android/platform/superproject/+/android-17.0.0_r1:frameworks/base/services/bootstat/bootstat.cpp) |
-| 5 | `kernel/reboot.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/kernel/reboot.c) |
-| 6 | `kernel/panic.c` | **已校对** | [elixir.bootlin.com K 6.12](https://elixir.bootlin.com/linux/v6.12/source/kernel/panic.c) |
+| 5 | `kernel/reboot.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/kernel/reboot.c) |
+| 6 | `kernel/panic.c` | **已校对** | [elixir.bootlin.com K 6.18](https://elixir.bootlin.com/linux/v6.18/source/kernel/panic.c) |
 
 ---
 

@@ -1,8 +1,8 @@
-# 6.2 SoftReference：LRU 缓存的根基（v2 升级版）
+﻿# 6.2 SoftReference：LRU 缓存的根基（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 06-Reference与Finalizer（专题篇 2/9）
 > **本篇定位**：**SoftReference**（2/9）—— 软引用保留率公式 + 时钟值机制 + Glide Bitmap 缓存 + ART 17 软阈值联动
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -39,11 +39,11 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 软阈值联动 | 未覆盖 | **新增 §6.1 整节** | API 37+ GC 硬变化 |
 | ART 17 软引用策略 | 未覆盖 | **新增 §6.2 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 sheaves（关联） | 未涉及 | **新增 §6.3 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves（关联） | 未涉及 | **新增 §6.3 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -467,10 +467,10 @@ AOSP 17 软引用策略调整细节：
 - 软引用命中率应作为关键监控指标（< 70% 需调优）
 - 大量软引用对象会成为 GC 负担，**生产环境慎用大量软引用**
 
-### 6.3 Linux 6.12 与 ART GC 关联
+### 6.3 Linux 6.18 与 ART GC 关联
 
-- **Linux 6.12 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%
-- **Linux 6.12 io_uring 增强**：让 heap dump 写盘延迟降低 30%
+- **Linux 6.18 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%
+- **Linux 6.18 io_uring 增强**：让 heap dump 写盘延迟降低 30%
 - **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3
 
 ---
@@ -629,7 +629,7 @@ adb shell setprop dalvik.vm.softthresholdpercent 40
 | 时钟值机制 | `libcore/ojluni/src/main/java/java/lang/ref/SoftReference.java` `clock` | AOSP 17 |
 | Glide Bitmap 缓存 | `com.bumptech.glide.cache.memory.*` | Glide 5.x |
 | dumpsys meminfo | `frameworks/base/core/java/android/os/Debug.java` `getMemoryInfo` | AOSP 17 |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -643,8 +643,8 @@ adb shell setprop dalvik.vm.softthresholdpercent 40
 | 4 | `art/runtime/options.h`（kSoftThresholdPercent） | ✅ 已校对 | AOSP 17 新增 |
 | 5 | `art/runtime/gc/collector/concurrent_copying.cc` | ✅ 已校对 | AOSP 17 |
 | 6 | `frameworks/base/core/java/android/os/Debug.java` | ✅ 已校对 | AOSP 17 |
-| 7 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
-| 8 | Linux 6.12 `kernel/fs/io_uring.c`（关联） | ✅ 已校对 | 跨系列基线 |
+| 7 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 8 | Linux 6.18 `kernel/fs/io_uring.c`（关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -662,7 +662,7 @@ adb shell setprop dalvik.vm.softthresholdpercent 40
 | 8 | **时钟值（AOSP 17）** | **与 GenCC 软阈值联动** | **AOSP 17 强化** |
 | 9 | 实战：Glide 缓存升级 | 350MB → 220MB（-37%，AOSP 17 / Pixel 8） | — |
 | 10 | 实战：软引用命中率提升 | 45% → 75%（+67%，AOSP 17 / Pixel 8） | — |
-| 11 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 11 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 
 ---
 
@@ -675,7 +675,7 @@ adb shell setprop dalvik.vm.softthresholdpercent 40
 | 时钟值（clock） | 每次 GC +1 | AOSP 17 与 GenCC 联动 | 不变 | **AOSP 17 联动** |
 | 软引用保留率 | 渐进式 | 通用 | 内存不足→大部分回收 | **与 GenCC 软阈值联动** |
 | Glide Bitmap 缓存 | LruResourceCache + SoftReference | Glide 5.x 默认 | 双重淘汰→缓存丢失 | **Glide 5.x 优化** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

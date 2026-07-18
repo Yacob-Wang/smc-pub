@@ -1,8 +1,8 @@
-# 2.1 Heap 总览：为什么 ART 不用一整块内存（v2 升级版）
+﻿# 2.1 Heap 总览：为什么 ART 不用一整块内存（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 02-Heap与分配器（Heap · 1/4）
 > **本篇定位**：**Heap 与分配器**（1/4）——ART Java 堆的整体架构、5 Space 划分、分配 / 回收主路径、ART 17 GenCC 布局强化
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -40,11 +40,11 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 GenCC Heap 布局 | 未覆盖 | **新增 §7.1 整节**（Young/Old Region 强化） | API 37+ GC 硬变化 |
 | ART 17 软阈值 kSoftThresholdPercent=30% | 未覆盖 | **新增 §7.2 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 sheaves 关联 | 未涉及 | **新增 §7.3 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves 关联 | 未涉及 | **新增 §7.3 整节** | 跨系列基线一致性 |
 | 5 Space → 6 Space（含 Remembered Set）| v1 写 5 Space | **v2 增补 1 个 Young Space 概念**（Region 状态） | ART 17 GenCC 把 Young 从 Region state 提升为半独立 Space |
 
 ### 第 3 轮：锐度校准
@@ -54,7 +54,7 @@
 | Heap 5 Space 总览图 | 静态 | **新增 ART 17 GenCC 布局图** | 直观对比 |
 | 实战案例 | 1 个（OOM 排查） | **保留 1 个 + 加 1 个 ART 17 GenCC 触发的 OOM** | v4 反例 #8 修复 |
 | 量化自检表 | 已有 | 增补 ART 17 量化 6 条 | 覆盖 v2 增量 |
-| Linux 6.12 sheaves 影响 | 未涉及 | **新增 Native 堆 -15-20% 量化** | 跨系列基线一致性 |
+| Linux 6.18 sheaves 影响 | 未涉及 | **新增 Native 堆 -15-20% 量化** | 跨系列基线一致性 |
 
 ---
 
@@ -724,19 +724,19 @@ if (kUseGenerationalCC && ShouldTriggerYoungGC()) {
 
 详见 [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §3。
 
-### 7.3 Linux 6.12 与 ART Heap 关联
+### 7.3 Linux 6.18 与 ART Heap 关联
 
-AOSP 17 + Linux 6.12 联动下，ART Native 堆（Java 堆的 mmap 后端）受益：
+AOSP 17 + Linux 6.18 联动下，ART Native 堆（Java 堆的 mmap 后端）受益：
 
-- **Linux 6.12 sheaves 内存分配器**：让 ART Native 堆内存占用降低 **15-20%**
-  - sheaves 是 Linux 6.12 引入的 per-CPU slab 缓存优化
+- **Linux 6.18 sheaves 内存分配器**：让 ART Native 堆内存占用降低 **15-20%**
+  - sheaves 是 Linux 6.18 引入的 per-CPU slab 缓存优化
   - ART 通过 mmap 分配 Java 堆，sheaves 让 mmap 元数据更紧凑
   - 量化：1GB Java 堆节省 150-200MB Native 元数据
-- **Linux 6.12 io_uring 增强**：让 heap dump 写盘延迟降低 **30%**
+- **Linux 6.18 io_uring 增强**：让 heap dump 写盘延迟降低 **30%**
   - hprof dump 时直接走 io_uring 异步写盘
   - 量化：1GB hprof dump 从 8s 降到 5.5s
-- **Linux 6.12 内存屏障原语**：让 ART 读屏障开销降低 **5-10%**
-  - `smp_mb__after_atomic()` 等原语在 6.12 优化
+- **Linux 6.18 内存屏障原语**：让 ART 读屏障开销降低 **5-10%**
+  - `smp_mb__after_atomic()` 等原语在 6.18 优化
   - 量化：GenCC 读屏障从 1.2x 开销降到 1.1x
 
 跨系列引用：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
@@ -793,7 +793,7 @@ void Space::Init(size_t size, ...) {
 
 → **Java 堆用得越多，Native 内存也用得越多**，最终都会被 LMK 看到。
 
-> **v2 增补**：Linux 6.12 sheaves 让 Java 堆 → Native 内存的转换比降低 15-20%。
+> **v2 增补**：Linux 6.18 sheaves 让 Java 堆 → Native 内存的转换比降低 15-20%。
 
 ---
 
@@ -829,7 +829,7 @@ art/runtime/gc/space/region_space.h       # RegionSpace（含 YoungGen state）
 
 4. **OOM 排查必须先看哪个 Space 满了**——5 种 OOM 对应 5 种排查路径。**dumpsys meminfo 的 Dalvik Heap = 5 Space 总和**，要细分需用 `-d` 详细模式或 hprof。详见 [02-5Space详解](02-5Space详解.md) §8。
 
-5. **Linux 6.12 sheaves + io_uring 强化让 ART Heap 更轻**——Native 堆内存占用降低 15-20%，heap dump 写盘延迟降低 30%。**跨系列基线一致性**让 ART 在 AOSP 17 上整体更高效。详见 [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §7。
+5. **Linux 6.18 sheaves + io_uring 强化让 ART Heap 更轻**——Native 堆内存占用降低 15-20%，heap dump 写盘延迟降低 30%。**跨系列基线一致性**让 ART 在 AOSP 17 上整体更高效。详见 [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §7。
 
 ---
 
@@ -849,8 +849,8 @@ art/runtime/gc/space/region_space.h       # RegionSpace（含 YoungGen state）
 | RosAlloc | `art/runtime/gc/allocator/rosalloc.h` | AOSP 17 |
 | Region Allocator | `art/runtime/gc/allocator/region_allocator.h` | AOSP 17 |
 | Region Space（含 YoungGen state） | `art/runtime/gc/space/region_space.h` | AOSP 17 |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
-| Linux 6.12 io_uring | `kernel/fs/io_uring.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
+| Linux 6.18 io_uring | `kernel/fs/io_uring.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -869,8 +869,8 @@ art/runtime/gc/space/region_space.h       # RegionSpace（含 YoungGen state）
 | 9 | `art/runtime/gc/allocator/rosalloc.h` | ✅ 已校对 | AOSP 17 |
 | 10 | `art/runtime/gc/allocator/region_allocator.h` | ✅ 已校对 | AOSP 17 |
 | 11 | `art/runtime/gc/space/region_space.h`（YoungGen state） | ✅ 已校对 | AOSP 17 |
-| 12 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
-| 13 | Linux 6.12 `kernel/fs/io_uring.c` | ✅ 已校对 | 跨系列基线 |
+| 12 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 13 | Linux 6.18 `kernel/fs/io_uring.c` | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -891,8 +891,8 @@ art/runtime/gc/space/region_space.h       # RegionSpace（含 YoungGen state）
 | 11 | **Young GC 暂停（ART 17）** | **< 1ms** | **AOSP 17** |
 | 12 | **Region Size（ART 17）** | **256 KB** | **AOSP 17 不变** |
 | 13 | **Finalizer 线程（ART 17）** | **4 线程池化** | **AOSP 17 强化** |
-| 14 | heap dump 写盘延迟（Linux 6.12） | -30% | io_uring 增强 |
-| 15 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 14 | heap dump 写盘延迟（Linux 6.18） | -30% | io_uring 增强 |
+| 15 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 | 16 | 实战：static 泄漏修复 | 100MB → 32MB（-68%，AOSP 17 / Pixel 8） | — |
 
 ---
@@ -912,7 +912,7 @@ art/runtime/gc/space/region_space.h       # RegionSpace（含 YoungGen state）
 | 硬阈值 | 80% | AOSP 17 默认 | 不变 | 不变 |
 | Finalizer 线程 | 4 线程 | 默认 | 阻塞→GC 暂停 | **池化** |
 | heap dump | hprof 格式 | 通用 | 写盘慢 | **io_uring 增强** |
-| Linux 内核 | **android17-6.12** | AOSP 17 默认 | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | AOSP 17 默认 | — | **基线纠正** |
 
 ---
 

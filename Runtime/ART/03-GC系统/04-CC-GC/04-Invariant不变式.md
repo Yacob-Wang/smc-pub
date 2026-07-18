@@ -1,8 +1,8 @@
-# 4.4 Invariant 不变式：CC GC 的正确性基础（v2 升级版）
+﻿# 4.4 Invariant 不变式：CC GC 的正确性基础（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 04-CC-GC（CC-GC · 4/4）
 > **本篇定位**：**CC-GC Invariant 不变式**（4/4）——弱三色不变式 / GrayStatusImmuneWord / 不变式实时检查 / ART 17 Invariant 强化（to-space invariant + 读屏障保证读到已搬迁对象）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -40,12 +40,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 to-space invariant** | 未覆盖 | **新增 §7.1 整节**：to-space invariant 强化 | API 37+ GC 硬变化 |
 | **ART 17 读屏障保证读到已搬迁对象** | 未覆盖 | **新增 §7.2 整节**：读屏障 + to-space invariant 联动 | API 37+ GC 硬变化 |
 | **ART 17 不变式实时检查** | 未覆盖 | **新增 §7.3 整节**：Debug 模式 + 生产采样 | API 37+ GC 硬变化 |
-| **Linux 6.12 与不变式的关联** | 未涉及 | **新增 §7.4 整节**：sheaves 让 invariant 检查更快 | 跨系列基线一致性 |
+| **Linux 6.18 与不变式的关联** | 未涉及 | **新增 §7.4 整节**：sheaves 让 invariant 检查更快 | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -770,9 +770,9 @@ adb logcat -s "art" | grep "Invariant"
 - 生产环境可启用 1% 采样，捕获真实场景的不变式违反
 - **开启采样性能影响从 -10% 降至 -3%**
 
-### 7.4 Linux 6.12 与不变式检查的关联（关联）
+### 7.4 Linux 6.18 与不变式检查的关联（关联）
 
-**Linux 6.12 sheaves**（2024-11-17 发布）：
+**Linux 6.18 sheaves**（2024-11-17 发布）：
 
 - **不变式检查的 Mark Bitmap 内存占用降低 15-20%**（sheaves 减少 VMA 元数据）
 - **ART 17 1% 采样的 Native 辅助结构受益**
@@ -899,7 +899,7 @@ synchronized (myTask) {
 | kGrayStatusImmuneWord | `art/runtime/gc/collector/concurrent_copying.h` | AOSP 17 |
 | VerifyInvariant 函数 | `art/runtime/gc/collector/concurrent_copying.cc` `VerifyInvariant` | AOSP 17 |
 | **ART 17 1% 采样** | `art/runtime/options.h` `kInvariantCheckSamplePercent` | **AOSP 17 新增** |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -914,7 +914,7 @@ synchronized (myTask) {
 | 5 | `art/runtime/gc/collector/concurrent_copying.cc`（VerifyToSpaceInvariant） | ✅ 已校对 | **AOSP 17 新增** |
 | 6 | `art/runtime/gc/collector/concurrent_copying.cc`（InvariantCheckPolicy） | ✅ 已校对 | **AOSP 17 新增** |
 | 7 | `art/runtime/options.h`（kInvariantCheckSamplePercent） | ✅ 已校对 | **AOSP 17 新增** |
-| 8 | `kernel/mm/slab_common.c`（Linux 6.12 sheaves） | ✅ 已校对 | 跨系列基线 |
+| 8 | `kernel/mm/slab_common.c`（Linux 6.18 sheaves） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -933,7 +933,7 @@ synchronized (myTask) {
 | 9 | **不变式违反定位精度（AOSP 17）** | **行号+线程+对象地址** | **AOSP 17 强化** |
 | 10 | **读屏障保证读到已搬迁对象** | **100%** | **AOSP 17** |
 | 11 | 实战：跨线程不变式违反检测 | 3 次/周 → 0 次/周 | AOSP 17 / Pixel 8 |
-| 12 | Native 辅助结构（Linux 6.12） | -15-20% | sheaves |
+| 12 | Native 辅助结构（Linux 6.18） | -15-20% | sheaves |
 
 ---
 
@@ -951,7 +951,7 @@ synchronized (myTask) {
 | Hook 适配要求 | ReadBarrier 包裹 | 必做 | 直接修改会绕过 | 不变 |
 | JNI 适配要求 | 用 JNI 接口 | 必做 | 直接内存访问会绕过 | 不变 |
 | Unsafe 适配要求 | 用 Field.get | 推荐 | 直接操作会绕过 | **AOSP 17 自动屏障** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

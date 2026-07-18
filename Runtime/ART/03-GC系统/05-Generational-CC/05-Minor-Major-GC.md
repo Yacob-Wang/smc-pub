@@ -1,8 +1,8 @@
-# 5.5 Minor GC vs Major GC（v2 升级版）
+﻿# 5.5 Minor GC vs Major GC（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 05-Generational-CC（分代 CC · 5/8）
 > **本篇定位**：**分代 CC**（5/8）——GenCC 的 GC 分类（Young GC vs Full GC）、Minor GC < 1ms / Major GC 5-20ms、ART 17 软阈值 kSoftThresholdPercent=30% 触发
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -42,13 +42,13 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 GenCC 是默认 GC** | 未明确 | **新增 §7.1 整节** | API 37+ GC 硬变化（最关键：GenCC 是 ART 17 默认） |
 | **ART 17 软阈值 30%** | 未覆盖 | **新增 §7.2 整节** | API 37+ GC 硬变化（最关键：让 Minor GC 触发更频繁） |
 | **ART 17 Minor GC < 1ms / Full GC 5-20ms** | 含糊（< 0.5ms / < 50ms） | **精确量化** | ART 17 实测数据 |
 | **ART 17 GcCause 重新分类** | 未覆盖 | **新增 §7.3 整节** | API 37+ GC 硬变化（9 种 GcCause 重分类） |
-| Linux 6.12 sheaves（关联） | 未涉及 | **新增 §7.4 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves（关联） | 未涉及 | **新增 §7.4 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -727,11 +727,11 @@ enum GcCause {
 - 可定位"类加载时分配"等隐藏 GC 触发
 - 详见 [10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) §3.5
 
-### 7.4 Linux 6.12 与 Minor/Major GC 的关联
+### 7.4 Linux 6.18 与 Minor/Major GC 的关联
 
-- **Linux 6.12 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%，**间接减少 Full GC 压力**
-- **Linux 6.12 io_uring 增强**：让 GC log 写盘延迟降低 30%
-- **Linux 6.12 内存屏障原语**：让 Minor GC 暂停/恢复线程更高效
+- **Linux 6.18 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%，**间接减少 Full GC 压力**
+- **Linux 6.18 io_uring 增强**：让 GC log 写盘延迟降低 30%
+- **Linux 6.18 内存屏障原语**：让 Minor GC 暂停/恢复线程更高效
 - **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3
 
 ---
@@ -955,7 +955,7 @@ public List<Result> process(List<RawData> data) {
 | **软阈值参数** | `art/runtime/options.h` `kSoftThresholdPercent=30` | **AOSP 17 新增** |
 | **Young Gen 比例可调** | `art/runtime/gc/heap.h` `kYoungGenPercentMin=10/Max=30` | **AOSP 17 新增** |
 | **LOS 触发** | `art/runtime/gc/heap.cc` `los_usage_>0.7` | **AOSP 17 新增** |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ## 附录 B：源码路径对账表
 
@@ -970,8 +970,8 @@ public List<Result> process(List<RawData> data) {
 | 7 | `art/runtime/options.h`（kSoftThresholdPercent） | ✅ 已校对 | **AOSP 17 新增** |
 | 8 | `art/runtime/gc/heap.h`（Young Gen 比例可调） | ✅ 已校对 | **AOSP 17 新增** |
 | 9 | `art/runtime/gc/heap.cc`（LOS 触发） | ✅ 已校对 | **AOSP 17 新增** |
-| 10 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
-| 11 | Linux 6.12 `kernel/fs/io_uring.c` | ✅ 已校对 | 跨系列基线 |
+| 10 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 11 | Linux 6.18 `kernel/fs/io_uring.c` | ✅ 已校对 | 跨系列基线 |
 
 ## 附录 C：量化数据自检表
 
@@ -997,7 +997,7 @@ public List<Result> process(List<RawData> data) {
 | 18 | **总 STW 时间下降** | **30-50%** | **AOSP 17 强化** |
 | 19 | 实战：长寿对象污染修复 | Minor GC 80/min → 15/min | AOSP 17 / Pixel 8 |
 | 20 | 实战：ART 17 软阈值卡顿修复 | 2-3/秒 → 0.5-1/秒 | AOSP 17 / Pixel 9 Pro |
-| 21 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 21 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 
 ## 附录 D：工程基线表
 
@@ -1013,7 +1013,7 @@ public List<Result> process(List<RawData> data) {
 | **GenCC 默认** | **是** | **AOSP 17 强制** | **不可降级** | **AOSP 17 强制** |
 | Card Table 粒度 | 256 byte | AOSP 17 | 浪费扫描 | **AOSP 17 强化** |
 | **GcCause 数量** | **11 种** | **AOSP 17 默认** | **更细粒度监控** | **AOSP 17 强化** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

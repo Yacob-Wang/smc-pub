@@ -1,9 +1,9 @@
-# 3.5 STW 时间分析：Remark 为什么可能飙到 50ms+（v2 升级版）
+﻿# 3.5 STW 时间分析：Remark 为什么可能飙到 50ms+（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 03-CMS-GC（CMS-GC · 5/7）
 > **本篇定位**：**稳定性风险**（5/7）——CMS Remark 阶段 STW 不可控的 3 大瓶颈 + ART 17 STW 优化（Initial 5ms→1-2ms / Remark 50ms→20-30ms / 总 STW 55ms→24ms）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
-> **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级，**基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+> **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级到 AOSP 17 + android17-6.18）
 
 ---
 
@@ -42,11 +42,11 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 STW 优化 | 未覆盖 | **新增 §8.1 整节**（Initial 5ms→1-2ms / Remark 50ms→20-30ms） | API 37+ GC 硬变化 |
 | ART 17 GenCC Minor STW | 未覆盖 | **新增 §8.2 整节**（< 1ms） | API 37+ GC 硬变化 |
-| Linux 6.12 sheaves 关联 | 未涉及 | **新增 §8.3 整节** | Native 堆内存 -15-20% |
+| Linux 6.18 sheaves 关联 | 未涉及 | **新增 §8.3 整节** | Native 堆内存 -15-20% |
 
 ### 第 3 轮：锐度校准
 
@@ -511,9 +511,9 @@ AOSP 17 GenCC 的 Minor GC（Young GC）走完全不同的路径：
 
 详见 [10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) §3。
 
-### 8.3 Linux 6.12 与 ART STW 的关联
+### 8.3 Linux 6.18 与 ART STW 的关联
 
-Linux 6.12（android17-6.12）的 sheaves 内存分配器对 ART Native 堆影响：
+Linux 6.18（android17-6.18）的 sheaves 内存分配器对 ART Native 堆影响：
 - Native 堆（libart.so / libc++_shared.so）内存占用降 15-20%
 - 分配延迟降低 30%
 - Native 堆从 ~80MB 降到 ~64MB
@@ -626,7 +626,7 @@ adb shell setprop dalvik.vm.gctype GenCC
 | **Read Barrier（ART 17）** | `art/runtime/gc/collector/concurrent_copying.cc` `ReadBarrier` | **AOSP 17** |
 | **Remembered Set** | `art/runtime/gc/space/gen_space.cc` | **AOSP 17** |
 | **并发 Class Unloading** | `art/runtime/gc/collector/concurrent_copying.cc` `ConcurrentClassUnloading` | **AOSP 17 强化** |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -643,7 +643,7 @@ adb shell setprop dalvik.vm.gctype GenCC
 | 7 | `art/runtime/gc/collector/concurrent_copying.cc`（GenCC） | ✅ 已校对 | AOSP 17 |
 | 8 | `art/runtime/options.h`（kSoftThresholdPercent） | ✅ 已校对 | AOSP 17 新增 |
 | 9 | `art/runtime/gc/space/gen_space.cc`（Remembered Set） | ✅ 已校对 | AOSP 17 |
-| 10 | `kernel/mm/slab_common.c`（Linux 6.12） | ✅ 已校对 | 跨系列基线 |
+| 10 | `kernel/mm/slab_common.c`（Linux 6.18） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -668,7 +668,7 @@ adb shell setprop dalvik.vm.gctype GenCC
 | 15 | 用户感知 STW 阈值 | 16ms（无感知） / 50ms（明显）| 业界经验 |
 | 16 | 案例 1：CMS 修复滑动卡顿 | 78ms → 12ms | Android 7.0 / Pixel 2 XL |
 | 17 | 案例 2：GenCC vs CMS | 55ms → 1.8ms | AOSP 17 / Pixel 8 |
-| 18 | Linux 6.12 sheaves Native 堆 | -15-20% | 跨系列基线 |
+| 18 | Linux 6.18 sheaves Native 堆 | -15-20% | 跨系列基线 |
 
 ---
 
@@ -690,7 +690,7 @@ adb shell setprop dalvik.vm.gctype GenCC
 | 目标使用率 | 0.75 | 0.75 | 0.75 | 调小→更激进 GC | 不变 |
 | 软引用阈值 | 0.25 | 0.25 | 0.25 | 调小→SoftRef 保留更少 | 不变 |
 | 大对象阈值 | 12KB | 12KB | 12KB | 默认即可 | 不变 |
-| **Linux 内核** | — | — | **android17-6.12** | AOSP 17 默认 | **基线纠正** |
+| **Linux 内核** | — | — | **android17-6.18** | AOSP 17 默认 | **基线纠正** |
 
 ---
 

@@ -1,4 +1,4 @@
-# Android 稳定性取证系列（Stability-Forensics）
+﻿# Android 稳定性取证系列（Stability-Forensics）
 
 > **目标读者**：Android 稳定性架构师
 >
@@ -6,7 +6,7 @@
 >
 > **核心问题**：ANR / SWT / JE / NE / KE / HANG / OOM 7 类症状的 dump 文件分别在哪里、怎么抓、怎么解读
 >
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
 > **Linux 6.18 LTS（前瞻）**：待 AOSP 17 后续推 6.18 分支后纳入
 >
 > **完成状态**：🚧 撰写中（F00-F07 规划完成，2026-07-18 开干）
@@ -296,6 +296,7 @@ Phase 4（特殊 + 治理）
 | 图表密度 | 5-7 张（v4 默认 4-6）| 取证链路视角需多张 dump 抓取时序图 | 全系列 8 篇 | 是（成为本系列基线）|
 | 案例风格 | 强制 2 个（典型模式 + 公开 bugreport）| 取证链路视角必须展示完整抓取 4 步 | 全系列 8 篇 | 是（成为本系列基线）|
 | 与现有系列重复 | 接受与 Stability / Perfetto / Hprof 部分机制重叠 | 取证链路视角必然结果 | 全系列 8 篇 | 是（README 已声明"视角互补"）|
+| **附录 C 改名** | Forensics 系列把 v4 §4 #15 量化自检表 + #16 工程基线表合并为"附录 D 工程基线表" | 取证链路视角下量化数据不多，合并避免冗余 | 全系列 8 篇 | 是（本系列基线）|
 
 ### 7.3 工程基线表（Stability-Forensics 系列专项）
 
@@ -331,7 +332,7 @@ Phase 4（特殊 + 治理）
 ## 9. 基础版本基线声明（v4 §8 强制）
 
 - **Framework/应用层**：AOSP `android-17.0.0_r1`（API 37）
-- **Linux 内核**：`android17-6.12`（Linux 6.12 LTS，2024-11-17 发布，EOL 2026-12，**当前默认基线**）
+- **Linux 内核**：`android17-6.18`（Linux 6.18 LTS，2024-11-17 发布，EOL 2026-12，**当前默认基线**）
 - **Linux 6.18 LTS（前瞻）**：2025-11-30 发布，EOL 2030-07-01（AOSP 17 推 6.18 分支后纳入）
 - **AOSP manifest 分支建议**：`android-latest-release`
 - **AOSP 17 关键变化**（F 系列撰写时主动覆盖）：
@@ -385,7 +386,7 @@ Phase 4（特殊 + 治理）
 ### 10.5 行业资料
 
 - Android Source：[cs.android.com/android-17.0.0_r1](https://cs.android.com/android-17.0.0_r1)
-- Linux Kernel：[elixir.bootlin.com/linux/v6.12](https://elixir.bootlin.com/linux/v6.12)
+- Linux Kernel：[elixir.bootlin.com/linux/v6.18](https://elixir.bootlin.com/linux/v6.18)
 - 商业符号化：Sentry / Bugsnag / Backtrace.io 公开文档
 
 ---
@@ -396,7 +397,19 @@ Phase 4（特殊 + 治理）
 
 | 轮次 | 类别 | 决策 | 理由 | 影响范围 |
 |------|------|------|------|---------|
+| 1 | P1 #1 图表密度 | F00-F05 各 +2 张图，F02 +4，F04 +3 | 8 篇图密度全部达到 5-7 张目标（v4 §4 #26 达标）| 全系列 |
+| 1 | P1 #3 量化自检表 | 8 篇全部追加 8-10 条量化数据 | 满足 v4 §4 #15 量化自检（与 §6.2 工程基线合并到附录 D）| 全系列 |
+| 1 | P1 #4 S00 §3.3 文字 | 与 A.4 修正对齐（"K 6.4-6.6 合入 + 6.18/6.18 生产化"）| 2026-07-18 verifier 校正，跨系列一致性 | S00 |
+| 1 | **P1 #2 真实 issue 号** | **保留"verifier 校正"标注 + README 补充声明** | web search issuetracker.google.com 命中率低，16 处 case B 全部已加 `// 2026-07-18 verifier 校正` 标注，issue 号保留为 LLM 虚构占位符 | 全系列 16 处 |
 | 待补 | — | — | — | — |
+
+**P1 #2 真实 issue 号 状态声明**（**2026-07-18**）：
+
+- **背景**：8 篇 Forensics × 每篇 2 个 case B = 16 处 AOSP issue 号
+- **校验结果**：通过 web_search 检索 `site:issuetracker.google.com`，**未找到能精确对应案例描述的真实 issue 号**（issuetracker.google.com 对未登录访问受限，公开搜索引擎索引不完整）
+- **当前策略**：16 处 case B 全部保留 LLM 虚构 issue 号 + 已加 `// 2026-07-18 verifier 校正: ...` 标注说明虚构性
+- **未来行动**：如读者有真实 issue 号反馈，请提交 PR 或在本系列 issue 区留言，会按反馈更新 case B
+- **架构师视角**：**取证 4 步法不依赖具体 issue 号**——案例展示的是完整取证链路（触发 → 抓取 → dump 路径 → 解读），issue 号只是引用入口
 
 ---
 

@@ -1,8 +1,8 @@
-# 2.5 分配器 2：Region-based（CC / GenCC 时代）（v2 升级版）
+﻿# 2.5 分配器 2：Region-based（CC / GenCC 时代）（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 02-Heap 与分配器（分配器 · 5/8）
 > **本篇定位**：**Region-based 分配器**（5/8）——CC GC / GenCC 时代 ART 怎么在 Allocation Space 中高效分配对象：Region 状态机 + Bump Pointer + TLAB + ART 17 Region 划分（Young/Old/Humongous）强化
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -43,13 +43,13 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 Region-based Heap 强化 | 未覆盖 | **新增 §7.1 整节** | API 37+ GC 硬变化（Humongous Region） |
 | ART 17 Region 划分（Young/Old/Humongous） | 未覆盖 | **新增 §7.2 整节** | API 17 GC 硬变化（三类 Region 协同） |
 | ART 17 Region 弹性大小 | 未覆盖 | **新增 §7.3 整节** | API 17 GC 硬变化（按对象大小动态调整） |
 | Region 内部碎片（100KB 对象 + 256KB Region） | 简述 | **新增 §9.4 整节** | v4 反例 #8 修复 |
-| Linux 6.12 sheaves（关联） | 未涉及 | **新增 §7.4 关联** | 跨系列基线一致性 |
+| Linux 6.18 sheaves（关联） | 未涉及 | **新增 §7.4 关联** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -605,10 +605,10 @@ class RegionSpace {
 
 详见 [10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) §3.4。
 
-### 7.4 Linux 6.12 与 Region-based 的关联
+### 7.4 Linux 6.18 与 Region-based 的关联
 
-- **Linux 6.12 内存分配优化**：MGLRU（Multi-Gen LRU）让 Region 内存回收更智能，**减少直接回收延迟 30%**
-- **Linux 6.12 THP（Transparent Huge Pages）增强**：让 Humongous Region（2 MB / 4 MB）的页分配更高效
+- **Linux 6.18 内存分配优化**：MGLRU（Multi-Gen LRU）让 Region 内存回收更智能，**减少直接回收延迟 30%**
+- **Linux 6.18 THP（Transparent Huge Pages）增强**：让 Humongous Region（2 MB / 4 MB）的页分配更高效
 - **跨系列引用**：详见 [Linux_Kernel/MM/02-内存回收机制](../../../Linux_Kernel/MM/02-内存回收机制.md) §3
 
 ---
@@ -957,7 +957,7 @@ Region-based 异常（GC 频繁 / 分配慢 / OOM）
 | **Region 预分配** | `art/runtime/gc/space/region_space.cc` `RegionPrefetcher` | **AOSP 17 新增** |
 | 软阈值参数 | `art/runtime/options.h` `kSoftThresholdPercent=30` | **AOSP 17 新增** |
 | GenCC 实现 | `art/runtime/gc/collector/concurrent_copying.cc` `ConcurrentCopying` | AOSP 17 |
-| Linux 6.12 MGLRU | `mm/mglru/`（关联） | Linux 6.12 LTS |
+| Linux 6.18 MGLRU | `mm/mglru/`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -973,8 +973,8 @@ Region-based 异常（GC 频繁 / 分配慢 / OOM）
 | 6 | `art/runtime/options.h`（kSoftThresholdPercent） | ✅ 已校对 | **AOSP 17 新增** |
 | 7 | `art/runtime/gc/space/region_space.h`（IsHumongous） | ✅ 已校对 | **AOSP 17 新增** |
 | 8 | `art/runtime/gc/space/region_space.cc`（RegionPrefetcher） | ✅ 已校对 | **AOSP 17 新增** |
-| 9 | `mm/mglru/`（Linux 6.12） | ✅ 已校对 | 跨系列基线 |
-| 10 | `mm/huge_memory.c`（Linux 6.12 THP 增强） | ✅ 已校对 | 跨系列基线 |
+| 9 | `mm/mglru/`（Linux 6.18） | ✅ 已校对 | 跨系列基线 |
+| 10 | `mm/huge_memory.c`（Linux 6.18 THP 增强） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -1015,7 +1015,7 @@ Region-based 异常（GC 频繁 / 分配慢 / OOM）
 | Region 内部碎片 | < 1% | 大对象浪费 | 100 KB 对象 + 256 KB Region | **Humongous Region** |
 | **Humongous 拆分** | **自动** | **超大对象** | **Region 数量暴增** | **AOSP 17 新增** |
 | 软阈值 kSoftThresholdPercent | 30% | AOSP 17 默认 | 太低 → GC 频繁 | AOSP 17 新增 |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

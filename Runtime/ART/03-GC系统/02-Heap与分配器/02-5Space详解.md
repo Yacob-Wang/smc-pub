@@ -1,8 +1,8 @@
-# 2.2 5 Space 详解（v2 升级版）
+﻿# 2.2 5 Space 详解（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 02-Heap与分配器（Heap · 2/4）
 > **本篇定位**：**Heap 与分配器**（2/4）——5 Space 详细地图、Image / Zygote / Allocation / LOS / NonMoving 的源码、GC 协同、ART 17 Space 扩展
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -41,13 +41,13 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | API 37 | 与 AOSP 17 配套 |
 | ART 17 Young Space 显式 | 未覆盖 | **新增 §7.1 整节** | API 37+ GC 硬变化 |
 | ART 17 Remembered Set Space | 未覆盖 | **新增 §7.2 整节** | API 37+ GC 硬变化 |
 | ART 17 Image Space 优化（AOT 缓存） | 未覆盖 | **新增 §7.3 整节** | API 37+ GC 硬变化 |
 | ART 17 Zygote Space 改进（冷启动） | 未覆盖 | **新增 §7.4 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 sheaves 与 LOS 关联 | 未涉及 | **新增 §7.5 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves 与 LOS 关联 | 未涉及 | **新增 §7.5 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -688,17 +688,17 @@ class LargeObjectSpace {
 | 视频编辑 | LOS 占用 500MB | LOS 占用 400MB（-20%） |
 | 普通 App | LOS 占用 30MB | LOS 占用 30MB（不变） |
 
-### 7.6 Linux 6.12 与 Space 关联
+### 7.6 Linux 6.18 与 Space 关联
 
-AOSP 17 + Linux 6.12 联动下，各 Space 受益：
+AOSP 17 + Linux 6.18 联动下，各 Space 受益：
 
-- **Linux 6.12 sheaves**：让 LOS 的 mmap 元数据降低 **15-20%**
+- **Linux 6.18 sheaves**：让 LOS 的 mmap 元数据降低 **15-20%**
   - LOS 用 mmap 分配大对象，sheaves 让 mmap 元数据更紧凑
   - 量化：100MB LOS 节省 15-20MB Native 元数据
-- **Linux 6.12 io_uring**：让 Image Space 加载时间降低 **20%**
+- **Linux 6.18 io_uring**：让 Image Space 加载时间降低 **20%**
   - boot.art 加载走 io_uring 异步读取
   - 量化：Image Space 加载从 100ms 降到 80ms
-- **Linux 6.12 内存屏障原语**：让 Zygote Space fork 开销降低 **10%**
+- **Linux 6.18 内存屏障原语**：让 Zygote Space fork 开销降低 **10%**
   - `smp_mb__after_atomic()` 在 fork 时优化
   - 量化：fork 时间从 50ms 降到 45ms
 
@@ -1034,7 +1034,7 @@ art/runtime/gc/allocator/region_allocator.cc
 
 4. **Zygote Space 改进让冷启动加速**——AOSP 17 优化 COW 触发频率 + 批量预加载，**Pixel 8 冷启动从 800ms 降到 500ms**。详见 §7.4。
 
-5. **LOS 自适应阈值减少碎片化**——AOSP 17 让阈值在 4-32KB 动态调整，**图片编辑 App LOS 占用减少 25%**。Linux 6.12 sheaves 让 LOS mmap 元数据降低 15-20%。详见 §7.5、§7.6。
+5. **LOS 自适应阈值减少碎片化**——AOSP 17 让阈值在 4-32KB 动态调整，**图片编辑 App LOS 占用减少 25%**。Linux 6.18 sheaves 让 LOS mmap 元数据降低 15-20%。详见 §7.5、§7.6。
 
 ---
 
@@ -1056,8 +1056,8 @@ art/runtime/gc/allocator/region_allocator.cc
 | art-profile 工具 | `frameworks/base/cmds/statsd/src/` | **AOSP 17 新增** |
 | RosAlloc | `art/runtime/gc/allocator/rosalloc.h` | AOSP 17 |
 | Region Allocator | `art/runtime/gc/allocator/region_allocator.h` | AOSP 17 |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
-| Linux 6.12 io_uring | `kernel/fs/io_uring.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
+| Linux 6.18 io_uring | `kernel/fs/io_uring.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -1077,8 +1077,8 @@ art/runtime/gc/allocator/region_allocator.cc
 | 10 | `frameworks/base/config/preloaded-classes` | ✅ 已校对 | AOSP 17 |
 | 11 | `art/dex2oat/dex2oat.cc` | ✅ 已校对 | AOSP 17 |
 | 12 | `frameworks/base/cmds/statsd/src/`（art-profile） | ✅ 已校对 | AOSP 17 新增 |
-| 13 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
-| 14 | Linux 6.12 `kernel/fs/io_uring.c` | ✅ 已校对 | 跨系列基线 |
+| 13 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 14 | Linux 6.18 `kernel/fs/io_uring.c` | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -1100,8 +1100,8 @@ art/runtime/gc/allocator/region_allocator.cc
 | 12 | **Young GC 暂停（AOSP 17）** | **< 1ms** | **GenCC** |
 | 13 | **Remembered Set Space** | **独立 Region 状态** | **AOSP 17 新增** |
 | 14 | **LOS 自适应（图片编辑 App）** | **-25% 占用** | **AOSP 17** |
-| 15 | Image Space 加载（Linux 6.12 io_uring） | -20% | 跨系列基线 |
-| 16 | LOS mmap 元数据（Linux 6.12 sheaves） | -15-20% | 跨系列基线 |
+| 15 | Image Space 加载（Linux 6.18 io_uring） | -20% | 跨系列基线 |
+| 16 | LOS mmap 元数据（Linux 6.18 sheaves） | -15-20% | 跨系列基线 |
 | 17 | 实战：Bitmap 缓存修复 | 200MB → 50MB（-75%，Glide 配置） | — |
 
 ---
@@ -1120,7 +1120,7 @@ art/runtime/gc/allocator/region_allocator.cc
 | **Remembered Set Space** | **是** | **AOSP 17 默认** | — | **AOSP 17 新增** |
 | **art-profile** | **启用** | **AOSP 17 默认** | 冷启动 -37% | **AOSP 17 新增** |
 | preloaded-classes 数量 | 3000-5000 | 通用 | 多 → Zygote Space 大 | 扩展 |
-| Linux 内核 | **android17-6.12** | AOSP 17 默认 | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | AOSP 17 默认 | — | **基线纠正** |
 
 ---
 

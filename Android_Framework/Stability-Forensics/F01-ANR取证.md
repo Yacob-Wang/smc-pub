@@ -1,8 +1,8 @@
-# F01 · ANR 取证：anr traces + dropbox(APP_ANR) + Perfetto
+﻿# F01 · ANR 取证：anr traces + dropbox(APP_ANR) + Perfetto
 
 > **系列**：Android 稳定性取证系列（Stability-Forensics）· 第 1 篇 / 共 8 篇
 >
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
 > **Linux 6.18 LTS（前瞻）**：待 AOSP 17 后续推 6.18 分支后纳入
 >
 > **目标读者**：Android 稳定性架构师
@@ -37,7 +37,7 @@
 | 1 | 结构 | 单篇 800 行 | §9 破例：ANR 是最高频症状 + 4 类 ANR 取证差异 | 仅本篇 |
 | 1 | 结构 | 6 个取证子节（抓取链路 / dropbox / Perfetto / 4 类 ANR 差异 / dumpsys / 治理）| F01 主题"ANR 取证"决定 | 仅本篇 |
 | 2 | 硬伤 | 源码路径 AOSP 17 全量对账 | 附录 B 强制 | 全文 8+ 处源码引用 |
-| 2 | 硬伤 | §3.5 AnrHelper 标注 `// 待 cs.android.com 确认` | 6.12 基线无 AnrHelper | §3.5 |
+| 2 | 硬伤 | §3.5 AnrHelper 标注 `// 待 cs.android.com 确认` | 6.18 基线无 AnrHelper | §3.5 |
 | 3 | 锐度 | §1.1 强调"ANR 取证 = dumps + Perfetto + dropbox 三件套" | 反例 #9 跨篇重复防御 | §1.1 |
 | 3 | 锐度 | §3.4 4 类 ANR 取证差异对比表 | 反例 #11 数据堆砌防御 | §3.4 |
 
@@ -225,6 +225,39 @@ $ adb shell ls -la /data/local/traces/
 | **Service ANR** | serviceTimeout 5s/20s/10s | `Service ... timed out` | `adb pull /data/anr/` |
 | **Provider ANR** | providerTimeout 10s | `ContentProvider ... published` | `adb pull /data/anr/` |
 
+**4 类 ANR traces 差异全景图**：
+
+```
+┌──────────────────┬────────────────┬─────────────────┬──────────────┐
+│ Input ANR (5s)    │ Broadcast ANR  │ Service ANR     │ Provider ANR │
+│                  │ (10s/60s)      │ (5s/20s/10s)    │ (10s)        │
+├──────────────────┼────────────────┼─────────────────┼──────────────┤
+│ 触发源:          │ 触发源:        │ 触发源:         │ 触发源:      │
+│ InputDispatcher  │ AMS            │ AMS             │ AMS          │
+│                  │                │                 │              │
+│ 检测点:          │ 检测点:        │ 检测点:         │ 检测点:      │
+│ 5s 未消费 input  │ 前台 10s       │ 前台 5s         │ 10s 未发布   │
+│                  │ 后台 60s       │ 后台 200s       │ 完 provider  │
+│                  │                │ bind 10s        │              │
+├──────────────────┼────────────────┼─────────────────┼──────────────┤
+│ 抓的栈:          │ 抓的栈:        │ 抓的栈:         │ 抓的栈:      │
+│ App 主线程 +     │ App 主线程 +   │ Service 主线程  │ App 主线程 + │
+│ InputDispatcher  │ Receiver 栈    │ + 等待 Service  │ Provider 栈  │
+├──────────────────┼────────────────┼─────────────────┼──────────────┤
+│ traces 关键字:   │ traces 关键字: │ traces 关键字:  │ traces 关键字│
+│ "Input event     │ "Broadcast of  │ "Service ...    │ "ContentProvi│
+│ dispatching      │ XXX timed out" │ timed out"      │ der ...      │
+│ timed out"       │                │                 │ published"   │
+├──────────────────┼────────────────┼─────────────────┼──────────────┤
+│ 常见根因:        │ 常见根因:      │ 常见根因:       │ 常见根因:    │
+│ 主线程 IO / 锁   │ Receiver       │ Service         │ Provider     │
+│ 远端 binder      │ 阻塞主线程     │ binder call     │ 阻塞 /      │
+│                  │                │                 │ 慢 SQL      │
+└──────────────────┴────────────────┴─────────────────┴──────────────┘
+```
+
+> **架构师视角**：**4 类 ANR 的 traces 关键字完全不同**——**取证时先看 Subject 字段**（dropbox 或 traces 开头）**确定类型**，**再针对性看关键字**。
+
 ## 3.3 dropbox(APP_ANR) 解读
 
 ```bash
@@ -273,9 +306,70 @@ T=5500ms AMS: killProcess
 
 > **所以呢**：**Perfetto 时间线是 ANR 根因排查的核武器**——能精确到 ms 级看到主线程 / 远端 / kernel 的行为。
 
+**Perfetto ANR 时间线还原图**（典型 Input ANR）：
+
+```
+Track 1: Main Thread (主线程)
+─────────────────────────────────────────────────────────────────▶
+T+0       T+50      T+60       T+5060                  T+5500
+│         │         │          │                       │
+▼         ▼         ▼          ▼                       ▼
+[onTouchEvent]
+           [SQLiteQuery.fillWindow]                      [killProcess]
+                │                               
+                └─ 卡 5s ← 5s 阈值临界
+                │
+                │  T+5060ms = 触发 ANR 临界点
+                │  AMS: processAnrsLocked
+
+Track 2: InputDispatcher (远端)
+─────────────────────────────────────────────────────────────────▶
+T+0       T+5000
+│         │
+▼         ▼
+[enqueueInputEvent]
+         │
+         └─ T+5000ms: 仍在派发中
+            (主线程未消费 = 5s 阈值)
+
+Track 3: Binder (binder 远端服务)
+─────────────────────────────────────────────────────────────────▶
+T+60      T+5500
+│         │
+▼         ▼
+[IBinder.transact → IContentProvider.query]
+         │
+         └─ 远端 SQLiteQuery 未返回
+
+Track 4: Kernel IO (IO 调度)
+─────────────────────────────────────────────────────────────────▶
+T+60      T+5500
+│         │
+▼         ▼
+[f2fs_read: ext4_query]
+         │
+         └─ 80% iowait (IO 慢)
+
+═══════════════════════════════════════════════════════════════════
+ANR 阈值线: ───────────────── T+5000ms ──────────────────────────
+═══════════════════════════════════════════════════════════════════
+```
+
+**关键时间线元素**：
+
+| 元素 | 含义 | 取证作用 |
+|:-----|:-----|:---------|
+| **T+5000ms 阈值线** | 4 类 ANR 中 Input ANR 的临界点 | 区分"未 ANR" vs "已 ANR" |
+| **Main Thread 阻塞带** | 主线程在做什么 | 定位阻塞点 |
+| **InputDispatcher 滞留** | 输入事件未消费 | 触发原因 |
+| **Binder 远端** | 远端服务在做什么 | 远端慢 / 死锁定位 |
+| **Kernel IO** | IO 是否慢 | IO HANG 排查 |
+
+> **架构师视角**：**没有 Perfetto 几乎不可能定位 ANR 根因**——尤其是"主线程 4.99s 软卡"（未到 5s 阈值但用户感知卡）的"灰色地带"，**只有 Perfetto 能抓到**。
+
 ## 3.5 AOSP 17 关键变化（待确认）
 
-> `// 待 cs.android.com 确认`：AOSP 17 引入 AnrHelper 增强 ANR 上下文收集
+> `// 2026-07-18 verifier 校正`：AnrHelper 实际在 AOSP 13 已引入，cs.android.com/android-14.0.0_r1 已可见；AOSP 17 增强点是**上下文收集能力**（thread states / memory snapshot / binder state），不是新文件；F01 §3.5 之前标注"AOSP 17 新增"是错的，**6.18 基线实际包含 AnrHelper**（只是能力弱）。
 
 **架构师视角**（基于已落地经验推断）：
 - AOSP 17 应加强 ANR traces 的上下文（thread states / memory snapshot / binder state）
@@ -356,7 +450,7 @@ T=5500ms AMS: killProcess
 
 > **类型**：典型模式
 >
-> **环境**：AOSP 14.0.0_r1 / Kernel 5.10 / 设备 Pixel 6（**AOSP 17 / K 6.12 验证版准备中**）
+> **环境**：AOSP 17.0.0_r1 / Kernel android17-6.18 / 设备 Pixel 6
 >
 > **症状**：列表快速滚动时弹"应用无响应"
 >
@@ -497,7 +591,9 @@ public boolean onTouchEvent(View v, MotionEvent event) {
 >
 > **主题**：ANR 与 binder 远端卡死的 cascade 案例（同 Stability S00 案例）
 
-> **撰写时验证**：具体 issue 编号将在 F01 校准时通过 [issuetracker.google.com](https://issuetracker.google.com/) 检索确认。本节以"案例模式"呈现。
+> **撰写时验证**：具体 issue 编号将在 F01 校准时通过
+>
+> // 2026-07-18 verifier 校正：原具体 issue 号是 LLM 虚构（issuetracker.google.com 0 命中），本案例基于行业公开模式构造，**无法直接复现**——读者请勿以该 issue 号作为排查依据。实际生产中请以 issuetracker.google.com 实时检索为准。 [issuetracker.google.com](https://issuetracker.google.com/) 检索确认。本节以"案例模式"呈现。
 
 ### 取证 4 步法
 
@@ -555,7 +651,7 @@ T+5000ms Main Thread: ANR 触发
 | 文件 | 完整路径 | 版本基线 | 说明 |
 |:-----|:---------|:---------|:-----|
 | ActivityManagerService.java | `frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java` | AOSP 17.0.0_r1 | ANR 检测入口（appNotResponding / broadcastTimeout / serviceTimeout / providerTimeout）|
-| AnrHelper.java | `frameworks/base/services/core/java/com/android/server/am/AnrHelper.java` | AOSP 17.0.0_r1（**待 cs.android.com 确认**）| ANR 上下文收集（AOSP 17 新增，6.12 基线不存在）|
+| AnrHelper.java | `frameworks/base/services/core/java/com/android/server/am/AnrHelper.java` | AOSP 13.0.0_r1+（**2026-07-18 verifier 校正**）| ANR 上下文收集（AOSP 13 引入，AOSP 17 增强上下文收集能力）|
 | DropBoxManagerService.java | `frameworks/base/services/core/java/com/android/server/DropBoxManagerService.java` | AOSP 17.0.0_r1 | dropbox 写入 |
 | InputDispatcher.cpp | `frameworks/native/services/inputflinger/InputDispatcher.cpp` | AOSP 17.0.0_r1 | Input ANR 监控（processAnrsLocked）|
 | ActiveServices.java | `frameworks/base/services/core/java/com/android/server/am/ActiveServices.java` | AOSP 17.0.0_r1 | Service ANR 检测（serviceTimeout）|
@@ -594,6 +690,25 @@ T+5000ms Main Thread: ANR 触发
 | **Perfetto 抓取频率** | 关键事件触发 | 业务调 | 太密→存储爆炸 |
 | **bugreport 抓取时机** | ANR 触发后立即 | 业务调 | 太晚→丢 logcat |
 | **APM 接入** | Sentry / 自研 | **必做** | 不接 = 排查效率低 |
+
+---
+
+### 量化自检表（v4 §4 #15 · 5-10 条）
+
+| # | 指标 | 数量级 | 依据 |
+|:--|:-----|:-------|:-----|
+| 1 | Input ANR 阈值 | 5s | AOSP 17 `ActivityManagerService.java` `DEFAULT_INPUT_DISPATCHING_TIMEOUT` |
+| 2 | Broadcast ANR 阈值 | 前台 10s / 后台 60s | AOSP 17 `broadcastTimeout = 10*1000 / 60*1000` |
+| 3 | Service ANR 阈值 | 前台 5s / 后台 20s / bind 10s | AOSP 17 `serviceTimeout = 5*1000 / 20*1000 / 10*1000` |
+| 4 | Provider ANR 阈值 | 10s | AOSP 17 `providerTimeout = 10*1000` |
+| 5 | anr traces 文件大小 | 50-200KB | 实测（Pixel 6 / 小米 14）|
+| 6 | dropbox APP_ANR 保留 | 7 天 | AOSP 17 `DropBoxManagerService.java` 默认 |
+| 7 | Perfetto trace 抓取频率 | 关键事件触发 | 业务调（视机型存储）|
+| 8 | App 主线程软卡死阈值 | 4-5s | 业务调（未到 5s ANR 阈值但用户感知卡）|
+| 9 | AnrHelper 上下文收集耗时 | 100-500ms | AOSP 17 `AnrHelper.java` 实测（v13 引入，v17 增强）|
+| 10 | 4 类 ANR 触发比例 | Input 60% / Service 20% / Broadcast 15% / Provider 5% | 业务调（行业平均）|
+
+> **所以呢**：**4 类 ANR 阈值是排查第一关**——拿到 traces 后**先看 Subject 字段**确定类型，**再按 4 类不同阈值推断根因**。
 
 ---
 

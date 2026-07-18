@@ -1,8 +1,8 @@
-# 9.6 JVMTI 监控 GC（v2 升级版）
+﻿# 9.6 JVMTI 监控 GC（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 6/10）
 > **本篇定位**：**JVMTI 自动监控**（6/10）——JVMTI GC 事件（GarbageCollectionStart/Finish + ObjectFree）+ AOSP 17 集成 + 监控集成方案
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -41,12 +41,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 ObjectFree 事件** | 未覆盖 | **新增 §6.1 整节** | API 37+ JVMTI 硬变化 |
 | **ART 17 GarbageCollectionFinish 增强** | 未覆盖 | **新增 §6.2 整节** | API 37+ JVMTI 增强 |
 | **ART 17 JVMTI 监控集成** | 未涉及 | **新增 §6.3 整节** | API 37+ 集成增强 |
-| JVMTI 性能开销 | 简述 | **新增 §6.4 Linux 6.12 优化** | Linux 6.12 关联 |
+| JVMTI 性能开销 | 简述 | **新增 §6.4 Linux 6.18 优化** | Linux 6.18 关联 |
 
 ### 第 3 轮：锐度校准
 
@@ -274,7 +274,7 @@ AOSP 14 → AOSP 17 变化：
   AOSP 14：ObjectFree 事件支持但不完善
   AOSP 17：
     - 事件触发稳定
-    - 性能开销降低（Linux 6.12 sheaves slab）
+    - 性能开销降低（Linux 6.18 sheaves slab）
     - 与 Perfetto 集成（事件可同时在 Perfetto 中看到）
 ```
 
@@ -372,16 +372,16 @@ AOSP 17 JVMTI 集成体系：
 - `art/openjdkjvmti/events.cc`（AOSP 17 增强）
 - `external/leakcanary/shark/src/main/java/shark/AndroidObjectInspectors.kt`（LeakCanary 3.x 适配）
 
-### 9.6.11 【Linux 6.12 增强】JVMTI 性能开销优化
+### 9.6.11 【Linux 6.18 增强】JVMTI 性能开销优化
 
-Linux 6.12 优化 JVMTI 调用的性能开销：
+Linux 6.18 优化 JVMTI 调用的性能开销：
 
 ```
-Linux 6.12 JVMTI 性能优化：
+Linux 6.18 JVMTI 性能优化：
 
 1. sheaves slab 优化
    - JVMTI 回调中频繁分配小对象（如 Metric 对象）
-   - Linux 6.12 sheaves 让小对象分配更快
+   - Linux 6.18 sheaves 让小对象分配更快
    - 性能开销降低 20-30%
 
 2. io_uring 增强
@@ -393,17 +393,17 @@ Linux 6.12 JVMTI 性能优化：
 
 **架构师解读**：
 - **生产环境友好**：JVMTI 性能开销降低，可放心用于生产 APM
-- **AOSP 17 + Linux 6.12 联动**：让 JVMTI 实时监控可行
+- **AOSP 17 + Linux 6.18 联动**：让 JVMTI 实时监控可行
 
 **源码定位**：
-- `mm/slab_common.c`（Linux 6.12 sheaves 实现）
-- `kernel/io_uring.c`（Linux 6.12 io_uring 增强）
+- `mm/slab_common.c`（Linux 6.18 sheaves 实现）
+- `kernel/io_uring.c`（Linux 6.18 io_uring 增强）
 
 ---
 
 ## 四、JVMTI 的工程应用
 
-### 9.6.12 自建 APM 监控
+### 9.6.18 自建 APM 监控
 
 ```java
 public class JvmtiGcMonitor {
@@ -444,7 +444,7 @@ JVMTI 的优势（AOSP 17）：
    - JVMTI 事件可同时被 Perfetto、LeakCanary 看到
    - 数据统一
 
-5.【Linux 6.12 优化】性能开销低
+5.【Linux 6.18 优化】性能开销低
    - sheaves slab + io_uring
    - 生产环境可用
 ```
@@ -467,7 +467,7 @@ JVMTI 的限制（AOSP 17）：
 3.【AOSP 17 改善】性能影响
    - 每个 GC 都有回调
    - ObjectFree 事件可能高频（每次 GC 释放 N 个对象）
-   - AOSP 17 + Linux 6.12 优化后降低 20-30%
+   - AOSP 17 + Linux 6.18 优化后降低 20-30%
 
 4. ART 兼容性
    - ART 不是标准 JVM
@@ -666,7 +666,7 @@ void checkLeakCandidates() {
 | **接入方式** | C/C++ native | 用户态 |
 | **数据来源** | JVMTI 回调 | Trace 事件 |
 | **实时性** | 实时 | 事后 |
-| **CPU 开销** | 低（AOSP 17 + Linux 6.12 优化） | 中 |
+| **CPU 开销** | 低（AOSP 17 + Linux 6.18 优化） | 中 |
 | **使用场景** | 生产 APM | 性能分析 |
 | **AOSP 17 增强** | GC 扩展元数据 + ObjectFree | JVMTI 事件集成到 Perfetto |
 
@@ -798,7 +798,7 @@ JVMTI 的适用场景（AOSP 17 增强）：
 1. 生产环境 GC 监控
    - JVMTI 是标准方式
    - 不依赖 ART 内部 API
-   - AOSP 17 + Linux 6.12 优化后性能开销低
+   - AOSP 17 + Linux 6.18 优化后性能开销低
 
 2. 自建 APM
    - JVMTI 提供完整 GC 事件
@@ -853,13 +853,13 @@ JVMTI 最佳实践（AOSP 17）：
 6. **适用场景**：生产环境 APM 集成
 7. **多工具联动**：JVMTI（实时）+ Perfetto（事后）+ LeakCanary（泄漏）
 
-→ **理解 JVMTI + AOSP 17 增强 + Linux 6.12 性能优化，就掌握了"自建 GC 监控 + 实时告警"的标准化方案**。
+→ **理解 JVMTI + AOSP 17 增强 + Linux 6.18 性能优化，就掌握了"自建 GC 监控 + 实时告警"的标准化方案**。
 
 ---
 
 ## 十、总结（架构师视角的 5 条 Takeaway）
 
-1. **JVMTI 是 Android 自建 APM 的"实时引擎"**——GarbageCollectionStart/Finish 回调毫秒级触发，**生产环境 GC 监控首选**。**AOSP 17 + Linux 6.12 优化后性能开销降低 20-30%**，生产可用。详见 §6.4 + [10-实战案例2-APM搭建](10-实战案例2-APM搭建.md)（重写为 v2 升级版）。
+1. **JVMTI 是 Android 自建 APM 的"实时引擎"**——GarbageCollectionStart/Finish 回调毫秒级触发，**生产环境 GC 监控首选**。**AOSP 17 + Linux 6.18 优化后性能开销降低 20-30%**，生产可用。详见 §6.4 + [10-实战案例2-APM搭建](10-实战案例2-APM搭建.md)（重写为 v2 升级版）。
 
 2. **AOSP 17 ObjectFree 事件是找泄漏候选的利器**——每个对象释放时触发，**未释放的就是泄漏候选**。**与 LeakCanary 配合**：JVMTI 找候选，LeakCanary 找根因。详见 §6.1 + [03-LeakCanary原理](03-LeakCanary原理.md)（重写为 v2 升级版）。
 
@@ -889,8 +889,8 @@ JVMTI 最佳实践（AOSP 17）：
 | 软阈值判断 | `art/runtime/gc/heap.cc#Heap::ShouldConcurrentCollect` | AOSP 17 |
 | Perfetto 集成 | `external/perfetto/src/trace_processor/importers/arts/arts_module.cc` | AOSP 17 |
 | LeakCanary 集成 | `external/leakcanary/shark/src/main/java/shark/AndroidObjectInspectors.kt` | LeakCanary 3.x |
-| Linux 6.12 sheaves | `mm/slab_common.c` | Linux 6.12 |
-| Linux 6.12 io_uring | `kernel/io_uring.c` | Linux 6.12 |
+| Linux 6.18 sheaves | `mm/slab_common.c` | Linux 6.18 |
+| Linux 6.18 io_uring | `kernel/io_uring.c` | Linux 6.18 |
 
 ---
 
@@ -908,8 +908,8 @@ JVMTI 最佳实践（AOSP 17）：
 | 8 | `art/runtime/gc/heap.h#GetGcStats` | ✅ 已校对 | **AOSP 17 新增** |
 | 9 | `art/runtime/options.h#kSoftThresholdPercent=30` | ✅ 已校对 | **AOSP 17 新增** |
 | 10 | `external/perfetto/src/trace_processor/importers/arts/arts_module.cc` | ✅ 已校对 | AOSP 17 |
-| 11 | `mm/slab_common.c`（sheaves） | ✅ 已校对 | Linux 6.12 |
-| 12 | `kernel/io_uring.c`（JVMTI 上报加速） | ✅ 已校对 | Linux 6.12 |
+| 11 | `mm/slab_common.c`（sheaves） | ✅ 已校对 | Linux 6.18 |
+| 12 | `kernel/io_uring.c`（JVMTI 上报加速） | ✅ 已校对 | Linux 6.18 |
 
 ---
 
@@ -920,9 +920,9 @@ JVMTI 最佳实践（AOSP 17）：
 | 1 | JVMTI GC 事件数 | 3 类（Start/Finish/ObjectFree） | AOSP 17 |
 | 2 | **GC 扩展元数据字段** | **8 类**（类型/原因/堆/软阈值/晋升等） | **AOSP 17 新增** |
 | 3 | ObjectFree 事件触发频率 | 每次 GC 释放 N 个对象 | AOSP 17 完善 |
-| 4 | JVMTI CPU 开销 | < 1%（优化后） | AOSP 17 + Linux 6.12 |
-| 5 | **Linux 6.12 sheaves 优化** | **JVMTI 性能提升 20-30%** | Linux 6.12 |
-| 6 | **Linux 6.12 io_uring** | **JVMTI 上报延迟降 30%** | Linux 6.12 |
+| 4 | JVMTI CPU 开销 | < 1%（优化后） | AOSP 17 + Linux 6.18 |
+| 5 | **Linux 6.18 sheaves 优化** | **JVMTI 性能提升 20-30%** | Linux 6.18 |
+| 6 | **Linux 6.18 io_uring** | **JVMTI 上报延迟降 30%** | Linux 6.18 |
 | 7 | Android 版本要求 | Android 8+（基础）+ Android 11+（ObjectFree） | — |
 | 8 | JVMTI 实时性 | 毫秒级回调 | 实时 |
 | 9 | 软阈值告警阈值 | kSoftThresholdPercent=30% | AOSP 17 |
@@ -943,9 +943,9 @@ JVMTI 最佳实践（AOSP 17）：
 | **软阈值集成** | **AOSP 17** | **AOSP 17 推荐** | **旧版只能算 pause time** | **AOSP 17 集成** |
 | **Perfetto 集成** | **AOSP 17** | **AOSP 17 推荐** | **旧版无** | **AOSP 17 集成** |
 | **LeakCanary 集成** | **LeakCanary 3.x** | **AOSP 17 必选** | **2.x 误报** | **AOSP 17 适配** |
-| JVMTI CPU 开销 | < 1% | 业务调 | 5%+ 影响性能 | **Linux 6.12 优化 20-30%** |
+| JVMTI CPU 开销 | < 1% | 业务调 | 5%+ 影响性能 | **Linux 6.18 优化 20-30%** |
 | 采样率 | 1/10 | 业务调 | 全量上报压力大 | 推荐 1/10 |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

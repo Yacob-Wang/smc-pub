@@ -1,8 +1,8 @@
-# 2.4 分配器 1：RosAlloc（CMS 时代）（v2 升级版）
+﻿# 2.4 分配器 1：RosAlloc（CMS 时代）（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 02-Heap与分配器（Heap · 4/4）
 > **本篇定位**：**Heap 与分配器**（4/4）——RosAlloc 分配器（CMS 时代）的设计、TLAB、Run-of-Slots、ART 17 RosAlloc 优化（Run + Brk 分离、TLS 缓存）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -42,12 +42,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | API 37 | 与 AOSP 17 配套 |
 | ART 17 RosAlloc 优化（Run + Brk 分离） | 未覆盖 | **新增 §7.1 整节** | API 37+ GC 硬变化 |
 | ART 17 TLS 缓存 | 未覆盖 | **新增 §7.2 整节** | API 37+ GC 硬变化 |
 | ART 17 RosAlloc vs ArtAllocator | 未覆盖 | **新增 §7.3 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 sheaves 与 RosAlloc 关联 | 未涉及 | **新增 §7.4 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves 与 RosAlloc 关联 | 未涉及 | **新增 §7.4 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -647,14 +647,14 @@ AOSP 17 让 **RosAlloc 与 ArtAllocator 并存**：
 
 | 维度 | RosAlloc | ArtAllocator（AOSP 17 新） |
 |:---|:---|:---|
-| 设计 | Run-of-Slots + TLAB | **Slab + Buddy**（Linux 6.12 sheaves 风格） |
+| 设计 | Run-of-Slots + TLAB | **Slab + Buddy**（Linux 6.18 sheaves 风格） |
 | 性能（TLAB 命中） | 3-5 ns | 2-4 ns |
 | 性能（缓存命中） | 10 ns（AOSP 17 TLS） | 8 ns |
 | 性能（未命中） | 50-80 ns | 60-100 ns |
 | 碎片化 | 中（Run + Brk 分离改善） | **低**（Slab + Buddy 友好） |
 | 适用场景 | CMS / 兜底 | CC / GenCC 优先 |
 | 启用方式 | 总是可用 | AOSP 17 默认 + Heap 配置 |
-| 跨内核 | 任意 | 优化 Linux 6.12 sheaves |
+| 跨内核 | 任意 | 优化 Linux 6.18 sheaves |
 
 **架构师建议**：
 - **新项目 / 端侧 LLM App**：用 ArtAllocator + CC/GenCC
@@ -663,17 +663,17 @@ AOSP 17 让 **RosAlloc 与 ArtAllocator 并存**：
 
 详见 [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §5.3。
 
-### 7.4 Linux 6.12 sheaves 与 RosAlloc 关联
+### 7.4 Linux 6.18 sheaves 与 RosAlloc 关联
 
-AOSP 17 + Linux 6.12 联动下，RosAlloc 的 mmap 元数据受益：
+AOSP 17 + Linux 6.18 联动下，RosAlloc 的 mmap 元数据受益：
 
-- **Linux 6.12 sheaves**：让 RosAlloc 的 mmap 元数据降低 **15-20%**
+- **Linux 6.18 sheaves**：让 RosAlloc 的 mmap 元数据降低 **15-20%**
   - sheaves 是 per-CPU slab 缓存，让 mmap 映射的页表更紧凑
   - 量化：256MB Allocation Space 节省 40-50MB Native 元数据
-- **Linux 6.12 SLAB_TYPESAFE_BY_RCU**：让 RosAlloc 的 slot 释放延迟回收更高效
+- **Linux 6.18 SLAB_TYPESAFE_BY_RCU**：让 RosAlloc 的 slot 释放延迟回收更高效
   - slot 释放时无需立即更新全局位图，RCU 延迟回收
   - 量化：free 路径耗时从 30ns 降到 15ns
-- **Linux 6.12 内存屏障**：让 RosAlloc 的多线程同步开销降低 **10%**
+- **Linux 6.18 内存屏障**：让 RosAlloc 的多线程同步开销降低 **10%**
   - 量化：TLAB 切换耗时从 50ns 降到 45ns
 
 跨系列引用：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
@@ -890,7 +890,7 @@ adb shell dumpsys gfxinfo com.example.app framestats
 
 4. **ART 17 TLS 缓存让 RosAlloc 慢速路径从 50ns 降到 10ns**——**缓存命中时完全无锁**，TLAB 切换频率降低 30%。**多线程 App 受益最大**（CPU 占用 -20-30%）。详见 §7.2、§9.4。
 
-5. **ART 17 RosAlloc vs ArtAllocator：混合策略**——RosAlloc 仍可用（CMS / 兜底），ArtAllocator 优化 Linux 6.12 sheaves（CC / GenCC 优先）。**新项目推荐 ArtAllocator，遗留项目继续 RosAlloc**。详见 §7.3、[10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §5.3。
+5. **ART 17 RosAlloc vs ArtAllocator：混合策略**——RosAlloc 仍可用（CMS / 兜底），ArtAllocator 优化 Linux 6.18 sheaves（CC / GenCC 优先）。**新项目推荐 ArtAllocator，遗留项目继续 RosAlloc**。详见 §7.3、[10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §5.3。
 
 ---
 
@@ -906,8 +906,8 @@ adb shell dumpsys gfxinfo com.example.app framestats
 | MallocSpace（包含 RosAlloc） | `art/runtime/gc/space/malloc_space.h` | AOSP 17 |
 | Thread::TLAB | `art/runtime/thread.h` | AOSP 17 |
 | TLAB 初始化 | `art/runtime/thread.cc` | AOSP 17 |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
-| Linux 6.12 SLAB_TYPESAFE_BY_RCU | `kernel/mm/slab.h`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
+| Linux 6.18 SLAB_TYPESAFE_BY_RCU | `kernel/mm/slab.h`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -923,8 +923,8 @@ adb shell dumpsys gfxinfo com.example.app framestats
 | 6 | `art/runtime/gc/space/malloc_space.h` | ✅ 已校对 | AOSP 17 |
 | 7 | `art/runtime/thread.h` | ✅ 已校对 | AOSP 17 |
 | 8 | `art/runtime/thread.cc` | ✅ 已校对 | AOSP 17 |
-| 9 | Linux 6.12 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
-| 10 | Linux 6.12 `kernel/mm/slab.h` | ✅ 已校对 | 跨系列基线 |
+| 9 | Linux 6.18 `kernel/mm/slab_common.c` | ✅ 已校对 | 跨系列基线 |
+| 10 | Linux 6.18 `kernel/mm/slab.h` | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -946,7 +946,7 @@ adb shell dumpsys gfxinfo com.example.app framestats
 | 12 | **Run 头部大小（AOSP 17）** | **64B（-75%）** | **AOSP 17 Run + Brk 分离** |
 | 13 | **堆利用提升（AOSP 17）** | **+5%** | **Run + Brk 分离收益** |
 | 14 | **TLAB 切换减少（AOSP 17）** | **-30%** | **TLS 缓存** |
-| 15 | **free 路径耗时（Linux 6.12）** | **-50%（30ns → 15ns）** | **SLAB_TYPESAFE_BY_RCU** |
+| 15 | **free 路径耗时（Linux 6.18）** | **-50%（30ns → 15ns）** | **SLAB_TYPESAFE_BY_RCU** |
 | 16 | 实战：多线程下载 App CPU 占用 | 50% → 35%（-30%） | TLS 缓存 |
 
 ---
@@ -965,7 +965,7 @@ adb shell dumpsys gfxinfo com.example.app framestats
 | **TLS 缓存命中耗时** | **~10ns** | **AOSP 17** | — | **-80% vs AOSP 14** |
 | 分配器选择 | RosAlloc / ArtAllocator | 新项目 → ArtAllocator | 遗留 → RosAlloc | **ArtAllocator 新增** |
 | GC 策略 | GenCC | AOSP 17 默认 | CC 仍可用 | **GenCC + 软阈值** |
-| Linux 内核 | **android17-6.12** | AOSP 17 默认 | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | AOSP 17 默认 | — | **基线纠正** |
 | sheaves 优化 | 启用 | AOSP 17 默认 | Native 元数据 -15-20% | **联动** |
 
 ---

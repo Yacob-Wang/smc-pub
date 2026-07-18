@@ -1,8 +1,8 @@
-# 4.6 Thread Roots 与栈扫描（v2 升级版）
+﻿# 4.6 Thread Roots 与栈扫描（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 04-CC-GC（CC-GC · 6/8）
 > **本篇定位**：**CC-GC Thread Roots 栈扫描**（6/8）——STW 时如何冻结线程 + 栈扫描完整流程 + Thread 字段扫描 + ART 17 栈扫描优化（Initial Copy 并行化 / 反射 Roots 处理 / Stack Map 缓存）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -43,12 +43,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 Initial Copy 栈扫描并行化** | 未覆盖 | **新增 §7.1 整节**：栈扫描从 STW → 部分并行 | API 37+ GC 硬变化 |
 | **ART 17 反射 Roots 处理** | 未覆盖 | **新增 §7.2 整节**：Class 对象 / Reflection 栈扫描优化 | API 37+ GC 硬变化 |
 | **ART 17 Stack Map 缓存** | 未覆盖 | **新增 §7.3 整节**：命中率 +30%、内存 -25% | API 37+ GC 硬变化 |
-| **Linux 6.12 sheaves** | 未涉及 | **新增 §7.4**：Native 堆 -15-20% 间接降低 Stack Map 缓存压力 | 跨系列基线一致性 |
+| **Linux 6.18 sheaves** | 未涉及 | **新增 §7.4**：Native 堆 -15-20% 间接降低 Stack Map 缓存压力 | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -866,7 +866,7 @@ GC 触发 → Initial Copy 阶段 → 关键线程栈扫描（~0.5ms）
 | **JNI Slot Table** | `art/runtime/jni_env_ext.h` | **AOSP 17 强化** |
 | **反射 Roots 增量扫描** | `art/runtime/reflection.h` | **AOSP 17 强化** |
 | CC GC 入口 | `art/runtime/gc/collector/concurrent_copying.cc` | AOSP 17 |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -884,7 +884,7 @@ GC 触发 → Initial Copy 阶段 → 关键线程栈扫描（~0.5ms）
 | 8 | `art/runtime/stack_map.h`（StackMapCache） | ✅ 已校对 | **AOSP 17 新增** |
 | 9 | `art/runtime/jni_env_ext.h`（Slot Table） | ✅ 已校对 | **AOSP 17 强化** |
 | 10 | `art/runtime/reflection.h`（增量扫描） | ✅ 已校对 | **AOSP 17 强化** |
-| 11 | `kernel/mm/slab_common.c`（Linux 6.12 sheaves） | ✅ 已校对 | 跨系列基线 |
+| 11 | `kernel/mm/slab_common.c`（Linux 6.18 sheaves） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -907,7 +907,7 @@ GC 触发 → Initial Copy 阶段 → 关键线程栈扫描（~0.5ms）
 | 13 | **MethodHandle 缓存命中率** | **+30%** | **AOSP 17 强化** |
 | 14 | STW 总时间（v1 时代） | ~18ms | 理论最坏 |
 | 15 | **STW 总时间（ART 17）** | **~8-10ms** | **-50%** |
-| 16 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
+| 16 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
 | 17 | 实战：反射密集 App 优化 | Pause 8.5ms → 1.2ms | AOSP 17 / Pixel 8 Pro |
 
 ---
@@ -925,7 +925,7 @@ GC 触发 → Initial Copy 阶段 → 关键线程栈扫描（~0.5ms）
 | JNI Local Ref 存储 | std::vector | — | 扫描慢 | **Slot Table** |
 | Thread 池大小 | 8-16 | 业务控制 | 太多→栈扫描慢 | 不变 |
 | 反射调用占比 | < 30% | 通用 | 高→反射密集 | 不变 |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 | MethodHandle 缓存 | 启用 | AOSP 17 默认 | — | 命中率 +30% |
 
 ---

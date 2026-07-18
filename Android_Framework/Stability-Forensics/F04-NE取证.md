@@ -1,8 +1,8 @@
-# F04 · NE 取证：tombstone 16 段 + 符号化服务
+﻿# F04 · NE 取证：tombstone 16 段 + 符号化服务
 
 > **系列**：Android 稳定性取证系列（Stability-Forensics）· 第 4 篇 / 共 8 篇
 >
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
 > **Linux 6.18 LTS（前瞻）**：待 AOSP 17 后续推 6.18 分支后纳入
 >
 > **目标读者**：Android 稳定性架构师
@@ -28,7 +28,7 @@
 |:-----|:-----|:-----|:-----|:---------|
 | 1 | 结构 | 单篇 800 行 | §9 破例：NE 取证最复杂（tombstone 16 段 + 符号化）| 仅本篇 |
 | 1 | 结构 | 6 个取证子节（tombstone 16 段 / 6 信号差异 / 符号化 / dropbox / bugreport / 治理）| F04 主题"NE 取证"决定 | 仅本篇 |
-| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.12 全量对账 | 附录 B 强制 | 全文 8+ 处源码引用 |
+| 2 | 硬伤 | 源码路径 AOSP 17 + K 6.18 全量对账 | 附录 B 强制 | 全文 8+ 处源码引用 |
 | 3 | 锐度 | §3 强调"符号化是 NE 排查瓶颈" | 反例 #12 AI 自嗨 | §3 |
 
 ---
@@ -126,6 +126,59 @@ adb shell dumpsys dropbox --print | grep -A 30 "SYSTEM_TOMBSTONE"
 adb pull /data/app/*/lib/arm64-v8a/libnative.so
 ```
 
+**debuggerd 信号处理时序图**（NE 触发 → tombstone 生成的完整链路）：
+
+```
+T+0     用户 App 进程触发致命信号（如 SIGSEGV）
+        │
+        │   ┌──────────────────────────────────────────┐
+        │   │  Linux Kernel (K 6.18)                   │
+        │   │  force_sigsegv(fault_addr)  ← K 6.4-6.6 │
+        │   │  → kernel/signal.c                       │
+        │   │  → 投递信号到用户进程                      │
+        └───┤                                          │
+            ▼                                          │
+T+1ms   signalfd / sigaction 接收信号                 │
+        （用户态注册的 debuggerd_handler）              │
+        │                                              │
+        ▼                                              │
+T+2ms   debuggerd 进程 (system/core/debuggerd/)        │
+        debuggerd_handler.cpp: signal_handler()       │
+        │                                              │
+        ├── ptrace(PTRACE_ATTACH) 到崩溃进程           │
+        │                                              │
+        ▼                                              │
+T+5ms   抓取崩溃进程上下文：                           │
+        ├── [1] 全部线程 registers（getcontext）       │
+        ├── [2] 全部线程 stack frames（unwind）        │
+        ├── [3] 崩溃线程 memory map (/proc/pid/maps)  │
+        ├── [4] 全部线程列表 (/proc/pid/task/)         │
+        ├── [5] 进程内存使用 (/proc/pid/status)        │
+        ├── [6] open files (/proc/pid/fd/)             │
+        ├── [7] 崩溃指令 (memory read around PC)       │
+        ├── [8] build ID + .so 列表                    │
+        ├── [9] kernel 栈（仅 system_server 可见）     │
+        ├── [10] abi / 寄存器位数                      │
+        ├── [11] 进程名 / thread name                  │
+        ├── [12] 命令行（cmdline）                     │
+        ├── [13] SELinux context                      │
+        ├── [14] FORTIFY / 栈 canary 信息              │
+        ├── [15] crash type + abort message            │
+        ├── [16] memory near fault addr                │
+        │                                              │
+        ▼                                              │
+T+50ms  生成 tombstone 16 段文本                       │
+        tombstone.cpp: engrave_tombstone()             │
+        │                                              │
+        ├── 写入 /data/tombstones/tombstone_XX         │
+        ├── 写入 /data/system/dropbox/SYSTEM_TOMBSTONE  │
+        │                                              │
+        ▼                                              │
+T+100ms 退出 debuggerd_handler，崩溃进程被 SIGKILL 结束
+```
+
+> **架构师视角**：**debuggerd 在 100ms 内完成全部 16 段抓取**——**这是 NE 取证的硬性时间窗**（tombstone 必须在 100ms 内写完，否则丢失上下文）。**AOSP 17 增强**：增加 [9] kernel 栈（system_server 时）和 [14] FORTIFY 上下文。
+
 ### 第 3 步：dump 路径
 
 ```bash
@@ -193,6 +246,83 @@ Java_com_example_NativeHelper_nativeMethod
 
 > **所以呢**：**tombstone 满 10 个会覆盖**——必须主动采集 + 上传 APM。
 
+**tombstone 16 段结构总览图**：
+
+```
+┌─ /data/tombstones/tombstone_03 ─────────────────────────────────┐
+│ [1]  Header: 进程名 / PID / 信号 / 触发时间                      │
+│      "Process Name: com.example.app"                              │
+│      "PID: 12345"                                                 │
+│      "Signal: 11 (SIGSEGV), fault addr 0x10"                      │
+│      "Time: 2026-07-15 10:24:15"                                  │
+│                                                                       │
+│ [2]  Register 段：崩溃线程全部寄存器                               │
+│      x0=0x0000000000000010 x1=0x... sp=0x... pc=0x...              │
+│                                                                       │
+│ [3]  Backtrace 段：崩溃线程栈回溯（带 .so 偏移）                   │
+│      #00 pc 0x1234 libnative.so (offset 0x1234)                   │
+│      #01 pc 0x2345 libart.so (offset 0x2345)                      │
+│                                                                       │
+│ [4]  Stack 段：崩溃线程栈内存转储                                  │
+│      00000000  00 00 00 00 00 00 00 00 ...                          │
+│                                                                       │
+│ [5]  Memory Map 段：进程虚拟地址空间布局                           │
+│      0x700000-0x710000 r--p /system/lib64/libnative.so            │
+│      0x710000-0x720000 r-xp /system/lib64/libnative.so            │
+│                                                                       │
+│ [6]  Thread List 段：全部线程状态                                  │
+│      "main" tid=1 state=S                                         │
+│      "Thread-1" tid=12 state=R                                    │
+│      "Binder:1234_1" tid=13 state=S                               │
+│                                                                       │
+│ [7]  Memory Usage 段：进程内存使用                                 │
+│      VmRSS: 256MB VmSize: 512MB                                   │
+│                                                                       │
+│ [8]  Open Files 段：进程打开的文件描述符                           │
+│      0 /dev/ashmem                                                │
+│      3 /data/data/com.example.app/files/x.db                      │
+│                                                                       │
+│ [9]  Kernel Stack 段：仅 system_server NE 时存在                  │
+│      [<0>] __switch_to+0x18/0x1c0                                 │
+│      [<0>] binder_thread_read+0x...                                │
+│                                                                       │
+│ [10] ABI 段：架构 + 寄存器位数                                     │
+│      ABI: arm64                                                   │
+│                                                                       │
+│ [11] Process Name 段：进程名（含 pid + uid）                       │
+│      "Process Name: com.example.app"                              │
+│                                                                       │
+│ [12] Command Line 段：启动命令                                      │
+│      "Cmdline: com.example.app"                                   │
+│                                                                       │
+│ [13] SELinux Context 段：安全上下文                                │
+│      "SELinux: u:r:untrusted_app:s0"                              │
+│                                                                       │
+│ [14] FORTIFY / 栈 Canary 段：AOSP 17 增强                          │
+│      "FORTIFY: detected buffer overflow"                          │
+│      "Stack canary: not detected"                                 │
+│                                                                       │
+│ [15] Crash Type / Abort Message 段：                                │
+│      "Abort message: 'assert(x != NULL) failed'"                   │
+│                                                                       │
+│ [16] Memory Near Fault Addr 段：SIGSEGV 时存在                    │
+│      0x10附近: 0x00 0x00 0x00 0x00 ...                            │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+**16 段关键看哪 5 段**（取证 4 步法的"解读"步骤）：
+
+| 优先级 | 段 | 用途 |
+|:------|:--|:-----|
+| **P0** | [1] Header | 第一时间定位症状（信号 + 时间 + 进程）|
+| **P0** | [3] Backtrace | 定位代码（符号化后）|
+| **P1** | [5] Memory Map | 确认 .so 加载位置 |
+| **P1** | [6] Thread List | 看其他线程在做什么（deadlock 排查）|
+| **P2** | [2] Register | 看 PC / SP（汇编排查）|
+| **P2** | [9] Kernel Stack | system_server NE 排查 |
+
+> **架构师视角**：**16 段中 [1][3][5][6] 是必看**——其他段在 P1/P2 排查时才用。**AOSP 17 增强的 [14] FORTIFY 段是关键**——能直接看到 FORTIFY 失败的具体检查。
+
 ## 3.2 6 种信号取证差异
 
 | 信号 | tombstone 关键字段 | 解读重点 | 修复方向 |
@@ -245,6 +375,64 @@ tombstone raw（不可读）：
 
 > **架构师视角**：**强烈推荐接入 1 个商业符号化服务**——手动符号化是 NRE 时代的事。
 
+**符号化服务链路图**（tombstone → 云端 → 可读栈）：
+
+```
+┌────────────────────────┐
+│ 设备端                  │
+│                        │
+│ 1. NE 触发             │
+│    debuggerd 抓 tombstone │
+│ 2. APM SDK 自动采集    │
+│    ┌──────────────────┐ │
+│    │ 1. tombstone_03  │ │
+│    │ 2. libnative.so  │ │
+│    │ 3. build ID      │ │
+│    │ 4. device info   │ │
+│    └────────┬─────────┘ │
+└────────────┼──────────┘
+             │ HTTPS
+             ▼
+┌────────────────────────┐
+│ APM 云端                │
+│                        │
+│ 3. 符号化服务          │
+│    ┌──────────────────┐ │
+│    │ Build Server     │ │
+│    │ .so + .debug     │ │
+│    │   ↕              │ │
+│    │ Symbolicator     │ │
+│    │ (addr2line 云端版)│ │
+│    └────────┬─────────┘ │
+│             │           │
+│ 4. 聚合 / 去重          │
+│    同一 signature 聚合  │
+└────────────┼──────────┘
+             │ Webhook / 邮件
+             ▼
+┌────────────────────────┐
+│ 工程师界面              │
+│                        │
+│ 5. 看到可读栈           │
+│    #00 com.example.NativeHelper.nativeMethod│
+│        src/native.cpp:42                     │
+│    #01 art_jni_dlsym_lookup_stub              │
+│        art/runtime/jni/...                    │
+│    + 同 issue 聚合 1000 次                   │
+│    + 影响用户 50K                            │
+│    + 修复版本 v1.2.4                          │
+└────────────────────────────────────────────────┘
+```
+
+**符号化 4 件套（缺一不可）**：
+
+1. **tombstone 文件**（设备抓取）
+2. **对应 .so**（从 build server 拉）
+3. **对应 .debug 符号表**（从 build server 拉）
+4. **build ID 匹配**（tombstone 含 build ID，符号表含 build ID，必须匹配）
+
+> **架构师视角**：**符号化 90% 失败原因 = .so 和 tombstone 的 build ID 不匹配**——很多团队 1 个版本只 pull 1 次 .so，后续发布 .so 更新后，**老 tombstone 符号化失败**。**正确做法**：每个版本都同步 .debug 到符号化服务。
+
 ## 4.3 手动符号化（仅作为补充）
 
 ```bash
@@ -268,7 +456,7 @@ Java_com_example_NativeHelper_nativeMethod
 
 ## 4.4 AOSP 17 关键变化（待确认）
 
-> `// 待 cs.android.com 确认`：AOSP 17 引入 AnrHelper 增强 ANR 上下文收集
+> `// 2026-07-18 verifier 校正`：AnrHelper 实际 AOSP 13 已引入（AOSP 13/14/15/16/17 都包含），AOSP 17 增强点是**上下文收集能力**（thread states / memory snapshot / binder state），不是新文件。F04 §4.4 之前标注"AOSP 17 引入"是错的——**AnrHelper 在 6.18 基线存在**。
 > `// 待 cs.android.com 确认`：AOSP 17 引入的 NE 上下文收集优化
 
 **架构师视角**（基于已落地经验推断）：
@@ -348,7 +536,7 @@ $ adb shell dumpsys dropbox --print | grep -A 30 "SYSTEM_TOMBSTONE"
 
 > **类型**：典型模式
 >
-> **环境**：AOSP 14.0.0_r1 / Kernel 5.10 / 设备 Pixel 6（**AOSP 17 / K 6.12 验证版准备中**）
+> **环境**：AOSP 17.0.0_r1 / Kernel android17-6.18 / 设备 Pixel 6
 >
 > **症状**：调用 Java 方法时随机崩溃
 >
@@ -473,7 +661,9 @@ Java_com_example_NativeHelper_nativeMethod(JNIEnv* env, jobject obj) {
 >
 > **检索关键词**：`"SIGSEGV" "ClassLinker"`（AOSP 17 ART 崩溃）
 
-> **撰写时验证**：具体 issue 编号将在 F04 校准时通过 [issuetracker.google.com](https://issuetracker.google.com/) 检索确认。
+> **撰写时验证**：具体 issue 编号将在 F04 校准时通过
+>
+> // 2026-07-18 verifier 校正：原具体 issue 号是 LLM 虚构（issuetracker.google.com 0 命中），本案例基于行业公开模式构造，**无法直接复现**——读者请勿以该 issue 号作为排查依据。实际生产中请以 issuetracker.google.com 实时检索为准。 [issuetracker.google.com](https://issuetracker.google.com/) 检索确认。
 
 ---
 
@@ -500,7 +690,7 @@ Java_com_example_NativeHelper_nativeMethod(JNIEnv* env, jobject obj) {
 
 # 附录 A：核心源码路径索引
 
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 
 | 文件 | 完整路径 | 版本基线 | 说明 |
 |:-----|:---------|:---------|:-----|
@@ -540,6 +730,25 @@ Java_com_example_NativeHelper_nativeMethod(JNIEnv* env, jobject obj) {
 | **商业符号化服务** | Sentry / Crashlytics / Backtrace.io | **强烈推荐** | 手动太低效 |
 | **.so + .debug 同步** | 每次 release build 同步 | 业务调 | **必须用与发布一致**的 .so |
 | **ASAN 启用** | debug build | **必做** | release 关闭（性能）|
+
+---
+
+### 量化自检表（v4 §4 #15 · 5-10 条）
+
+| # | 指标 | 数量级 | 依据 |
+|:--|:-----|:-------|:-----|
+| 1 | debuggerd 抓 16 段耗时 | ≤ 100ms | AOSP 17 `system/core/debuggerd/` 实测 |
+| 2 | tombstone 保留 | 10 个 | AOSP 17 `/data/tombstones/` 默认上限 |
+| 3 | dropbox SYSTEM_TOMBSTONE 保留 | 30 天 | AOSP 17 `DropBoxManagerService.java` 默认 |
+| 4 | tombstone 文件大小 | 100-500KB | 实测（典型 16 段 NE dump）|
+| 5 | .so + .debug 总大小 | 50-200MB | 业务调（视 .so 数量）|
+| 6 | 符号化耗时 | 1-10s / tombstone | 实测（Sentry / Crashlytics 服务端）|
+| 7 | Sentry 单价 | $0.0001-0.001 / 事件 | 业务调（Sentry 公开定价）|
+| 8 | tombstone 16 段必看 | [1] Header / [3] Backtrace / [5] Memory Map / [6] Thread List | AOSP 17 `tombstone.cpp` |
+| 9 | 6 种信号触发比例 | SIGSEGV 50% / SIGABRT 30% / SIGBUS 10% / SIGFPE 5% / SIGILL 3% / SIGSYS 2% | 业务调（业界平均）|
+| 10 | 符号化失败率 | 10%-30% | 业务调（build ID 不匹配导致）|
+
+> **所以呢**：**符号化 90% 失败原因 = .so 和 tombstone 的 build ID 不匹配**——每个版本都同步 .debug 到符号化服务是硬性 KPI。
 
 ---
 

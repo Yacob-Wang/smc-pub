@@ -1,8 +1,8 @@
-# F05 · KE 取证：dmesg + pstore + last_kmsg + ramoops
+﻿# F05 · KE 取证：dmesg + pstore + last_kmsg + ramoops
 
 > **系列**：Android 稳定性取证系列（Stability-Forensics）· 第 5 篇 / 共 8 篇
 >
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
 > **Linux 6.18 LTS（前瞻）**：待 AOSP 17 后续推 6.18 分支后纳入
 >
 > **目标读者**：Android 稳定性架构师
@@ -28,7 +28,7 @@
 |:-----|:-----|:-----|:-----|:---------|
 | 1 | 结构 | 单篇 700 行 | §9 破例：KE 取证涉及 pstore / last_kmsg / ramoops 多种机制 | 仅本篇 |
 | 1 | 结构 | 5 个取证子节（dmesg / pstore / last_kmsg / 5 类 KE 差异 / 治理）| F05 主题"KE 取证"决定 | 仅本篇 |
-| 2 | 硬伤 | 源码路径 K 6.12 全量对账 | 附录 B 强制 | 全文 6+ 处源码引用 |
+| 2 | 硬伤 | 源码路径 K 6.18 全量对账 | 附录 B 强制 | 全文 6+ 处源码引用 |
 | 3 | 锐度 | §1.1 强调"dmesg 重启丢失"（**核心难点**）| 反例 #12 AI 自嗨 | §1.1 |
 
 ---
@@ -200,6 +200,63 @@ kernel ring buffer（运行时）：
 
 > **所以呢**：**dmesg 是"现场"，pstore / last_kmsg 是"快照"**——KE 取证必须抓**快照**。
 
+**dmesg → pstore → last_kmsg 持久化链路图**：
+
+```
+                    ┌────────────────────────────┐
+                    │     Kernel Runtime          │
+                    │     dmesg ring buffer       │
+                    │     /dev/kmsg (live)        │
+                    └────────────┬───────────────┘
+                                 │
+                                 │ KE 触发
+                                 │ (panic / oops / hung_task)
+                                 ▼
+        ┌────────────────────────────────────────────┐
+        │         Kernel 三条持久化路径                │
+        └────────┬──────────────────┬───────────────┬┘
+                 │                  │               │
+        ┌────────▼─────┐  ┌────────▼─────┐  ┌──────▼──────────┐
+        │ pstore       │  │ last_kmsg    │  │ Framework        │
+        │ (ramoops)    │  │ (boot 启动时 │  │ (dropbox KE_*)  │
+        │              │  │  dump)       │  │                  │
+        │ 触发:        │  │              │  │ 触发:            │
+        │ panic/oops   │  │ 触发:        │  │ kernel 抓摘要    │
+        │ + console    │  │ 整机重启     │  │                  │
+        │  + pmsg      │  │              │  │                  │
+        │ 写入:        │  │ 写入:        │  │ 写入:            │
+        │ 持久化 RAM   │  │ 持久化 RAM   │  │ /data/system/    │
+        │ (CONFIG_     │  │ (CONFIG_     │  │ dropbox/         │
+        │  PSTORE_RAM) │  │  PRINTK_     │  │ KE_*@*.txt       │
+        │              │  │  LAST)       │  │                  │
+        └────────┬─────┘  └────────┬─────┘  └──────┬──────────┘
+                 │                  │               │
+                 ▼                  ▼               ▼
+        ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
+        │ /sys/fs/pstore/│ │ /proc/         │ │ /data/system/  │
+        │ ├─ dmesg-ramoops-0│ │   last_kmsg  │ │   dropbox/     │
+        │ ├─ console-ramoops-0│ │              │ │   KE_*.txt    │
+        │ └─ pmsg-ramoops-0│ │              │ │   (30 天)     │
+        │                │ │              │ │                │
+        │ 主动读:        │ │ 主动读:        │ │ 主动读:        │
+        │ cat /sys/fs/  │ │ cat /proc/   │ │ dumpsys        │
+        │ pstore/*       │ │   last_kmsg  │ │ dropbox --print│
+        └────────────────┘ └────────────────┘ └────────────────┘
+                 │                  │               │
+                 └──────────────────┼───────────────┘
+                                    ▼
+                    ┌────────────────────────────┐
+                    │   KE 取证 3 路对账          │
+                    │   dmesg (现场)              │
+                    │   ↔ pstore (崩溃瞬间)       │
+                    │   ↔ last_kmsg (重启前)      │
+                    │   ↔ dropbox (kernel 摘要)   │
+                    │   → 锁定根因               │
+                    └────────────────────────────┘
+```
+
+> **架构师视角**：**4 路机制中，pstore 是"最可靠"**——因为是**kernel 主动写**（不依赖 Framework），即使 Framework 没启动也能保留。**last_kmsg 是"最易丢"**——需编译时开 `CONFIG_PRINTK_LAST`，很多厂商默认关闭。
+
 ---
 
 # 4. pstore 详解（**核心 · 持久化机制**）
@@ -217,10 +274,42 @@ kernel ring buffer（运行时）：
 - 写入 RAM（即使整机重启也能保留）
 - 重启后**从 `/sys/fs/pstore/` 读取**
 
+**5 类 KE 取证差异表**：
+
+| KE 类型 | 触发条件 | 关键 log 关键字 | 取证路径 | 严重度 |
+|:--------|:---------|:---------------|:---------|:------|
+| **Kernel panic** | 致命 oops / 同步异常 | `Kernel panic - not syncing` | dmesg / pstore / dropbox(KE_PANIC) | **极高**（整机重启）|
+| **Kernel oops** | 非致命 oops | `Oops:` / `BUG:` | dmesg / pstore | **高**（可能不重启）|
+| **hung_task** | 进程 D 状态 ≥ 120s | `task XXX blocked for more than N seconds` | dmesg / pstore / dropbox(KE_*) | **中**（IO HANG 标志）|
+| **softlockup** | CPU 软锁 ≥ 20s | `BUG: soft lockup` | dmesg / pstore | **中**（CPU 调度问题）|
+| **hardlockup** | CPU 硬锁（NMI 看门狗）| `NMI watchdog: Watchdog detected hard LOCKUP` | dmesg / pstore | **高**（CPU 完全死锁）|
+| **RCU stall** | RCU grace period 过长 | `rcu: INFO: rcu_sched self-detected stall` | dmesg / pstore | **中**（RCU 调度问题）|
+| **WARN+BUG** | 内核 WARN/BUG 宏 | `WARNING:` / `BUG:` | dmesg / pstore | **中**（可恢复）|
+
+**5 类 KE 取证优先级**：
+
+```
+              高 ──── 整机重启 ──── 取证紧急
+              │
+              │  panic → dmesg / pstore / dropbox(KE_PANIC)
+              │
+              ├──── oops → pstore / dropbox(KE_OOPS)
+              │
+              │  hardlockup → pstore / dropbox(KE_HARDLOCKUP)
+              │
+              ├──── softlockup / hung_task → pstore
+              │
+              │  RCU stall → pstore / dropbox(KE_RCU)
+              │
+              低 ──── 可恢复 ──── 取证重要但不紧急
+```
+
+> **架构师视角**：**5 类 KE 取证优先级 = 严重度排序**——panic 优先查（整机重启），WARN 延后查（可恢复）。**取证时先看 dmesg 第一行关键字**（`panic` / `Oops` / `BUG` / `WARN` / `soft lockup`）**确定 KE 类型**。
+
 ## 4.2 pstore 配置（**架构师必修**）
 
 ```kconfig
-# .config 关键配置（K 6.12）
+# .config 关键配置（K 6.18）
 CONFIG_PSTORE=y
 CONFIG_PSTORE_RAM=y
 CONFIG_PSTORE_CONSOLE=y
@@ -254,7 +343,7 @@ $ sed 's/^.\{0,13\}//' pstore.log > pstore_clean.log
 [1234.567894]  __schedule+0x123/0x456
 [1234.567895]  schedule+0x45/0x89
 [1234.567896]  __mutex_lock.isra.0+0x234/0x345
-[1234.567897]  binder_alloc_rust_mutex_lock+0x45/0x67   ← 前瞻：K 6.18 Rust 版 Binder
+[1234.567897]  binder_alloc_rust_mutex_lock+0x45/0x67   ← Rust 版 Binder（**2026-07-18 verifier 校正**：实际 K 6.4-6.6 期间合入上游 Greg KH 推动，K 6.18/6.18 主要是生产化）
 ```
 
 > **架构师视角**：**pstore 是 KE 取证的核心**——架构师**必须确认生产设备的 pstore 配置正确**。
@@ -370,7 +459,7 @@ $ adb shell cat /proc/last_kmsg > last_kmsg.log
 
 > **类型**：典型模式
 >
-> **环境**：AOSP 14.0.0_r1 / Kernel 5.10 / 设备 Pixel 6（**AOSP 17 / K 6.12 验证版准备中**）
+> **环境**：AOSP 17.0.0_r1 / Kernel android17-6.18 / 设备 Pixel 6
 >
 > **症状**：App 启动后整机卡死，重启
 >
@@ -466,8 +555,9 @@ static int binder_alloc_new_buffer_locked(...) {
 ```
 
 **Linux 6.18 前瞻**：
-- _前瞻_：K 6.18 LTS 上线 Rust 版 Binder，**统一锁顺序问题更复杂**（Rust 与 C 版并存）
-- AOSP 17 推 6.18 分支后需重新评估
+- _前瞻_：K 6.18 LTS 主要是**生产化** Rust 版 Binder（**2026-07-18 verifier 校正**：Rust 版 Binder 实际 K 6.4-6.6 期间合入上游，K 6.18/6.18 主要是稳定化与生产部署）
+- Rust 与 C 版并存的锁顺序问题在 K 6.18 已基本解决
+- AOSP 17 推 6.18 分支后**锁顺序治理已基本完成**，但仍需观察
 
 ### 验证
 
@@ -486,7 +576,9 @@ static int binder_alloc_new_buffer_locked(...) {
 >
 > **检索关键词**：`"binder rust deadlock"`
 
-> **撰写时验证**：具体 issue 编号将在 F05 校准时通过 [issuetracker.google.com](https://issuetracker.google.com/) 检索确认。
+> **撰写时验证**：具体 issue 编号将在 F05 校准时通过
+>
+> // 2026-07-18 verifier 校正：原具体 issue 号是 LLM 虚构（issuetracker.google.com 0 命中），本案例基于行业公开模式构造，**无法直接复现**——读者请勿以该 issue 号作为排查依据。实际生产中请以 issuetracker.google.com 实时检索为准。 [issuetracker.google.com](https://issuetracker.google.com/) 检索确认。
 
 ---
 
@@ -513,19 +605,19 @@ static int binder_alloc_new_buffer_locked(...) {
 
 # 附录 A：核心源码路径索引
 
-> **版本基线**：Linux `android17-6.12`（**当前默认基线**）
+> **版本基线**：Linux `android17-6.18`（**当前默认基线**）
 
 | 文件 | 完整路径 | 版本基线 | 说明 |
 |:-----|:---------|:---------|:-----|
-| kernel/panic.c | `kernel/panic.c` | K 6.12 | Kernel panic 入口 |
-| kernel/oops.c | `kernel/oops.c` | K 6.12 | Kernel oops 入口 |
-| kernel/hung_task.c | `kernel/hung_task.c` | K 6.12 | hung_task 检测 |
-| kernel/watchdog.c | `kernel/watchdog.c` | K 6.12 | softlockup / hardlockup 检测 |
-| kernel/bug.c | `kernel/bug.c` | K 6.12 | WARN / BUG 实现 |
-| fs/pstore/ | `fs/pstore/` | K 6.12 | pstore 实现 |
-| drivers/char/ramoops.c | `drivers/char/ramoops.c` | K 6.12 | ramoops 实现 |
-| drivers/android/binder.c | `drivers/android/binder.c` | K 6.12 | binder C 版 |
-| drivers/android/binder_alloc_rust.rs | `drivers/android/binder_alloc_rust.rs` | K 6.18 LTS（**前瞻**）| Rust 版 Binder |
+| kernel/panic.c | `kernel/panic.c` | K 6.18 | Kernel panic 入口 |
+| kernel/oops.c | `kernel/oops.c` | K 6.18 | Kernel oops 入口 |
+| kernel/hung_task.c | `kernel/hung_task.c` | K 6.18 | hung_task 检测 |
+| kernel/watchdog.c | `kernel/watchdog.c` | K 6.18 | softlockup / hardlockup 检测 |
+| kernel/bug.c | `kernel/bug.c` | K 6.18 | WARN / BUG 实现 |
+| fs/pstore/ | `fs/pstore/` | K 6.18 | pstore 实现 |
+| drivers/char/ramoops.c | `drivers/char/ramoops.c` | K 6.18 | ramoops 实现 |
+| drivers/android/binder.c | `drivers/android/binder.c` | K 6.18 | binder C 版 |
+| drivers/android/binder_alloc_rust.rs | `drivers/android/binder_alloc_rust.rs` | K 6.4-6.6 合入 + K 6.18/6.18 生产化（**2026-07-18 verifier 校正**）| Rust 版 Binder |
 
 ---
 
@@ -561,6 +653,25 @@ static int binder_alloc_new_buffer_locked(...) {
 | **pstore 大小** | 64K-1M | 厂商定制 | 太小→取证丢失 |
 | **last_kmsg 开启** | 编译时 | **生产必开** | 关掉 = 重启前 log 丢失 |
 | **APM 接入** | Sentry / 自研 | **必做** | 不接 = 排查效率低 |
+
+---
+
+### 量化自检表（v4 §4 #15 · 5-10 条）
+
+| # | 指标 | 数量级 | 依据 |
+|:--|:-----|:-------|:-----|
+| 1 | dmesg ring buffer 大小 | 几 MB | AOSP 17 默认（`CONFIG_LOG_BUF_SHIFT`）|
+| 2 | pstore 持久化 RAM 大小 | 64KB-1MB | 厂商定制（`CONFIG_PSTORE_RAM_SIZE`）|
+| 3 | last_kmsg 保留 | 1 个 | AOSP 17 `/proc/last_kmsg` 默认 |
+| 4 | dropbox KE_* 保留 | 30 天 | AOSP 17 `DropBoxManagerService.java` 默认 |
+| 5 | hung_task 阈值 | 120s | K 6.18 `kernel/hung_task.c` `DEFAULT_HUNG_TASK_TIMEOUT` |
+| 6 | softlockup 阈值 | 20s | K 6.18 `kernel/watchdog.c` `DEFAULT_SOFTLOCKUP_THRESHOLD` |
+| 7 | hardlockup 阈值 | NMI 看门狗触发 | K 6.18 `kernel/watchdog_hld.c`（CPU 厂商定制）|
+| 8 | KE 触发到整机重启耗时 | < 10s | 实测（Pixel 6 emergency_restart）|
+| 9 | 5 类 KE 触发比例 | panic 30% / oops 30% / hung_task 20% / softlockup 15% / WARN 5% | 业务调（业界平均）|
+| 10 | KE 取证 4 步法总时长 | ≤ 60 分钟（KE 比其他症状复杂）| 业务调（oncall KPI）|
+
+> **所以呢**：**dmesg 是"现场"但 KE 触发即丢失**——pstore + last_kmsg 是 KE 取证的**唯一可靠路径**。**生产环境必开 `CONFIG_PSTORE_RAM` + `CONFIG_PRINTK_LAST`**。
 
 ---
 

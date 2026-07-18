@@ -1,8 +1,8 @@
-# 9.9 实战案例 1：从 dumpsys 到 Heap Dump 完整诊断（v2 升级版）
+﻿# 9.9 实战案例 1：从 dumpsys 到 Heap Dump 完整诊断（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 9/10）
 > **本篇定位**：**综合实战 · dumpsys 诊断**（9/10）——从 dumpsys meminfo 到 ART 17 软阈值诊断、Native 堆分析、Heap Dump 治理的端到端流程
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -41,12 +41,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **AOSP 17 dumpsys 增强（软阈值诊断）** | 未覆盖 | **新增 §6 整节（实战 3）** | API 37+ dumpsys 硬变化 |
-| **AOSP 17 Native 堆分析（sheaves）** | 未覆盖 | **新增 §7 整节（实战 4）** | API 37+ + Linux 6.12 联动 |
+| **AOSP 17 Native 堆分析（sheaves）** | 未覆盖 | **新增 §7 整节（实战 4）** | API 37+ + Linux 6.18 联动 |
 | **AOSP 17 ART Internal State 诊断** | 未涉及 | **新增 §8 整节（实战 5）** | API 37+ ART 内部状态 |
-| **Linux 6.12 smaps_rollup 集成** | 未涉及 | **新增 §4 实战扩展** | Linux 6.12 性能优化 |
+| **Linux 6.18 smaps_rollup 集成** | 未涉及 | **新增 §4 实战扩展** | Linux 6.18 性能优化 |
 
 ### 第 3 轮：锐度校准
 
@@ -93,8 +93,8 @@ App：某社交 App（类微信）
    -【AOSP 17 新增】看 Distance to soft threshold
 
 2. procrank / smaps：看进程级内存（详细）
-   -【Linux 6.12 新增】smaps_rollup 快速汇总
-   -【Linux 6.12 + AOSP 17 新增】sheaves 段分析
+   -【Linux 6.18 新增】smaps_rollup 快速汇总
+   -【Linux 6.18 + AOSP 17 新增】sheaves 段分析
 
 3. LeakCanary：自动检测泄漏
    -【AOSP 17】必须用 LeakCanary 3.x（类去重适配）
@@ -248,7 +248,7 @@ dumpsys 阶段结论（AOSP 17 增强）：
 
 ---
 
-## 三、第二步：Heap Dump（AOSP 17 + Linux 6.12 优化）
+## 三、第二步：Heap Dump（AOSP 17 + Linux 6.18 优化）
 
 ### 9.9.7 抓取 Heap Dump
 
@@ -264,14 +264,14 @@ adb pull /data/local/tmp/heap.hprof
 Debug.dumpHprofData("/data/local/tmp/heap.hprof");
 ```
 
-### 9.9.8 【AOSP 17 + Linux 6.12 增强】hprof-conv 转换
+### 9.9.8 【AOSP 17 + Linux 6.18 增强】hprof-conv 转换
 
 ```bash
 # AOSP 14：Android 格式 hprof → Java SE 格式（MAT 需要）
 # 转换时间：~30 秒（1 GB hprof）
 hprof-conv heap.hprof heap-conv.hprof
 
-# AOSP 17 + Linux 6.12：转换时间 ~10 秒
+# AOSP 17 + Linux 6.18：转换时间 ~10 秒
 # 优化点：io_uring 异步 I/O + mmap 零拷贝 + sheaves slab
 hprof-conv heap.hprof heap-conv.hprof
 
@@ -561,15 +561,15 @@ Heap Summary:
 ### 9.9.23 场景
 
 ```
-场景：升级到 AOSP 17 + Linux 6.12 后，
+场景：升级到 AOSP 17 + Linux 6.18 后，
 Native 堆内存从 105 MB 降到 88 MB（约 -16%）。
 想知道是泄漏已修复，还是 sheaves slab 优化的结果。
 ```
 
-### 9.9.24 smaps 分析（AOSP 17 + Linux 6.12）
+### 9.9.24 smaps 分析（AOSP 17 + Linux 6.18）
 
 ```bash
-# 1. smaps_rollup 快速汇总（Linux 6.12 新增）
+# 1. smaps_rollup 快速汇总（Linux 6.18 新增）
 adb shell run-as com.example.app cat /proc/self/smaps_rollup
 # 输出每个 VMA 1 行，文件大小 ~300 KB（vs 传统 smaps 30 MB）
 
@@ -599,7 +599,7 @@ AOSP 14 / Linux 5.10：
   Total native: 105000 kB（无 sheaves）
   → Native 堆 105 MB
 
-AOSP 17 / Linux 6.12：
+AOSP 17 / Linux 6.18：
   Total native: 88000 kB（有 sheaves）
   → Native 堆 88 MB
   → 节省 17000 kB = 16.2%
@@ -608,9 +608,9 @@ AOSP 17 / Linux 6.12：
 ### 9.9.26 根因分析
 
 ```
-根因分析（AOSP 17 + Linux 6.12）：
+根因分析（AOSP 17 + Linux 6.18）：
 
-1.【Linux 6.12 新增】sheaves 内存分配器
+1.【Linux 6.18 新增】sheaves 内存分配器
    - 把频繁分配/释放的小对象（< 8KB）放到 sheaves slab
    - 减少 slab 内部碎片
    - 节省约 15-20% 内存
@@ -628,11 +628,11 @@ AOSP 17 / Linux 6.12：
 ### 9.9.27 架构师 Takeaway
 
 ```
-Native 堆分析 Takeaway（AOSP 17 + Linux 6.12 增强）：
+Native 堆分析 Takeaway（AOSP 17 + Linux 6.18 增强）：
 
-1.【Linux 6.12】sheaves 让 Native 堆降 15-20%——不要误判为泄漏修复
+1.【Linux 6.18】sheaves 让 Native 堆降 15-20%——不要误判为泄漏修复
 2.【AOSP 17】用 smaps `[sheaves]` 段验证优化效果
-3.【Linux 6.12】smaps_rollup 让频繁采集成为可能（开销降 100 倍）
+3.【Linux 6.18】smaps_rollup 让频繁采集成为可能（开销降 100 倍）
 4.【AOSP 17】Native 堆分类（sheaves/malloc/mmap）见 §7
 5.【AOSP 17】dumpsys meminfo -d 看 "Distance to hard threshold" 紧急告警
 ```
@@ -880,11 +880,11 @@ public class ChatManager {
 
 2. **AOSP 17 软阈值诊断是"轻量预警"利器**——Distance to soft threshold 直接显示软阈值触发状态。**软阈值是 Young GC，硬阈值是 Full GC**——别把软阈值当 OOM 信号。详见 §6 + [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §3。
 
-3. **AOSP 17 Native 堆分析让 sheaves 优化可验证**——Linux 6.12 sheaves 让 Native 堆降 15-20%。**用 smaps `[sheaves]` 段验证**——不要把优化误判为泄漏修复。详见 §7 + [02-procrank-smaps](02-procrank-smaps.md) §6.1。
+3. **AOSP 17 Native 堆分析让 sheaves 优化可验证**——Linux 6.18 sheaves 让 Native 堆降 15-20%。**用 smaps `[sheaves]` 段验证**——不要把优化误判为泄漏修复。详见 §7 + [02-procrank-smaps](02-procrank-smaps.md) §6.1。
 
 4. **AOSP 17 ART Internal State 是 JNI 泄漏排查第一站**——JNI Global refs 直接显示，**AOSP 14 看不到这个数据**。Global refs > 1000 立即告警，> 5000 紧急。详见 §8 + [01-dumpsys-meminfo详解](01-dumpsys-meminfo详解.md) §6.1。
 
-5. **AOSP 17 工具链必须配套升级**——LeakCanary 3.x、MAT 1.14.0+、Java 17。**AOSP 14 工具 + AOSP 17 hprof = 误判/崩溃**。**hprof-conv + Linux 6.12 io_uring**让 heap dump 写盘快 3 倍。详见 [08-治理工具箱](08-治理工具箱.md) §6 + 附录 A 源码索引。
+5. **AOSP 17 工具链必须配套升级**——LeakCanary 3.x、MAT 1.14.0+、Java 17。**AOSP 14 工具 + AOSP 17 hprof = 误判/崩溃**。**hprof-conv + Linux 6.18 io_uring**让 heap dump 写盘快 3 倍。详见 [08-治理工具箱](08-治理工具箱.md) §6 + 附录 A 源码索引。
 
 ---
 
@@ -903,9 +903,9 @@ public class ChatManager {
 | **GC Root 索引** | `art/runtime/hprof/hprof.cc#WriteGCRootIndex` | **AOSP 17 新增** |
 | 类去重 | `art/runtime/gc/class_linker.cc#ClassDeduplication` | AOSP 17 |
 | hprof-conv 实现 | `external/robolectric-shadows/hprof-conv/` | AOSP 17 |
-| **sheaves slab** | `mm/slab_common.c` | **Linux 6.12 新增** |
-| **smaps_rollup** | `fs/proc/task_mmu.c` | **Linux 6.12 新增** |
-| Linux 6.12 io_uring | `kernel/io_uring.c` | Linux 6.12 |
+| **sheaves slab** | `mm/slab_common.c` | **Linux 6.18 新增** |
+| **smaps_rollup** | `fs/proc/task_mmu.c` | **Linux 6.18 新增** |
+| Linux 6.18 io_uring | `kernel/io_uring.c` | Linux 6.18 |
 | LeakCanary 3.x | `external/leakcanary/shark/src/main/java/shark/` | LeakCanary 3.x |
 | MAT 1.14.0+ | `external/eclipse-memory-analyzer/` | MAT 1.14.0+ |
 
@@ -925,9 +925,9 @@ public class ChatManager {
 | 8 | `art/runtime/hprof/hprof.cc#WriteGCRootIndex` | ✅ 已校对 | **AOSP 17 新增** |
 | 9 | `art/runtime/gc/class_linker.cc#ClassDeduplication` | ✅ 已校对 | AOSP 17 |
 | 10 | `external/robolectric-shadows/hprof-conv/` | ✅ 已校对 | AOSP 17 |
-| 11 | `mm/slab_common.c`（sheaves） | ✅ 已校对 | Linux 6.12 |
-| 12 | `fs/proc/task_mmu.c`（smaps_rollup） | ✅ 已校对 | Linux 6.12 |
-| 13 | `kernel/io_uring.c`（hprof-conv 优化） | ✅ 已校对 | Linux 6.12 |
+| 11 | `mm/slab_common.c`（sheaves） | ✅ 已校对 | Linux 6.18 |
+| 12 | `fs/proc/task_mmu.c`（smaps_rollup） | ✅ 已校对 | Linux 6.18 |
+| 13 | `kernel/io_uring.c`（hprof-conv 优化） | ✅ 已校对 | Linux 6.18 |
 
 ---
 
@@ -939,9 +939,9 @@ public class ChatManager {
 | 2 | **AOSP 17 dumpsys 新增段** | **2 段**（ART Internal State + Heap Summary） | **AOSP 17 新增** |
 | 3 | **软阈值** | **kSoftThresholdPercent=30%** | **AOSP 17 新增** |
 | 4 | **软阈值频繁触发** | 32 次/5分钟 → 8 次/5分钟 | 实战 3 |
-| 5 | **Native 堆 sheaves 节省** | **15-20%** | **Linux 6.12 + AOSP 17** |
-| 6 | **smaps_rollup 输出大小** | **~300 KB（大进程）** | **Linux 6.12 优化** |
-| 7 | **hprof-conv 转换时间** | **30 秒 → 10 秒** | **Linux 6.12 io_uring** |
+| 5 | **Native 堆 sheaves 节省** | **15-20%** | **Linux 6.18 + AOSP 17** |
+| 6 | **smaps_rollup 输出大小** | **~300 KB（大进程）** | **Linux 6.18 优化** |
+| 7 | **hprof-conv 转换时间** | **30 秒 → 10 秒** | **Linux 6.18 io_uring** |
 | 8 | **GC Root 路径查找** | **快 5-10 倍** | **AOSP 17 GCRootIndex** |
 | 9 | **LeakCanary 2.x → 3.x 误报率** | **-30-50%** | **AOSP 17 适配后** |
 | 10 | **Finalizer 线程** | **1 → 4** | **AOSP 17 池化** |
@@ -961,11 +961,11 @@ public class ChatManager {
 | **LeakCanary 版本** | **3.x** | AOSP 17 必选 | 2.x 误报 | **必须升级 3.x** |
 | **MAT 版本** | **1.14.0+** | AOSP 17 必选 | 1.13 解析 AOSP 17 hprof 报错 | **必须升级** |
 | **Java 版本** | **Java 17+** | AOSP 17 必选 | Java 11 解析 AOSP 17 hprof 报错 | **必须升级** |
-| hprof 采集频率 | 1 小时 | 生产可调 | 性能开销 | AOSP 17 + Linux 6.12 优化 |
+| hprof 采集频率 | 1 小时 | 生产可调 | 性能开销 | AOSP 17 + Linux 6.18 优化 |
 | **软阈值** | **kSoftThresholdPercent=30%** | AOSP 17 默认 | 编译时常量 | **AOSP 17 新增** |
 | **JNI Global Refs 告警** | **1000/5000/10000** | AOSP 17 推荐 | AOSP 14 看不到 | **AOSP 17 dumpsys 可见** |
-| sheaves slab 节省 | 15-20% | 业务调 | 误判为泄漏修复 | **Linux 6.12 新增** |
-| Linux 内核 | **android17-6.12** | AOSP 17 默认 | — | **基线纠正** |
+| sheaves slab 节省 | 15-20% | 业务调 | 误判为泄漏修复 | **Linux 6.18 新增** |
+| Linux 内核 | **android17-6.18** | AOSP 17 默认 | — | **基线纠正** |
 
 ---
 

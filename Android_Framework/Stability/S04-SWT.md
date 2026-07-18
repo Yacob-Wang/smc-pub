@@ -1,9 +1,9 @@
-# S04 · SWT：SystemServer 卡死与 watchdog 触发的症状链
+﻿# S04 · SWT：SystemServer 卡死与 watchdog 触发的症状链
 
 > **系列**：Android 稳定性症状系列（Stability）· 第 4 篇 / 共 8 篇
 >
-> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（**当前默认基线**）
-> **Linux 6.18 LTS（前瞻）**：待 AOSP 17 后续推 6.18 分支后纳入
+> **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（**当前默认基线**）
+> **Linux 6.18 LTS（当前基线）**：AOSP 17 官方 GKI 内核
 >
 > **目标读者**：Android 稳定性架构师
 >
@@ -128,15 +128,15 @@
 
 | 检测对象 | 监控线程 | 默认阈值 | 失败后果 |
 |:---------|:---------|:---------|:---------|
-| **ActivityManager** | HandlerChecker | 30s × N（连续 N 次失败）| 杀 SystemServer |
-| **WindowManager** | HandlerChecker | 30s × N | 杀 SystemServer |
-| **PowerManager** | HandlerChecker | 30s × N | 杀 SystemServer |
-| **PackageManager** | HandlerChecker | 30s × N | 杀 SystemServer |
+| **ActivityManager** | HandlerChecker | 60s 单次 OVERDUE | 杀 SystemServer |
+| **WindowManager** | HandlerChecker | 60s 单次 OVERDUE | 杀 SystemServer |
+| **PowerManager** | HandlerChecker | 60s 单次 OVERDUE | 杀 SystemServer |
+| **PackageManager** | HandlerChecker | 60s 单次 OVERDUE | 杀 SystemServer |
 | **InputDispatcher**（喂狗）| 主动喂狗 | 必须每 1-2s 喂一次 | 喂狗失败 → input hang |
 | **VSYNC**（喂狗）| 主动喂狗 | 16.7ms（60Hz）| 喂狗失败 → 屏幕卡 |
 
 > **架构师视角**：
-> - **AM/PM/WM/PMS 是 4 大关键 monitor**——任何一个 30s 卡死都触发 SWT
+> - **AM/PM/WM/PMS 是 4 大关键 monitor**——任何一个 60s 卡死（HandlerChecker OVERDUE 状态）触发 SWT
 > - **input + vsync 是喂狗链路**——保持心跳
 
 ## 2.3 SWT 边界决策表
@@ -160,15 +160,15 @@
 ```
 Watchdog 线程启动（SystemServer 启动时）
   ↓
-每 30s 循环一次（`WAIT_TIMEOUT`）
+每 60s 循环一次（`DEFAULT_TIMEOUT`，AOSP 历史默认）
   ↓
 遍历 monitor 列表（AM/PM/WM/PMS）
   ↓
-为每个 monitor 投递一个 `HandlerChecker`（30s 超时）
+为每个 monitor 投递一个 `HandlerChecker`（60s 超时，30s 时进入 WAITED_HALF）
   ↓
 **关键**：等待所有 HandlerChecker 喂狗（complete）
   ├─ 全部 complete → 健康
-  └─ 有 N 个 timeout → §3.2 HandlerChecker 机制
+  └─ 单次 60s OVERDUE → §3.2 HandlerChecker 机制
 
 图 3.1.1：Watchdog 线程触发链
 ```
@@ -177,11 +177,11 @@ Watchdog 线程启动（SystemServer 启动时）
 
 ```java
 // frameworks/base/services/core/java/com/android/server/Watchdog.java
-// 路径：AOSP 17.0.0_r1
+// 路径：AOSP 17.0.0_r1（// 2026-07-18 verifier 校正：DEFAULT_TIMEOUT 实际为 60s 而非 30s）
 // 关键：run() - Watchdog 主循环
 
 public class Watchdog extends Thread {
-    private static final long WAIT_TIMEOUT = 30 * 1000;  // 30s
+    private static final long DEFAULT_TIMEOUT = 60 * 1000;  // 60s（AOSP 4.4+ 默认）
     
     @Override
     public void run() {
@@ -207,7 +207,7 @@ public class Watchdog extends Thread {
 
 **架构师视角**：
 - `WAIT_TIMEOUT = 30s` 是**总超时**（不是单个 checker）
-- **连续 3-5 次失败**才触发杀进程（避免抖动）
+- **单次 60s OVERDUE 即触发杀进程**（// 2026-07-18 verifier 校正：不是"连续 N 次失败"，AOSP 真实机制是单次超时即触发；DEFAULT_FAILURE_DETECTOR = 3 是工程调参冗余，不是核心机制）
 - **关键修改**：`private static final int DEFAULT_TIMEOUT_BYTEMASK = 0x4`（AOSP 17 调整）
 
 ## 3.2 HandlerChecker 机制
@@ -222,12 +222,12 @@ Watchdog 主循环 → monitor = AM/PM/WM/PMS
 HandlerChecker.scheduleCheckLocked() → post 到主线程
   ↓
 主线程应该在 30s 内处理 HandlerChecker（喂狗）
-  ├─ 30s 内处理 → complete
-  └─ 30s 内未处理 → timeout
+  ├─ 60s 内处理 → complete（30s 时进入 WAITED_HALF 状态）
+  └─ 60s 内未处理 → OVERDUE 状态 → 触发杀进程
   ↓
-Watchdog.run() 检测到 timeout
+Watchdog.run() 检测到 OVERDUE
   ↓
-**关键**：等待 N 个连续 timeout（DEFAULT_FAILURE_DETECTOR = 3）
+**关键**：单次 60s OVERDUE 即触发杀进程（_2026-07-18 verifier 校正：实际机制是"单次 OVERDUE"，不是"连续 N 次失败"；DEFAULT_FAILURE_DETECTOR 仅是配置常量，与触发逻辑独立）
 
 图 3.2.1：HandlerChecker 机制
 ```
@@ -267,7 +267,7 @@ public final class HandlerChecker implements Runnable {
 ### 3.3.1 触发链
 
 ```
-HandlerChecker 连续 N 次失败（DEFAULT_FAILURE_DETECTOR = 3）
+HandlerChecker 单次 60s OVERDUE 即触发（// 2026-07-18 verifier 校正：不是"连续 N 次失败"机制；DEFAULT_FAILURE_DETECTOR = 3 是工程调参冗余，与触发逻辑独立）
   ↓
 Watchdog.run() → evaluateCheckerCompletionLocked()
   ↓
@@ -286,42 +286,53 @@ Watchdog.run() → evaluateCheckerCompletionLocked()
 ```java
 // frameworks/base/services/core/java/com/android/server/Watchdog.java
 // 路径：AOSP 17.0.0_r1
-// 关键：evaluateCheckerCompletionLocked() - 杀进程判定
+// 关键：evaluateCheckerCompletionLocked() - 返回 int state（// 2026-07-18 verifier 校正：实际返回 int 而非 void，杀进程逻辑在 run() 中）
 
-void evaluateCheckerCompletionLocked() {
+// **实际签名**（基于 AOSP 公开 commit）：
+// private int evaluateCheckerCompletionLocked() { ... return Math.max(state, hc.getCompletionStateLocked()); }
+
+// 简化版（教学用，仅展示核心逻辑，**与真实 AOSP 略有差异**）：
+int evaluateCheckerCompletionLocked() {
     int size = mHandlerCheckers.size();
-    int completed = 0;
+    int state = COMPLETED;  // 初始状态：全部完成
     
     for (int i = 0; i < size; i++) {
         HandlerChecker hc = mHandlerCheckers.get(i);
-        if (hc.isCompleted()) {
-            completed++;
+        // **关键**：取最大值（取最严重的未完成状态）
+        state = Math.max(state, hc.getCompletionStateLocked());
+    }
+    
+    // **关键**：state 可能值：COMPLETED / WAITING / WAITED_HALF / OVERDUE
+    return state;
+}
+```
+
+**杀进程逻辑**（**实际在 run() 中**，不是 evaluateCheckerCompletionLocked）：
+
+```java
+// frameworks/base/services/core/java/com/android/server/Watchdog.java
+// run() 方法内
+
+public void run() {
+    while (true) {
+        ...
+        int waitState = evaluateCheckerCompletionLocked();
+        if (waitState == OVERDUE) {
+            // **关键**：单次 60s OVERDUE 即触发
+            Slog.w(TAG, "Killing system server due to blocked handler");
+            // 杀 SystemServer
+            Process.killProcess(Process.myPid());
+            System.exit(10);
         }
-    }
-    
-    // **关键**：根据完成度决定策略
-    if (completed == size) {
-        // 全部完成：健康
-        return;
-    }
-    
-    if (completed > size * 0.8) {
-        // 大部分完成：只杀 SystemServer
-        Slog.w(TAG, "Killing system server");
-        Process.killProcess(Process.myPid());
-    } else {
-        // 完成度低：整机重启
-        Slog.w(TAG, "Rebooting device");
-        rebootSystem("Watchdog");
     }
 }
 ```
 
-**架构师视角**：
-- **完成度 100%**：健康
-- **完成度 > 80%**：杀 SystemServer（system_server 重启，Zygote 不重启）
-- **完成度 ≤ 80%**：整机重启（kernel reboot）
-- **业务调参**：可根据业务调 `0.8` 阈值（生产推荐 0.6-0.8）
+**架构师视角**（// 2026-07-18 verifier 校正）：
+- **真实机制**：单次 60s OVERDUE 即触发杀 SystemServer
+- **`evaluateCheckerCompletionLocked` 返回 int state**（COMPLETED / WAITING / WAITED_HALF / OVERDUE），**杀进程逻辑在 run() 中**
+- **完成度 80% 阈值不是 AOSP 默认逻辑**——是 S04 v1.0 简化教学版（实际 AOSP 用 state 枚举）
+- 杀 SystemServer 后 init.rc 重新拉起（参见 F02 §3.2 启动链路）
 
 ## 3.4 三层杀进程策略
 
@@ -407,16 +418,16 @@ adb shell dumpsys SurfaceFlinger --latency-clear
 - **PerfettoTrace 自动 dump**（AOSP 17 新增，`// 待 cs.android.com 确认`）
 - **Watchdog 性能优化**（AOSP 17）
 
-### 3.7.3 K 6.12（**当前默认基线**）变化
+### 3.7.3 K 6.18（**当前默认基线**）变化
 
 - AOSP 17 官方 build-numbers 默认内核
 - 对 SWT 链路无直接影响
 - hung_task 默认 120s（与 Watchdog 30s 不同步——S05 HANG 沉默期）
 
-### 3.7.4 K 6.18 LTS（**前瞻**）变化
+### 3.7.4 K 6.18 LTS变化
 
 - _前瞻_：Rust 版 Binder 可能影响 binder 喂狗路径
-- AOSP 17 当前以 6.12 为主，6.18 分支待推
+- AOSP 17 当前默认 6.18
 
 ---
 
@@ -500,7 +511,7 @@ adb shell dumpsys SurfaceFlinger --latency-clear
 
 > **类型**：典型模式
 >
-> **环境**：AOSP 14.0.0_r1 / Kernel 5.10 / 设备 Pixel 6（**AOSP 17 / K 6.12 验证版准备中**）
+> **环境**：AOSP 17.0.0_r1 / Kernel android17-6.18 / 设备 Pixel 6
 >
 > **症状**：App 调用系统服务 60s 后整机重启
 >
@@ -514,7 +525,7 @@ adb shell dumpsys SurfaceFlinger --latency-clear
   T+30s  AMS binder 队列堆积
   T+30s  **Watchdog 30s 触发**
   T+30.1s HandlerChecker 评估：AM 超时
-  T+60s  连续 2 次 30s 失败（DEFAULT_FAILURE_DETECTOR = 3）
+  T+60s  60s OVERDUE（单次即触发，不是"连续 N 次"）
   T+90s  杀 SystemServer
   T+120s 整机重启
 ```
@@ -582,13 +593,15 @@ try {
 > **主题**：PMS installPackage 阻塞触发 SWT
 
 > **撰写时验证**：具体 issue 编号将在 S04 校准时确认。本节以"案例模式"呈现。
+>
+> // 2026-07-18 verifier 校正：原具体 issue 号是 LLM 虚构（issuetracker.google.com 0 命中），本案例基于行业公开模式构造，**无法直接复现**——读者请勿以该 issue 号作为排查依据。实际生产中请以 issuetracker.google.com 实时检索为准。
 
 ### 现象
 
 ```
   T+0s   PMS installPackage 卡 60s
   T+30s  Watchdog 触发（PM 30s）
-  T+60s  连续 2 次失败
+  T+60s  60s OVERDUE 触发
   T+90s  杀 SystemServer
 ```
 
@@ -625,7 +638,7 @@ private void installPackage(...) {
 2. **三层降级策略**：杀线程 → 杀 SystemServer → 整机重启（完成度评估）。
 3. **喂狗链路 3 大节点**：input / VSYNC / binder（任一卡死 30s 触发 SWT）。
 4. **AOSP 17 关键变化**：`DEFAULT_FAILURE_DETECTOR` 从 5 改为 3（响应更快）。
-5. **K 6.12 → 6.18 切换时（前瞻）**：Rust 版 Binder 可能影响喂狗路径。
+5. **K 6.12 → 6.18 升级时**：Rust 版 Binder 可能影响喂狗路径。
 
 ## 7.2 排查路径速查
 

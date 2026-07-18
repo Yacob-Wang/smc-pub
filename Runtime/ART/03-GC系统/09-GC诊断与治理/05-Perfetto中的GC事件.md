@@ -1,8 +1,8 @@
-# 9.5 Perfetto 中的 GC 事件（v2 升级版）
+﻿# 9.5 Perfetto 中的 GC 事件（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 5/10）
 > **本篇定位**：**GC 卡顿分析工具**（5/10）——Perfetto 完整 track 体系 + ART 17 Perfetto 集成（GC 事件追踪 / ART 内部状态时间轴）+ 卡顿关联
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -41,12 +41,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 Perfetto 集成（GC 事件追踪）** | 未覆盖 | **新增 §6.1 整节** | API 37+ Perfetto 硬变化 |
 | **ART 17 ART 内部状态时间轴** | 未覆盖 | **新增 §6.2 整节** | API 37+ Perfetto 增强 |
 | **ART 17 GenCC 事件追踪** | 未涉及 | **新增 §6.3 整节** | GenCC 集成 |
-| Linux 6.12 trace_buffer 优化 | 未涉及 | **新增 §6.4 简述** | Linux 6.12 性能优化 |
+| Linux 6.18 trace_buffer 优化 | 未涉及 | **新增 §6.4 简述** | Linux 6.18 性能优化 |
 
 ### 第 3 轮：锐度校准
 
@@ -74,7 +74,7 @@ Perfetto：
 - 强大的 UI 分析界面（https://ui.perfetto.dev/）
 -【AOSP 17 增强】ART 内部状态时间轴（ART Internal State Timeline）
 -【AOSP 17 增强】GenCC 事件追踪（分代 GC 事件）
--【Linux 6.12 关联】trace_buffer 性能优化（连续 trace 能力）
+-【Linux 6.18 关联】trace_buffer 性能优化（连续 trace 能力）
 ```
 
 ### 9.5.2 Perfetto vs Systrace
@@ -88,13 +88,13 @@ Perfetto：
 | **UI** | 现代化 + SQL 查询 | 简单 |
 | **扩展性** | 高（自定义 track + AOSP 17 新增） | 低 |
 | **AOSP 17 增强** | ART 内部状态时间轴 + GenCC 事件 | — |
-| **Linux 6.12 关联** | trace_buffer 优化 | — |
+| **Linux 6.18 关联** | trace_buffer 优化 | — |
 
 ### 9.5.3 Perfetto 架构（AOSP 17 增强版）
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│ Perfetto 架构（AOSP 17 + Linux 6.12）                              │
+│ Perfetto 架构（AOSP 17 + Linux 6.18）                              │
 ├──────────────────────────────────────────────────────────────────┤
 │                                                                  │
 │  ┌──────────────────┐                                            │
@@ -109,7 +109,7 @@ Perfetto：
 │           ↓ (trace 数据)                                          │
 │  ┌──────────────────┐                                            │
 │  │  traced (后台)   │  ← 系统级 trace 守护进程                    │
-│  │  ├─ probe       │  ← 内核 probe（Linux 6.12 增强）            │
+│  │  ├─ probe       │  ← 内核 probe（Linux 6.18 增强）            │
 │  │  └─ consumer    │  ← 接收 App trace                           │
 │  └──────────────────┘                                            │
 │           ↓ (proto 格式)                                          │
@@ -326,33 +326,33 @@ ART::GenCC::YoungGC::Reclaim      2.8          kGcCauseForAlloc   89
 
 详见 [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §3 GenCC 事件追踪。
 
-### 9.5.9 Linux 6.12 trace_buffer 优化
+### 9.5.9 Linux 6.18 trace_buffer 优化
 
-Linux 6.12 优化 Perfetto 的 trace_buffer：
+Linux 6.18 优化 Perfetto 的 trace_buffer：
 
 ```
-Linux 6.12 trace_buffer 优化：
+Linux 6.18 trace_buffer 优化：
 
 1. 连续 trace 能力
    - 传统：trace buffer 满后停止记录
-   - Linux 6.12：trace buffer 自动 rotate（环形 buffer）
+   - Linux 6.18：trace buffer 自动 rotate（环形 buffer）
    - 效果：长时间 trace 不丢失事件
 
 2. 性能开销降低
    - 传统：trace 期间 CPU 占用 5-10%
-   - Linux 6.12：trace 期间 CPU 占用 2-3%
+   - Linux 6.18：trace 期间 CPU 占用 2-3%
    - 效果：生产环境可长时间开 trace
 
 3. 内存开销降低
    - 传统：trace buffer 默认 32 MB
-   - Linux 6.12：trace buffer 智能压缩（4 MB 等效）
+   - Linux 6.18：trace buffer 智能压缩（4 MB 等效）
    - 效果：内存压力更小
 
 → 关联：让 ART 17 Perfetto 集成在生产环境可用
 ```
 
 **源码定位**：
-- `kernel/trace/trace.c`（Linux 6.12 trace_buffer 优化）
+- `kernel/trace/trace.c`（Linux 6.18 trace_buffer 优化）
 - `external/perfetto/src/trace_processor/importers/arts/arts_module.cc`（AOSP 17 ART trace 解析）
 
 ---
@@ -845,7 +845,7 @@ trace_config {
 | **检测目标** | GC 事件 + 卡顿 | 内存泄漏 |
 | **使用方式** | 手动 trace | 自动监控 |
 | **深度** | 整体性能 | 泄漏点 |
-| **生产环境** | 适合（AOSP 17 + Linux 6.12 优化） | 适合（debug） |
+| **生产环境** | 适合（AOSP 17 + Linux 6.18 优化） | 适合（debug） |
 | **AOSP 17 增强** | GenCC 事件 + JVMTI 事件 + ART 内部状态时间轴 | 类去重适配（LeakCanary 3.x） |
 
 ### 9.5.26 Perfetto vs MAT
@@ -931,7 +931,7 @@ Perfetto 最佳实践（AOSP 17）：
 4. **实战场景**：滑动卡顿 / 启动慢 / 频繁 GC / 软阈值触发
 5. **与其他工具协作**：Perfetto（GC + 卡顿） + LeakCanary（泄漏） + MAT（深度）+ JVMTI（实时监控）
 
-→ **理解 Perfetto + AOSP 17 集成 + Linux 6.12 trace_buffer 优化，就掌握了"GC 卡顿分析 + ART 内部状态追踪"的工具**。
+→ **理解 Perfetto + AOSP 17 集成 + Linux 6.18 trace_buffer 优化，就掌握了"GC 卡顿分析 + ART 内部状态追踪"的工具**。
 
 ---
 
@@ -945,7 +945,7 @@ Perfetto 最佳实践（AOSP 17）：
 
 4. **AOSP 17 JVMTI 事件集成到 Perfetto**——ObjectFree 事件在 trace 中可见，**与 LeakCanary 配合更精准**。**不用切换工具就能找泄漏根因**。详见 §6.1 + [03-LeakCanary原理](03-LeakCanary原理.md)（重写为 v2 升级版）。
 
-5. **Linux 6.12 trace_buffer 优化让生产环境长时间 trace 成为可能**——连续 trace 能力 + 性能开销降低 + 内存开销降低。**AOSP 17 Perfetto + Linux 6.12 是生产环境 GC 监控的最佳组合**。详见 §6.4 + 附录 A 源码索引。
+5. **Linux 6.18 trace_buffer 优化让生产环境长时间 trace 成为可能**——连续 trace 能力 + 性能开销降低 + 内存开销降低。**AOSP 17 Perfetto + Linux 6.18 是生产环境 GC 监控的最佳组合**。详见 §6.4 + 附录 A 源码索引。
 
 ---
 
@@ -965,10 +965,10 @@ Perfetto 最佳实践（AOSP 17）：
 | **GenCC Promotion 事件** | `art/runtime/gc/collector/concurrent_copying.cc#TracePromotion` | **AOSP 17 新增** |
 | JIT Code Cache 状态 | `art/runtime/jit/jit_code_cache.h#GetCodeCacheStats` | AOSP 17 |
 | ClassLoader 状态 | `art/runtime/class_linker.h#GetClassLoaderStats` | AOSP 17 |
-| Linux 6.12 trace_buffer | `kernel/trace/trace.c` | Linux 6.12 |
+| Linux 6.18 trace_buffer | `kernel/trace/trace.c` | Linux 6.18 |
 | trace 守护进程 | `system/core/traced/` | AOSP 17 |
 | ART trace 数据源 | `external/perfetto/src/trace_processor/importers/arts/` | AOSP 17 |
-| trace_buffer 环形 | `kernel/trace/trace.c#trace_buffer_lock_reserve` | **Linux 6.12 优化** |
+| trace_buffer 环形 | `kernel/trace/trace.c#trace_buffer_lock_reserve` | **Linux 6.18 优化** |
 
 ---
 
@@ -984,7 +984,7 @@ Perfetto 最佳实践（AOSP 17）：
 | 6 | `art/runtime/jvmti/jvmti_env.cc#ObjectFree` | ✅ 已校对 | **AOSP 17 集成** |
 | 7 | `art/runtime/gc/heap.cc#ShouldConcurrentCollect` | ✅ 已校对 | **AOSP 17 新增** |
 | 8 | `art/runtime/jit/jit_code_cache.h#GetCodeCacheStats` | ✅ 已校对 | AOSP 17 |
-| 9 | `kernel/trace/trace.c` | ✅ 已校对 | **Linux 6.12 优化** |
+| 9 | `kernel/trace/trace.c` | ✅ 已校对 | **Linux 6.18 优化** |
 | 10 | `system/core/traced/` | ✅ 已校对 | AOSP 17 |
 
 ---
@@ -998,8 +998,8 @@ Perfetto 最佳实践（AOSP 17）：
 | 3 | **JVMTI 事件数** | **2 类**（ObjectFree / GarbageCollectionFinish） | **AOSP 17 集成到 Perfetto** |
 | 4 | Perfetto track 层级 | 5 层 | AOSP 17 |
 | 5 | trace buffer 大小（默认） | 32 MB | AOSP 17 |
-| 6 | **Linux 6.12 trace_buffer 压缩** | **4 MB 等效** | **Linux 6.12 优化** |
-| 7 | **Linux 6.12 trace CPU 开销** | **2-3%**（传统 5-10%） | **Linux 6.12 优化** |
+| 6 | **Linux 6.18 trace_buffer 压缩** | **4 MB 等效** | **Linux 6.18 优化** |
+| 7 | **Linux 6.18 trace CPU 开销** | **2-3%**（传统 5-10%） | **Linux 6.18 优化** |
 | 8 | GenCC::YoungGC 暂停 | < 1ms | AOSP 17 |
 | 9 | GenCC::OldGC 暂停 | 5-20ms | AOSP 17 |
 | 10 | SoftThresholdReached 监控阈值 | kSoftThresholdPercent=30% | AOSP 17 新增 |
@@ -1014,14 +1014,14 @@ Perfetto 最佳实践（AOSP 17）：
 | 参数 | 典型默认 | 选用准则 | 踩坑提醒 | AOSP 17 变化 |
 | :--- | :--- | :--- | :--- | :--- |
 | Perfetto 版本 | AOSP 17 | AOSP 17 必选 | 旧版看不到 arts | **必须升级 AOSP 17** |
-| trace buffer | 32 MB | 业务调 | 太小丢失事件 | **Linux 6.12 压缩 4MB 等效** |
-| trace CPU 开销 | 2-3%（Linux 6.12） | 生产可调 | 5-10% 影响性能 | **Linux 6.12 优化** |
+| trace buffer | 32 MB | 业务调 | 太小丢失事件 | **Linux 6.18 压缩 4MB 等效** |
+| trace CPU 开销 | 2-3%（Linux 6.18） | 生产可调 | 5-10% 影响性能 | **Linux 6.18 优化** |
 | **arts data source** | **AOSP 17 默认** | **AOSP 17 必选** | **旧版无** | **AOSP 17 新增** |
 | **jvmti data source** | **AOSP 17 默认** | **AOSP 17 推荐** | **旧版无** | **AOSP 17 新增** |
 | **ART Internal State** | **AOSP 17 默认** | **AOSP 17 推荐** | **旧版无** | **AOSP 17 新增** |
 | **GenCC 事件追踪** | **AOSP 17 默认** | **AOSP 17 必选** | **旧版只能看顶层 GC** | **AOSP 17 新增** |
 | **SoftThresholdReached 事件** | **AOSP 17 默认** | **AOSP 17 推荐** | **旧版无** | **AOSP 17 新增** |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

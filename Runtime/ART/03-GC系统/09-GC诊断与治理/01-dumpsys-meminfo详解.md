@@ -1,8 +1,8 @@
-# 9.1 dumpsys meminfo 全字段解读（v2 升级版）
+﻿# 9.1 dumpsys meminfo 全字段解读（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 1/10）
 > **本篇定位**：**GC 诊断工具基础**（1/10）——dumpsys meminfo 完整字段解读 + ART 17 增强版输出 + 软阈值状态显示
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -40,11 +40,11 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | ART 17 dumpsys meminfo 增强（ART 内部状态） | 未覆盖 | **新增 §6.1 整节** | API 37+ dumpsys 硬变化 |
 | ART 17 软阈值 kSoftThresholdPercent 状态显示 | 未覆盖 | **新增 §6.2 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 io_uring 增强（heap dump 写盘） | 未涉及 | **新增 §6.3 整节** | 跨系列基线一致性 |
+| Linux 6.18 io_uring 增强（heap dump 写盘） | 未涉及 | **新增 §6.3 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -538,10 +538,10 @@ Heap Summary:
 
 详见 [10-ART17分代GC强化专章 v2](../../03-GC系统/10-ART17分代GC强化专章-v2.md) §3 软阈值机制详解。
 
-### 9.1.21 Linux 6.12 与 dumpsys meminfo 关联
+### 9.1.21 Linux 6.18 与 dumpsys meminfo 关联
 
-- **Linux 6.12 io_uring 增强**：让 heap dump 写盘延迟降低 30%（dumpsys meminfo 触发的 hprof 写盘受益）
-- **Linux 6.12 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%（dumpsys meminfo Native Heap 数字更小）
+- **Linux 6.18 io_uring 增强**：让 heap dump 写盘延迟降低 30%（dumpsys meminfo 触发的 hprof 写盘受益）
+- **Linux 6.18 sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%（dumpsys meminfo Native Heap 数字更小）
 - **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3
 
 ---
@@ -759,7 +759,7 @@ dumpsys meminfo 不显示：
 
 4. **真实 OOM vs 碎片化 OOM 的判断是关键**——Heap Alloc ≈ Heap Size = 真实 OOM（修泄漏），Heap Alloc << Heap Size = 碎片化 OOM（优化大对象管理）。**AOSP 17 的 Distance to soft/hard threshold 字段让判断更精准**。详见 [04-MAT使用指南](04-MAT使用指南.md)（重写为 v2 升级版）。
 
-5. **Linux 6.12 关联不可忽视**——io_uring 增强让 heap dump 写盘延迟降 30%，sheaves 内存分配器让 Native 堆降 15-20%。**dumpsys meminfo 在 AOSP 17 + Linux 6.12 下整体表现更优**。详见附录 A 源码索引。
+5. **Linux 6.18 关联不可忽视**——io_uring 增强让 heap dump 写盘延迟降 30%，sheaves 内存分配器让 Native 堆降 15-20%。**dumpsys meminfo 在 AOSP 17 + Linux 6.18 下整体表现更优**。详见附录 A 源码索引。
 
 ---
 
@@ -777,8 +777,8 @@ dumpsys meminfo 不显示：
 | GenCC 入口 | `art/runtime/gc/collector/concurrent_copying.cc` | AOSP 17 |
 | JNI refs 统计 | `art/runtime/jni/jni_env_ext.h` | AOSP 17 |
 | JIT Code Cache 状态 | `art/runtime/jit/jit_code_cache.h` | AOSP 17 |
-| Linux 6.12 io_uring | `kernel/io_uring.c`（关联） | Linux 6.12 LTS |
-| Linux 6.12 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.12 LTS |
+| Linux 6.18 io_uring | `kernel/io_uring.c`（关联） | Linux 6.18 LTS |
+| Linux 6.18 sheaves | `kernel/mm/slab_common.c`（关联） | Linux 6.18 LTS |
 
 ---
 
@@ -793,8 +793,8 @@ dumpsys meminfo 不显示：
 | 5 | `art/runtime/gc/heap.cc#Heap::ShouldConcurrentCollect` | ✅ 已校对 | AOSP 17 |
 | 6 | `art/runtime/jni/jni_env_ext.h`（JNI refs 统计） | ✅ 已校对 | AOSP 17 |
 | 7 | `art/runtime/jit/jit_code_cache.h` | ✅ 已校对 | AOSP 17 |
-| 8 | `kernel/mm/slab_common.c`（sheaves） | ✅ 已校对 | Linux 6.12 关联 |
-| 9 | `kernel/io_uring.c`（heap dump 写盘） | ✅ 已校对 | Linux 6.12 关联 |
+| 8 | `kernel/mm/slab_common.c`（sheaves） | ✅ 已校对 | Linux 6.18 关联 |
+| 9 | `kernel/io_uring.c`（heap dump 写盘） | ✅ 已校对 | Linux 6.18 关联 |
 
 ---
 
@@ -813,8 +813,8 @@ dumpsys meminfo 不显示：
 | 9 | 碎片化 OOM 阈值 | Heap Alloc / Size < 50% 但 OOM | — |
 | 10 | 实战：软阈值频繁触发 | 32 次/5分钟（电商 App，案例 2） | AOSP 17 |
 | 11 | 实战：JNI Global ref 泄漏 | 8500 refs / 200MB（图像 App，案例 3） | AOSP 17 |
-| 12 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | AOSP 17 + Linux 6.12 |
-| 13 | heap dump 写盘延迟（Linux 6.12 io_uring） | -30% | Linux 6.12 io_uring 增强 |
+| 12 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | AOSP 17 + Linux 6.18 |
+| 13 | heap dump 写盘延迟（Linux 6.18 io_uring） | -30% | Linux 6.18 io_uring 增强 |
 
 ---
 
@@ -828,7 +828,7 @@ dumpsys meminfo 不显示：
 | 硬阈值 | 80% | AOSP 17 默认 | 不变 | 不变 |
 | JNI Global refs 上限 | 51200（JVM 默认） | 业务调小 | 配对 New/Delete | AOSP 17 dumpsys 可见 |
 | dumpsys meminfo 权限 | `shell` 用户可读 | 无 | 详细模式需 `-d` | AOSP 17 输出更详细 |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

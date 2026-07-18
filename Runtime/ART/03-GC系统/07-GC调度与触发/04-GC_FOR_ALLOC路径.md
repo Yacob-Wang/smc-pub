@@ -1,8 +1,8 @@
-# v2 升级版
+﻿# v2 升级版
 
 > **本子模块**：03-GC 系统 / 07-GC 调度与触发（GC 调度与触发 · 4/8）
 > **本篇定位**：**kGcCauseForAlloc 同步 GC 路径**（4/8）——TLAB 失败 → 全局分配失败 → 同步 GC → 重试分配 → OOM 完整流程 + ART 17 Young GC 优先 / Full GC 罕见 / GenCC 配合
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -39,12 +39,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 Young GC 优先** | 未覆盖 | **新增 §6.1 整节** | API 37+ GC 硬变化（关键） |
 | **ART 17 Full GC 罕见化** | 未覆盖 | **新增 §6.2 整节** | API 37+ GC 硬变化（关键） |
 | **ART 17 GenCC 配合** | 未覆盖 | **新增 §6.3 整节** | API 37+ GC 硬变化 |
-| Linux 6.12 sheaves 关联 | 未涉及 | **新增 §6.4** | 跨系列基线一致性 |
+| Linux 6.18 sheaves 关联 | 未涉及 | **新增 §6.4** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -635,18 +635,18 @@ Major GC 罕见（频率降低 70%+）
 
 **GenCC 详解**：详见 [05-Generational-CC](../05-Generational-CC/) 完整算法。
 
-### 6.4 Linux 6.12 sheaves 关联
+### 6.4 Linux 6.18 sheaves 关联
 
-**ART 17 的 GC_FOR_ALLOC 路径与 Linux 6.12 内核深度联动**：
+**ART 17 的 GC_FOR_ALLOC 路径与 Linux 6.18 内核深度联动**：
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│ GC_FOR_ALLOC + Linux 6.12 关联                                     │
+│ GC_FOR_ALLOC + Linux 6.18 关联                                     │
 ├────────────────────────────────────────────────────────────────┤
 │                                                                │
 │  1. Native 内存压力                                               │
 │     └─ Bitmap / NIO / JNI 分配                                    │
-│     └─ Linux 6.12 sheaves 内存分配器                               │
+│     └─ Linux 6.18 sheaves 内存分配器                               │
 │     └─ Native 堆内存占用降低 15-20%                                │
 │                                                                │
 │  2. sheaves 对 GC_FOR_ALLOC 的影响                                 │
@@ -655,13 +655,13 @@ Major GC 罕见（频率降低 70%+）
 │     └─ 与 ART 17 软阈值形成"双重缓冲"                              │
 │                                                                │
 │  3. 跨系列基线一致性                                               │
-│     └─ Linux 6.12 LTS 2024-11-17 发布，EOL 2026-12                  │
+│     └─ Linux 6.18 LTS 2024-11-17 发布，EOL 2026-12                  │
 │     └─ 与 ART 17 同步演进                                          │
 │                                                                │
 └────────────────────────────────────────────────────────────────┘
 ```
 
-**Linux 6.12 关联详见**：[Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
+**Linux 6.18 关联详见**：[Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
 
 ---
 
@@ -816,7 +816,7 @@ adb logcat -d -s "art" | grep "kGcCauseForAlloc" -A 5
 | 7 | `art/runtime/gc/collector/generational_cc.h` `kSoftThresholdPercent` | ✅ 已校对 | **AOSP 17 新增** |
 | 8 | `art/runtime/gc/space/gen_space.cc`（Remembered Set） | ✅ 已校对 | AOSP 17 |
 | 9 | `art/runtime/gc/space/gen_space.cc`（Card Table） | ✅ 已校对 | AOSP 17 |
-| 10 | Linux 6.12 `kernel/mm/slab_common.c`（sheaves 关联） | ✅ 已校对 | 跨系列基线 |
+| 10 | Linux 6.18 `kernel/mm/slab_common.c`（sheaves 关联） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -835,7 +835,7 @@ adb logcat -d -s "art" | grep "kGcCauseForAlloc" -A 5
 | 9 | AOSP 14 Major GC 频率 | 100% kGcCauseForAlloc 触发 | 旧版 |
 | 10 | **AOSP 17 Major GC 频率** | **< 10%**（Minor 失败升级） | **罕见化** |
 | 11 | 软阈值提前处理 kGcCauseForAlloc 比例 | ~50-60% | AOSP 17 |
-| 12 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | 跨系列基线 |
+| 12 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | 跨系列基线 |
 
 ---
 
@@ -853,7 +853,7 @@ adb logcat -d -s "art" | grep "kGcCauseForAlloc" -A 5
 | **Minor 失败升级 Major** | 不存在 | **★ 新增** | AOSP 17 默认 | 罕见路径 |
 | **STW 时间（GC_FOR_ALLOC）** | 5-50ms | **< 1ms（大多数）** | AOSP 17 默认 | **卡顿减少 20-30%** |
 | **young 区大小** | 4-8MB | **4-16MB（更大）** | AOSP 17 默认 | 太小→频繁 GC |
-| Linux 内核 | android14-5.10/5.15 | **android17-6.12** | AOSP 17 默认 | **基线纠正** |
+| Linux 内核 | android14-5.10/5.15 | **android17-6.18** | AOSP 17 默认 | **基线纠正** |
 
 ---
 
