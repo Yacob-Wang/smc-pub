@@ -46,3 +46,6 @@ dist/
 scripts/__pycache__/
 **/__pycache__/
 *.py[cod]
+# 本次 commit 批处理临时脚本（已废弃）
+/_commit_*.ps1
+/_commit_*.py
