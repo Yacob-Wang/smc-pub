@@ -463,6 +463,8 @@ public List<ResolveInfo> queryActivities(Intent intent, String resolvedType,
 
 ## 五、实战案例
 
+**【CASE-ACT-07】**
+
 ### 案例 1：Android 11+ 隐式启动失败（包可见性未声明）
 
 **现象**：
@@ -566,6 +568,8 @@ public void openBrowser(String url) {
 - 修复后 Android 11+ 设备上能正常启动浏览器
 - 关键监控：`ActivityNotFoundException` 次数从 100% 降到 0
 - 关键监控：跨 App 启动成功率 100%
+
+**【CASE-ACT-08】**
 
 ### 案例 2：IntentFilter 配错导致匹配不到
 

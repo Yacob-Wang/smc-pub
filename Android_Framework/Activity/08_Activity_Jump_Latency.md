@@ -392,6 +392,8 @@ if (mWindowMode == WindowMode.SPLASH_SCREEN) {
 
 ## 五、实战案例
 
+**【CASE-ACT-11】**
+
 ### 案例 1：SplashScreen + windowBackground 闪烁
 
 **现象**：

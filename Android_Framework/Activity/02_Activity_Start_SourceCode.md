@@ -676,6 +676,8 @@ final void appNotResponding(ProcessRecord app, ActivityRecord activity,
 
 ## 五、实战案例
 
+**【CASE-ACT-01】**
+
 ### 案例 1：主线程 Looper 阻塞导致启动 ANR
 
 **现象**：
@@ -781,6 +783,8 @@ protected void onCreate(Bundle savedInstanceState) {
 - 修复后 24 小时线上 ANR 归零
 - 关键监控：`MainActivity.onCreate` 平均耗时从 850ms 降到 45ms
 - 关键监控：冷启动时间从 1200ms 降到 850ms
+
+**【CASE-ACT-02】**
 
 ### 案例 2：冷启动白屏（首帧慢）
 

@@ -540,6 +540,8 @@ void unscheduleTraversals() {
 
 ## 第四部分：实战案例
 
+**【CASE-ACT-12】**
+
 ### 案例 1：单例持有 Activity 引用导致内存泄漏
 
 **现象**：
@@ -659,6 +661,8 @@ public class MainActivity extends AppCompatActivity {
 - 修复后 LeakCanary 报告 0 泄漏
 - 关键监控：`Activities: 1`（正常）
 - 关键监控：用户反复进出 100 次后，Native 堆稳定
+
+**【CASE-ACT-13】**
 
 ### 案例 2：Handler 内部类持有 Activity 引用
 

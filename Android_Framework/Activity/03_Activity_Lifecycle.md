@@ -604,6 +604,8 @@ public void execute(ClientTransactionHandler client, ActivityClientRecord r,
 
 ## 六、实战案例
 
+**【CASE-ACT-03】**
+
 ### 案例 1：横竖屏切换状态丢失（onSaveInstanceState 没正确实现）
 
 **现象**：
@@ -740,6 +742,8 @@ public class EditActivity extends AppCompatActivity {
 - 修复后横竖屏切换不再丢内容
 - 关键监控：`onSaveInstanceState` 平均耗时 5-15ms（可接受）
 - 关键监控：横竖屏切换后内容恢复率 100%
+
+**【CASE-ACT-04】**
 
 ### 案例 2：onPause 慢导致跳转卡顿
 

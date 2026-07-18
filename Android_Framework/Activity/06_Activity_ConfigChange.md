@@ -349,6 +349,8 @@ public class WindowProcessController {
 
 ## 五、实战案例
 
+**【CASE-ACT-09】**
+
 ### 案例 1：横竖屏切换资源未重新加载
 
 **现象**：
@@ -421,6 +423,8 @@ public void onConfigurationChanged(Configuration newConfig) {
 - 修复后横竖屏切换 UI 正常
 - 关键监控：`onConfigurationChanged` 耗时 5-20ms
 - 关键监控：用户感知"横竖屏切换流畅"反馈提升
+
+**【CASE-ACT-10】**
 
 ### 案例 2：configChanges 配错导致 Activity 重建
 

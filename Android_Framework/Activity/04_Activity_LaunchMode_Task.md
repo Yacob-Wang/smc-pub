@@ -529,6 +529,8 @@ public class TaskFragment extends WindowContainer<ActivityRecord> {
 
 ## 五、实战案例
 
+**【CASE-ACT-05】**
+
 ### 案例 1：电商 App 首页 singleTask 配错导致无法返回
 
 **现象**：
@@ -611,6 +613,8 @@ logcat:
 - 修复后从通知中心启动 MainActivity + 点击商品 + 按返回，**正确回到 MainActivity**
 - 关键监控：`dumpsys activity activities` 显示 mTaskId 复用正常
 - 关键监控：用户感知"返回到首页"成功率 100%
+
+**【CASE-ACT-06】**
 
 ### 案例 2：第三方推送 SDK 用 singleTask 抢占 Task
 
