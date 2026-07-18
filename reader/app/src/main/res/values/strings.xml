@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- 桌面显示名：4 字，便于 launcher 展示 -->
-    <string name="app_name">稳知库</string>
-    <!-- 应用内完整品牌名 -->
-    <string name="app_name_full">稳知库 · 稳定性架构师知识库</string>
-    <string name="app_name_en">StabilityMatrix Reader</string>
-    <string name="app_tagline">Android 稳定性架构师 · 离线阅读</string>
-</resources>
