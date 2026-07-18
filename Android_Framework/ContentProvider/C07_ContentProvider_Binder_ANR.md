@@ -23,6 +23,9 @@ AOSP 17 上 ContentProvider 涉及 5 个关键阈值常量：
 | `BINDER_VM_SIZE` | 1MB | 单次 transaction | TransactionTooLargeException |
 | `MAX_QUERY_RESULTS` | 1000 | 单次 query 返回 | AOSP 17 引入 |
 
+> 跨系列引用：见 [Activity · 启动 ANR 整体机制](../Activity/07_Activity_Launch_ANR.md)（启动 ANR 整体机制）
+> 跨系列引用：见 [Broadcast · ANR 整体机制](../Broadcast/B08_Broadcast_ANR_Landscape.md)（ANR 整体机制）
+
 **关键源码**：
 
 ```java

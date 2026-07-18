@@ -105,6 +105,10 @@
 - **FGS 强制要求显示通知**——API 34+ 启动 FGS 必须先有 Notification，否则抛 `ForegroundServiceTypeException`。
 - **`ProcessList` 计算 Service 进程优先级**——前台 Service 进程是 `top-app` 级别，OOM 时最后被杀。
 
+> 跨系列引用：见 [Activity A01 全景](../Activity/01_Activity_Overview.md) §2.1（四大组件在系统中的位置）
+> 跨系列引用：见 [Broadcast B01 全景](../Broadcast/B01_Broadcast_Overview.md) §2.1（Broadcast 在四大组件中的位置）
+> 跨系列引用：见 [ContentProvider C01 全景](../ContentProvider/C01_ContentProvider_Overview.md) §2.1（ContentProvider 在四大组件中的位置）
+
 ### 2.2 Service 的关键类层级（按调用频度）
 
 ```

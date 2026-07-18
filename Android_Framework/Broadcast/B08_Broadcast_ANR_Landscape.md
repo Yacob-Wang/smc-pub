@@ -44,6 +44,8 @@ static final int BROADCAST_BG_LONG_TIMEOUT = 120 * 1000;
 2. **Broadcast ANR 根因跨多个组件**——onReceive 慢 / 静态注册冷启动 / PMS 解析慢 / 后台广播 / 限频。
 3. **AOSP 16+ 引入 AnrHelper 强化**（A07 §2.2 详细展开）——**Broadcast ANR 也走异步检测**。
 
+> 跨系列引用：见 ANR_Detection 系列（`../ANR_Detection/` 路径待定主文章）—— Broadcast ANR 是 ANR 整体机制的一个分支（前台 10s / 后台 60s 阈值由 AMS 统一管理），其检测路径在 AOSP 16+ 已合并到 `AnrHelper.triggerAnr()` 异步检测框架，与 Input / Service / Provider 等多类 ANR 共享同一早期检测 + 异步 trace 抓取机制。
+
 ---
 
 ## 二、架构与交互

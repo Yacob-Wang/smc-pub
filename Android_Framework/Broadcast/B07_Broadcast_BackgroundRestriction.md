@@ -23,6 +23,9 @@ AOSP 14 (API 34) 引入了一系列广播相关的"收紧"行为，**统称"Andr
 | **`FLAG_RECEIVER_FOREGROUND`** | AOSP 14 | 隐式 + 后台启动 | 显式声明 |
 | **静默广播限频** | AOSP 16 | `MAX_BROADCASTS_PER_APP` | 限频 |
 
+> 跨系列引用：见 [Service · S04 FGS 类型化](../Service/04_Service_FGS_TypeRestricted.md) §3.2（Android 14+ 后台启动收紧是系列化）—— `ActivityManagerService.startService()` 的 FGS 校验与 B07 的 `registerReceiver` 后台限制是同一系列化策略：都是"Android 14 对后台 App 跨进程拉起做收紧"，对应 `callerApp.getSetProcState() >= PROCESS_STATE_CACHED` 同一检查。
+> 跨系列引用：见 [Activity · A07 启动 ANR](../Activity/07_Activity_Launch_ANR.md) §3.4（AOSP 14+ 收紧是系列化策略）—— 启动 ANR 5 大根因中"Android 14+ 后台启动限制"与 B07 提到的"后台启动 Receiver 限制"共用同一 AMS 侧 `mState.handleBackgroundActivityStart` 检查路径。
+
 ### 1.2 为什么需要深入 AOSP 14+ 收紧
 
 1. **升级到 AOSP 14 必回归**——业务方必须主动适配，**否则 100% 崩溃**。

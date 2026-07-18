@@ -236,6 +236,8 @@ public final int getPriority() {
 - **同 priority 随机**——**业务方不依赖同 priority 的顺序**。
 - **AOSP 17 强化**：排序使用 `Arrays.sort` + 二分查找优化，**O(N log N)**。
 
+> 跨系列引用：见 [Activity · A04 启动模式与 Task](../Activity/04_Activity_LaunchMode_Task.md) §3.2（启动模式 vs 优先级）—— `ActivityStarter.startActivityUnchecked()` 中的 `launchMode` 复用决策（singleInstance / singleTask / standard）与有序广播按 `priority` 串行分发共享同一"按属性决定调度路径"的稳定性模式：都是"上一级按属性决定下一级的命中/复用/中止"。
+
 ### 3.4 `processNextOrderedBroadcastLocked()` 串行调度
 
 ```java

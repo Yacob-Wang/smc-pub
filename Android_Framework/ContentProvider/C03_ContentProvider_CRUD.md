@@ -88,6 +88,8 @@ ContentProvider.query(uri, projection, ...)
 ContentResolver 收到 Cursor
 ```
 
+> 跨系列引用：见 [Service · bindService 跨进程通信](../Service/03_Service_BindService_Path.md)（bindService 跨进程通信对比）
+
 ### 2.2 关键决策点
 
 ```
@@ -300,6 +302,8 @@ public class MyProvider extends ContentProvider {
 **稳定性架构师视角**：
 - **`enforceReadPermission` 检查**——**跨进程必须匹配读权限**。
 - **业务方在主线程执行**——**同步 IO 必触发 ANR**。
+
+> 跨系列引用：见 [Broadcast · 发送流程](../Broadcast/B03_Broadcast_Send.md)（隐式广播 + 跨 App ContentProvider）
 
 ### 3.5 Cursor 跨进程传递
 

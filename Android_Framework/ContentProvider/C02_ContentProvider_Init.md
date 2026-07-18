@@ -290,6 +290,8 @@ T6 = 首帧上屏 (50-200ms)
 - **T3 的硬底 ≈ 0ms**（如果 Provider onCreate 几乎为空），**最坏 5s+**（如果业务方在 Provider onCreate 做同步初始化）。
 - **AOSP 17 强化 USAP 预热池**——**T0 耗时降低 20-30%**。
 
+> 跨系列引用：见 [Activity 启动流程源码深潜](../Activity/02_Activity_Start_SourceCode.md) §3.3（Application 初始化时机）
+
 ### 3.6 `LoadedApk.getProvider()`
 
 ```java

@@ -405,6 +405,8 @@ public final Cursor query(Uri uri, String[] projection, String selection,
 - **AOSP 17 引入 ContentResolver 缓存**——**同 URI + 同参数 重复查询 < 1ms**。
 - **业务方**——**相同查询应该用同参数**（参数不同 = 不同缓存键）。
 
+> 跨系列引用：见 [Activity · 内存治理](../Activity/09_Activity_Memory_Governance.md)（内存治理与 ContentProvider 缓存）
+
 ---
 
 ## 第四部分：实战案例

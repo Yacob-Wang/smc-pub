@@ -73,6 +73,8 @@ public boolean isLayoutSizeAtLeast(int size);  // sw600dp 判定
 - **重建 vs 不重建是 Activity 性能的关键决策**——重建会走完整生命周期，**涉及 WMS 端 Window 销毁、Surface 释放、View 树重建、首帧重新分配**——冷启动风格的 100-500ms 耗时。
 - **`onConfigurationChanged` 处理不当会导致"看似没反应"或"UI 错乱"**——比如横竖屏切换后没重新加载资源，**用户看到的是"竖屏布局"但实际是"横屏"**。
 
+> 跨系列引用：AOSP 14+ 收紧是"系列化策略"的一部分，同样的收紧也发生在 [Broadcast 后台限制](../Broadcast/B07_Broadcast_BackgroundRestriction.md) §2（B07，AOSP 14+ 收紧是系列化策略）。
+
 ### 1.3 为什么需要深入 ConfigurationChange
 
 1. **占"用户体验"类问题 30%+**——"旋转屏幕 UI 错乱"、"字体大小变了 App 没反应"、"切深色模式没生效"。

@@ -304,6 +304,9 @@ Service started: 2026-07-15 10:23:25.123 (20s ago)
 - **"main" 线程的栈**——**第一行就是要找的"卡住的方法"**。
 - **CPU usage 段**——**判断"是系统问题还是 App 问题"**。
 
+> 跨系列引用：见 [Activity A07 启动 ANR](../Activity/07_Activity_Launch_ANR.md) §2.1（Service ANR 是整体 ANR 机制在 Service 维度的子集，调度链路与 Activity ANR 共用 `appNotResponding` 入口）
+> 跨系列引用：见 [Broadcast B08 广播 ANR 全景](../Broadcast/B08_Broadcast_ANR_Landscape.md) §3.3（Service/Broadcast/Input 三类 ANR 在 AOSP 16+ 统一收敛到 `AnrHelper.triggerAnr()` 异步检测，机制一致）
+
 ---
 
 ## 四、风险地图：Service ANR 5 大根因

@@ -199,6 +199,8 @@ public final boolean matchData(ContentResolver resolver, String type, String sch
 - **PMS 端 IntentResolver 是"热点代码"**——每次隐式启动都要遍历。**AOSP 17 引入了 `mResolveCache` 缓存**（LruCache，size=1024），**相同 Intent 第二次解析 < 1ms**。
 - **PMS 端解析不涉及跨进程**——所有 Package 的 IntentFilter 都在 PMS 进程的内存里。**PMS 进程启动时把所有 Package 的 IntentFilter 加载到内存**，**占用约 50-200MB**（视已安装 App 数量）。
 
+> 跨系列引用：IntentFilter 解析在 PMS 端的具体实现见 [PMS 系列]（待定，PMS 系列未发布）；隐式 Intent + 跨 App ContentProvider 访问的实践场景见 [ContentProvider 跨进程](../ContentProvider/C04_ContentProvider_CrossProcess.md) §1（C04）。
+
 ### 2.3 AOSP 17 的 Intent 解析关键变化
 
 | AOSP 版本 | 关键变化 | 对排查的影响 |

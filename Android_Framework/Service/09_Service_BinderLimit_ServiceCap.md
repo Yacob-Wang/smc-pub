@@ -432,6 +432,10 @@ private void updateCachedProcessStates() {
 - **`mLruProcesses` 是 LRU 队列**——**最近最少使用的进程最先被杀**。
 - **AOSP 17 强化**：`updateCachedProcessStates` 内部增加"批量处理"，**减少单次扫描**。
 
+> 跨系列引用：见 [Activity A09 内存治理](../Activity/09_Activity_Memory_Governance.md) §1（Service 数量上限与 Activity 内存治理是同一组 OomAdjuster 策略下的不同切面，Service 上限受缓存进程预算约束）
+> 跨系列引用：见 [Process 04 应用进程首生](../Process/04-应用进程首生-fork到ActivityThread.md) §1.2（进程上限 `MAX_CACHED_PROCESSES` 与 Service 数量 `MAX_ACTIVE_SERVICES` 由同一组 AMS 常量约束，互为约束条件）
+> 跨系列引用：见 [ContentProvider C04 跨进程通信](../ContentProvider/C04_ContentProvider_CrossProcess.md) §3.1（跨进程 Binder 限制（`MAX_BINDER_TRANSACTION`、`Binder 线程池` 15 条）在 ContentProvider 跨进程中同样命中，Service/ContentProvider 共享同一 Binder 通道）
+
 ---
 
 ## 第四部分：实战案例

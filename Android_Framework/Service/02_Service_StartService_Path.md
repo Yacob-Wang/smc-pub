@@ -134,6 +134,8 @@ AOSP 17 上 startService 链路是**"从发起方 Context.startService 到 Servi
   └─ 不匹配？→ 抛 SecurityException
 ```
 
+> 跨系列引用：见 [Activity A02 启动流程源码深潜](../Activity/02_Activity_Start_SourceCode.md) §2.1（startService 与 startActivity 共用 AMS 调度入口，Activity 启动链路是父调用）
+
 ---
 
 ## 三、核心机制与源码

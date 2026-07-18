@@ -216,6 +216,8 @@ public static class ReceiverInfo extends ComponentInfo {
 - **AOSP 14+ 强制 `filterByPackageVisibility` 校验**——**未声明 RECEIVER_EXPORTED 的 Receiver 不可见**。
 - **AOSP 17 强化**：`mReceivers` 缓存优化，**匹配速度 < 1ms**。
 
+> 跨系列引用：见 PMS（PackageManagerService）系列（待建）—— 静态注册在 PMS 端 `mReceivers` 缓存；PMS 解析慢直接拖慢广播分发，与 AOSP 8+ 隐式广播收紧的过滤机制共享同一解析路径。
+
 ### 3.3 动态注册：`ContextImpl.registerReceiver()`
 
 ```java
@@ -306,6 +308,8 @@ public final class LoadedApk {
 - **`mReceivers` 持有 Context 引用**——**Context 是 Activity 时泄漏 Activity**（A09 §4.1 案例 1 同源）。
 - **ReceiverDispatcher 持有 IIntentReceiver 跨进程 Binder**——**业务方调用频繁时分配大量对象**。
 - **AOSP 17 强化**：`mReceivers` 内部增加"过期清理"，**避免长时间不用的 ReceiverDispatcher 堆积**。
+
+> 跨系列引用：见 [ContentProvider · C02 初始化](../ContentProvider/C02_ContentProvider_Init.md) §3.6（LoadedApk 共享模式）—— 同一 `LoadedApk` 同时持有 `mReceivers`（动态注册 Receiver 池）与 `mProviders`（ContentProvider 池），广播与 ContentProvider 在进程内的对象池共享同一生命周期管理路径。
 
 ### 3.4 ReceiverDispatcher 内部结构
 

@@ -103,6 +103,8 @@
 - 四大组件里，**只有 Activity 在 AMS + WMS + IMS 三个服务里都有状态**（Service 只在 AMS，Broadcast 只在 AMS + PMS，ContentProvider 只在 AMS + PMS）。这是 Activity"问题最多"的根本原因——它的失败路径有 3 个维度，排查必须三个都查。
 - Activity 启动 = AMS 端状态变更 + WMS 端 Window 创建 + IMS 端焦点窗口切换 + PMS 端组件解析。**任何一环失败都会导致"启动 ANR"或"启动失败"，但 logcat 表现可能相同**——A07 会展开这个分类。
 
+> 跨系列引用：四大组件协作图全景见 [Service 全景](../Service/01_Service_Overview.md) §2.1 / [Broadcast 全景](../Broadcast/B01_Broadcast_Overview.md) §2.1 / [ContentProvider 全景](../ContentProvider/C01_ContentProvider_Overview.md) §2.1（四大组件协作图）。
+
 ### 2.2 Activity 的关键类层级（按调用频度）
 
 ```

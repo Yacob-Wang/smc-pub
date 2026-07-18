@@ -186,3 +186,28 @@ S01 → S02 → S03 → S04 → S05 → S06 → S07 → S08 → S09
 | Android 14 收紧 | 后台启动 | FGS 类型化 | 隐式广播 / RECEIVER_NOT_EXPORTED |
 
 **稳定性架构师视角**：三个组件的稳定性问题是**高度耦合的**——Activity 启动 Service，Service 发送 Broadcast，Broadcast 启动 Activity（受限）。**理解一个组件必须理解另外两个**。
+
+## 九、跨系列引用矩阵
+
+> **本节目的**：把 9 篇正文中所有 inline 跨系列引用汇总到一张矩阵，**便于读者从"外部视角"反查**。每条引用都已在正文章节末尾以 blockquote 形式落地，**此处只做索引，不重复解释**。
+
+| 序号 | 源文章 | 跨系列目标 | 章节定位 | 说明 |
+|------|--------|-----------|---------|------|
+| R01 | S01 §2.1 | [Activity A01 全景](../Activity/01_Activity_Overview.md) | §2.1 | 四大组件在系统中的位置 |
+| R02 | S01 §2.1 | [Broadcast B01 全景](../Broadcast/B01_Broadcast_Overview.md) | §2.1 | Broadcast 在四大组件中的位置 |
+| R03 | S01 §2.1 | [ContentProvider C01 全景](../ContentProvider/C01_ContentProvider_Overview.md) | §2.1 | ContentProvider 在四大组件中的位置 |
+| R04 | S02 §2.3 | [Activity A02 启动流程源码深潜](../Activity/02_Activity_Start_SourceCode.md) | §2.1 | startService 与 startActivity 共用 AMS 调度入口 |
+| R05 | S03 §2.3 | Binder 系列（路径待定：Linux_Kernel/Binder/） | — | bindService 走跨进程 Binder |
+| R06 | S04 §3.5 | Window 系列（路径待定：Android_Framework/Window/） | — | FGS 通知在 NotificationManagerService |
+| R07 | S05 §3.6 | [Process 04 应用进程首生](../Process/04-应用进程首生-fork到ActivityThread.md) | §1.2 | WorkManager 涉及进程优先级 |
+| R08 | S06 §3.6 | Binder 系列（路径待定：Linux_Kernel/Binder/） | — | 死亡通知是 Binder 框架能力 |
+| R09 | S07 §3.5 | [Activity A07 启动 ANR](../Activity/07_Activity_Launch_ANR.md) | §2.1 | ANR 整体机制，Service 是子类 |
+| R10 | S07 §3.5 | [Broadcast B08 广播 ANR 全景](../Broadcast/B08_Broadcast_ANR_Landscape.md) | §3.3 | ANR 检测 AnrHelper 强化 |
+| R11 | S08 §3.6 | [Process 04 应用进程首生](../Process/04-应用进程首生-fork到ActivityThread.md) | §1.2 | onTrimMemory 与进程优先级 |
+| R12 | S08 §3.6 | [Activity A09 内存治理](../Activity/09_Activity_Memory_Governance.md) | §1 | 内存治理，onTrimMemory 回调 |
+| R13 | S09 §3.4 | [Activity A09 内存治理](../Activity/09_Activity_Memory_Governance.md) | §1 | 内存治理与 Service 上限 |
+| R14 | S09 §3.4 | [Process 04 应用进程首生](../Process/04-应用进程首生-fork到ActivityThread.md) | §1.2 | 进程上限与 Service 数量 |
+| R15 | S09 §3.4 | [ContentProvider C04 跨进程通信](../ContentProvider/C04_ContentProvider_CrossProcess.md) | §3.1 | 跨进程 Binder 限制 |
+
+> **路径待定说明**：Binder 系列目标目录 `Linux_Kernel/Binder/` 与 Window 系列目标目录 `Android_Framework/Window/` 暂未发布，对应 3 条引用（R05 / R06 / R08）在正文中以"路径待定"形式标记，待对应系列文章发布后回填具体路径。
+

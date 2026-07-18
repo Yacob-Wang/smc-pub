@@ -476,6 +476,8 @@ private void handleBindService(BindServiceData data) {
 - **`bindStation` 字段是 AOSP 17 新增**——**记录"这是第几次 bind"**，**业务方可以用来判断是否需要重新加载**。
 - **`onBind` 不重入会调**——**多客户端只调一次 onBind**。
 
+> 跨系列引用：见 Binder 系列（路径待定：Linux_Kernel/Binder/，linkToDeath / unlinkToDeath / binderDied 是 Binder 框架原生死亡通知能力，Service 死亡链路本质上复用该机制）
+
 ---
 
 ## 四、风险地图

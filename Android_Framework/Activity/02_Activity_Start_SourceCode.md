@@ -440,6 +440,8 @@ private final boolean startProcessLocked(ProcessRecord app, ...) {
 - **`mService.startProcess(app)`** 内部最终调到 `ZygoteProcess.start()`，再调到 `ZygoteInit`。**AOSP 17 引入了 USAP（Unused Zygote App Process）预热池**——如果 USAP 池有空闲进程，**冷启动可以省掉 fork 开销**。这是 AOSP 16+ 冷启动快 20-30% 的关键优化。
 - **`app.setOomAdj()`** 决定进程被杀的优先级。**top-app Activity 在前台时，进程 oom_score_adj = 0**（最低被杀优先级）；Activity 退后台，oom_score_adj 立刻被改到 700+。**OomScoreAdj 变化是触发 `OomAdjuster` 写 `/proc/<pid>/oom_score_adj` 的主因**——大量写这个文件会触发 kernel 的 oom killer 逻辑，在 Android 17 上对应 `android17-6.18` 的 `proc_oom_score_adj_show` 接口。
 
+> 跨系列引用：zygote fork 出 ActivityThread 的完整首生链路见 [Process 04-应用进程首生]（待定，Process 系列未发布）；`am start` 调用的就是 A02 链路，命令行全景见 [AmCommand 01-am 命令全景]（待定，AmCommand 系列未发布）；冷启动时 ContentProvider 早于 Application 初始化的时序见 [ContentProvider 初始化](../ContentProvider/C02_ContentProvider_Init.md) §1（C02）。
+
 ### 3.4 步骤 10-13：ActivityThread 端执行
 
 #### 3.4.1 `ActivityThread.handleLaunchActivity()`

@@ -359,6 +359,8 @@ public class MyInitializer implements Initializer<MyDependency> {
 - **依赖关系**支持——`dependencies()` 声明依赖，**按拓扑排序执行**。
 - **AOSP 17 强化**：`androidx.startup` 1.1+ 支持 lazy init。
 
+> 跨系列引用：见 [Process 04 应用进程首生](../Process/04-应用进程首生-fork到ActivityThread.md) §1.2（WorkManager 依赖 JobScheduler 调度 Worker，而 JobScheduler 跑在独立进程上，涉及进程优先级与 oom_score_adj 联动）
+
 ---
 
 ## 四、风险地图

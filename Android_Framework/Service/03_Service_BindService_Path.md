@@ -159,6 +159,8 @@ public final class LoadedApk {
 - **`ServiceDispatcher.mIServiceConnection` 跨进程 Binder**——**泄漏会持有远端 Service 引用**。
 - **每个 bindService 调用都会创建/复用 `ServiceDispatcher`**——**频繁 bindService 但不复用会创建大量对象**。
 
+> 跨系列引用：见 Binder 系列（路径待定：Linux_Kernel/Binder/，bindService 走的是跨进程 Binder 调用，详见 Binder 系列对 `binder.c` 与 `BpBinder/BBinder` 的拆解）
+
 ---
 
 ## 三、核心机制与源码

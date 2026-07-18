@@ -91,6 +91,10 @@
 - **静态注册 Receiver 在 PMS 端缓存**——PMS 端慢直接拖慢广播分发。
 - **Broadcast ANR 阈值比 Service 低**（10s vs 20s）——**onReceive 是短回调，设计上要快进快出**。
 
+> 跨系列引用：见 [Activity · A01 全景](../Activity/01_Activity_Overview.md) §2.1（四大组件协作图）
+> 跨系列引用：见 [Service · S01 全景](../Service/01_Service_Overview.md) §2.1（Service 协作图）
+> 跨系列引用：见 [ContentProvider · C01 全景](../ContentProvider/C01_ContentProvider_Overview.md) §2.1（四大组件协作图）
+
 ### 2.2 Broadcast 的关键类层级
 
 ```

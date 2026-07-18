@@ -349,6 +349,9 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc) {
 - **LMK 直接读 `/proc/<pid>/oom_score_adj`**——**OomAdjuster 写这个文件** → **LMK 读这个文件**。
 - **AOSP 17 强化**：`android17-6.18` LTS 优化 LMK 选择算法，**减少误杀**。
 
+> 跨系列引用：见 [Process 04 应用进程首生](../Process/04-应用进程首生-fork到ActivityThread.md) §1.2（onTrimMemory 回调由 OomAdjuster 驱动，OomAdjuster 调整 oom_score_adj 的全流程与进程首生时的 setThread 状态机联动）
+> 跨系列引用：见 [Activity A09 内存治理](../Activity/09_Activity_Memory_Governance.md) §1（onTrimMemory 回调同时派发到 Activity/Service/Application 三个层级，Service 侧的回收策略与 Activity 内存治理强相关）
+
 ---
 
 ## 四、风险地图

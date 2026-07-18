@@ -98,6 +98,10 @@
 - **ContentProvider 在 App 进程对应 `ActivityThread.mProviderMap`**——**Provider 客户端缓存**。
 - **ContentProvider 初始化在 Application.onCreate 之前**——**冷启动"看不见的瓶颈"**。
 
+> 跨系列引用：见 [Activity 启动流程源码深潜](../Activity/01_Activity_Overview.md) §2.1（四大组件协作图）
+> 跨系列引用：见 [Service 启动流程](../Service/01_Service_Overview.md) §2.1（Service 协作图）
+> 跨系列引用：见 [Broadcast 启动流程](../Broadcast/B01_Broadcast_Overview.md) §2.1（Broadcast 协作图）
+
 ### 2.2 ContentProvider 的关键类层级
 
 ```

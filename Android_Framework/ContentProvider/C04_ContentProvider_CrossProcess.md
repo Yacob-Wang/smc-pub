@@ -173,6 +173,9 @@ public Cursor query(Uri url, String[] projection, String selection,
 - **每次 query 是一次 Binder transaction**——**高频访问占满 15 个 Binder 线程**。
 - **`data.recycle()` 必须调**——**否则 Parcel 泄漏**。
 
+> 跨系列引用：见 [Activity · 启动 ANR 整体机制](../Activity/07_Activity_Launch_ANR.md)（ANR 整体机制）
+> 跨系列引用：见 [Service · Binder 限制与 ServiceCap](../Service/09_Service_BinderLimit_ServiceCap.md)（Binder 限制）
+
 ### 3.3 `ContentProviderNative` 服务端实现
 
 ```java

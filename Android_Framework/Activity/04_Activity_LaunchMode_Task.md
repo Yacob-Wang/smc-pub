@@ -436,6 +436,8 @@ public class TaskFragment extends WindowContainer<ActivityRecord> {
 - **AOSP 13+ 引入了 `TaskFragmentOrganizer` API**——三方 App 可以"组织"TaskFragment（如自定义窗口动画、跨 TaskFragment 拖拽）。**用了这个 API 的 App 在配置变化时行为可能不符合 launchMode 预期**。
 - **`findTask` 在 AOSP 17 上同时遍历 Task 和 TaskFragment**——这增加了查找复杂度。**Task 树越大、TaskFragment 越多越慢**。
 
+> 跨系列引用：launchMode 与 Service 跨进程通信的对比类比见 [Service BindService 路径](../Service/03_Service_BindService_Path.md) §1（S03，启动模式 vs Service 跨进程通信）；Task 在 WMS 端的 TaskFragment 映射详见 [Window 系列]（待定，Window 系列未发布）。
+
 ### 3.6 `taskAffinity` 配错导致的常见问题
 
 #### 3.6.1 `singleTask` 不配 taskAffinity

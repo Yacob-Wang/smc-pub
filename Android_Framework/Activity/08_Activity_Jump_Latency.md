@@ -47,6 +47,8 @@ public class SplashScreen {
 - **白屏时间 = 冷启动时间 - 首帧时间**——**冷启动 800-1500ms，白屏时间约 500-1000ms**。**超过 1500ms 视为"用户感知白屏"**。
 - **国内 App 99% 不优化白屏**——因为 SplashScreen 默认就够了，**业务方不知道还有优化空间**。
 
+> 跨系列引用：启动窗口（StartingWindow/SplashScreenWindow）与 WMS 的关系详见 [Window 系列]（待定，Window 系列未发布，启动窗口与 WMS 的关系）。
+
 ### 1.2 什么是跳转卡顿
 
 "跳转卡顿"是用户从 Activity A 点击按钮启动 Activity B 时，**A07 §1.3 提到的"onPause 慢导致下个 Activity 慢"** 的具体表现。**关键时序**：

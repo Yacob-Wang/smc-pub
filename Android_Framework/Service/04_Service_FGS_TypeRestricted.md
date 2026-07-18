@@ -370,6 +370,8 @@ public void notify(...) {
 - **Android 8+ 强制 NotificationChannel**——**业务方升级时必须迁移**。
 - **AOSP 17 强化 channel 校验**——`POST_NOTIFICATIONS` 权限也强制（API 33+）。
 
+> 跨系列引用：见 Window 系列（路径待定：Android_Framework/Window/，FGS 通知下发走 NotificationManagerService 通道，属于 Window/Notification 体系，待对应文章发布后补充）
+
 ---
 
 ## 四、风险地图：FGS 5 大风险

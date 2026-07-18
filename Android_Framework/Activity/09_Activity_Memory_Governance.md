@@ -22,6 +22,8 @@
 
 Activity 内存治理的目标是 **"在用户感知 '卡' 之前主动发现并解决内存问题"**。**线上 OOM 类问题中，30-40% 根因在 Activity 内存**（Activity 泄漏 / Bitmap 泄漏 / ViewModel 残留 / 资源未释放 / Fragment 状态保留）。
 
+> 跨系列引用：Activity 泄漏与 ART 堆 / Native 堆的关系全景见 [MM_v2 12-内存稳定性风险全景]（待定，MM_v2 系列未发布，Activity 泄漏与 ART 堆的关系）。
+
 **关键概念区分**：
 
 | 概念 | 含义 | 风险等级 |
@@ -103,6 +105,8 @@ Activity 内存治理的目标是 **"在用户感知 '卡' 之前主动发现并
 **根因定位**：
 - `dumpsys activity broadcasts` 看队列
 - LeakCanary 检测到 Activity 持有上述引用
+
+> 跨系列引用：跨进程 ContentProvider 的 Cursor / Client 持有 Activity 引用导致泄漏的链路见 [ContentProvider CRUD](../ContentProvider/C03_ContentProvider_CRUD.md) §3（C03，Cursor / Client 泄漏）。
 
 #### 风险 5：Fragment 状态保留（占比 5-10%）
 
@@ -369,6 +373,8 @@ private void cleanUpPendingDestroyActivities() {
 - **`cleanUpPendingDestroyActivities` 是 AOSP 17 强化方法**——AOSP 15 之前是 `handleDestroyActivity` 内部清理，AOSP 17 抽成独立方法，**支持批量清理**。
 - **`r.lastNonConfigurationInstances = null` 是关键**——**持有 ViewModel 引用**，**如果不清理就是 ViewModel 泄漏**。
 
+> 跨系列引用：bindService 回调中"未解绑的 ServiceConnection"导致 Activity 泄漏，与本节"未清理 mActivities"是同型问题，类比见 [Service BindService 路径](../Service/03_Service_BindService_Path.md) §3（S03，bindService 泄漏类比）。
+
 ### 3.2 `ViewModelStore` 的清理
 
 ```java
@@ -493,6 +499,8 @@ public final class LoadedApk {
 - **`mReceivers` 持有 Context**——**Context 是 Activity 时泄漏，是 Application 时不泄漏**。
 - **AOSP 17 强化 `registerReceiver`**——**自动检测 `RECEIVER_NOT_EXPORTED` / `RECEIVER_EXPORTED` 标志**（API 33+ 强制）。
 - **业务方常见错误**：`Context.registerReceiver(receiver, filter)` 在 Activity 中调用，**没在 onDestroy 中 unregister**。
+
+> 跨系列引用：`ReceiverDispatcher` 内部类持有 Activity Context 的泄漏链路详解见 [Broadcast 注册管理](../Broadcast/B02_Broadcast_Register.md) §2（B02，ReceiverDispatcher 泄漏类比）。
 
 ### 3.5 `Choreographer.mCallbackQueue` 的 FrameCallback 管理
 

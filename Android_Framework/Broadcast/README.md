@@ -67,12 +67,18 @@ B09 系统广播 (治理)
 |------|-------------|---------|---------|-------------------|
 | B01 | Activity | A01 §2.1 | 四大组件协作图 | 2026-07-18 |
 | B01 | Service | S01 §2.1 | Service 协作图 | 2026-07-18 |
+| B01 | ContentProvider | C01 §2.1 | 四大组件协作图 | 2026-07-18 |
 | B02 | PMS（待建） | — | 静态注册在 PMS 端缓存 | 2026-07-18 |
-| B03 | Activity | A02 | Activity 发送广播的链路 | 2026-07-18 |
-| B03 | Service | S02 | Service 发送广播的链路 | 2026-07-18 |
-| B07 | Service | S04 | Android 14+ 后台限制是系列化策略 | 2026-07-18 |
-| B08 | ANR_Detection | 待定 | Broadcast ANR 整体机制 | 2026-07-18 |
-| B09 | Process | 04-应用进程首生 | BOOT_COMPLETED 在 zygote fork 后的时序 | 2026-07-18 |
+| B02 | ContentProvider | C02 §3.6 | LoadedApk 共享模式（Receiver + Provider 共用 mReceivers / mProviders 池） | 2026-07-18 |
+| B03 | Activity | A02 §3.1 | Activity 发送广播的链路 | 2026-07-18 |
+| B03 | Service | S02 §3.1 | Service 发送广播的链路 | 2026-07-18 |
+| B03 | ContentProvider | C03 §2.1 | 隐式广播 + 跨 App ContentProvider 共享 PMS 端 IntentFilter 解析 | 2026-07-18 |
+| B04 | Activity | A04 §3.2 | 启动模式 vs 优先级（ActivityStarter 复用决策 ↔ Receiver priority 调度） | 2026-07-18 |
+| B07 | Service | S04 §3.2 | Android 14+ 后台启动收紧是系列化策略 | 2026-07-18 |
+| B07 | Activity | A07 §3.4 | AOSP 14+ 收紧是系列化策略（启动 ANR 5 大根因 ↔ 后台启动 Receiver 限制） | 2026-07-18 |
+| B08 | ANR_Detection | 待定 | Broadcast ANR 整体机制（AOSP 16+ 合并到 AnrHelper 异步检测框架） | 2026-07-18 |
+| B09 | Process | 04-应用进程首生 §6 | BOOT_COMPLETED 在 zygote fork 后的时序（attachApplicationLocked 握手之后才能下发） | 2026-07-18 |
+| B09 | ContentProvider | C02 §3.5 | 冷启动时 ContentProvider 在前（ContentProvider.onCreate 早于 BootReceiver.onReceive） | 2026-07-18 |
 
 ### 2.4 与其他系列的边界声明
 

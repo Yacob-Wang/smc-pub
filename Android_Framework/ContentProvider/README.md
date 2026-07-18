@@ -186,3 +186,30 @@ C01 → C02 → C03 → C04 → C05 → C06 → C07 → C08 → C09
 | 进程保活 | 无 | FGS 强 | 静态注册 BOOT_COMPLETED | **冷启动硬耗时** |
 
 **稳定性架构师视角**：**ContentProvider 是四大组件里"最容易被忽视"的——它在 Application.onCreate 之前初始化，**冷启动慢的"看不见的瓶颈"**。理解 ContentProvider 初始化链路就理解了"App 冷启动的另一面"**。
+
+---
+
+## 九、跨系列引用矩阵（正文内联版）
+
+> 本段为 ContentProvider 系列 9 篇正文内 inline 跨系列引用的总账（与 §2.3 简化版互补）。共 16 条，按文章分组。
+
+| 本篇 | 引用系列 | 引用文章 | 引用章节 / 主题 | 链接 | 核查日期 |
+|------|---------|---------|----------------|------|---------|
+| C01 | Activity | A01 全景 | §2.1 四大组件协作图 | [Activity 全景](../Activity/01_Activity_Overview.md) | 2026-07-18 |
+| C01 | Service | S01 全景 | §2.1 Service 协作图 | [Service 全景](../Service/01_Service_Overview.md) | 2026-07-18 |
+| C01 | Broadcast | B01 全景 | §2.1 Broadcast 协作图 | [Broadcast 全景](../Broadcast/B01_Broadcast_Overview.md) | 2026-07-18 |
+| C02 | Activity | A02 启动流程源码 | §3.3 Application 初始化时机 | [Activity 启动流程源码深潜](../Activity/02_Activity_Start_SourceCode.md) | 2026-07-18 |
+| C03 | Service | S03 bindService 路径 | bindService 跨进程通信对比 | [Service · bindService 跨进程通信](../Service/03_Service_BindService_Path.md) | 2026-07-18 |
+| C03 | Broadcast | B03 发送流程 | 隐式广播 + 跨 App ContentProvider | [Broadcast · 发送流程](../Broadcast/B03_Broadcast_Send.md) | 2026-07-18 |
+| C04 | Activity | A07 启动 ANR | ANR 整体机制 | [Activity · 启动 ANR 整体机制](../Activity/07_Activity_Launch_ANR.md) | 2026-07-18 |
+| C04 | Service | S09 Binder 限制 | Binder 限制 | [Service · Binder 限制与 ServiceCap](../Service/09_Service_BinderLimit_ServiceCap.md) | 2026-07-18 |
+| C06 | Service | S04 FGS 类型限制 | AOSP 14+ 收紧是系列化策略 | [Service · FGS 类型限制与收紧](../Service/04_Service_FGS_TypeRestricted.md) | 2026-07-18 |
+| C06 | Activity | A06 ConfigChange | 收紧是系列化策略 | [Activity · ConfigChange 收紧](../Activity/06_Activity_ConfigChange.md) | 2026-07-18 |
+| C07 | Activity | A07 启动 ANR | 启动 ANR 整体机制 | [Activity · 启动 ANR 整体机制](../Activity/07_Activity_Launch_ANR.md) | 2026-07-18 |
+| C07 | Broadcast | B08 ANR 全景 | ANR 整体机制 | [Broadcast · ANR 整体机制](../Broadcast/B08_Broadcast_ANR_Landscape.md) | 2026-07-18 |
+| C08 | Activity | A07 启动 ANR | 启动 ANR 案例 | [Activity · 启动 ANR 案例](../Activity/07_Activity_Launch_ANR.md) | 2026-07-18 |
+| C08 | Service | S03 bindService 路径 | bindService 泄漏类比 | [Service · bindService 跨进程通信](../Service/03_Service_BindService_Path.md) | 2026-07-18 |
+| C08 | Broadcast | B02 注册流程 | ReceiverDispatcher 泄漏类比 | [Broadcast · 动态注册 Receiver 流程](../Broadcast/B02_Broadcast_Register.md) | 2026-07-18 |
+| C09 | Activity | A09 内存治理 | 内存治理与 ContentProvider 缓存 | [Activity · 内存治理](../Activity/09_Activity_Memory_Governance.md) | 2026-07-18 |
+
+> 链路有效性最后核查：2026-07-18。本矩阵不重复 §2.3 的简化版，**与正文 inline 引用一一对应**。

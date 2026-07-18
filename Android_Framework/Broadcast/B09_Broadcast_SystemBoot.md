@@ -282,6 +282,8 @@ public void bootCompleted() {
 - **每个 App 进程第一次接收 BOOT_COMPLETED 都要冷启动**——**这是"开机慢"的核心**。
 - **AOSP 17 强化 USAP 预热池**——**冷启动耗时降低 20-30%**。
 
+> 跨系列引用：见 [Process · 04 应用进程首生](../Process/04-应用进程首生-fork到ActivityThread.md) §6（BOOT_COMPLETED 在 zygote fork 后的时序）—— `ActivityManagerService.attachApplicationLocked` 是 zygote fork 后进程向 system_server "握手"的唯一入口；BOOT_COMPLETED 必须在该握手完成后才能下发到目标进程，所以静态注册 BOOT_COMPLETED 接收时机严格受限于此链路。
+
 ### 3.2 `MY_PACKAGE_REPLACED` 升级广播
 
 ```java
@@ -381,6 +383,8 @@ private void deliverToManifestReceiverLocked(BroadcastRecord r, ResolveInfo info
 - **BOOT_COMPLETED 接收时 App 进程未启动 = 冷启动**——**耗时 200-500ms**。
 - **AOSP 17 强化 USAP 预热池**——**冷启动耗时降低 20-30%**。
 - **业务方应该在 BootReceiver.onReceive 第一行 `goAsync()` 异步化**。
+
+> 跨系列引用：见 [ContentProvider · C02 初始化](../ContentProvider/C02_ContentProvider_Init.md) §3.5（冷启动时 ContentProvider 在前）—— App 进程冷启动的初始化顺序是 `Application.attachBaseContext → ContentProvider.onCreate → Application.onCreate → Activity.onCreate`，**ContentProvider 早于任何 Receiver 调度**，所以 BOOT_COMPLETED 触发的 BootReceiver.onReceive 必然在 ContentProvider 初始化之后，跨进程冷启动耗时要叠加 ContentProvider 初始化时间。
 
 ---
 

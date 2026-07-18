@@ -169,6 +169,10 @@ public int broadcastIntent(IApplicationThread caller, Intent intent, ...) {
 - **`resolveTypeIfNeeded()` 内部会跨进程调 PMS**——**A05 提到的包可见性**直接影响广播。
 - **AOSP 17 强化**：`broadcastIntentWithFeature` 内部增加"调用方权限校验"，**避免恶意 App 发送广播**。
 
+> 跨系列引用：见 [Activity · A02 启动流程源码](../Activity/02_Activity_Start_SourceCode.md) §3.1（Activity 发送广播的链路）—— Activity 在 `ContextImpl.sendBroadcast` 入口的调用模式与 `startActivity` 共享同一 `getAttributionTag()` + `resolveTypeIfNeeded()` 路径。
+> 跨系列引用：见 [Service · S02 启动路径](../Service/02_Service_StartService_Path.md) §3.1（Service 发送广播的链路）—— Service 在 `ContextImpl.sendBroadcast` 入口的调用模式与 `startService` 共享同一 `getAttributionTag()` + `resolveTypeIfNeeded()` 路径。
+> 跨系列引用：见 [ContentProvider · C03 CRUD](../ContentProvider/C03_ContentProvider_CRUD.md) §2.1（隐式广播 + 跨 App ContentProvider）—— 隐式广播触发 `queryIntentReceivers` 的解析路径与 ContentResolver `acquireProvider` 的跨 App 解析共用 PMS 端 IntentFilter 匹配逻辑。
+
 ### 3.2 步骤 2-3：AMS 端 `broadcastIntentWithFeature()`
 
 ```java

@@ -110,6 +110,8 @@ static final int PROC_START_TIMEOUT = 10 * 1000;
 [BugReport 上报]
 ```
 
+> 跨系列引用：前台 Service（FGS）类型化与 ANR 检测的关联见 [Service FGS 类型限制](../Service/04_Service_FGS_TypeRestricted.md) §3（S04，FGS 类型化与 ANR 检测）；AOSP 16+ AnrHelper 强化的 ANR 检测机制见 [Broadcast ANR 全景](../Broadcast/B08_Broadcast_ANR_Landscape.md) §2（B08，ANR 检测 AnrHelper 强化）；ContentProvider publish 的 10s ANR 阈值与 binder 链路见 [ContentProvider Binder ANR](../ContentProvider/C07_ContentProvider_Binder_ANR.md) §1（C07，ContentProvider ANR 10s）。
+
 ### 2.2 AnrHelper（AOSP 16+）的核心变化
 
 AOSP 16 把 ANR 检测从 `AMS.appNotResponding()` 抽到独立 `AnrHelper` 类。**关键变化**：
