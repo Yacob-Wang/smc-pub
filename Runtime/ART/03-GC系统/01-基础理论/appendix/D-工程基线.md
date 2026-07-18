@@ -1,10 +1,10 @@
-# 附录 D：工程基线（v2 升级版）
+﻿# 附录 D：工程基线（v2 升级版）
 
 > **本附录是 01-基础理论子模块的"工程基线"** —— 关键参数、监控指标、排查 checklist 的完整清单。
 >
 > **目的**：把 01 子模块 9 篇的知识点转化为可直接使用的工程工具。
 >
-> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS）
+> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS）
 > **v2 升级日期**：2026-07-18
 
 ---
@@ -45,9 +45,9 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
-| Linux 内核 | android17-6.18（误） | **android17-6.12** | **基线纠正** |
+| Linux 内核 | android17-6.18（误） | **android17-6.18** | **基线纠正** |
 | Card Table 粒度默认值 | 512B | **128B（AOSP 17）** | 基线纠正 |
 | **软阈值 kSoftThresholdPercent** | 未列出 | **新增 §1.2** | AOSP 17 关键参数 |
 | **Finalizer 线程数** | 1 线程 | **4 线程池化（AOSP 17）** | 基线纠正 |
@@ -98,7 +98,7 @@
 | **`FinalizerDaemon::kPoolSize`** | **4** | **AOSP 17 默认** | **ART 14 = 1 线程** | **AOSP 17 池化** |
 | **`RBCCState` 位数** | **3 bit** | **AOSP 17 默认** | **ART 14 = 2 bit** | **AOSP 17 扩展** |
 
-### 1.3 Kernel 相关参数（AOSP 17 + Linux 6.12）
+### 1.3 Kernel 相关参数（AOSP 17 + Linux 6.18）
 
 | 参数 | 默认值 | 选用准则 | 踩坑提醒 |
 | :--- | :--- | :--- | :--- |
@@ -107,8 +107,8 @@
 | `vm.swappiness` | 60 | 调高 → 更积极 swap | 影响 zram 行为 |
 | `vm.dirty_ratio` | 20 | 默认即可 | 影响脏页回写 |
 | `vm.pressure_level` | 内核 4.20+ | 默认即可 | 内存压力通知 |
-| **Linux 6.12 sheaves** | **启用** | **AOSP 17 默认** | **Native 堆 -15-20%** |
-| **Linux 6.12 io_uring** | **5.x+** | **AOSP 17 默认** | **Card Table 刷盘 -30%** |
+| **Linux 6.18 sheaves** | **启用** | **AOSP 17 默认** | **Native 堆 -15-20%** |
+| **Linux 6.18 io_uring** | **5.x+** | **AOSP 17 默认** | **Card Table 刷盘 -30%** |
 
 ### 1.4 关键参数配置示例（custom.prop，AOSP 17）
 
@@ -670,7 +670,7 @@ if (BuildConfig.DEBUG) {
 
 ## 七、附录小结
 
-1. **关键参数基线**：完整 dalvik.vm.* / ART 17 内部参数 / Kernel 6.12 参数
+1. **关键参数基线**：完整 dalvik.vm.* / ART 17 内部参数 / Kernel 6.18 参数
 2. **监控指标基线**：dumpsys meminfo + GC 指标 + Perfetto trace + **AOSP 17 屏障统计**
 3. **排查 Checklist**：OOM / GC 卡顿 / 内存泄漏 / **AOSP 17 漏标** 四类问题
 4. **APM 监控指标基线**：关键告警阈值（AOSP 17 强化）+ 工具推荐

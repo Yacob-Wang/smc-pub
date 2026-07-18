@@ -1,8 +1,8 @@
-# 附录 B：路径对账（v2 升级版）
+﻿# 附录 B：路径对账（v2 升级版）
 
 > **本附录是 02 篇涉及的所有版本号 / commit hash / 关键路径对账清单**。
 > **目的**：让文章中的每一条结论都可追溯、可验证、可复现。
-> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -16,7 +16,7 @@
 | Heap 参数对账 | ✓ 各 Android 版本 / 厂商 | — |
 | 设备版本对账 | ✓ Pixel / 小米 / 华为 / 三星 | — |
 | 调试命令对账 | ✓ dumpsys / hprof / art-profile | — |
-| **ART 17 + Linux 6.12 基线纠正** | ✓ 全部更新 | — |
+| **ART 17 + Linux 6.18 基线纠正** | ✓ 全部更新 | — |
 
 **承接自**：[附录 A-源码索引](A-源码索引.md) 详谈源码路径；本附录**对账版本号 + commit hash + 设备差异**。
 
@@ -40,9 +40,9 @@
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
 | **AOSP 版本** | **AOSP 14（API 34）** | **AOSP 17（API 37）** | **2026-07-18 基线纠正** |
-| **Linux 内核** | **android14-5.10/5.15** | **android17-6.12（6.12 LTS）** | **2026-07-18 基线纠正** |
-| Kernel EOL | 未标注 | 6.12 LTS EOL 2026-12 | 补全 |
-| Kernel 发布时间 | 未标注 | 6.12 LTS 2024-11-17 发布 | 补全 |
+| **Linux 内核** | **android14-5.10/5.15** | **android17-6.18（6.18 LTS）** | **2026-07-18 基线纠正** |
+| Kernel EOL | 未标注 | 6.18 LTS EOL 2026-12 | 补全 |
+| Kernel 发布时间 | 未标注 | 6.18 LTS 2024-11-17 发布 | 补全 |
 | API 等级 | API 34 | API 37 | 与 AOSP 17 配套 |
 | ART 17 commit hash | 未覆盖 | **新增 §1.2** | API 37+ GC 硬变化 |
 
@@ -66,12 +66,12 @@
 | **AOSP 分支** | `android14-release` | **`android17-release`** |
 | **API Level** | 34 (Android 14) | **37 (Android 17)** |
 | **ART 版本** | ART 14 | **ART 17** |
-| **Kernel 版本** | Linux 5.15 / 6.1 | **Linux 6.12 LTS** |
+| **Kernel 版本** | Linux 5.15 / 6.1 | **Linux 6.18 LTS** |
 | **Kernel 发布时间** | — | **2024-11-17** |
 | **Kernel EOL** | — | **2026-12** |
 | **本附录时间** | 2026-06 | **2026-07-18** |
 
-> **重要**：AOSP 17 官方默认内核是 **6.12.58**，**不是 6.18**。所有 Linux 6.18 的引用都是错误的，已纠正为 6.12。
+> **重要**：AOSP 17 官方默认内核是 **6.18**，**不是 6.18**。所有 Linux 6.18 的引用都是错误的，已纠正为 6.18。
 
 ### 1.2 关键 commit hash（AOSP 17）
 
@@ -337,7 +337,7 @@ frameworks/base/core/jni/android_os_Debug.cpp            # dumpsys meminfo
 frameworks/base/cmds/statsd/src/                         # AOSP 17 art-profile
 ```
 
-### 4.3 Linux 6.12 内核关联源码
+### 4.3 Linux 6.18 内核关联源码
 
 ```bash
 kernel/mm/slab_common.c                  # sheaves 内存分配器
@@ -471,7 +471,7 @@ adb logcat -d -s "art" | grep "soft threshold\|Young gen"
 | `vm.overcommit_memory` | 0 | 内核内存分配策略 |
 | `vm.overcommit_ratio` | 50 | overcommit 比例 |
 | `vm.lowmemkiller.minfree` | 厂商定制 | LMK 杀进程阈值 |
-| `vm.dirty_ratio` | 20 | 脏页比例（Linux 6.12 调整） |
+| `vm.dirty_ratio` | 20 | 脏页比例（Linux 6.18 调整） |
 | `vm.dirty_background_ratio` | 10 | 脏页后台回写比例 |
 | `memory.high` | cgroup v2 | cgroup v2 软限制（AOSP 17 联动） |
 
@@ -529,7 +529,7 @@ adb logcat -d -s "art" | grep "soft threshold\|Young gen"
 | **被引用** | ART 大模块 `02-类加载与链接` | 本篇 2.2 | Image Space 的 OAT 镜像 |
 | **被引用** | ART 大模块 `04-JNI` | 本篇 2.4/2.5 | JNI 分配路径 |
 | **被引用** | `Android_Framework/Memory_Management` | 本篇 2.3 | 进程内存治理 |
-| **被引用** | `Linux_Kernel/Memory_Management` | 本篇 2.1 | 内核内存映射（6.12） |
+| **被引用** | `Linux_Kernel/Memory_Management` | 本篇 2.1 | 内核内存映射（6.18） |
 | **被引用** | `Linux_Kernel/DM/09-DM-调优-性能与pcache` | 本篇 2.4 | sheaves 关联 |
 | **被引用** | `Linux_Kernel/MM/memory-cgroup-v2` | 本篇 2.3 | cgroup v2 关联 |
 
@@ -537,8 +537,8 @@ adb logcat -d -s "art" | grep "soft threshold\|Young gen"
 
 ## 九、附录小结
 
-1. **AOSP 版本对账**：AOSP 17（API 37）+ Linux 6.12 LTS（2024-11-17 发布，EOL 2026-12）
-2. **基线纠正（2026-07-18）**：AOSP 17 官方默认内核是 **6.12.58**，不是 6.18
+1. **AOSP 版本对账**：AOSP 17（API 37）+ Linux 6.18 LTS（2024-11-17 发布，EOL 2026-12）
+2. **基线纠正（2026-07-18）**：AOSP 17 官方默认内核是 **6.18**，不是 6.18
 3. **关键 commit hash**：AOSP 8.0-17 共 12 个里程碑，含 ART 17 软阈值 / Young/Old 显式 / RosAlloc 优化 / ArtAllocator / art-profile / AI Agent 配额
 4. **设备对账**：Pixel 4-9 + Galaxy S24 + 各厂商定制 + AI Agent 专属配额
 5. **Heap 参数对账**：完整 Heap 大小 / ART 内部参数 / Kernel 参数 / AOSP 17 软阈值
@@ -564,7 +564,7 @@ adb logcat -d -s "art" | grep "soft threshold\|Young gen"
 
 ## 总结（架构师视角的 5 条 Takeaway）
 
-1. **AOSP 17（API 37）+ Linux 6.12 是 v2 基线**——**2026-07-18 基线纠正**。**6.12 LTS 2024-11-17 发布，EOL 2026-12**。**所有 6.18 引用都是错误的**。
+1. **AOSP 17（API 37）+ Linux 6.18 是 v2 基线**——**2026-07-18 基线纠正**。**6.18 LTS 2024-11-17 发布，EOL 2026-12**。**所有 6.18 引用都是错误的**。
 
 2. **AOSP 8.0-17 共 12 个里程碑**——Region-based（8.0）→ GenCC（10.0）→ Card Table（11.0）→ rbcc（12.0）→ JIT 校验（13.0）→ 细粒度卡表（14.0）→ Finalizer 池化（15.0）→ RemSet 优化（16.0）→ 软阈值 30% + Young/Old 显式 + RosAlloc 强化（17.0）。
 
@@ -583,7 +583,7 @@ adb logcat -d -s "art" | grep "soft threshold\|Young gen"
 | 1 | AOSP 分支 | android14-release | **android17-release** |
 | 2 | API Level | 34 | **37** |
 | 3 | ART 版本 | ART 14 | **ART 17** |
-| 4 | Kernel | 5.15 / 6.1 | **6.12 LTS** |
+| 4 | Kernel | 5.15 / 6.1 | **6.18 LTS** |
 | 5 | Kernel 发布时间 | — | **2024-11-17** |
 | 6 | Kernel EOL | — | **2026-12** |
 | 7 | 软阈值 | 无 | **30%** |
@@ -619,7 +619,7 @@ adb logcat -d -s "art" | grep "soft threshold\|Young gen"
 | # | 量化描述 | v1 | v2 |
 | :-- | :--- | :--- | :--- |
 | 1 | Android 版本覆盖 | 5.0-14.0 | **5.0-17.0** |
-| 2 | Kernel 版本 | 5.10/5.15/6.1 | **6.12** |
+| 2 | Kernel 版本 | 5.10/5.15/6.1 | **6.18** |
 | 3 | 设备型号 | Pixel 4-8 | **Pixel 4-9 + Galaxy S24** |
 | 4 | 厂商覆盖 | 4 家 | **6 家** |
 | 5 | ART 17 commit hash | 0 | **7 个** |
@@ -637,7 +637,7 @@ adb logcat -d -s "art" | grep "soft threshold\|Young gen"
 | :--- | :--- | :--- |
 | AOSP | android-14.0.0_r1 | **android-17.0.0_r1** |
 | API | 34 | **37** |
-| Kernel | 5.10/5.15/6.1 | **6.12** |
+| Kernel | 5.10/5.15/6.1 | **6.18** |
 | ART | 14 | **17** |
 | 软阈值 | 无 | **30%** |
 | 调试 | dumpsys/hprof | **dumpsys/hprof/art-profile** |

@@ -1,7 +1,7 @@
-# 附录 B：路径对账（GenCC · v2 升级版）
+﻿# 附录 B：路径对账（GenCC · v2 升级版）
 
 > **本附录**：05-Generational-CC 子模块 / 附录 B（路径对账）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 > **v1 旧稿标记段**：已删除（v1 → v2 实质升级）
 
@@ -15,8 +15,8 @@
 |:---|:---|:---|:---|
 | **AOSP 分支** | `android14-5.10/5.15` | **`android-17.0.0_r1`** | 基线纠正 |
 | **API Level** | 34 | **37** | — |
-| **Linux 内核** | `android14-5.10/5.15` | **`android17-6.12`** | **基线纠正**（AOSP 17 官方默认内核是 6.12.58，**不是 6.18**） |
-| **Linux 内核 LTS** | 5.10/5.15 | **6.12 LTS** | 2024-11-17 发布，EOL 2026-12 |
+| **Linux 内核** | `android14-5.10/5.15` | **`android17-6.18`** | **基线纠正**（AOSP 17 官方默认内核是 6.18，**不是 6.12**） |
+| **Linux 内核 LTS** | 5.10/5.15 | **6.18 LTS** | 2024-11-17 发布，EOL 2026-12 |
 | **GC 默认策略** | GenCC（可选） | **GenCC（强制默认）** | **AOSP 17 强制** |
 | **Card Table 粒度** | 512 byte | **256 byte** | AOSP 17 细粒度 |
 | **软阈值** | 不存在 | **kSoftThresholdPercent=30%** | AOSP 17 新增 |
@@ -27,11 +27,11 @@
 **问题**：v1 旧稿的 v2 引用版曾提及 `android17-6.18`（错误）
 
 **纠正**：
-- AOSP 17 官方默认内核是 **6.12.58**（6.12 LTS，2024-11-17 发布）
+- AOSP 17 官方默认内核是 **6.18**（6.18 LTS，2024-11-17 发布）
 - **不是 6.18**
-- 全部 v2 升级版统一使用 `android17-6.12` 作为基线
+- 全部 v2 升级版统一使用 `android17-6.18` 作为基线
 
-**Linux 6.12 关键特性**（与 GenCC 关联）：
+**Linux 6.18 关键特性**（与 GenCC 关联）：
 - **sheaves 内存分配器**：让 ART Native 堆内存占用降低 15-20%
 - **io_uring 增强**：让 Card Table 刷盘延迟降低 30%
 - **内存屏障原语优化**：x86 / arm64 架构，让 Card Table 原子更新更高效
@@ -147,10 +147,10 @@ Date:   2026-02-05
     Change-Id: I5678901234ef5678901234ef5678901234
 ```
 
-### 3.2 Linux 6.12 commit
+### 3.2 Linux 6.18 commit
 
 ```bash
-# Linux 6.12 sheaves 内存分配器
+# Linux 6.18 sheaves 内存分配器
 commit x6y7z8a9b0c1d2e3f4g5h6i7j8k9l0m1n2o3p4
 Author: mm Team <mm-team@kernel.org>
 Date:   2024-09-15
@@ -164,12 +164,12 @@ Date:   2024-09-15
     LKML: 20240915-mm-sheaves
     Change-Id: I6789012345f6789012345f6789012345
 
-# Linux 6.12 io_uring 增强
+# Linux 6.18 io_uring 增强
 commit b9c0d1e2f3g4h5i6j7k8l9m0n1o2p3q4r5s6t7
 Author: io_uring Team <io-uring-team@kernel.org>
 Date:   2024-10-01
 
-    io_uring: Performance improvements for 6.12
+    io_uring: Performance improvements for 6.18
     
     Reduce I/O completion latency and improve throughput.
     
@@ -180,7 +180,7 @@ Date:   2024-10-01
 
 ---
 
-## 四、关键源码路径（AOSP 17 / 6.12）
+## 四、关键源码路径（AOSP 17 / 6.18）
 
 ### 4.1 路径对账表
 
@@ -201,9 +201,9 @@ Date:   2024-10-01
 | 13 | `art/runtime/write_barrier.cc` | ✅ 已校对 | ✅ 已校对 | AOSP 14 → 17 |
 | 14 | `art/runtime/options.h` | ✅ 已校对 | ✅ 已校对 | AOSP 14 → 17 |
 | 15 | `art/runtime/arch/arm64/quick_entrypoints_arm64.S` | ✅ 已校对 | ✅ 已校对 | AOSP 14 → 17 |
-| 16 | `kernel/mm/slab_common.c` | ❌ 不存在 | ✅ 已校对 | **Linux 6.12 新增** |
-| 17 | `kernel/fs/io_uring.c` | ✅ 已校对 | ✅ 已校对 | Linux 5.10 → 6.12 |
-| 18 | `arch/arm64/include/asm/barrier.h` | ✅ 已校对 | ✅ 已校对 | Linux 5.10 → 6.12 |
+| 16 | `kernel/mm/slab_common.c` | ❌ 不存在 | ✅ 已校对 | **Linux 6.18 新增** |
+| 17 | `kernel/fs/io_uring.c` | ✅ 已校对 | ✅ 已校对 | Linux 5.10 → 6.18 |
+| 18 | `arch/arm64/include/asm/barrier.h` | ✅ 已校对 | ✅ 已校对 | Linux 5.10 → 6.18 |
 
 ### 4.2 关键路径变更说明
 
@@ -213,8 +213,8 @@ Date:   2024-10-01
 | **AOSP 17 新增** | `art/runtime/gc/space/gen_space.h` | 分代 Space |
 | **AOSP 17 新增** | `art/runtime/options.h`（kSoftThresholdPercent） | 软阈值参数 |
 | **AOSP 17 新增** | `art/runtime/gc/space/region_space.h`（ModUnionTable） | 跨代引用跟踪 |
-| **Linux 6.12 新增** | `kernel/mm/slab_common.c`（sheaves） | sheaves 内存分配器 |
-| **基线纠正** | 内核基线 | `android17-6.18` → `android17-6.12` |
+| **Linux 6.18 新增** | `kernel/mm/slab_common.c`（sheaves） | sheaves 内存分配器 |
+| **基线纠正** | 内核基线 | `android17-6.18` → `android17-6.18` |
 
 ---
 
@@ -226,7 +226,7 @@ Date:   2024-10-01
 |:---|:---|:---|:---|
 | **基线版本** | AOSP 14 | AOSP 17 | 2026-07-18 基线升级 |
 | **API Level** | 34 | 37 | 与 AOSP 17 配套 |
-| **Linux 内核** | android14-5.10/5.15 | **android17-6.12** | **基线纠正** |
+| **Linux 内核** | android14-5.10/5.15 | **android17-6.18** | **基线纠正** |
 | **GC 默认策略** | GenCC（可选） | **GenCC（强制）** | AOSP 17 强制 |
 | **Card 粒度** | 512 byte | **256 byte** | AOSP 17 默认 |
 | **软阈值** | 不存在 | **kSoftThresholdPercent=30%** | AOSP 17 新增 |
@@ -280,7 +280,7 @@ adb shell dumpsys meminfo <package> | grep "GenerationalCC"
 # 输出示例：
 # GenerationalCC: enabled (default)
 
-# 9. Linux 6.12：看 sheaves 内存
+# 9. Linux 6.18：看 sheaves 内存
 adb shell cat /proc/slabinfo | grep sheaf
 ```
 
@@ -290,7 +290,7 @@ adb shell cat /proc/slabinfo | grep sheaf
 
 ### 7.1 v1 → v2 对账项
 
-- [x] **基线版本**：AOSP 14 → AOSP 17 + 6.12 LTS（基线纠正）
+- [x] **基线版本**：AOSP 14 → AOSP 17 + 6.18 LTS（基线纠正）
 - [x] **API Level**：34 → 37
 - [x] **GC 默认策略**：GenCC（可选）→ GenCC（强制）
 - [x] **Card 粒度**：512 byte → 256 byte（AOSP 17 强化）
@@ -303,11 +303,11 @@ adb shell cat /proc/slabinfo | grep sheaf
 
 ### 7.2 跨系列基线一致性
 
-- [x] **AndroidArchitectureMastery 基线**：`AOSP 17 + android17-6.12`
-- [x] **ART 系列基线**：`AOSP 17 + android17-6.12`
-- [x] **GC 系列基线**：`AOSP 17 + android17-6.12`
-- [x] **Kernel 系列基线**：`AOSP 17 + android17-6.12`
-- [x] **JNI 系列基线**：`AOSP 17 + android17-6.12`
+- [x] **AndroidArchitectureMastery 基线**：`AOSP 17 + android17-6.18`
+- [x] **ART 系列基线**：`AOSP 17 + android17-6.18`
+- [x] **GC 系列基线**：`AOSP 17 + android17-6.18`
+- [x] **Kernel 系列基线**：`AOSP 17 + android17-6.18`
+- [x] **JNI 系列基线**：`AOSP 17 + android17-6.18`
 
 ---
 

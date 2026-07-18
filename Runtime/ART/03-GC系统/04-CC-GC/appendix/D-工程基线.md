@@ -1,8 +1,8 @@
-# 附录 D：工程基线（CC GC · v2 升级版）
+﻿# 附录 D：工程基线（CC GC · v2 升级版）
 
 > **本子模块**：03-GC 系统 / 04-CC-GC（CC-GC · 附录 D）
 > **本附录定位**：**CC-GC 工程基线**（D/4）——关键参数 + 监控指标 + Hook 兼容性 checklist + APM 监控 + CC GC 时代的稳定性策略
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -38,11 +38,11 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 新增参数** | 未覆盖 | **新增整节**：kSoftThresholdPercent / UseGenerationalCc / kInvariantCheckSamplePercent | API 37+ GC 硬变化 |
 | **ART 17 监控指标** | 未覆盖 | **新增整节**：Young GC 暂停 < 1ms / Repair 阶段监控 | API 37+ GC 硬变化 |
-| **Linux 6.12 关联** | 未涉及 | **新增**：sheaves 让 Native 堆 -15-20% | 跨系列基线一致性 |
+| **Linux 6.18 关联** | 未涉及 | **新增**：sheaves 让 Native 堆 -15-20% | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -118,9 +118,9 @@
 | 软阈值触发次数 | 5-10/min | 2-5/min | < 1/min |
 | 跨代引用写屏障开销 | < 2% | 2-5% | > 10% |
 
-### 2.4 Native 堆监控（Linux 6.12 关联）
+### 2.4 Native 堆监控（Linux 6.18 关联）
 
-| 指标 | AOSP 14 | AOSP 17 + Linux 6.12 | 改进 |
+| 指标 | AOSP 14 | AOSP 17 + Linux 6.18 | 改进 |
 |:---|:---|:---|:---|
 | **Region Pool 内存** | 100MB | **80-85MB** | **-15-20%** |
 | **Mark Bitmap 内存** | 50MB | **40-42MB** | **-15-20%** |
@@ -239,7 +239,7 @@ public class ART17GCMonitor {
             " thread=" + threadId + " obj=0x" + Long.toHexString(objAddr));
     }
     
-    // 6. Native 堆监控（Linux 6.12 关联）
+    // 6. Native 堆监控（Linux 6.18 关联）
     public void onNativeHeapSample(long sizeBytes) {
         apmClient.report("gc.nativeheap.size", sizeBytes);
     }
@@ -277,7 +277,7 @@ public class ART17GCMonitor {
 | **升级到 ART 17 GenCC 强化** | 软阈值 30% + Young GC < 1ms | 必做 |
 | **启用 inlined 读屏障** | ART 17 默认 30ns → 10ns | 必做 |
 | **升级 Hook 框架到支持 to-space invariant** | 1% 采样 + 自动屏障覆盖 | 必做 |
-| **Linux 6.12 sheaves 利用** | Native 堆 -15-20% | 推荐 |
+| **Linux 6.18 sheaves 利用** | Native 堆 -15-20% | 推荐 |
 | **反射 / Unsafe 替换为 JNI 接口** | 漏标 -20% | 推荐 |
 | **生产环境 1% 不变式采样** | 捕获真实场景 | 推荐 |
 | **栈扫描并行化确认** | Initialize 阶段 -50% | 推荐 |
@@ -307,7 +307,7 @@ public class ART17GCMonitor {
 | **JNI 直接访问** | 绕过读屏障 | 漏标 | 代码审查 | 用 JNI 接口 |
 | **Unsafe 操作** | 绕过读屏障 | 漏标 | 代码审查 | **AOSP 17 自动屏障** |
 | **跨代引用** | GenCC 跨代假设失败 | GC 频繁 | systrace | 调高 `kSoftThresholdPercent` |
-| **Native 堆膨胀** | sheaves 未启用 | OOM | dumpsys meminfo | **Linux 6.12 sheaves** |
+| **Native 堆膨胀** | sheaves 未启用 | OOM | dumpsys meminfo | **Linux 6.18 sheaves** |
 | **反射修改 final** | ART 14 漏标 | 漏标 | 代码审查 | **AOSP 17 自动屏障** |
 
 ---
@@ -328,7 +328,7 @@ public class ART17GCMonitor {
 | **读屏障调用** | 30ns | **10ns（inlined）** | **3x** |
 | **自愈检查** | 3ns | **1ns** | **3x** |
 | **屏障开销占比** | 15% | **6%** | **2.5x** |
-| **Native 堆** | 100% | **80-85%** | **-15-20%（Linux 6.12）** |
+| **Native 堆** | 100% | **80-85%** | **-15-20%（Linux 6.18）** |
 | **heap dump 延迟** | 100ms | **70ms** | **-30%（io_uring）** |
 
 ### 7.2 实战对照（社交 App / 1.5GB 堆）
@@ -339,18 +339,18 @@ public class ART17GCMonitor {
 | **GC 频率** | 2/min | **5/min（Young 为主）** | **更频繁但更轻** |
 | **UI 卡顿次数 / 小时** | 12 | **3** | **4x** |
 | **App 内存占用** | 1.2GB | **1.0GB** | **-17%** |
-| **Native 堆** | 200MB | **165MB** | **-17%（Linux 6.12）** |
+| **Native 堆** | 200MB | **165MB** | **-17%（Linux 6.18）** |
 | **帧率稳定性（p99）** | 8ms 抖动 | **3ms 抖动** | **2.5x** |
 | **崩溃次数 / 周** | 3 | **0** | **不变式强化** |
 
 ---
 
-## 八、Linux 6.12 工程关联
+## 八、Linux 6.18 工程关联
 
 ### 8.1 sheaves 分配器对 ART 的影响
 
 ```
-Linux 6.12 sheaves（2024-11-17 发布）：
+Linux 6.18 sheaves（2024-11-17 发布）：
   ├─ ART Native 堆（Region Pool / Mark Bitmap / TLAB）内存 -15-20%
   ├─ Native 辅助结构重置更快（SwapSemiSpaces）
   └─ GenCC Young GC 频率可提升 30%（Native 内存压力减小）
@@ -359,7 +359,7 @@ Linux 6.12 sheaves（2024-11-17 发布）：
 ### 8.2 内存屏障原语对 ART 的影响
 
 ```
-Linux 6.12 arm64 内存屏障指令优化：
+Linux 6.18 arm64 内存屏障指令优化：
   ├─ ART 读屏障的 MonitorEnter / MonitorExit 开销 -10%
   └─ ART 17 inlined 屏障配合，屏障总开销 < 1ns
 ```
@@ -367,7 +367,7 @@ Linux 6.12 arm64 内存屏障指令优化：
 ### 8.3 io_uring 增强对 ART 的影响
 
 ```
-Linux 6.12 io_uring 增强：
+Linux 6.18 io_uring 增强：
   ├─ heap dump 写盘延迟 -30%
   └─ ART 17 不变式采样日志写入更快
 ```
@@ -387,7 +387,7 @@ Linux 6.12 io_uring 增强：
   □ 1. 升级 Hook 框架到支持 to-space invariant（LSPosed / Frida 12.x+）
   □ 2. 替换 JNI 直接内存访问为 JNI 接口
   □ 3. 替换 Unsafe 直接操作 Java 对象为 Field.get()
-  □ 4. 确认 Linux 内核是 android17-6.12（基线纠正）
+  □ 4. 确认 Linux 内核是 android17-6.18（基线纠正）
   □ 5. 启用 ART 17 inlined 读屏障（默认开启）
   □ 6. 确认 UseGenerationalCc=true（默认）
 
@@ -397,7 +397,7 @@ Linux 6.12 io_uring 增强：
   □ 9. 监控 Full GC 暂停 5-20ms
   □ 10. 监控 Repair 阶段 5-20ms
   □ 11. 监控读屏障开销占比 < 8%
-  □ 12. 监控 Native 堆 -15-20%（Linux 6.12 sheaves）
+  □ 12. 监控 Native 堆 -15-20%（Linux 6.18 sheaves）
 ```
 
 ### 9.2 性能调优 checklist
@@ -410,7 +410,7 @@ Linux 6.12 io_uring 增强：
   □ 4. 调优 Region Size（256KB / 512KB）
   □ 5. 启用 inlined 读屏障（默认）
   □ 6. 启用 1 bit 自愈检查（默认）
-  □ 7. 监控 Native 堆（Linux 6.12 sheaves）
+  □ 7. 监控 Native 堆（Linux 6.18 sheaves）
   □ 8. 监控 io_uring 增强（heap dump）
 ```
 
@@ -439,8 +439,8 @@ Linux 6.12 io_uring 增强：
 - **ART 17 是 CC GC 的成熟版本**——inlined 屏障 + to-space invariant + Repair 阶段
 - **总 STW 从 3-8ms 降至 2-5ms**（2x 提升）
 - **读屏障开销从 30ns 降至 10ns**（3x 提升）
-- **Native 堆 -15-20%**（Linux 6.12 sheaves）
-- **heap dump 延迟 -30%**（Linux 6.12 io_uring）
+- **Native 堆 -15-20%**（Linux 6.18 sheaves）
+- **heap dump 延迟 -30%**（Linux 6.18 io_uring）
 
 ### 10.2 架构师视角
 
@@ -468,4 +468,4 @@ Linux 6.12 io_uring 增强：
 
 ---
 
-> **本附录为 04-CC-GC 子模块的工程基线参考**。所有工程参数、监控指标、checklist 都基于 AOSP 17.0.0_r1（API 37）+ Linux android17-6.12 基线。
+> **本附录为 04-CC-GC 子模块的工程基线参考**。所有工程参数、监控指标、checklist 都基于 AOSP 17.0.0_r1（API 37）+ Linux android17-6.18 基线。

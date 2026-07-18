@@ -1,7 +1,7 @@
-# 附录 A：源码索引（GC 调度与触发 · v2 升级版）
+﻿# 附录 A：源码索引（GC 调度与触发 · v2 升级版）
 
-> **本附录定位**：**A 附录 · 源码路径索引**（4 附录之 1/4）——07 子模块 4 篇正文涉及的 AOSP 17 ART 源码完整路径 + 关键函数清单 + ART 17 新增源码 + Linux 6.12 关联源码
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **本附录定位**：**A 附录 · 源码路径索引**（4 附录之 1/4）——07 子模块 4 篇正文涉及的 AOSP 17 ART 源码完整路径 + 关键函数清单 + ART 17 新增源码 + Linux 6.18 关联源码
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -30,10 +30,10 @@ art/runtime/gc/collector/generational_cc.cc              # ★ GenCC 实现（Mi
 art/runtime/options.h                                    # ★ ART 17 全局选项
 ```
 
-### 1.2 Linux 6.12 关联源码（跨系列基线）
+### 1.2 Linux 6.18 关联源码（跨系列基线）
 
 ```
-kernel/mm/slab_common.c                                   # Linux 6.12 sheaves 内存分配器
+kernel/mm/slab_common.c                                   # Linux 6.18 sheaves 内存分配器
 kernel/mm/slub.c                                          # SLUB 分配器（与 ART Native 堆相关）
 kernel/sched/core.c                                       # CPU 负载检测（HeapTaskDaemon 动态 sleep 联动）
 kernel/fs/io_uring.c                                      # io_uring（heap dump 写盘延迟）
@@ -245,9 +245,9 @@ static constexpr int kDefaultHeapTaskDaemonPriority = -19;
 
 ## 六、跨系列源码引用
 
-### 6.1 ART ↔ Linux Kernel 6.12 关联
+### 6.1 ART ↔ Linux Kernel 6.18 关联
 
-| 维度 | ART 17 端 | Linux 6.12 端 | 关联路径 |
+| 维度 | ART 17 端 | Linux 6.18 端 | 关联路径 |
 |:---|:---|:---|:---|
 | **Native 内存** | NativeAllocationRegistry | sheaves 分配器 | `kernel/mm/slab_common.c` |
 | **CPU 负载** | HeapTaskDaemon 动态 sleep | `kernel/sched/core.c` | `loadavg` / `cpu_util` |

@@ -1,8 +1,8 @@
-# 附录 A：源码索引（CC GC · v2 升级版）
+﻿# 附录 A：源码索引（CC GC · v2 升级版）
 
 > **本子模块**：03-GC 系统 / 04-CC-GC（CC-GC · 附录 A）
 > **本附录定位**：**CC-GC 源码路径索引**（A/4）——4 篇涉及的所有 AOSP 17 源码路径清单
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -14,7 +14,7 @@
 | CC GC 核心类源码路径 | ✓ 完整 AOSP 17 路径 |
 | 关键函数 / 常量索引 | ✓ 完整 |
 | ART 17 新增源码 | ✓ inlined 读屏障 / Repair 阶段 / to-space invariant |
-| 跨系列源码关联 | ✓ Linux 6.12 sheaves |
+| 跨系列源码关联 | ✓ Linux 6.18 sheaves |
 
 **承接自**：4 篇主文（[01-CC核心思想](../01-CC核心思想.md) / [02-3阶段详解](../02-3阶段详解.md) / [03-读屏障机制](../03-读屏障机制.md) / [04-Invariant不变式](../04-Invariant不变式.md)）。
 
@@ -36,10 +36,10 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 新增源码** | 未覆盖 | **新增整节**：inlined 读屏障 / Repair 阶段 / to-space invariant | API 37+ GC 硬变化 |
-| **Linux 6.12 关联** | 未涉及 | **新增**：sheaves 路径 | 跨系列基线一致性 |
+| **Linux 6.18 关联** | 未涉及 | **新增**：sheaves 路径 | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -286,14 +286,14 @@ key changes:
 
 ---
 
-## 七、Linux 6.12 关联源码
+## 七、Linux 6.18 关联源码
 
 | 路径 | 关键内容 | Linux 版本 |
 |:---|:---|:---|
-| `kernel/mm/slab_common.c` | **sheaves 分配器**（ART Native 堆 -15-20%） | Linux 6.12 LTS |
-| `arch/arm64/include/asm/barrier.h` | **arm64 内存屏障原语**（屏障开销 -10%） | Linux 6.12 LTS |
-| `arch/x86/include/asm/barrier.h` | **x86 内存屏障原语** | Linux 6.12 LTS |
-| `kernel/fs/io_uring.c` | **io_uring 增强**（heap dump 写盘 -30%） | Linux 6.12 LTS |
+| `kernel/mm/slab_common.c` | **sheaves 分配器**（ART Native 堆 -15-20%） | Linux 6.18 LTS |
+| `arch/arm64/include/asm/barrier.h` | **arm64 内存屏障原语**（屏障开销 -10%） | Linux 6.18 LTS |
+| `arch/x86/include/asm/barrier.h` | **x86 内存屏障原语** | Linux 6.18 LTS |
+| `kernel/fs/io_uring.c` | **io_uring 增强**（heap dump 写盘 -30%） | Linux 6.18 LTS |
 
 **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) §3。
 
@@ -366,7 +366,7 @@ art/runtime/jit/jit_code_cache.cc                 # JIT 读屏障插入
 art/runtime/options.h                             # GC 选项 (AOSP 17 新增)
 art/runtime/gc/accounting/space_bitmap.h          # Mark Bitmap
 
-# Linux 6.12 关联
+# Linux 6.18 关联
 kernel/mm/slab_common.c                           # sheaves
 arch/arm64/include/asm/barrier.h                  # arm64 内存屏障
 ```

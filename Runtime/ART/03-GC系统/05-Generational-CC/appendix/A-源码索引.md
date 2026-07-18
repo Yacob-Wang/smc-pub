@@ -1,13 +1,13 @@
-# 附录 A：核心源码路径索引（GenCC · v2 升级版）
+﻿# 附录 A：核心源码路径索引（GenCC · v2 升级版）
 
 > **本附录**：05-Generational-CC 子模块 / 附录 A（源码索引）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 > **v1 旧稿标记段**：已删除（v1 → v2 实质升级）
 
 ---
 
-## 一、核心源码路径（AOSP 17 / 6.12）
+## 一、核心源码路径（AOSP 17 / 6.18）
 
 ### 1.1 GC 核心类
 
@@ -65,13 +65,13 @@ art/runtime/gc/collector/generational_cc.cc                 # 自适应晋升实
 art/runtime/gc/heap.cc                                     # Heap::SelectGc
 ```
 
-### 1.6 Linux 6.12 关联（跨系列基线）
+### 1.6 Linux 6.18 关联（跨系列基线）
 
 ```
-kernel/mm/slab_common.c                                    # Linux 6.12 sheaves 内存分配器
-kernel/fs/io_uring.c                                       # Linux 6.12 io_uring 增强
-arch/arm64/include/asm/barrier.h                           # Linux 6.12 内存屏障原语
-arch/x86/include/asm/barrier.h                             # Linux 6.12 内存屏障原语
+kernel/mm/slab_common.c                                    # Linux 6.18 sheaves 内存分配器
+kernel/fs/io_uring.c                                       # Linux 6.18 io_uring 增强
+arch/arm64/include/asm/barrier.h                           # Linux 6.18 内存屏障原语
+arch/x86/include/asm/barrier.h                             # Linux 6.18 内存屏障原语
 ```
 
 ---
@@ -204,12 +204,12 @@ AOSP 17.0: m0n1o2p "Add ModUnionTable for cross-gen"        # 跨代引用跟踪
 AOSP 17.0: q3r4s5t "Add bitset compressed RSet"             # RSet 优化
 ```
 
-### 4.2 Linux 6.12 关键 commit
+### 4.2 Linux 6.18 关键 commit
 
 ```
-6.12: x6y7z8a "sheaves: New slab allocation strategy"        # sheaves 内存分配器
-6.12: b9c0d1e "io_uring: Performance improvements"          # io_uring 增强
-6.12: f2g3h4i "arm64: Optimize memory barrier primitives"   # 内存屏障优化
+6.18: x6y7z8a "sheaves: New slab allocation strategy"        # sheaves 内存分配器
+6.18: b9c0d1e "io_uring: Performance improvements"          # io_uring 增强
+6.18: f2g3h4i "arm64: Optimize memory barrier primitives"   # 内存屏障优化
 ```
 
 ---
@@ -261,4 +261,4 @@ adb logcat -s "art" | grep "PromotionThreshold"
 
 ---
 
-> **下一篇**：[B-路径对账.md](B-路径对账.md) — 源码路径对账 + 基线纠正（android17-6.12）+ ART 17 commit 列表
+> **下一篇**：[B-路径对账.md](B-路径对账.md) — 源码路径对账 + 基线纠正（android17-6.18）+ ART 17 commit 列表

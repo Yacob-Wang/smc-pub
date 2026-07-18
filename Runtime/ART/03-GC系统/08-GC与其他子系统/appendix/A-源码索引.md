@@ -1,8 +1,8 @@
-# 附录 A：源码索引（v2 升级版）
+﻿# 附录 A：源码索引（v2 升级版）
 
 > **本附录是 08-GC与其他子系统子模块（01-04 篇）涉及的所有 AOSP 源码路径清单** —— 按章节组织，附关键函数和字段说明。
 >
-> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18
 > **使用方式**：用 `aosp-search` 工具或 AOSP 官方代码搜索定位（https://cs.android.com/android/platform/superproject/+/android17-release:）
 
@@ -19,7 +19,7 @@
 | 关键函数 + 关键字段 | ✓ 完整说明 | — |
 | 架构组织（art/runtime/jni/ + art/runtime/gc/） | ✓ 完整结构 | — |
 | AOSP 17 新增源码（Slot Pool / JNIRefTable 压缩 / ZygoteSpace 优化 / ClassLoader 去重 / newHook API / ArtMethod 保护） | ✓ 完整列表 | — |
-| Linux 6.12 关联源码 | ✓ 完整列表 | — |
+| Linux 6.18 关联源码 | ✓ 完整列表 | — |
 | 实战代码 | — | 见各篇实战案例章节 |
 | ART 17 完整变更 | — | 详见 [B-路径对账](B-路径对账.md) §3 |
 
@@ -45,22 +45,22 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58 |
+| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
-| Linux 内核 | android17-6.18（误） | **android17-6.12** | **基线纠正** |
+| Linux 内核 | android17-6.18（误） | **android17-6.18** | **基线纠正** |
 | ART 17 Slot Pool 优化源码 | 未列出 | **新增 §6.1** | AOSP 17 JNI 内存硬变化 |
 | ART 17 JNIRefTable 压缩源码 | 未列出 | **新增 §6.2** | AOSP 17 JNI 内存硬变化 |
 | ART 17 Zygote Space 优化源码 | 未列出 | **新增 §6.3** | AOSP 17 启动性能硬变化 |
 | ART 17 ClassLoader 去重源码 | 未列出 | **新增 §6.4** | AOSP 17 GC Root 减少 |
 | ART 17 newHook API 源码 | 未列出 | **新增 §6.5** | AOSP 17 官方 Hook 接口 |
 | ART 17 ArtMethod 保护源码 | 未列出 | **新增 §6.6** | AOSP 17 安全强化 |
-| Linux 6.12 sheaves | 未列出 | **新增 §7 关联** | 跨系列基线 |
+| Linux 6.18 sheaves | 未列出 | **新增 §7 关联** | 跨系列基线 |
 
 ### 第 3 轮：锐度校准
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 章节顺序 | 按 JNI / Zygote / Hook 旧序 | **按"01-04 篇 → §6 ART 17 → §7 Linux 6.12"** | 反映读者阅读路径 |
+| 章节顺序 | 按 JNI / Zygote / Hook 旧序 | **按"01-04 篇 → §6 ART 17 → §7 Linux 6.18"** | 反映读者阅读路径 |
 | 关键函数说明 | 简略 | **每函数都注明功能 + 调用方 + 影响** | 实战可查性 |
 | §6 AOSP 17 增补 | 无 | **整节覆盖 Slot Pool / JNIRefTable / ZygoteSpace / ClassLoader / newHook / ArtMethod** | 完整覆盖 v2 增量 |
 | §8 源码搜索技巧 | 简略 | **新增 aosp-search 工具 + cs.android.com 用法** | 实战可查性 |
@@ -452,18 +452,18 @@ public:
 
 ---
 
-## 七、Linux 6.12 关联源码（跨系列基线）
+## 七、Linux 6.18 关联源码（跨系列基线）
 
-### 7.1 Linux 6.12 sheaves 内存分配器
+### 7.1 Linux 6.18 sheaves 内存分配器
 
 | 文件路径 | 关键内容 | 备注 |
 |:---|:---|:---|
-| `kernel/mm/slab_common.c` | slab 通用代码 | Linux 6.12 |
-| `kernel/mm/slub.c` | SLUB allocator | Linux 6.12 |
-| `kernel/mm/sheaves.c` | **Linux 6.12 新增**：sheaves 分配器 | Linux 6.12 LTS |
+| `kernel/mm/slab_common.c` | slab 通用代码 | Linux 6.18 |
+| `kernel/mm/slub.c` | SLUB allocator | Linux 6.18 |
+| `kernel/mm/sheaves.c` | **Linux 6.18 新增**：sheaves 分配器 | Linux 6.18 LTS |
 
 ```c
-// kernel/mm/sheaves.c（Linux 6.12 新增）
+// kernel/mm/sheaves.c（Linux 6.18 新增）
 struct sheaf {
     unsigned int order;       // slab order
     unsigned int objects;     // 对象数
@@ -475,12 +475,12 @@ void *sheaf_alloc(struct sheaf *sh, gfp_t gfp);
 void sheaf_free(struct sheaf *sh, void *obj);
 ```
 
-### 7.2 Linux 6.12 io_uring 增强（heap dump 关联）
+### 7.2 Linux 6.18 io_uring 增强（heap dump 关联）
 
 | 文件路径 | 关键内容 | 备注 |
 |:---|:---|:---|
-| `kernel/fs/io_uring.c` | io_uring 实现 | Linux 6.12 |
-| `kernel/fs/io_uring.h` | io_uring 头文件 | Linux 6.12 |
+| `kernel/fs/io_uring.c` | io_uring 实现 | Linux 6.18 |
+| `kernel/fs/io_uring.h` | io_uring 头文件 | Linux 6.18 |
 
 ### 7.3 跨系列引用
 

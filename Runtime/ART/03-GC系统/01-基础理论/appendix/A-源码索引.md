@@ -1,8 +1,8 @@
-# 附录 A：源码索引（v2 升级版）
+﻿# 附录 A：源码索引（v2 升级版）
 
 > **本附录是 01-基础理论子模块涉及的所有 AOSP 源码路径清单** —— 按章节组织，附关键函数和字段说明。
 >
-> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS）
+> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS）
 > **v2 升级日期**：2026-07-18
 > **使用方式**：用 `aosp-search` 工具或 AOSP 官方代码搜索定位（https://cs.android.com/android/platform/superproject/+/android17-release:）
 
@@ -16,7 +16,7 @@
 | 关键函数 + 关键字段 | ✓ 完整说明 | — |
 | 架构组织（art/runtime/gc/） | ✓ 完整结构 | — |
 | AOSP 17 新增源码 | ✓ 完整列表 | — |
-| Linux 6.12 关联源码 | ✓ 完整列表 | — |
+| Linux 6.18 关联源码 | ✓ 完整列表 | — |
 | 实战代码 | — | 见各篇实战案例章节 |
 | ART 17 完整变更 | — | 详见 [B-路径对账](B-路径对账.md) §3 |
 
@@ -42,14 +42,14 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
-| Linux 内核 | android17-6.18（误） | **android17-6.12** | **基线纠正** |
+| Linux 内核 | android17-6.18（误） | **android17-6.18** | **基线纠正** |
 | ART 17 软阈值 kSoftThresholdPercent | 未列出 | **新增 §8.1** | AOSP 17 新增 |
 | ART 17 GenCC 源码 | 未列出 | **新增 §8.2** | AOSP 17 默认 GC |
 | ART 17 细粒度 Card Table | 未列出 | **新增 §8.3** | AOSP 17 性能优化 |
 | ART 17 反射屏障覆盖 | 未列出 | **新增 §8.4** | AOSP 17 漏标修复 |
-| Linux 6.12 sheaves | 未列出 | **新增 §9 关联** | 跨系列基线 |
+| Linux 6.18 sheaves | 未列出 | **新增 §9 关联** | 跨系列基线 |
 
 ### 第 3 轮：锐度校准
 
@@ -535,7 +535,7 @@ public final class Daemons {
 
 ---
 
-## 九、Linux 6.12 关联源码
+## 九、Linux 6.18 关联源码
 
 ### 9.1 内存屏障原语
 
@@ -571,14 +571,14 @@ kernel/fs/io_uring.c
 
 **与 ART GC 的关联**：让 Card Table 脏卡刷盘延迟降低 30%，heap dump 写盘延迟降低 30%。
 
-### 9.4 Linux 6.12 路径对账
+### 9.4 Linux 6.18 路径对账
 
 | 路径 | 状态 | 备注 |
 | :--- | :--- | :--- |
-| `arch/arm64/include/asm/barrier.h` | ✅ 已校对 | Linux 6.12 LTS |
-| `kernel/mm/slab_common.c` | ✅ 已校对 | Linux 6.12 LTS |
-| `kernel/fs/io_uring.c` | ✅ 已校对 | Linux 6.12 LTS |
-| `arch/x86/include/asm/barrier.h` | ✅ 已校对 | Linux 6.12 LTS |
+| `arch/arm64/include/asm/barrier.h` | ✅ 已校对 | Linux 6.18 LTS |
+| `kernel/mm/slab_common.c` | ✅ 已校对 | Linux 6.18 LTS |
+| `kernel/fs/io_uring.c` | ✅ 已校对 | Linux 6.18 LTS |
+| `arch/x86/include/asm/barrier.h` | ✅ 已校对 | Linux 6.18 LTS |
 
 ---
 
@@ -721,7 +721,7 @@ Android Studio Hedgehog (2023.1.1) 及更新版本：
 2. **按章节组织**：1.1-1.6 各有独立的源码索引
 3. **关键函数清单**：每个核心类都有详细的函数说明
 4. **AOSP 17 源码增补**：§8 整节覆盖软阈值 / GenCC / Card Table / 反射 / CAS
-5. **Linux 6.12 关联源码**：§9 覆盖内存屏障 / sheaves / io_uring
+5. **Linux 6.18 关联源码**：§9 覆盖内存屏障 / sheaves / io_uring
 6. **源码搜索技巧**：cs.android.com + aosp-search + 本地 grep
 7. **版本变更追踪**：AOSP 8.0 → 17 的关键变更点 + commit hash
 
@@ -729,4 +729,4 @@ Android Studio Hedgehog (2023.1.1) 及更新版本：
 
 ---
 
-> **下一篇**：[B-路径对账](B-路径对账.md) 给出 AOSP 17 + Linux 6.12 的版本号 / commit hash / 关键路径对账清单。
+> **下一篇**：[B-路径对账](B-路径对账.md) 给出 AOSP 17 + Linux 6.18 的版本号 / commit hash / 关键路径对账清单。

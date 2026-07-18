@@ -1,7 +1,7 @@
-# 附录 A：源码索引（Reference 与 Finalizer）（v2 升级版）
+﻿# 附录 A：源码索引（Reference 与 Finalizer）（v2 升级版）
 
 > **本附录定位**：**源码索引**—— Reference 与 Finalizer 子模块所有关键源码的完整路径 + AOSP 17 新增源码
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -37,7 +37,7 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **ART 17 FinalizerThreadPool 源码** | 未覆盖 | **新增 §3.3 整节** | AOSP 17 新增 |
 | **ART 17 kSoftThresholdPercent 源码** | 未覆盖 | **新增 §3.4 整节** | AOSP 17 新增 |
@@ -343,12 +343,12 @@ static constexpr uint64_t kSlowFinalizeThresholdMs = 5000;  // 慢对象 5 秒
 
 ## 九、跨系列源码索引
 
-### 9.1 Linux 内核 6.12 关联
+### 9.1 Linux 内核 6.18 关联
 
 | 文件 | 完整路径 | 版本 | 关联 |
 | :--- | :--- | :--- | :--- |
-| sheaves 内存分配器 | `kernel/mm/slab_common.c` | Linux 6.12 LTS | Native 堆内存 -15-20% |
-| io_uring 增强 | `kernel/fs/io_uring.c` | Linux 6.12 LTS | Heap Dump 写盘 -30% |
+| sheaves 内存分配器 | `kernel/mm/slab_common.c` | Linux 6.18 LTS | Native 堆内存 -15-20% |
+| io_uring 增强 | `kernel/fs/io_uring.c` | Linux 6.18 LTS | Heap Dump 写盘 -30% |
 
 ### 9.2 跨篇源码引用
 
@@ -413,7 +413,7 @@ libcore/libart/src/main/java/jdk/internal/ref/
 libcore/ojluni/src/main/java/java/util/WeakHashMap.java
   └── WeakHashMap                       ← key 弱引用的 Map
 
-Linux 6.12 关联
+Linux 6.18 关联
   ├── kernel/mm/slab_common.c          ← sheaves 内存分配器
   └── kernel/fs/io_uring.c             ← io_uring 增强
 ```

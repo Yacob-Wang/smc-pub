@@ -1,8 +1,8 @@
-# 附录 D：工程基线（验收标准 + 检查清单 + 工具链 · v2 升级版）
+﻿# 附录 D：工程基线（验收标准 + 检查清单 + 工具链 · v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 附录 D）
 > **本附录定位**：**GC 诊断与治理的工程基线**——验收标准、部署检查清单、工具链依赖、监控告警配置、应急响应 SOP
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -18,7 +18,7 @@
 | 性能基线 | ✓ D.6 | — |
 | 培训基线 | ✓ D.7 | — |
 | 持续改进基线 | ✓ D.8 | — |
-| **AOSP 17 + Linux 6.12 增补基线** | ✓ **D.9**（GenCC + LeakCanary 3.x + MAT 1.14.0+ + Linux 6.12 sheaves/io_uring） | — |
+| **AOSP 17 + Linux 6.18 增补基线** | ✓ **D.9**（GenCC + LeakCanary 3.x + MAT 1.14.0+ + Linux 6.18 sheaves/io_uring） | — |
 | 源码索引 | — | [A-源码索引](A-源码索引.md)（v2 升级版） |
 | 路径对账 | — | [B-路径对账](B-路径对账.md)（v2 升级版） |
 
@@ -43,9 +43,9 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
-| **AOSP 17 增补基线未覆盖** | D.1 ~ D.8 | **新增 D.9（AOSP 17 + Linux 6.12 完整增补）** | v2 硬性要求 |
+| **AOSP 17 增补基线未覆盖** | D.1 ~ D.8 | **新增 D.9（AOSP 17 + Linux 6.18 完整增补）** | v2 硬性要求 |
 | LeakCanary 2.14 | 已列出 | **必须升级 3.x** | AOSP 17 适配 |
 | MAT 1.13.0 | 已列出 | **必须升级 1.14.0+** | AOSP 17 适配 |
 
@@ -77,7 +77,7 @@
 
 【v2 升级】AOSP 17 工程基线：
 - 增加：GenCC + 类去重 + Finalizer 池化 + Hprof 新元数据 + ART 内部状态 API
-- 修正：基线版本（AOSP 14 → AOSP 17 + android17-6.12）
+- 修正：基线版本（AOSP 14 → AOSP 17 + android17-6.18）
 - 升级：工具版本（LeakCanary 2.x → 3.x / MAT 1.13 → 1.14.0+）
 ```
 
@@ -110,7 +110,7 @@ GC 诊断治理验收标准（AOSP 17 强化版）：
    - [ ] 【AOSP 17】dumpsys meminfo -d 能输出 ART 内部状态
    - [ ] 【AOSP 17】dumpsys meminfo -d 显示软阈值状态（kSoftThresholdPercent=30%）
    - [ ] procrank / smaps 能获取详细信息
-   - [ ] 【Linux 6.12】smaps_rollup 能快速汇总
+   - [ ] 【Linux 6.18】smaps_rollup 能快速汇总
    - [ ] 【AOSP 17】LeakCanary 3.x（必须 3.x）能自动检测泄漏
    - [ ] 【AOSP 17】MAT 1.14.0+（必须 1.14+）能打开和解析 hprof
    - [ ] 【AOSP 17】MAT 能正确解析 Class Extent 元数据
@@ -274,7 +274,7 @@ GC 监控指标基线（AOSP 17 强化版）：
    - Fragment 泄漏数：< 5
    - ViewModel 泄漏数：< 0
 
-9.【AOSP 17 + Linux 6.12】sheaves 内存
+9.【AOSP 17 + Linux 6.18】sheaves 内存
    - sheaves PSS 占比 20-30%：正常
    - sheaves PSS 占比 < 10%：优化未生效
    - sheaves PSS 占比 > 40%：占用过多
@@ -530,7 +530,7 @@ GC 诊断治理工具链（AOSP 17 强制升级版）：
    - AOSP 系统组件
    - 部分定制 ROM 不支持 procrank
    - smaps 通过 /proc 内核接口
-   -【Linux 6.12】smaps_rollup（推荐使用，性能开销降低 100 倍）
+   -【Linux 6.18】smaps_rollup（推荐使用，性能开销降低 100 倍）
 
 3.【AOSP 17 强制升级】LeakCanary
    - Maven / Gradle 依赖
@@ -719,7 +719,7 @@ OOM 性能基线：
    - 能优化 GC 参数
    - 能设计 APM 系统
    - 能排查疑难杂症
-   - 理解 ART 17 + Linux 6.12 硬变化
+   - 理解 ART 17 + Linux 6.18 硬变化
 
 4.【AOSP 17 新增】架构师
    - 能设计 AOSP 17 升级方案
@@ -749,7 +749,7 @@ OOM 性能基线：
    - GC 调优
    - APM 设计（【AOSP 17】ART 内部状态 API）
    - 疑难杂症
-   - ART 17 + Linux 6.12 完整硬变化
+   - ART 17 + Linux 6.18 完整硬变化
 
 4. 应急培训（1 天）
    - 应急 SOP（D.4）
@@ -853,9 +853,9 @@ OOM 性能基线：
 
 ---
 
-## D.9 【v2 新增】AOSP 17 + Linux 6.12 增补基线
+## D.9 【v2 新增】AOSP 17 + Linux 6.18 增补基线
 
-> **本节为 v2 升级新增**——列出 AOSP 17 + Linux 6.12 相对 AOSP 14 + Linux 5.10 的基线变化。
+> **本节为 v2 升级新增**——列出 AOSP 17 + Linux 6.18 相对 AOSP 14 + Linux 5.10 的基线变化。
 
 ### D.9.1 AOSP 17 必升级工具
 
@@ -892,7 +892,7 @@ OOM 性能基线：
 | **Full GC STW p95** | < 16ms | **< 16ms** | 不变 |
 | **软阈值触发距离** | 不存在 | **> 5%** | **AOSP 17 新增** |
 | **JNI Global refs** | 不监控 | **< 1000** | **AOSP 17 新增监控** |
-| **sheaves 内存占比** | 不存在 | **20-30%** | **Linux 6.12 新增** |
+| **sheaves 内存占比** | 不存在 | **20-30%** | **Linux 6.18 新增** |
 
 ### D.9.4 AOSP 17 必避免的错误
 
@@ -912,7 +912,7 @@ AOSP 17 必避免的错误：
    - 必须升级到 Java 17+
 
 4.【必避免】把类去重误判为"内存泄漏已修复"
-   - Linux 6.12 sheaves 也会让 Native 堆降 15-20%
+   - Linux 6.18 sheaves 也会让 Native 堆降 15-20%
    - 两者叠加可能让 PSS 降 25-30%，**不是泄漏已修复**
 
 5.【必避免】用 `Object.finalize()`
@@ -943,7 +943,7 @@ AOSP 17 升级检查清单：
   - [ ] dumpsys meminfo -d 集成
   - [ ] ART 内部状态 API 集成（GetGcStats 等）
   - [ ] smaps_rollup 集成
-  - [ ] Linux 6.12 sheaves 监控
+  - [ ] Linux 6.18 sheaves 监控
 
 □ 阈值调整
   - [ ] GC 频率阈值调整（Young GC < 50 次/分钟）
@@ -981,7 +981,7 @@ D.7：培训基线（保留 + AOSP 17 强化培训内容 + 考核）
 D.8：持续改进基线（保留 + AOSP 17 强化）
 
 【v2 新增】
-D.9：AOSP 17 + Linux 6.12 增补基线（必升级工具 + 必集成 API + 必调整阈值 + 必避免错误 + 升级检查清单）
+D.9：AOSP 17 + Linux 6.18 增补基线（必升级工具 + 必集成 API + 必调整阈值 + 必避免错误 + 升级检查清单）
 D.10：v2 升级总览（本节）
 ```
 
@@ -1015,7 +1015,7 @@ AOSP 17 工程基线核心数字：
    - MAT 1.14.0+（必须）
    - Java 17+（必须）
 
-7. sheaves 内存（Linux 6.12）
+7. sheaves 内存（Linux 6.18）
    - 占比 20-30%（正常）
    - Native 堆节省 15-20%
 ```
@@ -1060,8 +1060,8 @@ AOSP 17 工程基线核心数字：
 | Hprof Class Extent | `art/runtime/hprof/hprof.cc#WriteClassExtent` | AOSP 17 |
 | dumpsys meminfo | `frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java#dumpApplicationMemoryUsage` | AOSP 17 |
 | ART 内部状态 API | `art/runtime/gc/heap.h#GetGcStats` | **AOSP 17 新增** |
-| sheaves | `kernel/mm/slab_common.c` | **Linux 6.12** |
-| smaps_rollup | `fs/proc/task_mmu.c` | **Linux 6.12** |
+| sheaves | `kernel/mm/slab_common.c` | **Linux 6.18** |
+| smaps_rollup | `fs/proc/task_mmu.c` | **Linux 6.18** |
 | LeakCanary 3.x | `external/leakcanary/leakcanary-android/` | LeakCanary 3.x |
 | MAT 1.14.0+ | `external/eclipse-memory-analyzer/` | MAT 1.14.0+ |
 
@@ -1079,12 +1079,12 @@ AOSP 17 工程基线核心数字：
 | Finalizer 线程 | 1 线程 | 4 线程池化 |
 | Hprof 元数据 | 基础 | Class Extent + GenInfo + GCRootIndex |
 | ART 内部状态 API | 不存在 | GetGcStats 等 |
-| Linux 内核 | 5.10/5.15 | **android17-6.12** |
+| Linux 内核 | 5.10/5.15 | **android17-6.18** |
 | LeakCanary | 2.x | **必须 3.x** |
 | MAT | 1.13.0 | **必须 1.14.0+** |
 | Java | Java 11+ | **必须 Java 17+** |
-| sheaves 内存 | 不存在 | Linux 6.12 sheaves |
-| smaps_rollup | 不存在 | Linux 6.12 新增 |
+| sheaves 内存 | 不存在 | Linux 6.18 sheaves |
+| smaps_rollup | 不存在 | Linux 6.18 新增 |
 
 ### B.2 AOSP 17 性能阈值速查
 
@@ -1096,10 +1096,10 @@ AOSP 17 工程基线核心数字：
 | Full GC STW p95 | < 16ms | 不变 |
 | 软阈值触发距离 | > 5% | AOSP 17 新增 |
 | JNI Global refs | < 1000 | AOSP 17 新增 |
-| sheaves 内存占比 | 20-30% | Linux 6.12 新增 |
-| Native 堆内存节省 | 15-20% | Linux 6.12 新增 |
-| heap dump 写盘延迟 | -30% | Linux 6.12 io_uring |
-| hprof-conv 转换加速 | 3 倍 | AOSP 17 + Linux 6.12 |
+| sheaves 内存占比 | 20-30% | Linux 6.18 新增 |
+| Native 堆内存节省 | 15-20% | Linux 6.18 新增 |
+| heap dump 写盘延迟 | -30% | Linux 6.18 io_uring |
+| hprof-conv 转换加速 | 3 倍 | AOSP 17 + Linux 6.18 |
 | GC Root 路径查找加速 | 5-10 倍 | AOSP 17 GCRootIndex |
 
 ---

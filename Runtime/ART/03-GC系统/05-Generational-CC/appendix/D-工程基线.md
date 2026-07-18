@@ -1,7 +1,7 @@
-# 附录 D：工程基线（GenCC · v2 升级版）
+﻿# 附录 D：工程基线（GenCC · v2 升级版）
 
 > **本附录**：05-Generational-CC 子模块 / 附录 D（工程基线）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 > **v1 旧稿标记段**：已删除（v1 → v2 实质升级）
 
@@ -34,14 +34,14 @@
 | `kMaxRegions` | 1024 | 最大 Region 数 | AOSP 17 默认 |
 | `kCardSize` | 256 | Card 粒度 | AOSP 14 是 512 |
 
-### 1.3 Linux 6.12 关联参数
+### 1.3 Linux 6.18 关联参数
 
 | 参数 | 默认值 | 用途 | 关联 |
 |:---|:---|:---|:---|
-| Linux 内核 | 6.12.58 | AOSP 17 默认内核 | **基线纠正** |
-| sheaves 内存分配器 | 启用 | Native 堆内存 -15-20% | Linux 6.12 新增 |
-| io_uring 增强 | 启用 | I/O 延迟 -30% | Linux 6.12 强化 |
-| 内存屏障原语 | 优化 | 屏障原子更新更高效 | Linux 6.12 强化 |
+| Linux 内核 | 6.18 | AOSP 17 默认内核 | **基线纠正** |
+| sheaves 内存分配器 | 启用 | Native 堆内存 -15-20% | Linux 6.18 新增 |
+| io_uring 增强 | 启用 | I/O 延迟 -30% | Linux 6.18 强化 |
+| 内存屏障原语 | 优化 | 屏障原子更新更高效 | Linux 6.18 强化 |
 
 ---
 
@@ -149,7 +149,7 @@ public List<Result> process(List<RawData> data) {
 ```
 □ 1. 用 AppFunctions 框架加载 LLM 模型
 □ 2. 加载期间主动通知 GC 暂停 Minor GC
-□ 3. 利用 dm-pcache（6.12）持久化模型缓存
+□ 3. 利用 dm-pcache（6.18）持久化模型缓存
 □ 4. 模型加载后通知 GC 恢复正常
 □ 5. 详见 [10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) §4
 ```
@@ -229,7 +229,7 @@ public class GenCCMonitor {
 | **Old Gen 占比** | 75%（固定） | **70-90%（可调）** | **可调** |
 | **写屏障调用** | 50ns | **30ns** | **-40%** |
 | **Region Hot/Cold** | 不存在 | **新增** | **新增** |
-| **Linux 内核** | android14-5.10/5.15 | **android17-6.12** | **基线纠正** |
+| **Linux 内核** | android14-5.10/5.15 | **android17-6.18** | **基线纠正** |
 
 ### 5.2 性能提升（AOSP 14 → AOSP 17）
 
@@ -243,8 +243,8 @@ public class GenCCMonitor {
 | **续航** | 基线 | **+3-8%** | **显著** |
 | **冷启动** | 基线 | **-5-10%** | **显著** |
 | **卡顿** | 基线 | **-20-30%** | **显著** |
-| **Native 堆** | 基线 | **-15-20%**（Linux 6.12） | **显著** |
-| **Card Table 刷盘** | 基线 | **-30%**（Linux 6.12） | **显著** |
+| **Native 堆** | 基线 | **-15-20%**（Linux 6.18） | **显著** |
+| **Card Table 刷盘** | 基线 | **-30%**（Linux 6.18） | **显著** |
 
 ---
 
@@ -275,7 +275,7 @@ public class GenCCMonitor {
 □ 4. 不要忽略晋升阈值自适应（Old Gen 占用率高时阈值降到 5）
 □ 5. 不要在 Old Gen 持有大量 Young Gen 引用（脏卡比例高）
 □ 6. 不要假设 Card 粒度是 512 byte（ART 17 默认 256 byte）
-□ 7. 不要忽略 Linux 6.12 sheaves 带来的 Native 堆优化
+□ 7. 不要忽略 Linux 6.18 sheaves 带来的 Native 堆优化
 ```
 
 ### 7.2 SRE 踩坑
@@ -306,7 +306,7 @@ public class GenCCMonitor {
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│ AOSP 17 + android17-6.12 GenCC 工程基线（一页式速查）             │
+│ AOSP 17 + android17-6.18 GenCC 工程基线（一页式速查）             │
 ├──────────────────────────────────────────────────────────────┤
 │                                                              │
 │  GC 策略：                                                    │
@@ -333,7 +333,7 @@ public class GenCCMonitor {
 │    - adb logcat -s "art" | grep "Promote\|PromotionThreshold"│
 │                                                              │
 │  Linux 内核：                                                  │
-│    - android17-6.12（6.12 LTS，2024-11-17 发布）             │
+│    - android17-6.18（6.18 LTS，2024-11-17 发布）             │
 │    - sheaves 内存分配器（Native 堆 -15-20%）                   │
 │    - io_uring 增强（I/O 延迟 -30%）                            │
 │                                                              │
@@ -364,5 +364,5 @@ public class GenCCMonitor {
 ---
 
 > **完结**：05-Generational-CC 子模块 v2 升级完成（4 主篇 + 3 附录）。
-> **基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS）
+> **基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS）
 > **v2 升级日期**：2026-07-18

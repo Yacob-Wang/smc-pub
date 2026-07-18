@@ -1,10 +1,10 @@
-# 附录 D：工程基线（v2 升级版）
+﻿# 附录 D：工程基线（v2 升级版）
 
 > **本附录是 08-GC与其他子系统子模块（01-04 篇）的"工程基线"** —— 关键参数、监控指标、排查 checklist 的完整清单。
 >
 > **目的**：把 08 子模块 4 篇的知识点转化为可直接使用的工程工具。
 >
-> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18
 
 ---
@@ -47,9 +47,9 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58 |
+| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
-| Linux 内核 | android17-6.18（误） | **android17-6.12** | **基线纠正** |
+| Linux 内核 | android17-6.18（误） | **android17-6.18** | **基线纠正** |
 | **Slot Pool 大小** | 未列出 | **新增 §1.2** | AOSP 17 JNI 关键参数 |
 | **GlobalRef 默认容量** | 51200 | **50000** | AOSP 17 调整 |
 | **bytes_per_ref** | 未列出 | **12.8 byte** | AOSP 17 优化 -20% |
@@ -437,8 +437,8 @@ adb shell dumpsys meminfo system_server
 
 | KPI | AOSP 14 | **AOSP 17** | 提升 |
 |:---|:---|:---|:---|
-| Native 堆内存占用 | 基线 | **-15-20%（Linux 6.12 sheaves）** | **AOSP 17 + Linux 6.12** |
-| heap dump 写盘延迟 | 基线 | **-30%（Linux 6.12 io_uring）** | **AOSP 17 + Linux 6.12** |
+| Native 堆内存占用 | 基线 | **-15-20%（Linux 6.18 sheaves）** | **AOSP 17 + Linux 6.18** |
+| heap dump 写盘延迟 | 基线 | **-30%（Linux 6.18 io_uring）** | **AOSP 17 + Linux 6.18** |
 
 ---
 
@@ -521,7 +521,7 @@ adb shell dumpsys meminfo system_server
 - [10-ART17分代GC强化专章 v2](../../10-ART17分代GC强化专章-v2.md) —— ART 17 强化专章
 - [01-JNI 完整解析 v2](../../../05-JNI/01-JNI完整解析.md) —— JNI 完整机制
 - [02-ART17-JNI 优化 v2](../../../05-JNI/02-ART17-JNI优化与Hook兼容性-v2.md) —— ART 17 JNI 侧硬变化
-- [Linux_Kernel/MM/06-MM-调优-sheaves](../../../Linux_Kernel/MM/06-MM-调优-sheaves.md) —— Linux 6.12 sheaves（待升级 v2）
+- [Linux_Kernel/MM/06-MM-调优-sheaves](../../../Linux_Kernel/MM/06-MM-调优-sheaves.md) —— Linux 6.18 sheaves（待升级 v2）
 
 ---
 

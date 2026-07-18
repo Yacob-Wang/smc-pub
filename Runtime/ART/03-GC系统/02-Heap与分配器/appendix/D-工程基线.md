@@ -1,8 +1,8 @@
-# 附录 D：工程基线（v2 升级版）
+﻿# 附录 D：工程基线（v2 升级版）
 
 > **本附录是 02 篇的"工程基线"** —— 关键参数、监控指标、排查 checklist 的完整清单。
 > **目的**：把本篇的知识点转化为可直接使用的工程工具。
-> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -17,7 +17,7 @@
 | 监控代码示例 | ✓ APM + Debug API + dumpsys 解析 | 跨引用详见 [附录 A](A-源码索引.md) |
 | APM 工具推荐 | ✓ LeakCanary / Matrix / Firebase | — |
 | **ART 17 新增参数** | ✓ 软阈值 / AI Agent 配额 / RosAlloc 强化 | — |
-| **Linux 6.12 工程基线** | ✓ sheaves / io_uring / cgroup v2 | — |
+| **Linux 6.18 工程基线** | ✓ sheaves / io_uring / cgroup v2 | — |
 
 **承接自**：[附录 A-源码索引](A-源码索引.md) 详谈源码路径；[附录 B-路径对账](B-路径对账.md) 详谈版本对账；本附录**把工程知识转化为工具**。
 
@@ -40,12 +40,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | API 37 | 与 AOSP 17 配套 |
 | 软阈值 kSoftThresholdPercent | 未覆盖 | **新增 §1.1 + §2.1** | AOSP 17 新增 |
 | AI Agent 配额 | 未覆盖 | **新增 §1.4 + §6.2** | AOSP 17 新增 |
 | RosAlloc 强化（Run+Brk、TLS）| 未覆盖 | **新增 §1.5 + §3.1** | AOSP 17 新增 |
-| Linux 6.12 sheaves / io_uring | 未涉及 | **新增 §1.6 + §6.3** | 跨系列基线 |
+| Linux 6.18 sheaves / io_uring | 未涉及 | **新增 §1.6 + §6.3** | 跨系列基线 |
 
 ### 第 3 轮：锐度校准
 
@@ -141,12 +141,12 @@ dalvik.vm.softthreshold=0.5  # 减少 GC 频率
 # 需在 manifest 声明 android.app.ai_agent=true
 ```
 
-### 1.6 Linux 6.12 关联参数
+### 1.6 Linux 6.18 关联参数
 
 | 参数 | 默认值 | 备注 |
 |:---|:---|:---|
-| `vm.dirty_ratio` | 20 | Linux 6.12 调整 |
-| `vm.dirty_background_ratio` | 10 | Linux 6.12 调整 |
+| `vm.dirty_ratio` | 20 | Linux 6.18 调整 |
+| `vm.dirty_background_ratio` | 10 | Linux 6.18 调整 |
 | `memory.high` | cgroup v2 软限制 | AOSP 17 联动 |
 | `memory.max` | cgroup v2 硬限制 | AOSP 17 联动 |
 | `vm.overcommit_memory` | 0 | 内核内存分配策略 |
@@ -769,21 +769,21 @@ if (isHuaweiEMUI()) {
 
 ---
 
-## 九、Linux 6.12 工程基线（跨系列）
+## 九、Linux 6.18 工程基线（跨系列）
 
 ### 9.1 sheaves 内存分配器
 
 | 指标 | 值 | 备注 |
 |:---|:---|:---|
 | Native 堆内存（Java 堆 mmap） | -15-20% | AOSP 17 联动 |
-| slab 缓存命中率 | +20% | Linux 6.12 |
+| slab 缓存命中率 | +20% | Linux 6.18 |
 | slab 碎片化 | -30% | sheaves 优化 |
 
 ### 9.2 io_uring 增强
 
 | 指标 | 值 | 备注 |
 |:---|:---|:---|
-| heap dump 写盘延迟 | -30% | AOSP 17 + 6.12 |
+| heap dump 写盘延迟 | -30% | AOSP 17 + 6.18 |
 | Image Space 加载时间 | -20% | boot.art 加载 |
 | 异步 IO 性能 | +50% | 通用 |
 
@@ -805,7 +805,7 @@ if (isHuaweiEMUI()) {
 4. **APM 监控代码示例**：Java + Kotlin 协程 + AI Agent 监控
 5. **关键 KPI 基线**：Heap 性能 + Heap 配置 + AOSP 17 强化
 6. **工具链配置**：开发环境 + 调试命令 + art-profile
-7. **Linux 6.12 工程基线**：sheaves / io_uring / cgroup v2
+7. **Linux 6.18 工程基线**：sheaves / io_uring / cgroup v2
 
 → **本附录是 02 篇的"工程工具箱"**——遇到任何 Heap 相关问题，都能在这里找到对应的工具和阈值。
 
@@ -851,7 +851,7 @@ if (isHuaweiEMUI()) {
 
 4. **Heap 性能 KPI 8 → 10 项**——AOSP 17 新增 **TLS 缓存命中率** + **冷启动时间（art-profile 优化）**。**TLS 缓存命中率 > 99% 是 RosAlloc 优化的核心指标**。
 
-5. **Linux 6.12 联动让 Native 堆内存 -15-20%、heap dump 写盘 -30%、多任务内存 -30%**。**这是跨系列基线一致性的胜利**。
+5. **Linux 6.18 联动让 Native 堆内存 -15-20%、heap dump 写盘 -30%、多任务内存 -30%**。**这是跨系列基线一致性的胜利**。
 
 ---
 

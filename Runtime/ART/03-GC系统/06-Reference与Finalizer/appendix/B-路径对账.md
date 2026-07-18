@@ -1,7 +1,7 @@
-# 附录 B：路径对账（Reference 与 Finalizer）（v2 升级版）
+﻿# 附录 B：路径对账（Reference 与 Finalizer）（v2 升级版）
 
 > **本附录定位**：**路径对账**—— AOSP 17 版本对账 + 关键 commit + 调试命令 + 跨篇引用
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -37,10 +37,10 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **AOSP 17 关键 commit** | 未覆盖 | **新增 §4 整节** | AOSP 17 新增 |
-| **Linux 6.12 路径对账** | 未覆盖 | **新增 §5 整节** | 跨系列基线一致性 |
+| **Linux 6.18 路径对账** | 未覆盖 | **新增 §5 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -61,9 +61,9 @@
 | **API Level** | 37 (Android 17) |
 | **libcore 版本** | OpenJDK 17+ 移植版 |
 | **ART 版本** | ART 17 |
-| **Linux 内核** | `android17-6.12`（6.12 LTS，6.12.58） |
-| **发布日期** | 2024-11-17（Android 17）/ 2024-11-17（Linux 6.12 LTS） |
-| **EOL** | 2026-12（Linux 6.12 LTS） |
+| **Linux 内核** | `android17-6.18`（6.18 LTS，6.18） |
+| **发布日期** | 2024-11-17（Android 17）/ 2024-11-17（Linux 6.18 LTS） |
+| **EOL** | 2026-12（Linux 6.18 LTS） |
 
 ### 1.2 历史基线对比
 
@@ -74,7 +74,7 @@
 | AOSP 14 | API 34 | android14-5.10/5.15 | Daemon 完善（单线程） |
 | AOSP 15 | API 35 | android15-5.15/6.1 | Daemon 优化 |
 | AOSP 16 | API 36 | android16-6.1/6.6 | Reference 优化 |
-| **AOSP 17** | **API 37** | **android17-6.12** | **FinalizerThreadPool（4 线程）+ 慢对象检测 + kSoftThresholdPercent=30% + Heap Dump 增强** |
+| **AOSP 17** | **API 37** | **android17-6.18** | **FinalizerThreadPool（4 线程）+ 慢对象检测 + kSoftThresholdPercent=30% + Heap Dump 增强** |
 
 ### 1.3 ART 17 vs ART 14 对照
 
@@ -204,7 +204,7 @@ libcore/libart/src/main/java/jdk/internal/ref/
 └── PhantomCleanable.java     # PhantomCleanable 子类
 ```
 
-### 3.5 Linux 6.12 关联路径
+### 3.5 Linux 6.18 关联路径
 
 ```
 kernel/mm/slab_common.c          # sheaves 内存分配器（Native 堆 -15-20%）
@@ -275,7 +275,7 @@ adb shell setprop dalvik.vm.softthresholdpercent 20
 
 ---
 
-## 五、Linux 6.12 路径对账
+## 五、Linux 6.18 路径对账
 
 ### 5.1 sheaves 内存分配器
 
@@ -348,7 +348,7 @@ adb shell setprop dalvik.vm.softthresholdpercent 20
 
 ```
 □ 1. 升级到 AOSP 17
-□ 2. 升级到 Linux 6.12
+□ 2. 升级到 Linux 6.18
 □ 3. 验证 Finalizer 线程数（应为 4）
 □ 4. 验证 GenCC 软阈值（应为 30%）
 □ 5. 检查 finalize() 用法（应迁移到 Cleaner）
@@ -414,13 +414,13 @@ ART 17 升级后必查：
 ```
 步骤 1：基线检查
   □ 当前 ART 版本（AOSP 14 / AOSP 17）
-  □ 当前 Linux 内核（5.10/5.15/6.12）
+  □ 当前 Linux 内核（5.10/5.15/6.18）
   □ Reference 与 Finalizer 用法（finalize / Cleaner / WeakReference）
   □ 监控指标（Watchdog 警告 / Finalizer 队列 / Heap Dump 时间）
 
 步骤 2：基线升级
   □ 升级到 AOSP 17.0.0_r1（API 37）
-  □ 升级到 Linux android17-6.12（6.12.58）
+  □ 升级到 Linux android17-6.18（6.18）
   □ 验证 ART 17 行为（Finalizer 4 线程 + GenCC 30% + 慢对象检测）
 
 步骤 3：代码适配

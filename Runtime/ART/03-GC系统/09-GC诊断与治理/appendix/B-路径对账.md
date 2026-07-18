@@ -1,8 +1,8 @@
-# 附录 B：路径对账（已验证源码路径 vs 错误路径 · v2 升级版）
+﻿# 附录 B：路径对账（已验证源码路径 vs 错误路径 · v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 附录 B）
-> **本附录定位**：**全文涉及的 AOSP 源码路径对账**——按 9.1 ~ 9.10 章节排列 + 增补 AOSP 17 + Linux 6.12 路径
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **本附录定位**：**全文涉及的 AOSP 源码路径对账**——按 9.1 ~ 9.10 章节排列 + 增补 AOSP 17 + Linux 6.18 路径
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -17,7 +17,7 @@
 | 关键路径速查 | ✓ B.4 | — |
 | 路径对账核验清单 | ✓ B.5 | — |
 | **AOSP 17 增补路径对账** | ✓ **B.6**（GenCC + 类去重 + Hprof 新元数据 + ART 内部状态） | — |
-| **Linux 6.12 增补路径对账** | ✓ **B.7**（sheaves + io_uring + smaps_rollup） | — |
+| **Linux 6.18 增补路径对账** | ✓ **B.7**（sheaves + io_uring + smaps_rollup） | — |
 | 源码索引 | — | [A-源码索引](A-源码索引.md)（v2 升级版） |
 | 工程基线 | — | [D-工程基线](D-工程基线.md)（v2 升级版） |
 
@@ -42,7 +42,7 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **AOSP 17 增补路径未覆盖** | B.1 ~ B.5 | **新增 B.6 + B.7** | v2 硬性要求 |
 | 错误路径 | 已列出 | **保留 + 增补 AOSP 17 常见错误** | 实战可查性 |
@@ -76,9 +76,9 @@
 |:---|:---|:---|:---|
 | procrank 实现 | `system/core/procutils/procrank.c` | `frameworks/base/services/core/java/com/android/server/am/procrank.c` | 在 system/core，不在 services |
 | smaps 读取 | 内核 `/proc/$pid/smaps` | — | 内核提供，不在 AOSP |
-| **【Linux 6.12 新增】smaps_rollup** | 内核 `/proc/$pid/smaps_rollup` | — | **Linux 6.12 新增** |
-| **【Linux 6.12 新增】smaps_rollup 实现** | `fs/proc/task_mmu.c` | — | **Linux 6.12 新增** |
-| **【Linux 6.12 新增】sheaves 内存分配器** | `mm/slab_common.c` | — | **Linux 6.12 新增** |
+| **【Linux 6.18 新增】smaps_rollup** | 内核 `/proc/$pid/smaps_rollup` | — | **Linux 6.18 新增** |
+| **【Linux 6.18 新增】smaps_rollup 实现** | `fs/proc/task_mmu.c` | — | **Linux 6.18 新增** |
+| **【Linux 6.18 新增】sheaves 内存分配器** | `mm/slab_common.c` | — | **Linux 6.18 新增** |
 | smaps 解析 | `system/core/procutils/librank.c` | — | librank 在 procutils |
 | Debug.getMemoryInfo | `frameworks/base/core/java/android/os/Debug.java#getMemoryInfo` | — | — |
 | MemInfoReader | `frameworks/base/core/java/android/os/Debug.java#MemInfoReader` | — | Debug 内部类 |
@@ -318,14 +318,14 @@ bionic/
 ```
 kernel/
 ├── mm/
-│   ├── slab_common.c                        # 【Linux 6.12 新增】sheaves 实现
-│   ├── slab.h                               # 【Linux 6.12 新增】sheaves 数据结构
-│   ├── slub.c                               # 【Linux 6.12 强化】SLUB 适配 sheaves
+│   ├── slab_common.c                        # 【Linux 6.18 新增】sheaves 实现
+│   ├── slab.h                               # 【Linux 6.18 新增】sheaves 数据结构
+│   ├── slub.c                               # 【Linux 6.18 强化】SLUB 适配 sheaves
 │   └── ...
-├── io_uring.c                               # 【Linux 6.12 增强】io_uring 性能
+├── io_uring.c                               # 【Linux 6.18 增强】io_uring 性能
 ├── io_uring.h                               # io_uring 接口
 ├── fs/proc/
-│   ├── task_mmu.c                           # 【Linux 6.12 新增】smaps_rollup 实现
+│   ├── task_mmu.c                           # 【Linux 6.18 新增】smaps_rollup 实现
 │   └── ...
 └── ...
 ```
@@ -409,7 +409,7 @@ system/
    - `art/runtime/gc/accounting/remembered_set.h`（新增）
    - `art/runtime/hprof/hprof.cc#WriteClassExtent`（新增）
 
-7. Linux 6.12 新增路径不在 AOSP
+7. Linux 6.18 新增路径不在 AOSP
    - `kernel/mm/slab_common.c`（在 Linux 仓库，不在 AOSP）
    - `kernel/io_uring.c`（在 Linux 仓库）
    - `fs/proc/task_mmu.c`（在 Linux 仓库）
@@ -588,8 +588,8 @@ system/
 - [ ] `system/core/procutils/procrank.c`
 - [ ] `system/core/procutils/librank.c`
 - [ ] `frameworks/base/core/java/android/os/Debug.java#getMemoryInfo`
-- [ ] `kernel/mm/slab_common.c`（**Linux 6.12 新增**）
-- [ ] `fs/proc/task_mmu.c`（**Linux 6.12 新增**）
+- [ ] `kernel/mm/slab_common.c`（**Linux 6.18 新增**）
+- [ ] `fs/proc/task_mmu.c`（**Linux 6.18 新增**）
 
 ### B.5.3 9.3 LeakCanary 路径
 
@@ -693,17 +693,17 @@ system/
 
 ---
 
-## B.7 【Linux 6.12 新增】路径对账
+## B.7 【Linux 6.18 新增】路径对账
 
 | 内容 | 已验证路径 | 备注 |
 |:---|:---|:---|
-| sheaves 内存分配器 | `kernel/mm/slab_common.c` | **Linux 6.12 新增** |
-| sheaves slab 数据结构 | `kernel/mm/slab.h` | **Linux 6.12 新增** |
-| SLUB 适配 sheaves | `kernel/mm/slub.c` | **Linux 6.12 强化** |
-| io_uring 增强 | `kernel/io_uring.c` | **Linux 6.12 增强** |
-| smaps_rollup 实现 | `fs/proc/task_mmu.c` | **Linux 6.12 新增** |
+| sheaves 内存分配器 | `kernel/mm/slab_common.c` | **Linux 6.18 新增** |
+| sheaves slab 数据结构 | `kernel/mm/slab.h` | **Linux 6.18 新增** |
+| SLUB 适配 sheaves | `kernel/mm/slub.c` | **Linux 6.18 强化** |
+| io_uring 增强 | `kernel/io_uring.c` | **Linux 6.18 增强** |
+| smaps_rollup 实现 | `fs/proc/task_mmu.c` | **Linux 6.18 新增** |
 
-**注意**：Linux 6.12 路径在 Linux 内核仓库，**不在 AOSP 仓库**——AOSP 17 引用 Linux 6.12 头文件但不在 AOSP 中维护。
+**注意**：Linux 6.18 路径在 Linux 内核仓库，**不在 AOSP 仓库**——AOSP 17 引用 Linux 6.18 头文件但不在 AOSP 中维护。
 
 ---
 
@@ -724,7 +724,7 @@ system/
 | 9 | Hprof Class Extent | `art/runtime/hprof/hprof.cc#WriteClassExtent` |
 | 10 | ART 内部状态 API | `art/runtime/gc/heap.h#GetGcStats` |
 
-### B.8.2 Linux 6.12 速查（5 个核心路径）
+### B.8.2 Linux 6.18 速查（5 个核心路径）
 
 | # | 功能 | 路径 |
 |:--| :--- | :--- |
@@ -742,15 +742,15 @@ system/
 
 ```
 B.1：9.1 ~ 9.10 路径对账（保留 + AOSP 17 增强注释）
-B.2：全文章节路径汇总（保留 + AOSP 17 + Linux 6.12 注释）
+B.2：全文章节路径汇总（保留 + AOSP 17 + Linux 6.18 注释）
 B.3：路径对账方法论（保留 + 增补 AOSP 17 常见错误 3 类）
 B.4：关键路径速查（保留 + AOSP 17 增强注释）
 B.5：路径对账核验清单（保留 + 增补 AOSP 17 检查项）
 
 【v2 新增】
 B.6：AOSP 17 路径对账（GenCC + 类去重 + Finalizer 池化 + Hprof 新元数据 + ART 内部状态 API）
-B.7：Linux 6.12 路径对账（sheaves + io_uring + smaps_rollup）
-B.8：AOSP 17 + Linux 6.12 速查
+B.7：Linux 6.18 路径对账（sheaves + io_uring + smaps_rollup）
+B.8：AOSP 17 + Linux 6.18 速查
 B.9：v2 升级总览（本节）
 ```
 
@@ -767,7 +767,7 @@ B.9：v2 升级总览（本节）
 | LeakCanary | 2.x | **必须 3.x** |
 | MAT | 1.13.0 | **必须 1.14.0+** |
 | Java | Java 11+ | **必须 Java 17+** |
-| 内核 | 5.10/5.15 | **android17-6.12** |
+| 内核 | 5.10/5.15 | **android17-6.18** |
 
 ---
 
@@ -777,10 +777,10 @@ B.9：v2 升级总览（本节）
 | :-- | :--- | :--- | :--- |
 | 1 | 本附录对账的路径数 | 100+ 条 | B.1 ~ B.5 + B.6 + B.7 |
 | 2 | **AOSP 17 新增路径** | **15+ 条** | 见 B.6 |
-| 3 | **Linux 6.12 新增路径** | **5 条** | 见 B.7 |
+| 3 | **Linux 6.18 新增路径** | **5 条** | 见 B.7 |
 | 4 | AOSP 14 vs AOSP 17 关键差异 | 10 项 | 见 B.9.2 |
 | 5 | ART 17 速查路径 | 10 个 | 见 B.8.1 |
-| 6 | Linux 6.12 速查路径 | 5 个 | 见 B.8.2 |
+| 6 | Linux 6.18 速查路径 | 5 个 | 见 B.8.2 |
 | 7 | 核验清单检查项 | 30+ 项 | 见 B.5 |
 | 8 | 工具版本变化 | 3 类（LeakCanary 3.x / MAT 1.14.0+ / Java 17+） | B.9.2 |
 | 9 | AOSP 17 常见错误 | 3 类 | 见 B.3.2 |
@@ -798,7 +798,7 @@ B.9：v2 升级总览（本节）
 | MAT 路径 | `external/eclipse-memory-analyzer/` | 通用 | 必须 1.14.0+ | **AOSP 17 适配** |
 | 跨系列路径 | Linux 内核仓库 | AOSP 17 必选 | 不在 AOSP | **基线纠正** |
 | 常见错误率 | 5% | v2 降到 1% | 注意分支版本 | v2 增补 3 类错误 |
-| Linux 内核 | **android17-6.12** | **AOSP 17 默认** | — | **基线纠正** |
+| Linux 内核 | **android17-6.18** | **AOSP 17 默认** | — | **基线纠正** |
 
 ---
 

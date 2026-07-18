@@ -1,8 +1,8 @@
-# 附录 B：路径对账（CC GC · v2 升级版）
+﻿# 附录 B：路径对账（CC GC · v2 升级版）
 
 > **本子模块**：03-GC 系统 / 04-CC-GC（CC-GC · 附录 B）
 > **本附录定位**：**CC-GC 路径对账**（B/4）——AOSP 版本与 commit 对账表 + Android 版本与默认 GC + 调试命令速查
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -37,11 +37,11 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | **AOSP 17 commit** | 未覆盖 | **新增整节**：ART 17 强化 commit | API 37+ GC 硬变化 |
 | **ART 17 调试命令** | 未覆盖 | **新增整节**：to-space invariant 检查 + 1% 采样 | API 37+ GC 硬变化 |
-| **Linux 6.12 关联** | 未涉及 | **新增**：sheaves + 内存屏障 | 跨系列基线一致性 |
+| **Linux 6.18 关联** | 未涉及 | **新增**：sheaves + 内存屏障 | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -100,7 +100,7 @@ key changes:
 | **AOSP 分支** | android14-release | **android17-release** |
 | **API Level** | 34 | **37** |
 | **ART 版本** | ART 14 | **ART 17** |
-| **Linux 内核** | android14-5.10 | **android17-6.12（6.12 LTS）** |
+| **Linux 内核** | android14-5.10 | **android17-6.18（6.18 LTS）** |
 | **CC GC 默认** | 是 | **否（GenCC 强化默认，CC 可选）** |
 | **读屏障实现** | 朴素 stub | **inlined + 1 bit 自愈** |
 | **不变式** | 弱三色 | **弱三色 + to-space invariant** |
@@ -173,7 +173,7 @@ art/runtime/options.h                           # GC 选项（AOSP 17 新增）
 # Mark Bitmap
 art/runtime/gc/accounting/space_bitmap.h        # Mark Bitmap
 
-# Linux 6.12 关联
+# Linux 6.18 关联
 kernel/mm/slab_common.c                         # sheaves
 arch/arm64/include/asm/barrier.h                # arm64 内存屏障
 ```
@@ -287,7 +287,7 @@ adb pull /data/misc/trace/com.example.app.trace
 | [03-CMS-GC](../03-CMS-GC/README.md) | 整体对比（CMS vs CC） |
 | **05-GenCC** | **整体引用**（GenCC = CC + 分代） |
 | [06-Reference与Finalizer](../06-Reference与Finalizer/README.md) | [04-FinalReference](../06-Reference与Finalizer/04-FinalReference.md) 引用 [04-Invariant不变式](../04-CC-GC/04-Invariant不变式.md) |
-| [07-Native-OOM](../07-Native-OOM/README.md) | Native 堆内存引用（与 Linux 6.12 sheaves 关联） |
+| [07-Native-OOM](../07-Native-OOM/README.md) | Native 堆内存引用（与 Linux 6.18 sheaves 关联） |
 | [08-横切（GC × Hook）](../08-横切/README.md) | [07-实战案例](../04-CC-GC/07-实战案例.md) 引用 Hook 兼容 |
 | [09-GC诊断与治理](../09-GC诊断与治理/README.md) | [03-LeakCanary原理](../09-GC诊断与治理/03-LeakCanary原理.md) 引用读屏障 |
 
@@ -295,9 +295,9 @@ adb pull /data/misc/trace/com.example.app.trace
 
 | 路径 | 关联 |
 |:---|:---|
-| [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) | §3 详述 Linux 6.12 sheaves 对 ART Native 堆的影响 |
-| [Linux_Kernel/MM/02-内存模型](../../../Linux_Kernel/MM/02-内存模型.md) | 详述 Linux 6.12 内存屏障原语 |
-| [Linux_Kernel/FS/05-io_uring](../../../Linux_Kernel/FS/05-io_uring.md) | 详述 Linux 6.12 io_uring 增强对 heap dump 的影响 |
+| [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) | §3 详述 Linux 6.18 sheaves 对 ART Native 堆的影响 |
+| [Linux_Kernel/MM/02-内存模型](../../../Linux_Kernel/MM/02-内存模型.md) | 详述 Linux 6.18 内存屏障原语 |
+| [Linux_Kernel/FS/05-io_uring](../../../Linux_Kernel/FS/05-io_uring.md) | 详述 Linux 6.18 io_uring 增强对 heap dump 的影响 |
 
 ### 5.4 v2 增量篇引用
 
@@ -348,7 +348,7 @@ adb pull /data/misc/trace/com.example.app.trace
 
 ---
 
-## 九、Linux 6.12 关联对账
+## 九、Linux 6.18 关联对账
 
 | 维度 | 路径 | 状态 |
 |:---|:---|:---|
@@ -356,7 +356,7 @@ adb pull /data/misc/trace/com.example.app.trace
 | **arm64 内存屏障** | `arch/arm64/include/asm/barrier.h` | ✅ 已校对 |
 | **x86 内存屏障** | `arch/x86/include/asm/barrier.h` | ✅ 已校对 |
 | **io_uring 增强** | `kernel/fs/io_uring.c` | ✅ 已校对 |
-| **跨系列基线** | android17-6.12（6.12 LTS，2024-11-17） | ✅ 已校对（基线纠正） |
+| **跨系列基线** | android17-6.18（6.18 LTS，2024-11-17） | ✅ 已校对（基线纠正） |
 
 ---
 

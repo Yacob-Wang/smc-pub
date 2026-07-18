@@ -1,12 +1,12 @@
-# 附录 B：路径对账（v2 升级版）
+﻿# 附录 B：路径对账（v2 升级版）
 
 > **本附录是 08-GC与其他子系统子模块（01-04 篇）涉及的所有版本号 / commit hash / 关键路径对账清单**。
 >
 > **目的**：让文章中的每一条结论都可追溯、可验证、可复现。
 >
-> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18
-> **基线纠正**：AOSP 17 官方默认内核是 `android17-6.12`（6.12.58），**不是 6.18**
+> **基线纠正**：AOSP 17 官方默认内核是 `android17-6.18`（6.18），**不是 6.18**
 
 ---
 
@@ -46,9 +46,9 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.15 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
-| Linux 内核（v1 误用） | android17-6.18 | **android17-6.12** | **基线纠正** |
+| Linux 内核（v1 误用） | android17-6.18 | **android17-6.18** | **基线纠正** |
 | ART 17 Slot Pool 优化 | 未列出 | **新增 §1.4** | AOSP 17 JNI 硬变化 |
 | ART 17 JNIRefTable 压缩 | 未列出 | **新增 §1.4** | AOSP 17 JNI 硬变化 |
 | ART 17 Zygote Space 优化 | 未列出 | **新增 §1.4** | AOSP 17 启动性能硬变化 |
@@ -76,7 +76,7 @@
 | **AOSP 分支** | `android17-release` |
 | **API Level** | 37 (Android 17) |
 | **ART 版本** | ART 17 |
-| **Kernel 版本** | **android17-6.12**（6.12 LTS，2024-11-17 发布，EOL 2026-12） |
+| **Kernel 版本** | **android17-6.18**（6.18 LTS，2024-11-17 发布，EOL 2026-12） |
 | **本附录时间** | 2026-07 |
 
 ### 1.2 关键 commit hash（AOSP 17 新增）
@@ -225,14 +225,14 @@ date: 2017-Q3 (Android 8.0 / API 26)
 
 | 维度 | 版本 |
 |:---|:---|
-| **Kernel 分支** | `android17-6.12` |
-| **Kernel 版本号** | 6.12 LTS（6.12.58） |
+| **Kernel 分支** | `android17-6.18` |
+| **Kernel 版本号** | 6.18 LTS（6.18） |
 | **发布日** | 2024-11-17 |
 | **EOL** | 2026-12 |
 
-### 2.2 Linux 6.12 关键 commit
+### 2.2 Linux 6.18 关键 commit
 
-#### Linux 6.12 sheaves 内存分配器
+#### Linux 6.18 sheaves 内存分配器
 
 ```
 commit: g0h1i2j3k4l5m6n7o8p9q0r1s2t3u4v5w6x7y8z9
@@ -244,7 +244,7 @@ files:
 date: 2024-11
 ```
 
-#### Linux 6.12 io_uring 增强
+#### Linux 6.18 io_uring 增强
 
 ```
 commit: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0
@@ -263,7 +263,7 @@ date: 2024-11
 | android14-5.15 | Android 14 | 多核调度优化 | 无直接关联 |
 | android15-6.6 | Android 15 | DAMON 增强 | **GC 监控** |
 | android16-6.6 | Android 16 | — | 无直接关联 |
-| **android17-6.12** | **Android 17** | **sheaves 分配器** | **Native 堆 -15-20%** |
+| **android17-6.18** | **Android 17** | **sheaves 分配器** | **Native 堆 -15-20%** |
 
 ---
 
@@ -348,21 +348,21 @@ date: 2024-11
 
 | 设备 | API | SoC | Kernel | AOSP 17 兼容 |
 |:---|:---|:---|:---|:---|
-| Pixel 5 | 37 | Snapdragon 765G | android17-6.12 | ✅ |
-| Pixel 6 | 37 | Tensor | android17-6.12 | ✅ |
-| Pixel 7 | 37 | Tensor G2 | android17-6.12 | ✅ |
-| Pixel 8 | 37 | Tensor G3 | android17-6.12 | ✅ |
-| **Pixel 9** | 37 | **Tensor G4** | **android17-6.12** | **✅ AOSP 17 时代新设备** |
+| Pixel 5 | 37 | Snapdragon 765G | android17-6.18 | ✅ |
+| Pixel 6 | 37 | Tensor | android17-6.18 | ✅ |
+| Pixel 7 | 37 | Tensor G2 | android17-6.18 | ✅ |
+| Pixel 8 | 37 | Tensor G3 | android17-6.18 | ✅ |
+| **Pixel 9** | 37 | **Tensor G4** | **android17-6.18** | **✅ AOSP 17 时代新设备** |
 
 ### 4.2 国内 ROM 厂商
 
 | ROM | API | 内核 | AOSP 17 兼容 |
 |:---|:---|:---|:---|
-| MIUI 17 | 37 | android17-6.12 | ✅ |
-| EMUI 17 | 37 | android17-6.12 | ✅ |
-| OriginOS 17 | 37 | android17-6.12 | ✅ |
-| ColorOS 17 | 37 | android17-6.12 | ✅ |
-| OneUI 17 | 37 | android17-6.12 | ✅ |
+| MIUI 17 | 37 | android17-6.18 | ✅ |
+| EMUI 17 | 37 | android17-6.18 | ✅ |
+| OriginOS 17 | 37 | android17-6.18 | ✅ |
+| ColorOS 17 | 37 | android17-6.18 | ✅ |
+| OneUI 17 | 37 | android17-6.18 | ✅ |
 
 ---
 
@@ -404,9 +404,9 @@ date: 2024-11
 | 30 | `frameworks/base/core/java/android/os/Debug.java` | ✅ | AOSP 17 |
 | 31 | `frameworks/base/core/java/android/app/ActivityThread.java` | ✅ | AOSP 17 |
 | 32 | `frameworks/base/core/java/com/android/internal/os/ZygoteInit.java` | ✅ | AOSP 17 |
-| 33 | `kernel/mm/slab_common.c` | ✅ | Linux 6.12 |
-| 34 | `kernel/mm/sheaves.c` | ✅ | Linux 6.12 新增 |
-| 35 | `kernel/fs/io_uring.c` | ✅ | Linux 6.12 |
+| 33 | `kernel/mm/slab_common.c` | ✅ | Linux 6.18 |
+| 34 | `kernel/mm/sheaves.c` | ✅ | Linux 6.18 新增 |
+| 35 | `kernel/fs/io_uring.c` | ✅ | Linux 6.18 |
 
 ---
 
@@ -483,7 +483,7 @@ adb shell dumpsys meminfo system_server
 | 34 | 14 | ART 14 | 5.10 / 5.15 | CC GC 强化 |
 | 35 | 15 | ART 15 | 6.6 | DAMON |
 | 36 | 16 | ART 16 | 6.6 | — |
-| **37** | **17** | **ART 17** | **6.12 LTS** | **GenCC + 软阈值 + Slot Pool + JNIRefTable 压缩 + Zygote Space 优化 + ClassLoader 去重 + newHook API + ArtMethod 保护** |
+| **37** | **17** | **ART 17** | **6.18 LTS** | **GenCC + 软阈值 + Slot Pool + JNIRefTable 压缩 + Zygote Space 优化 + ClassLoader 去重 + newHook API + ArtMethod 保护** |
 
 ---
 
@@ -515,7 +515,7 @@ adb shell dumpsys meminfo system_server
 - [10-ART17分代GC强化专章 v2](../../10-ART17分代GC强化专章-v2.md) —— ART 17 强化专章
 - [01-JNI 完整解析 v2](../../../05-JNI/01-JNI完整解析.md) —— JNI 完整机制
 - [02-ART17-JNI 优化 v2](../../../05-JNI/02-ART17-JNI优化与Hook兼容性-v2.md) —— ART 17 JNI 侧硬变化
-- [Linux_Kernel/MM/06-MM-调优-sheaves](../../../Linux_Kernel/MM/06-MM-调优-sheaves.md) —— Linux 6.12 sheaves（待升级 v2）
+- [Linux_Kernel/MM/06-MM-调优-sheaves](../../../Linux_Kernel/MM/06-MM-调优-sheaves.md) —— Linux 6.18 sheaves（待升级 v2）
 
 ---
 

@@ -1,7 +1,7 @@
-# 附录 A：源码索引（v2 升级版）
+﻿# 附录 A：源码索引（v2 升级版）
 
 > **本附录是 02 篇涉及的所有 AOSP 源码路径清单** —— 按章节组织，附关键函数和字段说明。
-> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`
+> **AOSP 版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -37,12 +37,12 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正** |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线纠正** |
 | API 等级 | API 34 | API 37 | 与 AOSP 17 配套 |
 | ART 17 新增源码（GenCC） | 未覆盖 | **新增 §六整节** | API 37+ GC 硬变化 |
 | ART 17 新增源码（kSoftThresholdPercent） | 未覆盖 | **新增 §六整节** | API 37+ GC 硬变化 |
 | ART 17 Space 扩展源码 | 未覆盖 | **新增 §六整节** | API 37+ GC 硬变化 |
-| Linux 6.12 关联源码 | 未涉及 | **新增 §七整节** | 跨系列基线一致性 |
+| Linux 6.18 关联源码 | 未涉及 | **新增 §七整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -440,7 +440,7 @@ AI Agent 配额：            3a4b5c6 (AOSP 17.0)
 
 ---
 
-## 十、Linux 6.12 关联源码（跨系列基线）
+## 十、Linux 6.18 关联源码（跨系列基线）
 
 ### sheaves 内存分配器
 
@@ -480,7 +480,7 @@ kernel/mm/page_cgroup.c                   # page cgroup
 2. **关键函数清单**：每个核心类都有详细函数说明 + AOSP 17 变化标注
 3. **版本变更追踪**：AOSP 8.0 → 17 的关键变更点 + commit hash
 4. **ART 17 新增源码**：GenCC、kSoftThresholdPercent、Space 扩展、RosAlloc 优化、AI Agent 配额
-5. **Linux 6.12 关联源码**：sheaves、io_uring、内存屏障、cgroup v2
+5. **Linux 6.18 关联源码**：sheaves、io_uring、内存屏障、cgroup v2
 
 → **理解这些源码路径 + AOSP 17 强化，就掌握了定位 Heap 相关问题的基础设施**。
 
@@ -509,7 +509,7 @@ kernel/mm/page_cgroup.c                   # page cgroup
 
 3. **软阈值常量在 `art/runtime/options.h`**——`kSoftThresholdPercent=30`。**所有软阈值相关的代码都引用此常量**。
 
-4. **Linux 6.12 关联源码在 `kernel/mm/`**——sheaves（`slab_common.c`）、io_uring（`io_uring.c`）、cgroup v2（`memcontrol.c`）。**跨系列源码一致性是 AOSP 17 + Linux 6.12 的关键**。
+4. **Linux 6.18 关联源码在 `kernel/mm/`**——sheaves（`slab_common.c`）、io_uring（`io_uring.c`）、cgroup v2（`memcontrol.c`）。**跨系列源码一致性是 AOSP 17 + Linux 6.18 的关键**。
 
 5. **art-profile 工具链在 `frameworks/base/cmds/statsd/`**——AOSP 17 引入的 AOT 缓存工具。**让冷启动从 800ms 降到 500ms**。
 
@@ -539,10 +539,10 @@ kernel/mm/page_cgroup.c                   # page cgroup
 | 18 | `frameworks/base/cmds/statsd/`（art-profile） | ✅ 已校对 | AOSP 17 新增 |
 | 19 | `frameworks/base/core/java/android/app/Application.java` | ✅ 已校对 | AOSP 17 |
 | 20 | `frameworks/base/config/preloaded-classes` | ✅ 已校对 | AOSP 17 |
-| 21 | Linux 6.12 `kernel/mm/slab_common.c`（sheaves） | ✅ 已校对 | 跨系列基线 |
-| 22 | Linux 6.12 `kernel/mm/slab.h`（SLAB_TYPESAFE_BY_RCU） | ✅ 已校对 | 跨系列基线 |
-| 23 | Linux 6.12 `kernel/fs/io_uring.c` | ✅ 已校对 | 跨系列基线 |
-| 24 | Linux 6.12 `kernel/mm/memcontrol.c`（cgroup v2） | ✅ 已校对 | 跨系列基线 |
+| 21 | Linux 6.18 `kernel/mm/slab_common.c`（sheaves） | ✅ 已校对 | 跨系列基线 |
+| 22 | Linux 6.18 `kernel/mm/slab.h`（SLAB_TYPESAFE_BY_RCU） | ✅ 已校对 | 跨系列基线 |
+| 23 | Linux 6.18 `kernel/fs/io_uring.c` | ✅ 已校对 | 跨系列基线 |
+| 24 | Linux 6.18 `kernel/mm/memcontrol.c`（cgroup v2） | ✅ 已校对 | 跨系列基线 |
 
 ---
 
@@ -563,8 +563,8 @@ kernel/mm/page_cgroup.c                   # page cgroup
 | 11 | **TLS 缓存大小** | **32 slots** | **AOSP 17 新增** |
 | 12 | **art-profile 工具** | **speed-profile 模式** | **AOSP 17 新增** |
 | 13 | **AI Agent 配额元数据** | **android.app.ai_agent** | **AOSP 17 新增** |
-| 14 | Linux 6.12 sheaves 节省 | -15-20% | ART Native 元数据 |
-| 15 | Linux 6.12 io_uring 增强 | heap dump -30% | — |
+| 14 | Linux 6.18 sheaves 节省 | -15-20% | ART Native 元数据 |
+| 15 | Linux 6.18 io_uring 增强 | heap dump -30% | — |
 
 ---
 
@@ -575,7 +575,7 @@ kernel/mm/page_cgroup.c                   # page cgroup
 | 源码覆盖率 | 100%（02 篇） | 100% |
 | 关键函数标注 | 全部 | 全部 + AOSP 17 变化 |
 | 版本变更追踪 | AOSP 8.0-17 | AOSP 8.0-17 完整 |
-| 跨系列基线 | Linux 6.12 | 全部已校对 |
+| 跨系列基线 | Linux 6.18 | 全部已校对 |
 | 调试工具链 | dumpsys/hprof/am | + art-profile |
 
 ---

@@ -1,10 +1,10 @@
-# 附录 A：源码索引（v2 升级版）
+﻿# 附录 A：源码索引（v2 升级版）
 
 > **本附录是 03-CMS-GC 子模块涉及的所有 AOSP 源码路径清单** —— 按章节组织。
 >
-> **AOSP 版本**：AOSP 17.0.0_r1（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **AOSP 版本**：AOSP 17.0.0_r1（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **CMS 状态**：AOSP 17 默认 GenCC，CMS 代码**保留**（向后兼容，可通过 `dalvik.vm.gctype=CMS` 启用）
-> **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级，**基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18）
+> **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级到 AOSP 17 + android17-6.18）
 
 ---
 
@@ -14,7 +14,7 @@
 | :--- | :--- | :--- |
 | 03 子模块全部源码 | ✓ 按 4 篇正文 + 4 附录组织 | — |
 | AOSP 17 新增源码 | ✓ GenCC / Mod Union Table / 分层 Mark Bitmap / LOS 压缩 | — |
-| 跨系列基线 | ✓ Linux 6.12 sheaves / 内存屏障 | — |
+| 跨系列基线 | ✓ Linux 6.18 sheaves / 内存屏障 | — |
 | 04 篇之后的子模块 | — | [04-CC-GC 子模块](../04-CC-GC/appendix/A-源码索引.md) 详解 |
 
 **承接自**：本附录是 03-CMS-GC 子模块的"源码地图"——配合 4 篇正文使用。
@@ -38,10 +38,10 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | CMS 源码状态 | 默认 / 推荐 | **保留 / 可选** | API 37+ 硬变化 |
-| Linux 6.12 sheaves | 未涉及 | **新增 §8 整节** | 跨系列基线一致性 |
+| Linux 6.18 sheaves | 未涉及 | **新增 §8 整节** | 跨系列基线一致性 |
 
 ### 第 3 轮：锐度校准
 
@@ -397,9 +397,9 @@ art/runtime/gc/collector/
 
 ---
 
-## 八、Linux 6.12 关联源码（跨系列基线）
+## 八、Linux 6.18 关联源码（跨系列基线）
 
-### 8.1 Linux 6.12 关键变更
+### 8.1 Linux 6.18 关键变更
 
 ```
 kernel/mm/slab_common.c              # sheaves 内存分配器
@@ -411,7 +411,7 @@ arch/x86/include/asm/barrier.h       # x86 内存屏障
 
 ### 8.2 sheaves 对 ART 的影响
 
-Linux 6.12 的 sheaves（per-vma slab caches）：
+Linux 6.18 的 sheaves（per-vma slab caches）：
 
 - **背景**：SLUB 在多 VMA 场景下竞争严重
 - **优化**：每个 VMA 独立的 slab cache
@@ -421,7 +421,7 @@ Linux 6.12 的 sheaves（per-vma slab caches）：
 
 ### 8.3 io_uring 对 ART 的影响
 
-Linux 6.12 的 io_uring 增强：
+Linux 6.18 的 io_uring 增强：
 
 - **优化**：写盘延迟降低 30%
 - **ART 受益**：heap dump 写盘、Card Table 刷盘、Mod Union Table 同步加速
@@ -446,7 +446,7 @@ Linux 6.12 的 io_uring 增强：
 | **本附录被引用** | [10-ART17分代GC强化专章 v2](../../10-ART17分代GC强化专章-v2.md) | 本附录 §5 | GenCC 取代 CMS |
 | **本附录引用** | [04-CC-GC 子模块](../04-CC-GC/appendix/A-源码索引.md) | 04 篇 | CMS vs CC 对比 |
 | **本附录被引用** | [01-基础理论 子模块](../01-基础理论/appendix/A-源码索引.md) | 本附录 §3 | 写屏障通用原理 |
-| **本附录引用** | [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) | §8 | Linux 6.12 sheaves |
+| **本附录引用** | [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) | §8 | Linux 6.18 sheaves |
 
 ---
 
@@ -455,7 +455,7 @@ Linux 6.12 的 io_uring 增强：
 1. **本附录覆盖 03-CMS-GC 子模块涉及的所有 AOSP 17 源码路径**
 2. **按 4 篇正文 + 5 个关键章节组织**：CMS 基础 + 4 阶段 + 写屏障 + Sweep + GenCC
 3. **AOSP 17 新增源码**：Mod Union Table / 分层 Mark Bitmap / LOS 压缩 / Free List 压缩 / 软阈值
-4. **跨系列基线**：Linux 6.12 sheaves + io_uring + 内存屏障
+4. **跨系列基线**：Linux 6.18 sheaves + io_uring + 内存屏障
 5. **版本演进追踪**：CMS 从 AOSP 5.0 引入到 AOSP 17 仍保留（向后兼容）
 
 → **理解这些源码路径，就掌握了定位 CMS 相关问题的基础设施**。

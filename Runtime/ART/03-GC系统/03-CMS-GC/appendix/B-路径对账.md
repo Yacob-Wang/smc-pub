@@ -1,10 +1,10 @@
-# 附录 B：路径对账（v2 升级版）
+﻿# 附录 B：路径对账（v2 升级版）
 
 > **本附录是 03-CMS-GC 子模块涉及的所有版本号 / commit hash / 关键路径对账清单**。
 >
-> **AOSP 版本**：AOSP 17.0.0_r1（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **AOSP 版本**：AOSP 17.0.0_r1（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **CMS 状态**：AOSP 17 默认 GenCC，CMS 代码**保留**（向后兼容）
-> **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级，**基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18）
+> **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级到 AOSP 17 + android17-6.18）
 
 ---
 
@@ -38,7 +38,7 @@
 
 | 检查项 | 调整前 | 调整后 | 决策理由 |
 | :--- | :--- | :--- | :--- |
-| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.12** | **2026-07-18 基线纠正**：AOSP 17 官方默认内核是 6.12.58，不是 6.18 |
+| 基线版本号 | AOSP 14 / Linux 5.10 | AOSP 17 / **Linux 6.18** | **2026-07-18 基线升级 |
 | API 等级 | API 34 | **API 37** | 与 AOSP 17 配套 |
 | Android 17 行 | 未覆盖 | **新增 §2.1** | AOSP 17 硬变化 |
 | AOSP 17 新参数 | 未覆盖 | **新增 §5.3** | AOSP 17 硬变化 |
@@ -64,7 +64,7 @@
 | **ART 版本** | ART 17 |
 | **CMS 历史版本** | ART 5.0-7.0 (Android 5-7)，AOSP 17 保留向后兼容 |
 | **GenCC 版本** | AOSP 10.0+ (API 29+)，AOSP 17 默认 |
-| **Linux 内核** | `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12） |
+| **Linux 内核** | `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12） |
 | **本附录时间** | 2026-07 |
 
 ### 1.2 CMS 关键 commit hash
@@ -368,7 +368,7 @@ adb shell perfetto --out /data/local/tmp/trace.proto \
 |:---|:---|:---|:---|
 | **被引用** | `Android_Framework/Memory_Management` | 本附录 §1.2 | OOM 治理 |
 | **被引用** | ART 大模块 `02-类加载与链接` | 本附录 §3.1 | 类元数据 GC |
-| **被引用** | [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) | 本附录 §5.3 | Linux 6.12 sheaves |
+| **被引用** | [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../../Linux_Kernel/DM/09-DM-调优-性能与pcache.md) | 本附录 §5.3 | Linux 6.18 sheaves |
 
 ---
 
@@ -386,7 +386,7 @@ adb shell perfetto --out /data/local/tmp/trace.proto \
 | 漏标概率 | 0.1% | 0.05% | -50% |
 | LOS OOM 概率 | 高 | 低 | -60-80% |
 | Sweep 业务延迟 | 100ms | 30ms | -70% |
-| Native 堆（Linux 6.12） | 80MB | 64MB | -15-20% |
+| Native 堆（Linux 6.18） | 80MB | 64MB | -15-20% |
 
 ### 7.2 AOSP 17 新增参数覆盖
 

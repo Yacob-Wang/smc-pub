@@ -1,7 +1,7 @@
-# 附录 D：工程基线（GC 调度与触发 · v2 升级版）
+﻿# 附录 D：工程基线（GC 调度与触发 · v2 升级版）
 
 > **本附录定位**：**D 附录 · 工程基线**（4 附录之 4/4）——GC 调度与触发的工程参数 + 监控指标 + 业务优化建议 + APM 监控代码（含 ART 17 强化）
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -35,11 +35,11 @@
 | **`dalvik.vm.native-alloc-throttle`** | 启用 | AOSP 17 限流 | 避免 GC 风暴 |
 | **`dalvik.vm.minor-priority`** | 启用 | AOSP 17 Minor 优先 | — |
 
-### 1.3 Linux 6.12 内核参数（跨系列基线）
+### 1.3 Linux 6.18 内核参数（跨系列基线）
 
 | 参数 | 默认值 | 备注 |
 |:---|:---|:---|
-| `kernel.slab_common.sheaves` | 启用 | Linux 6.12 新增（Native 堆 -15-20%） |
+| `kernel.slab_common.sheaves` | 启用 | Linux 6.18 新增（Native 堆 -15-20%） |
 | `kernel.sched.cpu_util` | 启用 | HeapTaskDaemon 动态 sleep 依赖 |
 | `kernel.io_uring` | 启用 | heap dump 写盘延迟 -30% |
 
@@ -87,7 +87,7 @@
 | GC 线程 CPU 占用 | < 20% | 20-50% | > 50% | **★ 动态 sleep -5-15%** |
 | Trim Heap 频率 | < 5/h | 5-20/h | > 20/h | 不变 |
 | NativeAlloc GC 频率 | < 5/h | 5-20/h | > 20/h | **★ 限流** |
-| Native 内存占用（Linux 6.12 sheaves） | -15-20% | — | — | **★ 新增** |
+| Native 内存占用（Linux 6.18 sheaves） | -15-20% | — | — | **★ 新增** |
 | 续航影响 | 基线 | — | — | **★ +3-8%** |
 
 ### 2.5 ★ ART 17 STW 时间监控
@@ -526,7 +526,7 @@ public class Art17GcSchedulingMonitor {
 | 续航 | 基线 | **+3-8%** | **改善** |
 | Full GC 频率 | 高 | **-70%** | **降低** |
 | 软阈值提前处理 | 不支持 | **~50-60%** | **★ 新增** |
-| Native 内存（Linux 6.12） | -15-20% | -15-20% | 跨系列 |
+| Native 内存（Linux 6.18） | -15-20% | -15-20% | 跨系列 |
 
 ### 5.3 工程价值
 

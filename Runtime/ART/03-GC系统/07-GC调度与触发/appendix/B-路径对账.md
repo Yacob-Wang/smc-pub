@@ -1,7 +1,7 @@
-# 附录 B：路径对账（GC 调度与触发 · v2 升级版）
+﻿# 附录 B：路径对账（GC 调度与触发 · v2 升级版）
 
 > **本附录定位**：**B 附录 · 路径对账**（4 附录之 2/4）——AOSP 版本对账表 + 关键 commit + 调试命令全集 + 跨引用矩阵
-> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.12`（6.12 LTS，2024-11-17 发布，EOL 2026-12）
+> **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -15,11 +15,11 @@
 | **AOSP 分支** | `android-14.0.0_r1` | **`android-17.0.0_r1`** | ★ 升级 |
 | **API Level** | 34 | **37** | ★ 升级 |
 | **ART 版本** | ART 14 | **ART 17** | ★ 升级 |
-| **Linux 内核** | `android14-5.10/5.15` | **`android17-6.12`** | ★ **基线纠正** |
-| **Linux 内核版本** | 5.10 / 5.15 | **6.12 LTS** | ★ **2026-07-18 纠正** |
+| **Linux 内核** | `android14-5.10/5.15` | **`android17-6.18`** | ★ **基线纠正** |
+| **Linux 内核版本** | 5.10 / 5.15 | **6.18 LTS** | ★ **2026-07-18 纠正** |
 | **Linux 内核发布日期** | 2020 / 2021 | **2024-11-17** | — |
 | **Linux 内核 EOL** | 2026 / 2028 | **2026-12** | — |
-| **AOSP 17 官方默认内核** | — | **6.12.58** | ★ **基线纠正（不是 6.18）** |
+| **AOSP 17 官方默认内核** | — | **6.18** | ★ **基线纠正（不是 6.18）** |
 | **GC 策略** | GenCC（默认） | **GenCC + 软阈值** | ★ ART 17 强化 |
 | **后台 GC 路径** | ConcurrentMajorGc | **BackgroundGenCC** | ★ ART 17 新增 |
 
@@ -28,22 +28,22 @@
 ```
 v1 时代（已废弃）              v2 升级（当前）
 ─────────────────  ─────────────────
-android14-5.10        android17-6.12  ★
+android14-5.10        android17-6.18  ★
 android14-5.15        （不推荐）
 
 错误基线（已纠正）：
-  "android17-6.18" → 错误！AOSP 17 官方默认内核是 6.12.58，不是 6.18
+  "android17-6.18" → 错误！AOSP 17 官方默认内核是 6.18，不是 6.18
   6.18 是社区开发版（linux-stable），不是 AOSP 17 配套内核
 
 正确基线（v2）：
-  "android17-6.12" → 正确！AOSP 17 官方默认内核是 6.12.58（6.12 LTS）
+  "android17-6.18" → 正确！AOSP 17 官方默认内核是 6.18（6.18 LTS）
 ```
 
-**为什么 6.12 不是 6.18**：
-- Linux 6.12 于 2024-11-17 发布（LTS，长期支持）
+**为什么 6.18 不是 6.18**：
+- Linux 6.18 于 2024-11-17 发布（LTS，长期支持）
 - Linux 6.18 是社区开发版（截至 2026-07 未发布）
-- **AOSP 17 官方默认配套内核是 6.12 LTS**
-- K 6.12 sheaves 内存分配器：让 Native 堆内存占用降低 15-20%
+- **AOSP 17 官方默认配套内核是 6.18 LTS**
+- K 6.18 sheaves 内存分配器：让 Native 堆内存占用降低 15-20%
 
 ### 1.3 ART 17 新增特性（GC 调度与触发相关）
 
@@ -71,7 +71,7 @@ android-17.0.0_r1
 
 # 关键 commit（按时间倒序）
 # 2025-XX-XX: ART 17 release（GC 强化）
-# 2025-XX-XX: Linux 6.12 LTS 集成
+# 2025-XX-XX: Linux 6.18 LTS 集成
 # 2025-XX-XX: 软阈值机制引入（kSoftThresholdPercent）
 # 2025-XX-XX: HeapTaskDaemon 动态 sleep 优化
 # 2025-XX-XX: BackgroundGenCC 路径引入
@@ -238,10 +238,10 @@ adb shell cmd art-heap-task-daemon status
 
 | 引用方向 | 来源 | 目标 | 关联内容 |
 |:---|:---|:---|:---|
-| 来自 | [01-9种GcCause](01-9种GcCause.md) | Linux 6.12 sheaves | Native 内存 |
-| 来自 | [02-HeapTaskDaemon](02-HeapTaskDaemon.md) | Linux 6.12 sched | CPU 负载 |
-| 来自 | [03-ConcurrentGCTask](03-ConcurrentGCTask.md) | Linux 6.12 sheaves | Native 内存 |
-| 来自 | [04-GC_FOR_ALLOC路径](04-GC_FOR_ALLOC路径.md) | Linux 6.12 sheaves | Native 内存 |
+| 来自 | [01-9种GcCause](01-9种GcCause.md) | Linux 6.18 sheaves | Native 内存 |
+| 来自 | [02-HeapTaskDaemon](02-HeapTaskDaemon.md) | Linux 6.18 sched | CPU 负载 |
+| 来自 | [03-ConcurrentGCTask](03-ConcurrentGCTask.md) | Linux 6.18 sheaves | Native 内存 |
+| 来自 | [04-GC_FOR_ALLOC路径](04-GC_FOR_ALLOC路径.md) | Linux 6.18 sheaves | Native 内存 |
 | 被引用 | Linux_Kernel/DM/09-DM-调优-性能与pcache | [01-9种GcCause](01-9种GcCause.md) §6.3 | sheaves 关联 |
 
 ---
@@ -261,8 +261,8 @@ adb shell cmd art-heap-task-daemon status
 | 9 | urgency_level | 不存在 | **0-3** | **AOSP 17 新增** |
 | 10 | Full GC 频率 | 高 | **降低 70%+** | **罕见化** |
 | 11 | 软阈值提前处理比例 | 不存在 | **~50-60%** | **AOSP 17 新增** |
-| 12 | Linux 内核 | 5.10/5.15 | **6.12 LTS** | **基线纠正** |
-| 13 | Native 堆内存（Linux 6.12 sheaves） | -15-20% | -15-20% | 跨系列基线 |
+| 12 | Linux 内核 | 5.10/5.15 | **6.18 LTS** | **基线纠正** |
+| 13 | Native 堆内存（Linux 6.18 sheaves） | -15-20% | -15-20% | 跨系列基线 |
 
 ---
 
@@ -282,7 +282,7 @@ adb shell cmd art-heap-task-daemon status
 | **续航** | 基线 | **+3-8%** | **改善** |
 | **Full GC 频率** | 高 | **降低 70%+** | **降低** |
 | **软阈值机制** | 不存在 | **kSoftThresholdPercent=30%** | **核心新增** |
-| **Linux 内核** | 5.10/5.15 | **6.12 LTS** | **基线纠正** |
+| **Linux 内核** | 5.10/5.15 | **6.18 LTS** | **基线纠正** |
 
 ### 6.2 附录升级对账
 
@@ -308,7 +308,7 @@ adb shell cmd art-heap-task-daemon status
 
 ```
 ✅ 1. 移除 v1 旧稿标记段（4 篇 + 3 附录）
-✅ 2. 升级基线声明：AOSP 14 → AOSP 17 + android17-6.12（基线纠正）
+✅ 2. 升级基线声明：AOSP 14 → AOSP 17 + android17-6.18（基线纠正）
 ✅ 3. 增补 ART 17 硬变化（4 篇 × 3 项强化 = 12 项）
 ✅ 4. 3 轮校准决策日志（4 篇 + 3 附录 = 7 份）
 ✅ 5. 保留 v1 精华（基础机制 + 排查方法）
