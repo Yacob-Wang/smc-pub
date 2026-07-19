@@ -1,0 +1,47 @@
+==== GC v2 Final Status Verification ====
+Root: C:\Users\deepLife\Documents\GitHub\smc-pub\01-Mechanism\Runtime\ART\03-GC系统
+
+  01-基础理论: 7 files / 282.5 KB  (v1_mark=7  v2_upgrade=7)
+  02-Heap与分配器: 8 files / 326.9 KB  (v1_mark=8  v2_upgrade=8)
+  03-CMS-GC: 7 files / 242.2 KB  (v1_mark=7  v2_upgrade=7)
+  04-CC-GC: 7 files / 242.9 KB  (v1_mark=7  v2_upgrade=7)
+  05-Generational-CC: 8 files / 270.4 KB  (v1_mark=8  v2_upgrade=8)
+  06-Reference与Finalizer: 9 files / 340.5 KB  (v1_mark=9  v2_upgrade=9)
+  07-GC调度与触发: 8 files / 326.9 KB  (v1_mark=8  v2_upgrade=8)
+  08-GC与其他子系统: 8 files / 299.3 KB  (v1_mark=8  v2_upgrade=8)
+  09-GC诊断与治理: 10 files / 354.9 KB  (v1_mark=10  v2_upgrade=10)
+
+==== Summary ====
+Total GC files: 72 (expected 99)
+Total size: 2686.5 KB / 2.62 MB
+v1 mark residual: 72 (expected 0)
+v2 upgrade mark: 72 (expected 99)
+Files BOTH v1 mark AND v2 upgrade: 72 (SHOULD be 0)
+Files without 6.18 baseline: 0 (expected 0)
+Files without 4-appendix: 0 (expected 0)
+Files without decision log: 0 (expected 0)
+
+==== Files BOTH v1_mark AND v2_upgrade (anomaly) ====
+  01-基础理论\01-可达性分析.md
+  01-基础理论\02-三色标记不变式.md
+  01-基础理论\03-写屏障机制.md
+  01-基础理论\04-读屏障机制.md
+  01-基础理论\05-记忆集与卡表.md
+  01-基础理论\06-Reference体系.md
+  01-基础理论\07-理论总结.md
+  02-Heap与分配器\01-Heap总览.md
+  02-Heap与分配器\02-5Space详解.md
+  02-Heap与分配器\03-内存配额.md
+  ... 72 total
+
+==== v1 旧稿标记段位置检查（前 5 篇）====
+  01-基础理论\01-可达性分析.md - pos 5.6%
+    snippet: :--- | :--- | :--- | :--- | / | v1 旧稿标记段 | 在（顶部 14 行） | **删**（v1 → v2 实质升级） | 内容已按 v4 规范重写，标记段失效 | / | 本篇定位声明 | 无 | **新增**（v4 §3 强制要求） | v1 后期已按 v4 写但缺本篇定位段 | / | 衔接去 | 无 | **新增 2 篇**（02-三色 + 10-ART17 专章） |
+  01-基础理论\02-三色标记不变式.md - pos 6.1%
+    snippet: :--- | :--- | :--- | :--- | / | v1 旧稿标记段 | 在（顶部 14 行） | **删**（v1 → v2 实质升级） | 内容已按 v4 规范重写 | / | 本篇定位声明 | 无 | **新增** | v4 §3 强制要求 | / | 衔接去 | 无 | **新增 3 篇** | 跨篇引用矩阵 | / | 4 附录 | A/B/D 完整 | A/B/C/D 完整 + 增补 AR
+  01-基础理论\03-写屏障机制.md - pos 4.4%
+    snippet: :--- | :--- | :--- | :--- | / | v1 旧稿标记段 | 在（顶部 14 行） | **删**（v1 → v2 实质升级） | 内容已按 v4 规范重写，标记段失效 | / | 本篇定位声明 | 无 | **新增**（v4 §3 强制要求） | 明确本篇职责边界 | / | 衔接去 | 无 | **新增 3 篇**（04-读屏障/05-记忆集/10-ART17 专章） | 跨篇引用
+  01-基础理论\04-读屏障机制.md - pos 4.1%
+    snippet: :--- | :--- | :--- | :--- | / | v1 旧稿标记段 | 在（顶部 14 行） | **删**（v1 → v2 实质升级） | 内容已按 v4 规范重写，标记段失效 | / | 本篇定位声明 | 无 | **新增**（v4 §3 强制要求） | 明确本篇职责边界 | / | 衔接去 | 无 | **新增 3 篇**（03-写屏障/02-三色/10-ART17 专章） | 跨篇引用矩
+  01-基础理论\05-记忆集与卡表.md - pos 4.9%
+    snippet: :--- | :--- | :--- | :--- | / | v1 旧稿标记段 | 在（顶部 14 行） | **删**（v1 → v2 实质升级） | 内容已按 v4 规范重写 | / | 本篇定位声明 | 无 | **新增**（v4 §3 强制要求） | 明确本篇职责边界 | / | 衔接去 | 无 | **新增 3 篇**（03-写屏障/05-GenCC/10-ART17 专章） | 跨篇引用矩阵 |
