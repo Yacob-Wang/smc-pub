@@ -620,3 +620,214 @@ pre,
   color: var(--jk-muted);
   font-size: 0.8rem;
 }
+
+/* ==========================================================================
+   布局精简 —— 缩小侧栏 / toc 宽度，侧栏 label 截断，正文加宽
+   ========================================================================== */
+
+/* 缩窄左侧主侧栏（默认值 12.1rem → 9rem） */
+@media screen and (min-width: 60em) {
+  .md-sidebar--primary {
+    width: 9rem;
+  }
+
+  [dir=ltr] .md-content {
+    margin-left: 9rem;
+  }
+
+  /* 缩窄右侧 toc（默认值 12.1rem → 8.5rem） */
+  .md-sidebar--secondary {
+    width: 8.5rem;
+  }
+
+  [dir=ltr] .md-content__inner {
+    max-width: calc(100% - 1.6rem);
+  }
+}
+
+/* 进一步限制 sidebar 文字（防止 h1 长标题撑破侧栏） */
+.md-sidebar--primary .md-nav__link .md-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+  font-size: 0.74rem;
+  letter-spacing: 0;
+}
+
+/* 顶栏（症状、机制等一级）字号略大、不截断 */
+.md-sidebar--primary .md-nav--primary > .md-nav__list > .md-nav__item--section > .md-nav__link .md-ellipsis {
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* 隐藏 series 内每个 md 文件的 h1 标题作为 nav label（保持 .pages 顺序） */
+.md-nav__link {
+  padding: 0.45rem 0.7rem;
+}
+
+/* 缩窄 toc */
+.md-sidebar--secondary .md-nav--secondary .md-ellipsis {
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+/* 正文章节标题（h1/h2/h3）字号收一点，跟 release 公告风的紧凑感匹配 */
+.md-typeset h1 {
+  font-size: 1.9rem;
+  margin: 0 0 1.2rem;
+  letter-spacing: -0.02em;
+}
+
+.md-typeset h2 {
+  font-size: 1.45rem;
+  margin: 2.2rem 0 0.9rem;
+  letter-spacing: -0.015em;
+  border-bottom: 1px solid var(--jk-line);
+  padding-bottom: 0.4rem;
+}
+
+.md-typeset h3 {
+  font-size: 1.15rem;
+  margin: 1.6rem 0 0.7rem;
+}
+
+/* 正文行距 + 段落间距（更舒展） */
+.md-typeset p {
+  line-height: 1.75;
+  margin: 0.6rem 0 0.85rem;
+}
+
+.md-typeset ul li,
+.md-typeset ol li {
+  margin-bottom: 0.3rem;
+  line-height: 1.7;
+}
+
+/* ==========================================================================
+   Release 公告风：文章首个 blockquote（系列/版本基线/目标读者）改 banner
+   选取器：.md-content__inner > article > blockquote:first-of-type
+   ========================================================================== */
+
+/* 检测文章第一段 blockquote（含 "系列" / "版本基线" / "目标读者"） */
+.md-typeset blockquote:first-of-type {
+  position: relative;
+  margin: 0 0 1.6rem;
+  padding: 1.2rem 1.4rem 1.15rem 1.4rem;
+  border: 1px solid var(--jk-line);
+  border-left: 4px solid var(--jk-green);
+  border-radius: var(--jk-radius);
+  background: linear-gradient(135deg, var(--jk-green-soft) 0%, var(--jk-surface) 60%);
+  box-shadow: var(--jk-shadow-sm);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--jk-ink);
+}
+
+/* 把 blockquote 里的每一行（用 > **xxx**：值 的格式）排成 metadata grid */
+.md-typeset blockquote:first-of-type p {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 0.4rem 1rem;
+  align-items: baseline;
+  margin: 0.3rem 0;
+}
+
+.md-typeset blockquote:first-of-type p > strong:first-child {
+  color: var(--jk-green-darker);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+[data-md-color-scheme="slate"] .md-typeset blockquote:first-of-type p > strong:first-child {
+  color: var(--jk-green);
+}
+
+.md-typeset blockquote:first-of-type p > strong:first-child::after {
+  content: "";
+}
+
+.md-typeset blockquote:first-of-type code {
+  background: rgba(61, 220, 132, 0.12);
+  color: var(--jk-green-darker);
+  padding: 0.05em 0.4em;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+[data-md-color-scheme="slate"] .md-typeset blockquote:first-of-type code {
+  color: var(--jk-green);
+}
+
+/* 状态 chip（如 "🚧 主体完成"） */
+.md-typeset blockquote:first-of-type p:last-child {
+  margin-top: 0.5rem;
+  padding-top: 0.7rem;
+  border-top: 1px dashed var(--jk-line);
+}
+
+.md-typeset blockquote:first-of-type p:last-child strong {
+  color: var(--jk-muted);
+  font-size: 0.74rem;
+  font-weight: 500;
+}
+
+/* 表格在第一组里也用 metadata 风格 */
+.md-typeset > table:first-of-type {
+  border: 1px solid var(--jk-line);
+  border-radius: var(--jk-radius);
+  overflow: hidden;
+  box-shadow: var(--jk-shadow-sm);
+  margin: 0 0 1.6rem;
+  font-size: 0.85rem;
+}
+
+.md-typeset > table:first-of-type th {
+  background: var(--jk-green-soft);
+  color: var(--jk-green-darker);
+  font-weight: 600;
+}
+
+[data-md-color-scheme="slate"] .md-typeset > table:first-of-type th {
+  background: var(--jk-green-soft);
+  color: var(--jk-green);
+}
+
+/* ==========================================================================
+   系列总览 / README 表格在文章内的轻量化
+   ========================================================================== */
+
+.md-typeset table:not(:first-of-type) {
+  font-size: 0.85rem;
+}
+
+.md-typeset table thead th {
+  font-weight: 600;
+  color: var(--jk-ink);
+  background: var(--jk-soft);
+}
+
+/* ==========================================================================
+   系列 / 文章标题（页面 H1）— Release 公告风
+   ========================================================================== */
+
+article > h1:first-child,
+.md-content__inner > h1:first-child {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.4rem;
+  color: var(--jk-ink);
+  line-height: 1.18;
+}
+
+/* 文章 H1 下面若有"系列：xxx"小字，单独成行（用 CSS 兄弟选择器不太行，
+   但可以给 H1 标题后第一个 blockquote 加底部间距——已在上面处理） */
+
