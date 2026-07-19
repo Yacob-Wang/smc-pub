@@ -16,11 +16,11 @@
 - **强依赖**：
   - [A01-启动链路总览](../A01-启动链路总览.md)（必读前置）
   - [A02-Bootloader 到 Kernel](../../../02-Symptom/S11-Startup/A-启动机制/A02-Bootloader到Kernel.md)（必读前置）
-  - [A03-Init 进程与 init.rc](../../Native/A03-Init进程与init.rc.md)（必读前置）
+  - [A03-Init 进程与 init.rc](../../../../02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc.md)（必读前置）
   - [Process 系列 · 03-Zygote fork 机制](../Process/03-Zygote-fork机制与进程工厂.md)（如有）
   - [Stability S04-SWT 专题](../Stability/S04-SWT卡死与Watchdog专题.md)
   - [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md)
-- **承接自**：[A03 §3.1 T16 Zygote ready](../../Native/A03-Init进程与init.rc.md) → 等待 SystemServer fork
+- **承接自**：[A03 §3.1 T16 Zygote ready](../../../../02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc.md) → 等待 SystemServer fork
 - **衔接去**：
   - 下一篇 [A05-AMS/PMS/WMS 四大组件启动](../../../02-Symptom/S11-Startup/A-启动机制/A05-AMS-PMS-WMS四大组件启动.md) 深入 A4 下半段
   - 然后 A06 拆解 A5 阶段
@@ -1090,7 +1090,7 @@ public PackageManagerService(Context context) {
 
 > **本篇不重复**：
 > - [Process 系列 · 03-Zygote fork 机制](../Process/) 已深入的 Zygote 通用机制
-> - [A03-Init 进程与 init.rc](../../Native/A03-Init进程与init.rc.md) 已深入的 init 阶段
+> - [A03-Init 进程与 init.rc](../../../../02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc.md) 已深入的 init 阶段
 > - [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md) 已深入的 AMS dumpsys
 >
 > **视角互补**：
@@ -1209,7 +1209,7 @@ public PackageManagerService(Context context) {
 ---
 
 > **系列导航**：
-> - **上一篇**：[A03-Init 进程与 init.rc](../../Native/A03-Init进程与init.rc.md)
+> - **上一篇**：[A03-Init 进程与 init.rc](../../../../02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc.md)
 > - **下一篇**：[A05-AMS/PMS/WMS 四大组件启动](../../../02-Symptom/S11-Startup/A-启动机制/A05-AMS-PMS-WMS四大组件启动.md)
 > - **本系列 README**：[README-AOSP_Startup系列.md](../../../02-Symptom/S11-Startup/README.md)
 > - **机制联动**：[Stability S04-SWT 专题](../Stability/S04-SWT卡死与Watchdog专题.md) · [Process 系列 · 03](../Process/) · [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md)

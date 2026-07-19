@@ -20,7 +20,7 @@
   - [Stability S07-KE 专题](../Stability/S07-KE内核与硬件异常专题.md)
 - **承接自**：[A01-启动链路总览](../Framework/A01-启动链路总览.md) §3.1（A1 阶段 0-1s / A2 阶段 1-3s）
 - **衔接去**：
-  - 下一篇 [A03-Init 进程与 init.rc](../Native/A03-Init进程与init.rc.md) 深入 A3 阶段
+  - 下一篇 [A03-Init 进程与 init.rc](../../../02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc.md) 深入 A3 阶段
   - 然后 A04-A06 拆解 A4-A5 阶段
   - 风险排查跳转 [C05-开机无限重启](../Stability/C05-开机无限重启与bootstat.md)（如已写）或 [C04-启动崩溃](../Framework/SystemServer/A04-Zygote+SystemServer.md#6-风险地图强制))
 - **不重复内容**：
@@ -1071,7 +1071,7 @@ loglevel=0          # 关闭 printk
 
 ## 12.3 下一步
 
-- 下一篇 [A03-Init 进程与 init.rc](../Native/A03-Init进程与init.rc.md) 深入 A3 阶段（init 进程 + init.rc 解析 + property）
+- 下一篇 [A03-Init 进程与 init.rc](../../../02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc.md) 深入 A3 阶段（init 进程 + init.rc 解析 + property）
 - 然后 A04-A06 拆解 A4-A5 阶段
 - 启动期 KE 排查跳转 [C05-开机无限重启](../Stability/C05-开机无限重启与bootstat.md)（规划中）
 
@@ -1168,7 +1168,7 @@ loglevel=0          # 关闭 printk
 
 > **系列导航**：
 > - **上一篇**：[A01-启动链路总览](../Framework/A01-启动链路总览.md)
-> - **下一篇**：[A03-Init 进程与 init.rc](../Native/A03-Init进程与init.rc.md)
+> - **下一篇**：[A03-Init 进程与 init.rc](../../../02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc.md)
 > - **本系列 README**：[README-AOSP_Startup系列.md](../../02-Symptom/S11-Startup/README.md)
 > - **机制联动**：[Stability S06-重启专题](../Stability/S06-重启与REBOOT专题.md) · [Stability S07-KE 专题](../Stability/S07-KE内核与硬件异常专题.md) · [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/)
 > - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md)
