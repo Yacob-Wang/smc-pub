@@ -39,23 +39,27 @@ theme:
     - content.code.annotate
     - toc.follow
   palette:
+    # Android 绿系（参考 developer.android.com / source.android.com）
+    # 实际颜色由 extra.css 用 CSS 变量覆盖（#3DDC84 主色 + #00C853 辅色）
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: teal
-      accent: amber
+      primary: green
+      accent: green
       toggle:
         icon: material/brightness-7
         name: 切换到深色模式
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: teal
-      accent: amber
+      primary: green
+      accent: green
       toggle:
         icon: material/brightness-4
         name: 切换到浅色模式
   icon:
-    logo: material/book-open-page-variant
+    logo: material/android
   font:
+    # 用 Noto Sans SC 兼容中英文（Material 自动从 Google Fonts 加载）
+    # Roboto Flex 通过 extra_head 单独加载（Material 自带的 font.text 是简化版字重）
     text: Noto Sans SC
     code: JetBrains Mono
 
@@ -109,6 +113,10 @@ extra:
   homepage: /
 
 extra_css:
+  - stylesheets/fonts.css
   - stylesheets/extra.css
 
+extra_javascript: []
+
 copyright: Copyright &copy; JacobKing · Stability Matrix Course
+

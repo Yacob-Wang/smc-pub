@@ -1,0 +1,8 @@
+/* Roboto Flex 完整字重（Material 自带的 font.text 是简化版） */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,300..900&family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* 字体栈：英文 Roboto Flex（Material 3 字体） → 中文 Noto Sans SC → 系统 */
+:root {
+  --md-text-font: "Roboto Flex", "Noto Sans SC", "Roboto", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --md-code-font: "JetBrains Mono", "Roboto Mono", "Cascadia Code", Consolas, ui-monospace, monospace;
+}

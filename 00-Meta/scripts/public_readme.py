@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""站点首页文案（卡片式模块布局）。"""
+"""站点首页文案（卡片式模块布局 + Android 官方文档风格 Hero）。"""
 
 from __future__ import annotations
 
@@ -30,22 +30,26 @@ hide:
 ---
 
 <div class="jk-hero" markdown="0">
-  <h1>稳知库 · Stability Matrix Course</h1>
-  <p class="jk-hero__lead">面向 Android 稳定性架构师的系列技术博客。从 Linux 内核到 Framework、从运行时到应用层，按 AOSP 系统分层 + oncall 工作流双轴组织 — 8 大分类（项目地图 / 机制 / 症状 / 取证 / 工具 / 治理 / 案例 / 基础）。</p>
+  <h1>稳知库 · Android 稳定性架构师系列</h1>
+  <p class="jk-hero__lead">面向 Android 稳定性架构师的技术博客。从 Linux 内核到 Framework、从 ART 运行时到应用层，按 AOSP 系统分层 + oncall 工作流双轴组织 — 覆盖 Crash / ANR / OOM / 性能退化全部 11 大症状。</p>
   <div class="jk-hero__meta">
     <span class="jk-chip jk-chip--accent">Author · JacobKing</span>
     <span class="jk-chip">AOSP 17 + android17-6.18</span>
-    <span class="jk-chip">Crash / ANR / OOM</span>
+    <span class="jk-chip">233 篇 · 8 大分类</span>
+  </div>
+  <div class="jk-hero__cta">
+    <a class="jk-btn jk-btn--primary" href="01-Mechanism/">进入机制专题 →</a>
+    <a class="jk-btn jk-btn--ghost" href="02-Symptom/S00-症状总览/">查看症状总览</a>
   </div>
 </div>
 
 <ol class="jk-steps" markdown="0">
-  <li><strong>选模块</strong><span>顶栏切换 8 大分类（项目地图 / 机制 / 症状 / 取证 / 工具 / 治理 / 案例 / 基础）</span></li>
-  <li><strong>进系列</strong><span>左侧打开「系列总览」，先看目录结构</span></li>
-  <li><strong>读篇章</strong><span>从总览篇章表进入单篇，或用顶部搜索</span></li>
+  <li><strong>选模块</strong><span>顶栏切换 8 大分类：项目地图 / 机制 / 症状 / 取证 / 工具 / 治理 / 案例 / 基础</span></li>
+  <li><strong>进系列</strong><span>进入模块后选系列卡片，每个系列都有总览页 + 篇章表</span></li>
+  <li><strong>读篇章</strong><span>从篇章表进入单篇，配合顶部搜索快速定位</span></li>
 </ol>
 
-<p class="jk-section-title"><strong>模块</strong></p>
+<p class="jk-section-title"><strong>模块导览</strong></p>
 
 <div class="jk-grid" markdown="0">
 {cards_html}
@@ -87,3 +91,4 @@ def build_public_readme(repo_root: Path | None = None) -> str:
 def sanitize_readme(src: str) -> str:
     _ = src
     return build_reader_homepage()
+

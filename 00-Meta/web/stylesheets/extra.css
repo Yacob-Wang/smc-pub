@@ -1,90 +1,213 @@
-/* JacobKing · 稳知库 — header + homepage layout */
+/* ==========================================================================
+   稳知库 · Android 官方文档风格主题
+   参考：developer.android.com · source.android.com
+   主色：Android 绿 #3DDC84 / 辅色：深绿 #00C853
+   字体：Roboto Flex（英文）+ Noto Sans SC（中文）
+   圆角：Material You 大圆角 28px
+   ========================================================================== */
 
 :root {
-  --jk-ink: #0f172a;
-  --jk-muted: #64748b;
-  --jk-line: rgba(15, 23, 42, 0.08);
-  --jk-surface: #ffffff;
-  --jk-soft: #f4f7f8;
-  --jk-accent: #0f766e;
-  --jk-accent-soft: rgba(15, 118, 110, 0.12);
-  --jk-radius: 16px;
-  --jk-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px rgba(15, 23, 42, 0.06);
+  /* —— Android 绿主题 —————————————————————————————————————— */
+  --md-primary-fg-color: #1f7a4d;            /* 深绿：顶栏/链接 */
+  --md-primary-fg-color--light: #3DDC84;     /* 亮绿：hover */
+  --md-primary-fg-color--dark: #005a30;      /* 深绿：active */
+  --md-primary-bg-color: #ffffff;             /* 主色块文字 */
+  --md-primary-bg-color--light: #ffffffb3;
+  --md-accent-fg-color: #00C853;              /* 辅色（链接 hover / 高亮） */
+  --md-accent-fg-color--transparent: #00C8531a;
+  --md-accent-bg-color: #ffffff;
+  --md-accent-bg-color--light: #ffffffb3;
+
+  /* —— 品牌色变量（jk = JacobKing） ————————————————————— */
+  --jk-green: #3DDC84;            /* Android 绿（标准） */
+  --jk-green-deep: #00C853;        /* 深绿（hover/active） */
+  --jk-green-darker: #1f7a4d;      /* 最深绿（顶栏 tab） */
+  --jk-green-soft: #e6f9ee;        /* 极浅绿（卡片背景） */
+  --jk-green-ring: #3ddc8433;       /* 绿环（focus） */
+
+  /* —— 文字 / 表面 ———————————————————————————————————— */
+  --jk-ink: #0f172a;                /* 主文字 */
+  --jk-muted: #475569;              /* 次要文字 */
+  --jk-line: rgba(15, 23, 42, 0.08); /* 边线 */
+  --jk-surface: #ffffff;             /* 卡片背景 */
+  --jk-soft: #f4f7f8;                /* 浅灰底 */
+
+  /* —— 圆角（Material You 大圆角） ————————————————————— */
+  --jk-radius-sm: 12px;
+  --jk-radius: 20px;
+  --jk-radius-lg: 28px;
+
+  /* —— 阴影（Material 3 风格） ——————————————————————— */
+  --jk-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04), 0 2px 8px rgba(15, 23, 42, 0.04);
+  --jk-shadow: 0 2px 4px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.08);
+  --jk-shadow-lg: 0 4px 8px rgba(15, 23, 42, 0.06), 0 16px 40px rgba(15, 23, 42, 0.12);
 }
 
+/* 深色模式 */
 [data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #3DDC84;
+  --md-primary-fg-color--light: #6fe9a4;
+  --md-primary-fg-color--dark: #1f7a4d;
+  --md-primary-bg-color: #0d1410;
+  --md-accent-fg-color: #3DDC84;
   --jk-ink: #e2e8f0;
   --jk-muted: #94a3b8;
   --jk-line: rgba(226, 232, 240, 0.12);
   --jk-surface: #1e293b;
   --jk-soft: #0f172a;
-  --jk-accent: #2dd4bf;
-  --jk-accent-soft: rgba(45, 212, 191, 0.16);
-  --jk-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 12px 32px rgba(0, 0, 0, 0.28);
+  --jk-green-soft: #1a2e23;
+  --jk-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.16);
+  --jk-shadow: 0 2px 4px rgba(0, 0, 0, 0.24), 0 8px 24px rgba(0, 0, 0, 0.28);
+  --jk-shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.3), 0 16px 40px rgba(0, 0, 0, 0.4);
 }
 
-/* ---- Sticky header author chip ---- */
+/* —— 字体 —————————————————————————————————————————— */
+:root,
+[data-md-color-scheme] {
+  --md-text-font: "Roboto Flex", "Noto Sans SC", "Roboto", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --md-font-family: var(--md-text-font);
+  --jk-font-mono: "JetBrains Mono", "Roboto Mono", "Cascadia Code", Consolas, ui-monospace, monospace;
+}
+
+.md-typeset {
+  font-family: var(--md-text-font);
+  font-feature-settings: "ss01", "cv11";
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+  font-family: var(--md-text-font);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+code,
+pre,
+.md-typeset code,
+.md-typeset pre {
+  font-family: var(--jk-font-mono);
+}
+
+/* ==========================================================================
+   顶栏 Android 绿 + 顶部装饰条
+   ========================================================================== */
+
+/* 顶栏底部加细装饰条（Android 风格的"绿条"） */
+.md-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--jk-green), var(--jk-green-deep), var(--jk-green));
+  pointer-events: none;
+  opacity: 0.85;
+}
+
 .md-header {
-  backdrop-filter: saturate(1.2) blur(10px);
+  background: linear-gradient(180deg, var(--md-primary-fg-color) 0%, var(--md-primary-fg-color--dark) 100%);
+  color: var(--md-primary-bg-color);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
 }
 
-.md-header__inner {
-  gap: 0.35rem;
+.md-header__title,
+.md-header__topic {
+  color: var(--md-primary-bg-color);
 }
 
+.md-header__title .md-ellipsis,
+.md-header__topic .md-ellipsis {
+  color: var(--md-primary-bg-color) !important;
+}
+
+/* 顶栏 Tab（模块）—— 白色文字 + 底部高亮 */
+.md-tabs {
+  background: linear-gradient(180deg, var(--md-primary-fg-color) 0%, var(--md-primary-fg-color--dark) 100%);
+  color: var(--md-primary-bg-color);
+}
+
+.md-tabs__link {
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  padding: 0.85rem 0.9rem;
+  transition: color 0.18s ease, background 0.18s ease;
+}
+
+.md-tabs__link:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.md-tabs__link--active,
+.md-tabs__item--active .md-tabs__link {
+  color: #ffffff !important;
+}
+
+.md-tabs__item--active .md-tabs__link {
+  position: relative;
+}
+
+.md-tabs__item--active .md-tabs__link::after {
+  content: "";
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 0;
+  height: 3px;
+  background: var(--jk-green);
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 0 12px var(--jk-green);
+}
+
+/* —— Author chip (JacobKing 角标) ————————————————— */
 .jk-author {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
   margin-left: 0.25rem;
   margin-right: 0.35rem;
-  padding: 0.28rem 0.7rem 0.28rem 0.45rem;
+  padding: 0.3rem 0.75rem 0.3rem 0.5rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.14);
-  color: var(--md-primary-bg-color);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff !important;
   text-decoration: none !important;
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-family: var(--jk-font-mono);
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   line-height: 1;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: background 0.18s ease, transform 0.18s ease;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .jk-author:hover {
-  background: rgba(255, 255, 255, 0.24);
+  background: rgba(255, 255, 255, 0.28);
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .jk-author__mark {
   width: 1.35rem;
   height: 1.35rem;
   border-radius: 999px;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.55));
-  color: var(--md-primary-fg-color);
+  background: var(--jk-green);
+  color: var(--md-primary-fg-color--dark);
   display: inline-grid;
   place-items: center;
   font-size: 0.62rem;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .jk-author__mark::before {
   content: "JK";
-  color: var(--md-primary-fg-color);
-}
-
-.jk-author__name {
-  padding-right: 0.1rem;
-}
-
-@media screen and (max-width: 44.9375em) {
-  .jk-author__name {
-    /* keep name visible on mobile; shorten only if extremely narrow */
-  }
+  color: var(--md-primary-fg-color--dark);
 }
 
 @media screen and (max-width: 24em) {
@@ -93,27 +216,62 @@
   }
 
   .jk-author {
-    padding-right: 0.45rem;
+    padding-right: 0.5rem;
   }
 }
 
-/* ---- Homepage hero + cards ---- */
+/* ==========================================================================
+   首页 Hero —— Android 官方文档风格（大标题 + 双 CTA + 绿渐变背景）
+   ========================================================================== */
+
 .md-typeset .jk-hero {
-  margin: 0.4rem 0 1.6rem;
-  padding: 1.5rem 1.4rem 1.35rem;
-  border: 1px solid var(--jk-line);
-  border-radius: calc(var(--jk-radius) + 4px);
+  position: relative;
+  margin: 0 0 2.4rem;
+  padding: 3.5rem 2.4rem 3rem;
+  border-radius: var(--jk-radius-lg);
   background:
-    radial-gradient(1200px 280px at 10% -20%, var(--jk-accent-soft), transparent 55%),
-    linear-gradient(180deg, var(--jk-soft), var(--jk-surface));
-  box-shadow: var(--jk-shadow);
+    radial-gradient(800px 400px at 0% 0%, rgba(61, 220, 132, 0.25), transparent 60%),
+    radial-gradient(800px 400px at 100% 100%, rgba(0, 200, 83, 0.18), transparent 55%),
+    linear-gradient(135deg, #0d2818 0%, #1a3a2a 50%, #0d2818 100%);
+  color: #f1f5f4;
+  box-shadow: var(--jk-shadow-lg);
+  overflow: hidden;
+}
+
+/* Hero 装饰几何（抽象 Android 风格的圆 + 弧线） */
+.md-typeset .jk-hero::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  right: -120px;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(61, 220, 132, 0.32), transparent 65%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.md-typeset .jk-hero::after {
+  content: "";
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(0, 200, 83, 0.22), transparent 65%);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .md-typeset .jk-hero h1 {
-  margin: 0 0 0.45rem;
-  font-size: clamp(1.55rem, 2.4vw, 2rem);
-  letter-spacing: -0.02em;
+  margin: 0 0 0.85rem;
+  font-size: clamp(2rem, 4.8vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: #ffffff;
   border: 0;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
 .md-typeset .jk-hero h1::after {
@@ -121,135 +279,265 @@
 }
 
 .md-typeset .jk-hero__lead {
-  margin: 0 0 0.85rem;
-  max-width: 46rem;
-  color: var(--jk-muted);
-  font-size: 0.95rem;
+  margin: 0 0 1.4rem;
+  max-width: 52rem;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: clamp(0.95rem, 1.4vw, 1.12rem);
   line-height: 1.7;
+  font-weight: 400;
 }
 
 .md-typeset .jk-hero__meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.55rem;
+  margin-bottom: 1.6rem;
 }
 
+/* Hero CTA 按钮（双按钮：实心绿 + 描边） */
+.md-typeset .jk-hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 0.4rem;
+}
+
+.md-typeset .jk-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none !important;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease;
+  border: 1.5px solid transparent;
+}
+
+.md-typeset .jk-btn--primary {
+  background: var(--jk-green);
+  color: #0a2a18 !important;
+  box-shadow: 0 4px 14px rgba(61, 220, 132, 0.36);
+}
+
+.md-typeset .jk-btn--primary:hover {
+  background: #5de898;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(61, 220, 132, 0.5);
+}
+
+.md-typeset .jk-btn--ghost {
+  background: transparent;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.42);
+}
+
+.md-typeset .jk-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.7);
+  transform: translateY(-2px);
+}
+
+/* —— Hero chips ————————————————————————————————————— */
 .md-typeset .jk-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.28rem 0.65rem;
+  padding: 0.32rem 0.75rem;
   border-radius: 999px;
-  border: 1px solid var(--jk-line);
-  background: var(--jk-surface);
-  color: var(--jk-ink);
-  font-size: 0.72rem;
-  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  backdrop-filter: blur(4px);
 }
 
 .md-typeset .jk-chip--accent {
-  border-color: transparent;
-  background: var(--jk-accent-soft);
-  color: var(--jk-accent);
+  border-color: var(--jk-green);
+  background: rgba(61, 220, 132, 0.18);
+  color: #b6f3cd;
 }
 
+/* ==========================================================================
+   模块卡片 —— 3 列 grid + Material You 大圆角
+   ========================================================================== */
+
+.md-typeset .jk-section-title {
+  margin: 0.5rem 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--jk-ink);
+}
+
+.md-typeset .jk-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0 0 2.4rem;
+}
+
+.md-typeset .jk-card {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 1.4rem 1.4rem 1.25rem;
+  border: 1px solid var(--jk-line);
+  border-radius: var(--jk-radius-lg);
+  background: var(--jk-surface);
+  box-shadow: var(--jk-shadow-sm);
+  text-decoration: none !important;
+  color: inherit;
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
+              box-shadow 0.22s ease,
+              border-color 0.22s ease;
+  position: relative;
+  overflow: hidden;
+  min-height: 152px;
+}
+
+.md-typeset .jk-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--jk-green-soft), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  pointer-events: none;
+}
+
+.md-typeset .jk-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--jk-shadow-lg);
+  border-color: var(--jk-green);
+}
+
+.md-typeset .jk-card:hover::before {
+  opacity: 1;
+}
+
+.md-typeset .jk-card__title {
+  position: relative;
+  margin: 0 0 0.45rem;
+  color: var(--jk-ink);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.md-typeset .jk-card__desc {
+  position: relative;
+  margin: 0 0 0.9rem;
+  color: var(--jk-muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.md-typeset .jk-card__arrow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--jk-green-deep);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin-top: auto;
+  transition: gap 0.18s ease, color 0.18s ease;
+}
+
+.md-typeset .jk-card:hover .jk-card__arrow {
+  color: var(--jk-green);
+  gap: 0.55rem;
+}
+
+/* 3 列 grid 在小屏幕自适应 */
+@media screen and (max-width: 76.1875em) {
+  .md-typeset .jk-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 50em) {
+  .md-typeset .jk-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .md-typeset .jk-hero {
+    padding: 2.4rem 1.4rem 2rem;
+  }
+}
+
+/* ==========================================================================
+   3 步说明
+   ========================================================================== */
+
 .md-typeset .jk-steps {
-  margin: 0 0 1.75rem;
+  margin: 0 0 2rem;
   padding: 0;
   list-style: none;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
+  gap: 0.85rem;
   counter-reset: jk-step;
 }
 
 .md-typeset .jk-steps li {
   counter-increment: jk-step;
   margin: 0;
-  padding: 0.95rem 1rem 0.95rem 1rem;
+  padding: 1.1rem 1.2rem 1.05rem;
   border: 1px solid var(--jk-line);
   border-radius: var(--jk-radius);
   background: var(--jk-surface);
-  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
+  box-shadow: var(--jk-shadow-sm);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.md-typeset .jk-steps li:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--jk-shadow);
 }
 
 .md-typeset .jk-steps li::before {
-  content: "0" counter(jk-step);
+  content: counter(jk-step, decimal-leading-zero);
   display: block;
-  margin-bottom: 0.35rem;
-  color: var(--jk-accent);
-  font-family: "JetBrains Mono", ui-monospace, monospace;
-  font-size: 0.72rem;
+  margin-bottom: 0.5rem;
+  color: var(--jk-green-deep);
+  font-family: var(--jk-font-mono);
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.06em;
 }
 
 .md-typeset .jk-steps strong {
   display: block;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.25rem;
   color: var(--jk-ink);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 700;
 }
 
 .md-typeset .jk-steps span {
   color: var(--jk-muted);
-  font-size: 0.8rem;
-  line-height: 1.55;
-}
-
-.md-typeset .jk-section-title {
-  margin: 0.5rem 0 0.85rem;
-  font-size: 1.05rem;
-  letter-spacing: -0.01em;
-}
-
-.md-typeset .jk-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.85rem;
-  margin: 0 0 1.8rem;
-}
-
-.md-typeset .jk-card {
-  display: block;
-  margin: 0;
-  padding: 1.05rem 1.1rem 1rem;
-  border: 1px solid var(--jk-line);
-  border-radius: var(--jk-radius);
-  background: var(--jk-surface);
-  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
-  text-decoration: none !important;
-  color: inherit;
-  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.md-typeset .jk-card:hover {
-  border-color: color-mix(in srgb, var(--jk-accent) 45%, var(--jk-line));
-  box-shadow: var(--jk-shadow);
-  transform: translateY(-2px);
-}
-
-.md-typeset .jk-card__title {
-  margin: 0 0 0.35rem;
-  color: var(--jk-ink);
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.md-typeset .jk-card__desc {
-  margin: 0;
-  color: var(--jk-muted);
   font-size: 0.82rem;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
-.md-typeset .jk-card__arrow {
-  display: inline-block;
-  margin-top: 0.7rem;
-  color: var(--jk-accent);
-  font-size: 0.75rem;
-  font-weight: 600;
+@media screen and (max-width: 50em) {
+  .md-typeset .jk-steps {
+    grid-template-columns: 1fr;
+  }
 }
+
+/* ==========================================================================
+   "按问题进入" 表格
+   ========================================================================== */
 
 .md-typeset .jk-quick {
   width: 100%;
@@ -259,12 +547,14 @@
   border: 1px solid var(--jk-line);
   border-radius: var(--jk-radius);
   background: var(--jk-surface);
+  box-shadow: var(--jk-shadow-sm);
 }
 
 .md-typeset .jk-quick th,
 .md-typeset .jk-quick td {
   border-top: 1px solid var(--jk-line);
-  padding: 0.7rem 0.9rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
 }
 
 .md-typeset .jk-quick tr:first-child th,
@@ -279,15 +569,54 @@
   font-weight: 650;
 }
 
-.md-typeset .jk-foot {
-  margin-top: 1.4rem;
-  color: var(--jk-muted);
-  font-size: 0.8rem;
+.md-typeset .jk-quick td a {
+  color: var(--jk-green-darker);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.18s ease;
 }
 
-@media screen and (max-width: 76.1875em) {
-  .md-typeset .jk-steps,
-  .md-typeset .jk-grid {
-    grid-template-columns: 1fr;
-  }
+[data-md-color-scheme="slate"] .md-typeset .jk-quick td a {
+  color: var(--jk-green);
+}
+
+.md-typeset .jk-quick td a:hover {
+  color: var(--jk-green-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ==========================================================================
+   链接 / 强调元素
+   ========================================================================== */
+
+.md-typeset a {
+  color: var(--jk-green-darker);
+  transition: color 0.18s ease;
+}
+
+[data-md-color-scheme="slate"] .md-typeset a {
+  color: var(--jk-green);
+}
+
+.md-typeset a:hover {
+  color: var(--jk-green-deep);
+}
+
+/* Footer */
+.md-footer {
+  background: var(--jk-soft);
+}
+
+/* 关键字 strong */
+.md-typeset strong {
+  color: var(--jk-ink);
+  font-weight: 650;
+}
+
+/* —— Foot note —————————————————————————————————————— */
+.md-typeset .jk-foot {
+  margin-top: 1.6rem;
+  color: var(--jk-muted);
+  font-size: 0.8rem;
 }
