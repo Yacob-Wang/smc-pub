@@ -1,8 +1,11 @@
 ﻿# 8.6 GC × System Server 进程（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 08-GC与其他子系统（横切专题 · 6/8）
+>
 > **本篇定位**：**横切专题**（6/8）——SystemServer 进程的特殊 GC 策略 + ART 17 SystemServer GC 调优（与 Zygote fork 配合 / 启动期 GC 优化）
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -945,3 +948,4 @@ public class OomAlertMonitor {
 ---
 
 > **下一篇**：[07-GC与输入法-SurfaceFlinger v2](07-GC与输入法-SurfaceFlinger.md) 详述 **高频 Native 分配的子系统（输入法、SurfaceFlinger）怎么影响 Java GC**——ART 17 系统服务 GC 监控（dumpsys gfxinfo + meminfo 联动）。
+

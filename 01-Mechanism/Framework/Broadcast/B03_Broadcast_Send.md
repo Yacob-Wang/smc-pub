@@ -1,10 +1,15 @@
-# B03 · 发送流程：sendBroadcast → BroadcastQueue → Receiver
+﻿# B03 · 发送流程：sendBroadcast → BroadcastQueue → Receiver
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Broadcast 系列 **第 3 篇 / 核心机制**（重头戏）
+>
 > **强依赖**：[B01 · 全景](B01_Broadcast_Overview.md) §3.3、[B02 · 注册](B02_Broadcast_Register.md)
+>
 > **承接自**：B01 §3.3 给出 6 步发送链路；B02 已覆盖注册机制。本篇**专门展开 6 步链路源码 + 前后台队列决策 + ParallelBroadcasts 跨进程**
+>
 > **衔接去**：[B04 · 有序广播](B04_Broadcast_Ordered.md) — B03 讲并行广播；B04 讲有序广播
+>
 > **不重复内容**：与 B01 §3.3 骨架不重复；与 B02 注册机制不重复
 
 ---
@@ -709,3 +714,4 @@ Broadcast ANR?
 下一篇 [B04 · 有序广播：优先级 + 串行调度 + abort](B04_Broadcast_Ordered.md) 把 B03 的"并行广播"展开为"有序广播"——**`sendOrderedBroadcast` 链路 + 优先级调度 + `abortBroadcast()` 终止 + 串行分发**。B04 是 Broadcast 进阶篇。
 
 预计阅读时间 25-35 分钟。
+

@@ -1,8 +1,11 @@
 ﻿# 4.4 Invariant 不变式：CC GC 的正确性基础（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 04-CC-GC（CC-GC · 4/4）
+>
 > **本篇定位**：**CC-GC Invariant 不变式**（4/4）——弱三色不变式 / GrayStatusImmuneWord / 不变式实时检查 / ART 17 Invariant 强化（to-space invariant + 读屏障保证读到已搬迁对象）
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -956,3 +959,4 @@ synchronized (myTask) {
 ---
 
 > **下一篇**：[10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) 专章 **ART 17 分代 GC 强化**——频繁低耗年轻代回收 + 软阈值 30% + 端侧 LLM 友好的 GC 策略。
+

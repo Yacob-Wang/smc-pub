@@ -1,10 +1,15 @@
-# S01 · Service 全景：分类、进程模型与协作组件
+﻿# S01 · Service 全景：分类、进程模型与协作组件
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Service 系列 **第 1 篇 / 总览篇**（破例：风险地图简版 / 无实战案例）
+>
 > **强依赖**：[Activity 系列 · A01 全景](../Activity/01_Activity_Overview.md)、[Activity 系列 · A02 启动流程](../Activity/02_Activity_Start_SourceCode.md)
+>
 > **承接自**：无（系列根文章）
+>
 > **衔接去**：[S02 · startService 路径：onCreate → onStartCommand → onDestroy](02_Service_StartService_Path.md) — 把 S01 §3.1 的 startService 骨架下沉到源码级
+>
 > **不重复内容**：与 A01 §2.1 四大组件协作图不重复
 
 ## 破例决策记录
@@ -527,3 +532,4 @@ bindService 泄漏?
 下一篇 [S02 · startService 路径：onCreate → onStartCommand → onDestroy](02_Service_StartService_Path.md) 将把 S01 §3.1 的 startService 骨架下沉到源码级——按 5 步链路逐方法贴源码 + "稳定性架构师视角"分析 + Service ANR 实战案例（20s 阈值根因分类）。
 
 预计阅读时间 30-45 分钟。
+

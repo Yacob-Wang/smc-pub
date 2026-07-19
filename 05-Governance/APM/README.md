@@ -1,7 +1,9 @@
-# APM · 应用性能监控体系建设
+﻿# APM · 应用性能监控体系建设
 
 > **状态**：🟡 占位（计划 2026-07 启动 P0 必写）
+>
 > **目标读者**：Android 稳定性架构师 / APM Lead / 平台架构师
+>
 > **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 
 ## 计划内容（10 篇左右）
@@ -23,3 +25,4 @@
 - 上游：[04-Tool/Dumpsys](../../04-Tool/Dumpsys/) + [04-Tool/Perfetto](../../04-Tool/Perfetto/) 数据采集
 - 上游：[04-Tool/AmCommand](../../04-Tool/AmCommand/) 32 篇 am 命令
 - 配套：[05-Governance/AI-Native/03_AI_for_Stability](../AI-Native/03_AI_for_Stability/) 智能 APM
+

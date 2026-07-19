@@ -1,10 +1,15 @@
-# 06-Input ANR：从事件超时到系统裁决
+﻿# 06-Input ANR：从事件超时到系统裁决
 
 > **系列**：面向稳定性的 Android Input 子系统深度解析系列(Input_FWK)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java`、`frameworks/native/services/inputflinger/dispatcher/`;Android 14 Input ANR 阈值收紧见 §3)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-Input 系统总览](01-Input系统总览.md) / [03-InputDispatcher](03-InputDispatcher.md) / [05-View 事件分发](05-View事件分发.md)
+>
 > **下一篇**:[07-Input 稳定性风险全景](07-Input稳定性风险全景.md)
 
 ---
@@ -1038,3 +1043,4 @@ protected void onResume() {
 | AppErrors.java | `frameworks/base/services/core/java/com/android/server/am/AppErrors.java` | SIGQUIT + traces.txt |
 | signal_catcher.cc | `art/runtime/signal_catcher.cc` | SIGQUIT → dump 堆栈 |
 | InputTransport.cpp | `frameworks/native/libs/input/InputTransport.cpp` | finishInputEvent 回复 |
+

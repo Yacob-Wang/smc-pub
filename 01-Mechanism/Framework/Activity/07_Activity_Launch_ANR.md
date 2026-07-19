@@ -1,10 +1,15 @@
-# A07 · Activity 启动 ANR 全景：5s / 10s / 15s 阈值与根因分类
+﻿# A07 · Activity 启动 ANR 全景：5s / 10s / 15s 阈值与根因分类
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Activity 系列 **第 7 篇 / 风险地图**（重头戏）
+>
 > **强依赖**：[A02 · 启动流程源码深潜](02_Activity_Start_SourceCode.md)、[A03 · 生命周期](03_Activity_Lifecycle.md)、[A06 · ConfigurationChange](06_Activity_ConfigChange.md)
+>
 > **承接自**：A02 §4 已给出 5 大根因分类简版；A06 §4.1 已涉及"重建耗时"作为 ANR 风险点。本篇**专门展开 ANR 阈值常量、AnrHelper、ANR trace 生成、5 大根因详细分析**
+>
 > **衔接去**：[A08 · 跳转卡顿与黑白屏](08_Activity_Jump_Latency.md) — A07 讲"启动 ANR"；A08 讲"启动慢但没到 ANR"（即"白屏/黑屏"）
+>
 > **不重复内容**：与 A02 §4 简版风险地图不重复；与 A06 §4 重建风险不重复
 
 ---
@@ -839,3 +844,4 @@ public class MyApplication extends Application {
 下一篇 [A08 · 跳转卡顿与黑白屏](08_Activity_Jump_Latency.md) 把 A07 的"启动 ANR"过渡到"启动慢但没到 ANR"——**黑白屏是冷启动最常见的"用户体验问题"**，**AOSP 12+ 强制 SplashScreen API** 后，黑白屏治理有了新范式。A08 涉及 `WindowManagerService` 端 Window fade in 动画、`Choreographer` 帧调度、`SplashScreen` API 的源码。
 
 预计阅读时间 20-30 分钟。
+

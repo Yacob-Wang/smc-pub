@@ -1,8 +1,11 @@
-# L00 · Android 稳定性架构师学习路线：从 0 到胜任的 4 层栈阅读路径
+﻿# L00 · Android 稳定性架构师学习路线：从 0 到胜任的 4 层栈阅读路径
 
 > **系列**：Stability 系列 · 横切文档（与 S00-S07 并列，编号 L00 以"路线 = Learning"区别）
+>
 > **基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18` LTS
+>
 > **目标读者**：资浅 → 资深 Android 稳定性架构师 / 性能架构师
+>
 > **完成时间**：2026-07-18（v1.0）
 
 ---
@@ -519,3 +522,4 @@ Phase 0（必读，2-3h）+ Phase 1 跳过 S04/S06 → Phase 2 偏 ART/Process
 **最后更新**：2026-07-18（v1.0，与 S00 同步落库）  
 **基线**：AOSP 17 + android17-6.18  
 **作者**：Mavis · Stability Matrix Course 路线图
+

@@ -1,10 +1,15 @@
-# S02 · startService 路径：onCreate → onStartCommand → onDestroy
+﻿# S02 · startService 路径：onCreate → onStartCommand → onDestroy
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Service 系列 **第 2 篇 / 核心机制**
+>
 > **强依赖**：[S01 · Service 全景](01_Service_Overview.md) §3.1 / §3.3（启动模式骨架）
+>
 > **承接自**：S01 §3.3 给出 startService 6 步链路骨架；本篇**下沉到具体源码方法 + 行号 + ANR 实战**
+>
 > **衔接去**：[S03 · bindService 路径](03_Service_BindService_Path.md) — S02 覆盖 started 模式；S03 覆盖 bound 模式
+>
 > **不重复内容**：与 S01 §3.1 4 种分类表不重复
 
 ---
@@ -740,3 +745,4 @@ Service ANR?
 下一篇 [S03 · bindService 路径：Connection 池与跨进程 Binder](03_Service_BindService_Path.md) 把 S02 的 started 模式展开为 bound 模式——**8 步链路 + ServiceConnection 状态机 + 跨进程死亡链路**。S03 是 S06 死亡链路篇的前置知识。
 
 预计阅读时间 30-45 分钟。
+

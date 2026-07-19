@@ -1,10 +1,15 @@
-# A06 · ConfigurationChange 与 Activity 重建（横切专题）
+﻿# A06 · ConfigurationChange 与 Activity 重建（横切专题）
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Activity 系列 **第 6 篇 / 横切专题**（**破例：3 张图**）
+>
 > **强依赖**：[A03 · 生命周期](03_Activity_Lifecycle.md) §3.3（`onSaveInstanceState`）、[A04 · 启动模式](04_Activity_LaunchMode_Task.md) §3.5（TaskFragment）
+>
 > **承接自**：A03 已覆盖生命周期基础；A05 已覆盖 Intent 解析。本篇是 A03 §3.3 `onSaveInstanceState` 的**横切专题展开**——专门讲 ConfigurationChange 下的 Activity 重建 / 不重建逻辑
+>
 > **衔接去**：[A07 · 启动 ANR 全景](07_Activity_Launch_ANR.md) — A06 涉及"配置变化 → Activity 重建 → onCreate 慢"的链路，是 A07 启动 ANR 的风险点之一
+>
 > **不重复内容**：与 A03 §3.3 `onSaveInstanceState` 不重复；与 A04 §3.5 TaskFragment 不重复
 
 ## 破例决策记录
@@ -597,3 +602,4 @@ logcat:
 下一篇 [A07 · Activity 启动 ANR 全景](07_Activity_Launch_ANR.md) 把 A06 提到的"重建耗时 200-500ms"作为引子，**专门展开启动 ANR 的 5 大根因 + 8 个阈值常量 + ANR trace 实战分析**。A07 是 Activity 系列最重的一篇（12-15k 字），也是 A02 启动流程的"反面视角"——A02 讲"正常链路"，A07 讲"异常链路"。
 
 预计阅读时间 30-45 分钟。
+

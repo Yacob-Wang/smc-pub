@@ -1,10 +1,15 @@
-# Socket 04：缓冲区与数据收发
+﻿# Socket 04：缓冲区与数据收发
 
 > **系列**：面向稳定性的 Android Socket 子系统深度解析系列(Socket)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `net/ipv4/tcp_input.c`、`net/ipv4/tcp_output.c`、`include/net/sock.h`、`include/net/tcp.h`;TCP send buffer 自动调优在 5.15+ 增强 tcp_wmem[2] 见 §3;SO_SNDBUFFORCE 行为变化见 §4)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-Socket 总览](01-Socket总览.md) / [02-Socket 内核 API](02-Socket内核API与数据结构.md) / [03-Socket 生命周期](03-Socket连接生命周期.md)
+>
 > **下一篇**:[05-listen backlog 与连接队列](05-listen_backlog与连接队列.md)
 
 ---
@@ -1081,4 +1086,5 @@ socket 缓冲相关问题
 
 
 ---
+
 

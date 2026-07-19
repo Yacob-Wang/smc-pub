@@ -1,8 +1,11 @@
 ﻿# 5.3 Card Table：分代 GC 的基石（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 05-Generational-CC（分代 CC · 3/4）
+>
 > **本篇定位**：**分代 CC**（3/4）——Card Table 1 byte / 256 byte 记录跨代引用、Post-Write Barrier 维护、ART 17 细粒度卡表优化
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -713,3 +716,4 @@ ART 17 细粒度卡表是**透明优化**，业务代码无需修改即可受益
 ---
 
 > **下一篇**：[04-Remembered-Set](04-Remembered-Set.md) 深入 **Region 级别 RSet**——ART GenCC "Card Table + RSet" 双重机制、Mod Union Table 优化、ART 17 跨代引用跟踪强化。
+

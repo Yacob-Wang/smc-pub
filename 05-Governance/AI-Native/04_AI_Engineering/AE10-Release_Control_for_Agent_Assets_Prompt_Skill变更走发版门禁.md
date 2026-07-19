@@ -1,14 +1,23 @@
-# AE10 · Release Control for Agent Assets · Prompt/Skill 变更走发版门禁
+﻿# AE10 · Release Control for Agent Assets · Prompt/Skill 变更走发版门禁
 
 > **系列**：04_AI_Engineering（AI 工程师视角的工程实践）
+>
 > **篇号**：AE10（共 12 篇，本篇为第 10 篇，**簇 3「交互与发布」收尾**）
+>
 > **写作时间**：2026-07-07
+>
 > **前置阅读**：
+>
 > - [AE01 · Prompt→Skill→Tools→Context 四层架构](AE01-从Prompt到Skill到Tools到Context_AI工程师的四层架构.md)（资产清单的来源）
+>
 > - [AE04 · Trajectory Evals](AE04-Trajectory_Evals_评路径不只评答案.md)（Golden Replay 的素材）
+>
 > - [AE05 · Policy-as-Code](AE05-Policy_as_Code_守卫前移到工具调用层.md)（Tool Profile 是 Policy 的一种编码形式）
+>
 > - [AE08 · Tool Idempotency](AE08-Tool_Idempotency_副作用边界与重试安全.md)（Rollback 的副作用边界）
+>
 > - [AE09 · Human-in-the-Loop](AE09-Human_in_the_Loop_工程化_Interrupt_Approval_Packet.md)（发版门禁本身就是 Policy 触发的人回环）
+>
 > **目标读者**：所有管生产 Agent 的工程负责人；想知道"为什么 Prompt 改一行就能引发线上事故""怎么把 Prompt 改动变得跟代码改动一样可控"的人
 
 ---

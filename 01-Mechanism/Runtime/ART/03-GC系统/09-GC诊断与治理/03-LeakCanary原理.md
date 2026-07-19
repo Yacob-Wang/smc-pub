@@ -1,8 +1,11 @@
 ﻿# 9.3 LeakCanary 的实现原理（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 3/10）
+>
 > **本篇定位**：**自动内存泄漏检测**（3/10）——LeakCanary 完整工作流 + KeyedWeakReference + Shark 引擎 + ART 17 类去重后的引用追踪
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -898,3 +901,4 @@ try (GoodResource res = new GoodResource()) {
 ---
 
 > **下一篇**：[04-MAT使用指南](04-MAT使用指南.md) 深入**hprof 深度分析**——Shallow Size / Retained Size / Dominator Tree + ART 17 hprof 格式变更 + Class Extent 元数据 + 快速定位 GC Root。
+

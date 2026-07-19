@@ -1,8 +1,11 @@
 ﻿# 1.6 Reference 体系（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 01-基础理论（基础理论 · 6/9）
+>
 > **本篇定位**：**基础理论**（6/9）——Java 4 种引用类型（Strong/Soft/Weak/Phantom）+ FinalReference + ReferenceProcessor + ReferenceQueue + ART 17 引用处理强化
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -1126,3 +1129,4 @@ Reference 处理卡顿 / 内存异常
 ---
 
 > **下一篇**：[07-理论总结](07-理论总结.md) 把基础理论篇的所有机制 × 3 个具体算法（CMS / CC / GenCC）的对应关系画清楚——**理论篇的压轴章节，全局视角**。
+

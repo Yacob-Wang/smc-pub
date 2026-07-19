@@ -1,10 +1,15 @@
-# Socket 02：内核 API 与核心数据结构
+﻿# Socket 02：内核 API 与核心数据结构
 
 > **系列**：面向稳定性的 Android Socket 子系统深度解析系列(Socket)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `net/socket.c`、`include/net/sock.h`、`include/linux/socket.h`、`net/core/sock.c`;5.10→5.15 struct sock 字段新增 `sk_listener` 与 `sk_socket` 见 §3;Android 14 CGroupSocket 限制见 §5)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-Socket 总览](01-Socket总览.md)
+>
 > **下一篇**:[03-Socket 连接生命周期](03-Socket连接生命周期.md)
 
 > 面向 Android 稳定性架构师：从一次 `socket()` 系统调用出发，逐层拆解内核中的 `struct socket` / `struct sock` / `struct file` 三元组，理解"用户态 fd → 内核 socket 对象 → 协议实现"的完整映射，**让你看 `/proc/net/*` 字段、strace 输出、ANR trace 时能精确对应到内核结构体的某个字段**。
@@ -2107,4 +2112,5 @@ public void fetchData() {
 socket 系列 8 篇规划已写 5 篇（01/02/04/05/06/07/08）+ 桥接 1 + epoll 1，03 是"机制深潜"篇章的最后一片拼图。
 
 ---
+
 

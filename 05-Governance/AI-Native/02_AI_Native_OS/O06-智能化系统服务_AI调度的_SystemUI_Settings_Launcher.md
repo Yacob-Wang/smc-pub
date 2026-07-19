@@ -1,12 +1,19 @@
-# O06 智能化系统服务：AI 调度的 SystemUI / Settings / Launcher
+﻿# O06 智能化系统服务：AI 调度的 SystemUI / Settings / Launcher
 
 > **本系列**：AI_Native_OS（操作系统级 AI 架构）
+>
 > **本篇定位**：**实战治理 / 收尾**（6/6）—— 把前面 5 篇（O01 范式转移 + O02 ASI + O03 AICore + O04 AI Agent + O05 端侧 LLM）的所有能力**落到具体 Framework 服务**——SystemUI 智能通知、Settings 智能推荐、Launcher 智能整理；并给出 2 个完整实战案例收口整个子系列
+>
 > **基线版本**：AOSP android-14.0.0_r1（SystemUI AI 实验性 + SettingsIntelligence + Launcher3 AI Plugin）；android-15.0.0_r1（SystemUI AI 正式 + Launcher AI 集成）；Android 16（AI 化全面落地）；Pixel Stock Android 14+ / 三星 One UI 6 / 小米 HyperOS / 华为 HarmonyOS NEXT。
+>
 > **对线 JD**：
+>
 > - 职责 3「端侧 AI、大模型等前沿智能技术与 Android/OS 底层框架的系统级融合」——**核心对线**
+>
 > - 职责 5「跨团队主导 0→1 项目」——SystemUI/Settings/Launcher AI 化涉及 Framework + 算法 + UX 三团队
+>
 > - 职责 6「稳定性治理 + APM」——AI 化后的功耗 / 内存 / 启动时长治理是核心
+>
 > **与 v2.1 主干耦合**：与 `AI_Native_OS O01-O05` 强耦合（本篇是收尾）；与 `Android_Framework/Window` 中等耦合（SystemUI 渲染）；与 `Android_Framework/PKMS` 中等耦合（Settings 涉及包管理）；与 `Linux_Kernel/Power PM08 Thermal` 强耦合（AI 化后功耗治理）。
 
 ---

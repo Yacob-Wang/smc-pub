@@ -1,10 +1,15 @@
-# InputChannel 与跨进程投递：从 system_server 到 App 的事件通道
+﻿# InputChannel 与跨进程投递：从 system_server 到 App 的事件通道
 
 > **系列**：面向稳定性的 Android Input 子系统深度解析系列(Input_FWK)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `net/unix/af_unix.c`、`frameworks/native/libs/input/InputTransport.cpp`;Android 14 InputChannel mmap 优化见 §4)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-Input 系统总览](01-Input系统总览.md) / [03-InputDispatcher](03-InputDispatcher.md)
+>
 > **下一篇**:[05-View 事件分发](05-View事件分发.md)
 
 ---
@@ -1562,3 +1567,4 @@ registerActivityLifecycleCallbacks(new SimpleActivityLifecycleCallbacks() {
 
 - **排查工具**：`dumpsys input`（Connection 队列状态）、Systrace/Perfetto（主线程 Input 处理耗时）、`/proc/<pid>/fd`（fd 泄漏检测）、ANR traces.txt（主线程栈分析）
 - **系列文章导航**：[01-Input 系统总览](01-Input系统总览.md) → [02-EventHub 与 InputReader](02-EventHub与InputReader.md) → [03-InputDispatcher](03-InputDispatcher.md) → **04-InputChannel 与跨进程投递**（本篇）→ [05-ViewRootImpl 与事件分发](05-ViewRootImpl与事件分发.md)
+

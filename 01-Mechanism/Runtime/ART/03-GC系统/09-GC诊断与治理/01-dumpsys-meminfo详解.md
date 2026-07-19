@@ -1,8 +1,11 @@
 ﻿# 9.1 dumpsys meminfo 全字段解读（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 1/10）
+>
 > **本篇定位**：**GC 诊断工具基础**（1/10）——dumpsys meminfo 完整字段解读 + ART 17 增强版输出 + 软阈值状态显示
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -833,3 +836,4 @@ dumpsys meminfo 不显示：
 ---
 
 > **下一篇**：[02-procrank-smaps](02-procrank-smaps.md) 深入**进程排名 + VMA 粒度**——procrank 命令、smaps 字段、Native 堆分类细化、ART 17 sheaves 内存统计。
+

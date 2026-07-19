@@ -1,10 +1,15 @@
-# Socket 03：连接生命周期——从创建到关闭
+﻿# Socket 03：连接生命周期——从创建到关闭
 
 > **系列**：面向稳定性的 Android Socket 子系统深度解析系列(Socket)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `net/ipv4/tcp_input.c`、`net/ipv4/tcp_output.c`、`net/ipv4/tcp_minisocks.c`、`net/ipv4/tcp_timer.c`;TCP_TIMEWAIT_LEN 在 5.15+ 缩短到 60s 见 §5;MPTCP 路径差异见 §6)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-Socket 总览](01-Socket总览.md) / [02-Socket 内核 API 与数据结构](02-Socket内核API与数据结构.md)
+>
 > **下一篇**:[04-Socket 缓冲区与数据收发](04-Socket缓冲区与数据收发.md)
 
 ---
@@ -2093,4 +2098,5 @@ socket 系列 8 篇规划 + 1 桥接 + 1 epoll 全部完结。
 但 socket 系列本身——**已经齐了**。
 
 ---
+
 

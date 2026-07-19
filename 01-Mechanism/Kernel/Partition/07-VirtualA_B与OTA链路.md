@@ -1,13 +1,21 @@
-# 07-Virtual A/B（VAB）与 A/B+C：snapshot 化 OTA 链路
+﻿# 07-Virtual A/B（VAB）与 A/B+C：snapshot 化 OTA 链路
 
 > **基线**：AOSP android-14.0.0_r1 标签 + FCM level 11（Android 14）+ Project Mainline
+>
 > **适用读者**：资深 Android 稳定性架构师
+>
 > **本篇定位**：《分区架构演进系列》第 7 篇，承接 06-APEX 的"运行时模块化"概念，**深入 Virtual A/B（VAB）—— 用 device-mapper snapshot 替代物理 A/B 双份的 OTA 链路**。VAB 是 05-Dynamic Partitions 的"动态容器"和 06-APEX 的"运行时挂载"在线上运维层面的最终落点：**OTA 期间用户继续使用设备，升级"看起来"无感**。
+>
 > **源码基线**：所有源码路径均经 `https://android.googlesource.com/platform/<repo>/+/refs/heads/android14-release/<path>` 实际 HTTP 200 验证（详见文末"修复证据"）。**已修复 prompt 中 3 处路径错误**：
+>
 > 1. `system/update_engine/aosp/update_bootstats_action.cc` → 实测为 **`system/update_engine/update_boot_flags_action.cc`**（无 "stats" 前缀，在 update_engine/ 根目录，不在 aosp/ 子目录）；
+>
 > 2. `system/core/fs_mgr/snapuserd/snapuserd.cpp` / `snapuserd_worker.cpp` / `cow_reader.cpp` → 实测拆分为 **`fs_mgr/libsnapshot/snapuserd/dm-snapshot-merge/{snapuserd,snapuserd_worker}.cpp`** + **`fs_mgr/libsnapshot/libsnapshot_cow/cow_reader.cpp`**（promp t 把整棵树路径平铺且写错根目录）；
+>
 > 3. `system/core/init/bootstat.cpp` → 实测为 `system/core/init/bootstat/` 目录（无 .cpp 顶层文件）。
+>
 > **目录位置**：`Linux_Kernel/Partition/`
+>
 > **关联已有系列**：[01-分区演进史与三大架构改革](01-分区演进史与三大架构改革.md)、[02-VINTF 与 Treble 接口契约](02-VINTF与Treble接口契约.md)、[03-GKI 内核分区革命](03-GKI内核分区革命.md)、[04-GSI 通用系统镜像](04-GSI通用系统镜像.md)、[05-Dynamic Partitions 深度解析](05-DynamicPartitions深度解析.md)、[06-APEX 主线模块与运行时升级](06-APEX主线模块与运行时升级.md)
 
 ---
@@ -2023,3 +2031,4 @@ VAB 故障模式虽然多，但按"卡 boot / 回滚旧系统 / OTA 进度卡 / 
 > - 6 大类故障的子类型树（每个 5 行标准表：现象/影响/日志关键字/dumpsys 特征/排查入口）
 > - 1 个 OEM 实战案例（snapuserd COW 格式不匹配导致 4 万台设备卡 boot）
 > - 3 处 prompt 路径错误修复
+

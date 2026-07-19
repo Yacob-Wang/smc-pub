@@ -1,10 +1,15 @@
-# 01-Input 系统总览：从触摸屏到 App 响应的全链路
+﻿# 01-Input 系统总览：从触摸屏到 App 响应的全链路
 
 > **系列**：面向稳定性的 Android Input 子系统深度解析系列(Input_FWK)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `drivers/input/evdev.c`、`include/linux/input.h`、`frameworks/native/services/inputflinger/`;Android 14 InputFlinger 重构见 §3)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:`Android_Framework/Input/README-Input系列.md`
+>
 > **下一篇**:[02-EventHub 与 InputReader](02-EventHub与InputReader.md)
 
 ---
@@ -1179,4 +1184,5 @@ recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 - 后续文章将按本系列目录逐篇深入：从 EventHub 到 InputReader（02），从 InputDispatcher 到窗口选择（03），从 InputChannel 到跨进程投递（04），从 ViewRootImpl 到 View 事件分发（05），从 Input ANR 机制到系统裁决（06），直到诊断工具与治理体系（07-08）。
 - 排查工具速查：`adb shell getevent`（硬件层验证）、`adb shell dumpsys input`（系统层状态）、Systrace/Perfetto（端到端延迟分析）、ANR traces.txt（主线程栈分析）。
 - AOSP 在线阅读：[Android Code Search](https://cs.android.com/) 可在线浏览 `frameworks/native/services/inputflinger/` 下的所有源码。
+
 

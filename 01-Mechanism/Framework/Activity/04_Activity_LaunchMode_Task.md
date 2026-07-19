@@ -1,10 +1,15 @@
-# A04 · 启动模式与 Task 管理：standard / singleTop / singleTask / singleInstance
+﻿# A04 · 启动模式与 Task 管理：standard / singleTop / singleTask / singleInstance
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Activity 系列 **第 4 篇 / 核心机制**
+>
 > **强依赖**：[A02 · 启动流程源码深潜](02_Activity_Start_SourceCode.md) §3.2.4（`startActivityUnchecked`）、[A03 · 生命周期](03_Activity_Lifecycle.md) §4（状态机）
+>
 > **承接自**：A02 已覆盖 `ActivityStarter.startActivityUnchecked` 的入口；A03 已覆盖 `singleTop` 复用时 `onNewIntent` 的回调细节。本篇**专门展开 4 种 launchMode 的源码实现 + Task 模型 + flag 转换**
+>
 > **衔接去**：[A05 · Intent 与组件匹配](05_Activity_Intent_Resolve.md) — A04 假设 Intent 是显式/已知目标；A05 展开隐式 Intent + 包可见性 + IntentFilter 解析
+>
 > **不重复内容**：与 A02 §3.2.4 `startActivityUnchecked` 入口不重复；与 A03 §3.5 `onNewIntent` 不重复
 
 ---
@@ -775,3 +780,4 @@ Task 错乱?
 下一篇 [A05 · Intent 与组件匹配](05_Activity_Intent_Resolve.md) 把 A04 §2.3 提到的 Intent flags + launchMode 决策链路再往前一步——**A04 假设 Intent 已经知道要启动哪个 Activity，A05 展开隐式 Intent + PMS 端 `queryIntentActivities` + AndroidManifest IntentFilter 解析**。A05 还会覆盖 AOSP 11+ 引入的"包可见性"限制对隐式启动的影响。
 
 预计阅读时间 25-35 分钟。
+

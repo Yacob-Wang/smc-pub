@@ -1,10 +1,15 @@
-# Socket 08：诊断工具与治理体系
+﻿# Socket 08：诊断工具与治理体系
 
 > **系列**：面向稳定性的 Android Socket 子系统深度解析系列(Socket)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇工具涉及 `net/core/sock.c`、`include/linux/sock_diag.h`、`include/uapi/linux/sock_diag.h`;Android 14 已默认启用 sock_diag,见 §3)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:本系列 01-07 全篇
+>
 > **下一篇**:无(系列收官)
 
 > 面向 Android 稳定性架构师：把 socket 系列 8 篇(含桥接篇)所有知识点收口为"可立刻上手的诊断命令集 + 可落地工程的治理清单 + 2 个综合实战案例"——目标是"现场 5 分钟定位 + 治理工程化不再依赖个人经验"。
@@ -1948,4 +1953,5 @@ socket 系列 8 篇规划已全部完结。可考虑的后续延伸方向：
 本篇是 socket 系列的**最终收口**——所有风险（07）→ 所有工具（08）→ 所有治理（08）闭环完成。
 
 ---
+
 

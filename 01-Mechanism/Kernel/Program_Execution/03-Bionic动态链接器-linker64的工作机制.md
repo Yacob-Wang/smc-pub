@@ -1,9 +1,13 @@
-# 03-Bionic 动态链接器:linker64 的工作机制
+﻿# 03-Bionic 动态链接器:linker64 的工作机制
 
 > **系列**:程序加载与执行深度解析(PLE,Program Loading & Execution)
+>
 > **源码基线**:AOSP `android-14.0.0_r1` + Kernel `android14-5.10` / `android14-5.15` / `android15-6.1`(linker64 涉及 `load_elf_binary` + `mmap` 系统调用,内核版本差异主要在 `mmap` 行为)+ Bionic linker `bionic/linker/`(`linker.cpp`、`linker_phdr.cpp`、`linker_reloc_iterate.cpp`)
+>
 > **目标读者**:Android 系统架构师、性能架构师、稳定性架构师
+>
 > **前置阅读**:[01-程序加载与执行全景图](01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md) → [02-ELF 文件格式深度解析](02-ELF文件格式深度解析-从可执行文件到内核视角.md)
+>
 > **下一篇**:[04-符号解析与重定位:.plt / .got / .relro 全景](04-符号解析与重定位-plt-got-relro全景.md)
 
 ---
@@ -1246,3 +1250,4 @@ BFS 遍历:
 > **本篇把 linker64 拆解到"工作流级"——7 步流程、soinfo 数据结构、find_library 算法、namespace 隔离、dlopen API。**
 > **04 篇会在这个基础上,讲"重定位"——.so 加载完成后,符号地址怎么确定、.plt/.got 怎么联动、RELRO 怎么防攻击。**
 > **记住 7 步、soinfo、find_library、namespace、3 个 flag,你的 linker 视角就立住了。**
+

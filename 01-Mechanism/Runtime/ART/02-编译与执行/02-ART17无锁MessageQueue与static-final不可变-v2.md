@@ -1,8 +1,11 @@
-# 02-编译与执行 · 02-ART 17 无锁 MessageQueue 与 static final 不可变（v2 新篇）
+﻿# 02-编译与执行 · 02-ART 17 无锁 MessageQueue 与 static final 不可变（v2 新篇）
 
 > **本系列**：ART 深度解析系列 v2（9 大子模块）
+>
 > **本子模块**：02-编译与执行 · 核心机制
+>
 > **本篇系列角色**：**核心机制 · 增量 v2 新篇**
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 
 ---
@@ -525,3 +528,4 @@ Step 4: 评估：升级 Hook 框架 / 改代码 / 维持 targetSdk 34
 > **本文档**：[02-编译 · 02-ART 17 无锁 MessageQueue 与 static final 不可变 v2](02-ART17无锁MessageQueue与static-final不可变-v2.md)
 > **所属系列**：[ART 深度解析系列 v2](../../README-ART系列-v2.md)
 > **基线**：AOSP 17 + android17-6.18
+

@@ -1,10 +1,15 @@
-# C05 · ContentObserver：观察者模式与跨进程通知
+﻿# C05 · ContentObserver：观察者模式与跨进程通知
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：ContentProvider 系列 **第 5 篇 / 核心机制**
+>
 > **强依赖**：[C01 · 全景](C01_ContentProvider_Overview.md) §3.5、[C04 · 跨进程通信](C04_ContentProvider_CrossProcess.md)
+>
 > **承接自**：C01 §3.5 简述 ContentObserver 跨进程通知；C04 §3.1 提到 `notifyChange` Binder 方法。本篇**专门展开 ContentObserver 观察者模式 + ContentService 跨进程通知 + AOSP 17 批量通知优化**
+>
 > **衔接去**：[C06 · Android 11+ 包可见性](C06_ContentProvider_PackageVisibility.md) — C05 收尾核心机制；C06 进入风险地图
+>
 > **不重复内容**：与 C01 §3.5 ContentObserver 骨架不重复
 
 ---
@@ -594,3 +599,4 @@ onChange 阻塞?
 下一篇 [C06 · Android 11+ 包可见性与 exported 错配](C06_ContentProvider_PackageVisibility.md) 是"风险地图"篇——**AOSP 11+ 引入包可见性、ContentProvider exported 配置、SecurityException 5 大根因、实战案例**。C06 是 Broadcast B07 风险地图的姊妹篇。
 
 预计阅读时间 25-35 分钟。
+

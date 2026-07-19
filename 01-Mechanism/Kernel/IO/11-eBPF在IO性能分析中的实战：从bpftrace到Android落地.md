@@ -1,10 +1,15 @@
-# 11-eBPF 在 IO 性能分析中的实战：从 bpftrace 到 Android 落地
+﻿# 11-eBPF 在 IO 性能分析中的实战：从 bpftrace 到 Android 落地
 
 > **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `kernel/bpf/`、`include/uapi/linux/bpf.h`、`tools/bpf/bpftool/`;Android GKI 默认启用 BPF,见 §3 落地说明)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) / [10-IO 风险全景与诊断工具链](10-IO稳定性风险全景与诊断工具链.md) §9-§10
+>
 > **下一篇**:无(系列延伸专题收官)
 
 ---

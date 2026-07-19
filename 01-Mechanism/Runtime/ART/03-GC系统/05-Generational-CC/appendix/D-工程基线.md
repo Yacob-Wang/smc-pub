@@ -1,8 +1,11 @@
 ﻿# 附录 D：工程基线（GenCC · v2 升级版）
 
 > **本附录**：05-Generational-CC 子模块 / 附录 D（工程基线）
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
+>
 > **v1 旧稿标记段**：已删除（v1 → v2 实质升级）
 
 ---
@@ -366,3 +369,4 @@ public class GenCCMonitor {
 > **完结**：05-Generational-CC 子模块 v2 升级完成（4 主篇 + 3 附录）。
 > **基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS）
 > **v2 升级日期**：2026-07-18
+

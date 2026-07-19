@@ -1,10 +1,15 @@
-# EventHub 与 InputReader：从硬件中断到原始事件
+﻿# EventHub 与 InputReader：从硬件中断到原始事件
 
 > **系列**：面向稳定性的 Android Input 子系统深度解析系列(Input_FWK)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `drivers/input/evdev.c`、`frameworks/native/services/inputflinger/reader/`;Android 14 InputReader 多设备并行 epoll 调度见 §3)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-Input 系统总览](01-Input系统总览.md)
+>
 > **下一篇**:[03-InputDispatcher](03-InputDispatcher.md)
 
 ---
@@ -1608,3 +1613,4 @@ getevent（验证内核层）
 ```
 
 下一篇 [03-InputDispatcher：事件分发引擎与窗口选择](03-InputDispatcher.md) 将深入 InputDispatcher 的事件分发逻辑、窗口选择算法和 ANR 超时检测机制。
+

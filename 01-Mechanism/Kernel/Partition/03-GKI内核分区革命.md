@@ -1,11 +1,17 @@
-# 03-GKI 内核分区革命：boot / init_boot / vendor_boot / dlkm
+﻿# 03-GKI 内核分区革命：boot / init_boot / vendor_boot / dlkm
 
 > **基线**：AOSP 14（android-14.0.0_r1） + 内核 GKI `android14-5.15` LTS 分支（统一分支 `kernel/common.git` `refs/heads/android14-5.15`）
+>
 > **适用读者**：资深 Android 稳定性架构师
+>
 > **本篇定位**：《分区架构演进系列》第 3 篇——在上一篇 02-VINTF（framework↔vendor 接口契约）的基础上，本篇深入 kernel↔SoC 解耦，即"内核侧分区革命"
+>
 > **源码基线**：所有源码路径均经 `https://android.googlesource.com/platform/<repo>/+/refs/heads/android14-release/<path>` 实际 HTTP 200 验证（详见文末"修复证据"小节）
+>
 > **目录位置**：`Linux_Kernel/Partition/`
+>
 > **上一篇**：[02-VINTF 与 Treble 接口契约](02-VINTF与Treble接口契约.md)
+>
 > **下一篇**：[04-GSI 通用系统镜像](04-GSI通用系统镜像.md)
 
 ---
@@ -1720,3 +1726,4 @@ DM-Verity 块级 hash tree 校验  ──> 拒绝篡改
 3. **AOSP 13 / GKI 2.0**：[Generic Kernel Image (GKI) project](https://source.android.com/docs/core/architecture/kernel/generic-kernel-image) 明确 GKI 2.0 引入**init_boot 拆分**（通用 ramdisk 独立到 init_boot 分区）+ **DLKM 标准化**（system_dlkm / vendor_dlkm / odm_dlkm 三个分区）+ kernel 5.15 LTS 统一分支
 
 **修复点**：见正文 line 58（章节 0 背景）、line 204-211（章节 2.3 对比表）、line 225（章节 2.4 时间线）、line 618（章节 4.2.1 bootloader 阶段）、line 1687（篇尾衔接总结）。
+

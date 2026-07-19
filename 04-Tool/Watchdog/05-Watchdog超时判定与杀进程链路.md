@@ -1,10 +1,15 @@
-# 05-Watchdog 超时判定与杀进程链路:traces 采集、信号发送、Init 重启的完整流程
+﻿# 05-Watchdog 超时判定与杀进程链路:traces 采集、信号发送、Init 重启的完整流程
 
 > **系列**:面向稳定性的 Android Watchdog 子系统深度解析系列(Watchdog)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `frameworks/base/services/core/java/com/android/server/Watchdog.java`、`frameworks/base/native/cmds/dumpstate/`、`frameworks/base/core/java/android/os/Process.java`、`system/core/init/reboot.cpp`;Android 14 SIGQUIT 升级与 watchdog 触发后 30s 内不允许再次触发 见 §4)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-Watchdog 总览](01-Watchdog概述与体系位置.md) / [03-Java Watchdog 核心机制](03-Java-Watchdog核心机制.md) / [04-内核 Watchdog 与 watchdogd](04-内核Watchdog与watchdogd.md)
+>
 > **下一篇**:[06-Watchdog 实战案例与排查体系](06-Watchdog实战案例与排查体系.md)
 
 ---
@@ -674,4 +679,5 @@ system_server 启动: t=95s
 下一篇 [06-Watchdog 实战案例与排查体系](06-Watchdog实战案例与排查体系.md) 将汇总本系列所有案例,**建立一个"5min 定位 Watchdog 触发"的标准排查路径**——从 dumpsys / traces / dmesg 三种日志的协同解读,到常见误判模式的快速识别,到厂商定制陷阱的避坑清单。
 
 ---
+
 

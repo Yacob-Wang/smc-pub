@@ -1,8 +1,11 @@
 ﻿# v2 升级版
 
 > **本子模块**：03-GC 系统 / 07-GC 调度与触发（GC 调度与触发 · 4/8）
+>
 > **本篇定位**：**kGcCauseForAlloc 同步 GC 路径**（4/8）——TLAB 失败 → 全局分配失败 → 同步 GC → 重试分配 → OOM 完整流程 + ART 17 Young GC 优先 / Full GC 罕见 / GenCC 配合
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -858,3 +861,4 @@ adb logcat -d -s "art" | grep "kGcCauseForAlloc" -A 5
 ---
 
 > **下一篇**：[05-Native触发GC](05-Native触发GC.md) 深入 **Native 内存触发的 Java GC**——kGcCauseForNativeAlloc + kGcCauseForNativeAllocThrottled 完整路径。
+

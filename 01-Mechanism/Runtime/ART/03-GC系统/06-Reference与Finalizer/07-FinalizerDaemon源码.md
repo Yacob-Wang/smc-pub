@@ -1,8 +1,11 @@
 ﻿# 6.7 FinalizerDaemon 源码深潜（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 06-Reference与Finalizer（专题篇 7/9）
+>
 > **本篇定位**：**FinalizerDaemon 源码**（7/9）—— AOSP 14 单线程源码 + ART 17 4 线程池化 + 优先级调度 + 慢对象提前标记
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -988,3 +991,4 @@ try (Theme theme = new Theme()) {
 ---
 
 > **下一篇**：[08-FinalizerWatchdog源码](08-FinalizerWatchdog源码.md) 深入 **FinalizerWatchdogDaemon 源码 + 10s 超时监控 + ART 17 慢对象 dump 机制**——理解 finalize() 监控的底层实现。
+

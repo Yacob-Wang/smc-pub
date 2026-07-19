@@ -1,8 +1,11 @@
-# 01-从 app_process 到第一行 Java 代码：Android 启动流程全解析（v2 升级版）
+﻿# 01-从 app_process 到第一行 Java 代码：Android 启动流程全解析（v2 升级版）
 
 > **本子模块**：07-启动流程（启动核心 · 7/9）
+>
 > **本篇定位**：**启动核心**（7/9）——Android App 启动完整路径：Zygote fork → app_process → RuntimeInit → ActivityThread.main → 第一行 Java 代码
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，EOL 2030-07-01）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -563,3 +566,4 @@ public class MainActivity {
 ---
 
 > **下一篇**：[08-对比与演进 4 篇](../08-对比与演进/) 系列将深入 **ART 与 JVM 对比 / Mainline APEX / Hook 框架兼容 / 监控诊断基础设施**——从设计哲学到工程实战，全面理解 ART 在 Android 体系中的位置。
+

@@ -1,8 +1,11 @@
 ﻿# 3.7 CMS 时代 OOM 模式 + ART 17 OOM 处理（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 03-CMS-GC（CMS-GC · 7/7）
+>
 > **本篇定位**：**稳定性风险**（7/7）——CMS 时代 5 大 OOM 模式 + 排查方法论 + ART 17 OOM 处理（GenCC Young GC 优先 / Full GC 罕见 / LOS OOM 概率降低 60-80%）
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级到 AOSP 17 + android17-6.18）
 
 ---
@@ -704,3 +707,4 @@ adb shell setprop dalvik.vm.gctype GenCC
 ---
 
 > **本子模块终**：[03-CMS-GC](../README.md) 子模块 7 篇全部完成。下一篇进入 [04-CC-GC](../04-CC-GC/) 子模块（重写为 v2 升级版）——CC GC 的读屏障革命 + ART 17 强化。
+

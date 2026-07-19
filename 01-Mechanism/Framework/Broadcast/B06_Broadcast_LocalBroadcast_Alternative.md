@@ -1,10 +1,15 @@
-# B06 · LocalBroadcast 已死，进程内事件总线怎么选（横切专题）
+﻿# B06 · LocalBroadcast 已死，进程内事件总线怎么选（横切专题）
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Broadcast 系列 **第 6 篇 / 横切专题**（**破例：3 张图**）
+>
 > **强依赖**：[B01 · 全景](B01_Broadcast_Overview.md) §3.5、[B05 · 粘性广播演进](B05_Broadcast_Sticky_Evolution.md)
+>
 > **承接自**：B01 §3.5 简述 LocalBroadcastManager 已废弃；B05 详述粘性广播演进。本篇**专门展开 LocalBroadcastManager 演进 + LiveData / Flow / RxBus / EventBus 替代方案对比**
+>
 > **衔接去**：[B07 · Android 14+ 后台广播限制](B07_Broadcast_BackgroundRestriction.md) — B06 收尾横切专题；B07 进入风险地图
+>
 > **不重复内容**：与 B01 §3.5 简述不重复；与 B05 粘性广播不重复
 
 ## 破例决策记录
@@ -571,3 +576,4 @@ LiveData 不工作?
 下一篇 [B07 · Android 14+ 后台广播限制：RECEIVER_EXPORTED 与隐式广播收紧](B07_Broadcast_BackgroundRestriction.md) 是"风险地图"篇——**AOSP 14+ 强制 RECEIVER_EXPORTED + AOSP 8+ 隐式广播收紧 + 收不到广播的 5 大根因分类**。B07 是 Broadcast 系列第一个"重头戏"。
 
 预计阅读时间 25-35 分钟。
+

@@ -1,7 +1,9 @@
-# 第 07 篇 · 安卓 —— DM 在 Android 17 的应用全景
+﻿# 第 07 篇 · 安卓 —— DM 在 Android 17 的应用全景
 
 > **本系列**：Device Mapper 深度解析系列（10 篇）
+>
 > **本篇系列角色**：**横切专题（7/10）**——Android 17 场景，把 DM 在 Android 17 的 4 大基础应用 + 3 个新基线独家应用讲透
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 
 ---
@@ -633,3 +635,4 @@ adb shell vdc cryptfs init --wipe
 > **本文档**：[第 07 篇 · 安卓 — DM 在 Android 17 的应用全景](07-DM-Android17应用全景.md)
 > **所属系列**：[Device Mapper 深度解析系列 · v2](../README-DM系列.md)
 > **基线**：AOSP 17 + android17-6.18
+

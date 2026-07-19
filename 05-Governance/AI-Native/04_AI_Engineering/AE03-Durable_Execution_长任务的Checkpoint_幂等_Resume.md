@@ -1,11 +1,17 @@
-# AE03 · Durable Execution：长任务的 Checkpoint / 幂等 / Resume
+﻿# AE03 · Durable Execution：长任务的 Checkpoint / 幂等 / Resume
 
 > **系列**：04_AI_Engineering（AI 工程师视角的工程实践）
+>
 > **篇号**：AE03（共 12 篇，本篇为第 3 篇）
+>
 > **写作时间**：2026-06-30
+>
 > **前置阅读**：
+>
 > - [AE01 · 从 Prompt 到 Skill 到 Tools 到 Context](AE01-从Prompt到Skill到Tools到Context_AI工程师的四层架构.md)
+>
 > - [AE02 · Context Engineering](AE02-Context_Engineering_Token预算_缓存_记忆_压缩.md)
+>
 > **目标读者**：所有用 Agent 跑生产任务的工程师；正在搭"长时间运行 / 跨天等待 / 失败可恢复"的 AI 系统的人
 
 ---

@@ -1,10 +1,15 @@
-# 06-APEX 主线模块与运行时升级：用户态模块化升级机制
+﻿# 06-APEX 主线模块与运行时升级：用户态模块化升级机制
 
 > **基线**：AOSP android-14.0.0_r1 标签 + FCM level 11（Android 14）+ Project Mainline（Google Play System Update）
+>
 > **适用读者**：资深 Android 稳定性架构师
+>
 > **本篇定位**：《分区架构演进系列》第 6 篇，承接 05-Dynamic Partitions 的"容器"概念，**深入 APEX（Android Pony EXpress）—— 把 system 内部组件拆成"运行时挂载模块"的整套机制**。APEX 是 Treble（system ↔ vendor 解耦）和 GKI（kernel ↔ SoC 解耦）之后的**第三种解耦**：**system ↔ 系统组件解耦**。
+>
 > **源码基线**：所有源码路径均经 `https://android.googlesource.com/platform/<repo>/+/refs/heads/android14-release/<path>` 实际 HTTP 200 验证（详见文末"修复证据"）。**已修复 prompt 中 4 处路径错误**（manifest_verifier.cpp / snapshotctl.cpp / apexd_bootstrap.cpp / frameworks/base/...apex/）。
+>
 > **目录位置**：`Linux_Kernel/Partition/`
+>
 > **关联已有系列**：[01-分区演进史与三大架构改革](01-分区演进史与三大架构改革.md)、[02-VINTF 与 Treble 接口契约](02-VINTF与Treble接口契约.md)、[03-GKI 内核分区革命](03-GKI内核分区革命.md)、[04-GSI 通用系统镜像](04-GSI通用系统镜像.md)、[05-Dynamic Partitions 深度解析](05-DynamicPartitions深度解析.md)
 
 ---
@@ -1999,4 +2004,5 @@ HTTP: 200 OK
 
 1. **btservices/bluetooth 自相矛盾**：正文 3 处 JSON 代码示例（line 351-353, 828-830, 1907）原用 `com.android.bluetooth` 作为示例 manifest name，与 line 1903-1904 列出的实际 `com.android.btservices.avbpubkey / .pem / .pk8` 密钥文件名自相矛盾。修复：所有示例 name 改为 `com.android.btservices`，明确标注为「schema 示例（占位）」而非「实测内容」；删除编造的示例 version 字段，改为 `0`（build 系统注入）。
 2. **APEX 引入版本精确化**：APEX 机制在 AOSP 10 (Q, 2019) 首次引入（com.android.runtime / tzdata），AOSP 11 (R, 2020) 扩展为 Mainline modules。修复 line 89 / 136 / 138 / 149 / 155 / 1941 全部 6 处区分「AOSP 10 机制引入」与「AOSP 11 Mainline 扩展」。
+
 

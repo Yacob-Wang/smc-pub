@@ -1,8 +1,11 @@
 ﻿# 2.1 Heap 总览：为什么 ART 不用一整块内存（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 02-Heap与分配器（Heap · 1/4）
+>
 > **本篇定位**：**Heap 与分配器**（1/4）——ART Java 堆的整体架构、5 Space 划分、分配 / 回收主路径、ART 17 GenCC 布局强化
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -917,3 +920,4 @@ art/runtime/gc/space/region_space.h       # RegionSpace（含 YoungGen state）
 ---
 
 > **下一篇**：[02-5Space详解](02-5Space详解.md) 深入**每个 Space 的细节**——Image / Zygote / Allocation / LOS / NonMoving 的源码、GC 协同、ART 17 Space 扩展（Young Space、Remembered Set Space）。
+

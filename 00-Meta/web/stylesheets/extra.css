@@ -803,32 +803,37 @@ article > h1:first-child,
 
 /* ==========================================================================
    详情页 blockquote banner（系列 / 版本基线 / 目标读者）
+   - HTML 实际是单 <p> 包含多个 <strong> + 值，所以用 inline-block 对齐
+     不要用 display: grid（grid 会把 strong/code/text 当独立 item 散到两列）
    ========================================================================== */
 
 .md-typeset blockquote:first-of-type {
   border-left: 4px solid var(--jk-text-link);
   background: var(--jk-bg-callout);
   border-radius: var(--jk-radius);
-  padding: 1rem 1.2rem 1rem 1.2rem;
-  margin: 0 0 1.4rem;
+  padding: 0.75rem 1.05rem;
+  margin: 0 0 1.2rem;
   box-shadow: var(--jk-shadow-sm);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   line-height: 1.55;
 }
 
 .md-typeset blockquote:first-of-type p {
-  display: grid;
-  grid-template-columns: 6rem minmax(0, 1fr);
-  gap: 0.3rem 1.25rem;
-  align-items: baseline;
+  display: block;
   margin: 0.3rem 0;
+  line-height: 1.6;
 }
 
+/* strong 当列标签：固定最小宽度，inline-block 让值自然跟在后面 inline 流 */
 .md-typeset blockquote:first-of-type p > strong:first-child {
+  display: inline-block;
+  min-width: 5.25rem;
+  margin-right: 0.5rem;
   color: var(--jk-text-mute);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.01em;
+  vertical-align: top;
 }
 
 .md-typeset blockquote:first-of-type code {
@@ -842,7 +847,7 @@ article > h1:first-child,
 
 .md-typeset blockquote:first-of-type p:last-child {
   margin-top: 0.4rem;
-  padding-top: 0.55rem;
+  padding-top: 0.5rem;
   border-top: 1px dashed var(--jk-line);
 }
 

@@ -1,10 +1,15 @@
-# 02-VINTF 与 HIDL→AIDL Stable：Treble 的接口契约
+﻿# 02-VINTF 与 HIDL→AIDL Stable：Treble 的接口契约
 
 > **基线**：AOSP android-14.0.0_r1 标签 + FCM level 11（Android 14）
+>
 > **适用读者**：资深 Android 稳定性架构师
+>
 > **本篇定位**：《分区架构演进系列》第 2 篇，承接 01-分区演进史的"全局观"，深入 Treble 的核心机制——**VINTF + HIDL → AIDL Stable** 这一整套"system ↔ vendor 接口契约"
+>
 > **源码基线**：所有源码路径均经 `https://android.googlesource.com/platform/<repo>/+/refs/heads/android14-release/<path>` 实际 HTTP 200 验证（详见文末"修复证据"）
+>
 > **目录位置**：`Linux_Kernel/Partition/`
+>
 > **关联已有系列**：[01-分区演进史与三大架构改革](01-分区演进史与三大架构改革.md)、[Binder 系列](../Binder/README-Binder系列.md)（HIDL/AIDL 通过 Binder 进程间通信）、[Window 系列](../Window/)（WMS HIDL 接口）
 
 ---

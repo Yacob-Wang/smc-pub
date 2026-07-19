@@ -1,8 +1,11 @@
 ﻿# 5.2 Young Gen vs Old Gen 划分（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 05-Generational-CC（分代 CC · 2/4）
+>
 > **本篇定位**：**分代 CC**（2/4）——Young/Old Gen 的物理布局、Region 分配、对象晋升机制、ART 17 软阈值对两代协作的影响
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -676,3 +679,4 @@ class GenerationalCC : public GarbageCollector {
 ---
 
 > **下一篇**：[03-Card-Table基石](03-Card-Table基石.md) 深入 **Card Table 实现**——1 byte / 256 byte 记录跨代引用、Post-Write Barrier 维护、ART 17 细粒度卡表优化。
+

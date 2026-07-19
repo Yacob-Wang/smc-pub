@@ -1,7 +1,9 @@
-# LowEnd · 低端机稳定性治理
+﻿# LowEnd · 低端机稳定性治理
 
 > **状态**：🟡 占位（计划 2026-08 启动 P1）
+>
 > **目标读者**：海外市场稳定性工程师 / 入门机项目负责人
+>
 > **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 
 ## 计划内容（5-7 篇）
@@ -19,3 +21,4 @@
 - 上游：[01-Mechanism/Kernel/Memory_Management](../../01-Mechanism/Kernel/Memory_Management/) 内存
 - 上游：[02-Symptom/S11-Startup](../../02-Symptom/S11-Startup/) 启动专项
 - 配套：[05-Governance/PerfMem](../PerfMem/) 性能 vs 内存
+

@@ -1,10 +1,15 @@
-# Socket 05：listen backlog 与连接队列
+﻿# Socket 05：listen backlog 与连接队列
 
 > **系列**：面向稳定性的 Android Socket 子系统深度解析系列(Socket)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `net/ipv4/tcp_input.c`(syncookies)、`net/ipv4/tcp_minisocks.c`(request_sock)、`include/net/sock.h`、`include/linux/listen.h`;5.15+ BPF SYNPROXY 集成见 §6;Android 14 默认 tcp_syncookies=1)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-Socket 总览](01-Socket总览.md) / [03-Socket 生命周期](03-Socket连接生命周期.md) / [04-Socket 缓冲区](04-Socket缓冲区与数据收发.md)
+>
 > **下一篇**:[06-Unix Domain Socket 与 Android](06-Unix_Domain_Socket与Android使用.md)
 
 ---
@@ -1026,5 +1031,6 @@ backlog 相关问题
 
 
 ---
+
 
 

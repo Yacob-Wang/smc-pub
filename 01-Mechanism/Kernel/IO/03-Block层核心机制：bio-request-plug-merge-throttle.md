@@ -1,10 +1,15 @@
-# 03-Block 层核心机制：bio / request / plug / merge / throttle
+﻿# 03-Block 层核心机制：bio / request / plug / merge / throttle
 
 > **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `block/blk-core.c`、`block/blk-mq.c`、`block/blk-merge.c`、`block/blk-throttle.c`;各内核版本差异见 §2 blk-mq tag set 重构、§4 plug 机制在 5.15+ 的去除)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) / [02-IO 调度器](02-IO调度器与多队列架构.md)
+>
 > **下一篇**:[04-IO 优先级与 cgroup IO 控制器](04-IO优先级与cgroup-IO控制器.md)
 
 ---

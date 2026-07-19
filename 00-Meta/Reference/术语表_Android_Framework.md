@@ -1,8 +1,11 @@
-# 全局术语表（Reference · 术语表）
+﻿# 全局术语表（Reference · 术语表）
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **生效日期**：2026-07-18
+>
 > **维护规则**：按 [PROMPT v4 §8.2](../../PROMPT-技术系列文章写作指南-v4.md) 治理
+>
 > **覆盖系列**：Activity / Service / Broadcast / ContentProvider 四大组件
 
 ---
@@ -457,3 +460,4 @@
 ---
 
 > **本表维护规则**：任何对术语的修改都必须经过 [PROMPT v4 §8.2](../../PROMPT-技术系列文章写作指南-v4.md) 治理流程。**违反本表的文章必须重写**。
+

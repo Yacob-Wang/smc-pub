@@ -1,10 +1,15 @@
-# 03-ART 堆内存与 GC 全景
+﻿# 03-ART 堆内存与 GC 全景
 
 > **系列**：面向稳定性的 Android 内存架构深度解析系列（MM_v2）
+>
 > **源码基线**：AOSP `android-14.0.0_r1`（`refs/heads/android14-release`）
+>
 > **内核矩阵**：`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`（ART 用户态运行时，不直接涉及内核版本差异；GC pause 时长受内核 cgroup / PSI 影响，详见 07 篇）
+>
 > **目标读者**：Android 稳定性框架架构师
+>
 > **前置阅读**：[01-内存系统总览：从进程视角到硬件的完整链路](01-内存系统总览：从进程视角到硬件的完整链路.md)、[02-进程内存地图与 VMA 体系](02-进程内存地图与 VMA 体系.md)
+>
 > **下一篇**：[04-Native 堆内存与分配器（AOSP 14）](04-Native 堆内存与分配器（AOSP 14）.md)
 
 ---
@@ -1613,3 +1618,4 @@ class ImageProcessor {
 - Bitmap.recycle() 漏调导致 Native 堆增长 800MB 的实战案例
 
 **掌握了 Java 堆 + Native 堆，才算掌握了 App 进程内存的全貌**——这两块在 `dumpsys meminfo` 中分别占"Pss Java Heap"和"Pss Native Heap"两行，但治理手段完全不同。
+

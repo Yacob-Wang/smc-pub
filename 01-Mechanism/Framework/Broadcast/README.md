@@ -1,10 +1,15 @@
-# Broadcast 系列导读
+﻿# Broadcast 系列导读
 
 > **作者角色**：Android 稳定性架构师
+>
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **写作规范**：[PROMPT-技术系列文章写作指南-v4.md](../../../PROMPT-技术系列文章写作指南-v4.md)
+>
 > **本系列起始**：2026-07-18
+>
 > **本系列规划文档**：[三系列重写规划-2026-07-18.md](../三系列重写规划-2026-07-18.md)
+>
 > **依赖前序系列**：[Activity 系列](../Activity/README.md)、[Service 系列](../Service/README.md)（已发布）
 
 ---
@@ -216,3 +221,4 @@ B01 → B02 → B03 → B04 → B05 → B06 → B07 → B08 → B09
 | 进程保活 | 无 | FGS 强 | 静态注册 BOOT_COMPLETED |
 
 **稳定性架构师视角**：三个组件的稳定性问题是**高度耦合的**——Activity 启动 Service，Service 发送 Broadcast，Broadcast 启动 Activity（受限）。**理解一个组件必须理解另外两个**。
+

@@ -1,8 +1,11 @@
 ﻿# 8.4 GC × Hook 框架（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 08-GC与其他子系统（横切专题 · 4/8）
+>
 > **本篇定位**：**横切专题**（4/8）——Hook 框架与 GC 的协作：**ART 17 重要变化**——类去重对插件隔离的破坏 / 反射改 final 失效 / newHook API
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -1015,3 +1018,4 @@ auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - star
 ---
 
 > **下一篇**：[05-GC与APEX模块](05-GC与APEX模块.md) 深入 **GC × APEX（Android Pony EXpress）模块化更新**——AOSP 17 ART APEX 模块与 GC 协同。
+

@@ -1,8 +1,11 @@
 ﻿# 6.3 WeakReference：WeakHashMap 与内存泄漏排查（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 06-Reference与Finalizer（专题篇 3/9）
+>
 > **本篇定位**：**WeakReference**（3/9）—— 下次 GC 一定回收 + WeakHashMap 实现 + LeakCanary 原理 + ART 17 性能优化
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -799,3 +802,4 @@ public class RealTimeLeakDetector {
 ---
 
 > **下一篇**：[04-FinalReference](04-FinalReference.md) 深入**FinalReference + Finalizer 线程池化 + 替代方案**——finalize() 的本质与 ART 17 调度改进。
+

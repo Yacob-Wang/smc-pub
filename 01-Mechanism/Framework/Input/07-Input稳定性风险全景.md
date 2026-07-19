@@ -1,10 +1,15 @@
-# 07-Input 稳定性风险全景：ANR、延迟与事件丢失
+﻿# 07-Input 稳定性风险全景：ANR、延迟与事件丢失
 
 > **系列**：面向稳定性的 Android Input 子系统深度解析系列(Input_FWK)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇风险涉及 `frameworks/native/services/inputflinger/`、`frameworks/base/services/core/java/com/android/server/input/`;Android 14 input latency 监控增强见 §3)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:本系列 01-06 全篇
+>
 > **下一篇**:[08-Input 诊断工具与延迟治理体系](08-Input诊断工具与延迟治理体系.md)
 
 ---
@@ -617,3 +622,4 @@ Input 稳定性风险全景
 ```
 
 理解这张风险地图，就能在遇到 Input 相关问题时快速定位方向，而不是盲目排查。下一篇将介绍具体的诊断工具和延迟治理体系。
+

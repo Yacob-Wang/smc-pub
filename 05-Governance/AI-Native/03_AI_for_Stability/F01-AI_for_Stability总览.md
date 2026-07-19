@@ -1,12 +1,19 @@
-# F01 AI for Stability：把 AI 能力反哺到稳定性治理
+﻿# F01 AI for Stability：把 AI 能力反哺到稳定性治理
 
 > **本系列**：AI_for_Stability（AI 治理稳定性）
+>
 > **本篇定位**：**全局观**（1/6）——把 [AI_Native_Runtime R01-R08](../01_AI_Native_Runtime/) 和 [AI_Native_OS O01-O06](../02_AI_Native_OS/) 积累的 AI 能力，**反哺到稳定性治理场景**，回答"AI 在稳定性领域到底能解决什么问题、解决到什么程度、边界在哪"
+>
 > **基线版本**：AOSP android-14.0.0_r1；LLM 主线 OpenAI GPT-4o / Claude 3.5 Sonnet（云端）+ Gemini Nano（端侧,见 [O05](../02_AI_Native_OS/O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md)）；APM 行业对位 Datadog Watchdog / New Relic AI / 阿里云 ARMS AI / 字节跳动 ANRCanary。
+>
 > **对线 JD**：
+>
 > - 职责 3「端侧 AI、大模型等前沿智能技术与 Android/OS 底层框架的系统级融合」——**核心对线**
+>
 > - 职责 5「跨团队主导 0→1 项目」——F06 AI APM 平台（带 3 人 + 与 AI 算法团队深度合作）
+>
 > - 职责 6「稳定性治理 / 监控 / APM 体系建设」——F02/F06
+>
 > - 加分项 2「性能优化、稳定性优化领域有突出贡献」——F04/F06
 
 ---

@@ -1,13 +1,21 @@
-# AE07 · Indirect Prompt Injection · 工具响应里的信任边界
+﻿# AE07 · Indirect Prompt Injection · 工具响应里的信任边界
 
 > **系列**：04_AI_Engineering（AI 工程师视角的工程实践）
+>
 > **篇号**：AE07（共 12 篇，本篇为第 7 篇）
+>
 > **写作时间**：2026-06-30
+>
 > **前置阅读**：
+>
 > - [AE01 · 从 Prompt 到 Skill 到 Tools 到 Context](AE01-从Prompt到Skill到Tools到Context_AI工程师的四层架构.md)
+>
 > - [AE02 · Context Engineering](AE02-Context_Engineering_Token预算_缓存_记忆_压缩.md)
+>
 > - [AE05 · Policy-as-Code](AE05-Policy_as_Code_守卫前移到工具调用层.md)
+>
 > - [AE06 · MCP 与工具标准化契约](AE06-MCP与工具标准化契约.md)
+>
 > **目标读者**：所有搭 Agent / 多工具集成 / RAG / Tool-Calling 系统的工程师；想知道"为什么 Agent 突然抽风执行了奇怪动作"的人
 
 ---

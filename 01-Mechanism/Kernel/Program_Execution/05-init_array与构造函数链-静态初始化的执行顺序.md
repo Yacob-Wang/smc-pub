@@ -1,9 +1,13 @@
-# 05-.init_array 与构造函数链:静态初始化的执行顺序
+﻿# 05-.init_array 与构造函数链:静态初始化的执行顺序
 
 > **系列**:程序加载与执行深度解析(PLE,Program Loading & Execution)
+>
 > **源码基线**:AOSP `android-14.0.0_r1` + Kernel `android14-5.10` / `android14-5.15` / `android15-6.1`(本篇涉及 `linker64::call_constructors` 倒序遍历 + `__attribute__((constructor))` 优先级)+ Bionic linker `bionic/linker/linker.cpp::call_constructors` + `crtbegin.o/crtend.o` 运行时文件
+>
 > **目标读者**:Android 系统架构师、性能架构师、稳定性架构师
+>
 > **前置阅读**:[01-程序加载与执行全景图](01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md) → [02-ELF](02-ELF文件格式深度解析-从可执行文件到内核视角.md) → [03-linker64](03-Bionic动态链接器-linker64的工作机制.md) → [04-重定位](04-符号解析与重定位-plt-got-relro全景.md)
+>
 > **下一篇**:[06-DEX / ODEX / VDEX 格式:为 mmap 而生的字节码](06-DEX-ODEX-VDEX格式-为mmap而生的字节码.md)
 
 ---
@@ -1046,3 +1050,4 @@ void call_constructors(Solist& solist) {
 > **本篇把 .init_array 拆解到"section 类型 + 倒序执行 + 优先级 + JNI_OnLoad + 失败模式"5 个维度。**
 > **批 1 全部完成,接下来是批 2(DEX 与 ART 4 篇)。**
 > **记住倒序、优先级、JNI_OnLoad、5 类失败,你的 .init_array 视角就立住了。**
+

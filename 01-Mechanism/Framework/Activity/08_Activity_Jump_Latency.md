@@ -1,10 +1,15 @@
-# A08 · 跳转卡顿与黑白屏（横切专题）
+﻿# A08 · 跳转卡顿与黑白屏（横切专题）
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Activity 系列 **第 8 篇 / 横切专题**（**破例：3 张图**）
+>
 > **强依赖**：[A02 · 启动流程](02_Activity_Start_SourceCode.md)、[A07 · 启动 ANR](07_Activity_Launch_ANR.md)
+>
 > **承接自**：A02 §3.5 提到了 WMS 端 Window 创建与首帧绘制；A07 §1.3 提到"冷启动时间 800-1500ms"。本篇**专门展开"启动慢但没到 ANR"的白屏/黑屏问题 + SplashScreen API 实战**
+>
 > **衔接去**：[A09 · Activity 内存治理](09_Activity_Memory_Governance.md) — A08 收尾横切专题；A09 进入诊断治理
+>
 > **不重复内容**：与 A02 §3.5 启动流程末段不重复；与 A07 ANR 风险地图不重复
 
 ## 破例决策记录
@@ -575,3 +580,4 @@ logcat:
 下一篇 [A09 · Activity 内存治理](09_Activity_Memory_Governance.md) 把 A07 §4.1 提到的"Activity 重建 + Window 资源未释放"作为引子，**专门展开 Activity 内存治理的 5 大风险 + 工具（LeakCanary / MemoryProfiler / dumpsys meminfo）+ 实战案例**。A09 是 Activity 系列最后一篇（诊断治理，破例：章节重排"风险→工具→案例"），也是 Service 系列的前置知识——**Activity 内存治理是 Service / Broadcast 内存治理的子集**。
 
 预计阅读时间 25-35 分钟。
+

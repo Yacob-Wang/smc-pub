@@ -1,8 +1,11 @@
-# 第 01 篇 · 开篇 —— Device Mapper 是什么、为什么需要它
+﻿# 第 01 篇 · 开篇 —— Device Mapper 是什么、为什么需要它
 
 > **本系列**：Device Mapper 深度解析系列（10 篇）
+>
 > **本篇系列角色**：**全局观（1/10）**——开篇，建立 DM 的全景认知
+>
 > **基线版本**（v4 规范硬要求 · 用户 2026-07-17 决策升级）：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2025-11-30 发布，EOL 2030-07-01）
+>
 > **manifest 推荐**：`android-latest-release`（AOSP 2026 起推荐分支，详见 [AOSP Changes](https://source.android.google.cn/setup/site-updates)）
 
 ---
@@ -698,3 +701,4 @@ Step 5: dmesg | grep -i "dm"      # 内核侧 DM 日志
 > **所属系列**：[Device Mapper 深度解析系列 · v2](../README-DM系列.md)
 > **作者**：稳定性架构师 · 基线 AOSP 17 + android17-6.18
 > **写作规范**：[PROMPT-技术系列文章写作指南-v4.md](../../../PROMPT-技术系列文章写作指南-v4.md)
+

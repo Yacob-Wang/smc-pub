@@ -1,10 +1,15 @@
-# Socket 07：稳定性风险全景
+﻿# Socket 07：稳定性风险全景
 
 > **系列**：面向稳定性的 Android Socket 子系统深度解析系列(Socket)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇风险涉及 `net/core/sock.c`、`net/ipv4/tcp.c`、`net/unix/af_unix.c`、`include/net/sock.h`;Android 14 SELinux socket class 限制见 §3)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:本系列 01-06 全篇
+>
 > **下一篇**:[08-Socket 诊断工具与治理体系](08-Socket诊断工具与治理体系.md)
 
 > 面向 Android 稳定性架构师：把 socket 系列 6 大场景的所有风险统一为一张"风险地图"——按"6 大场景"和"5 大类风险"两个维度交叉，**让你 5 分钟内定位线上问题在 socket 哪个层面、怎么查、怎么防**。
@@ -879,4 +884,5 @@ service vendor_post_ota /system/bin/sh /vendor/bin/post_ota.sh
 - **完整案例**：2 个综合案例（带 5 大类风险联动排查）
 本篇是 socket 系列风险收口——08 是治理收口。
 ---
+
 

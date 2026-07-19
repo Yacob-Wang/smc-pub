@@ -1,10 +1,15 @@
-# 03-Java Watchdog 核心机制:HandlerChecker / Monitor / 检查循环的源码精析
+﻿# 03-Java Watchdog 核心机制:HandlerChecker / Monitor / 检查循环的源码精析
 
 > **系列**:面向稳定性的 Android Watchdog 子系统深度解析系列(Watchdog)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `frameworks/base/services/core/java/com/android/server/Watchdog.java`;Android 14 引入 `WatchdogRollback` 与 per-checker 超时配置见 §6)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-Watchdog 总览](01-Watchdog概述与体系位置.md) / [02-多层 Watchdog 架构](02-多层Watchdog架构.md)
+>
 > **下一篇**:[04-内核 Watchdog 与 watchdogd](04-内核Watchdog与watchdogd.md)
 
 ---
@@ -644,4 +649,5 @@ Watchdog 触发 → 抓 traces
 下一篇 [04-内核 Watchdog 与 watchdogd](04-内核Watchdog与watchdogd.md) 将深入内核态的两层兜底机制——**soft lockup 的 hrtimer 检测原理、hard lockup 的 NMI 中断机制、watchdogd 的 SELinux 上下文约束**。这两层虽然对大多数架构师来说"看不见",但正是它们在 Java Watchdog 卡死时救场。
 
 ---
+
 

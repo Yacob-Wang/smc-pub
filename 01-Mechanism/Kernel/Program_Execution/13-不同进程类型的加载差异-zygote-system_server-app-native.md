@@ -1,9 +1,13 @@
-# 13-不同进程类型的加载差异:zygote / system_server / app / native
+﻿# 13-不同进程类型的加载差异:zygote / system_server / app / native
 
 > **系列**:程序加载与执行深度解析(PLE,Program Loading & Execution)
+>
 > **源码基线**:AOSP `android-14.0.0_r1` + Kernel `android14-5.10` / `android14-5.15` / `android15-6.1`(4 类进程的 cgroup + schedtune 配置涉及内核 `cpu_set` / `cpuset` / `memcg` API,内核版本差异显著)+ `frameworks/base/core/java/com/android/server/am/ProcessList.java` + `frameworks/base/core/java/com/android/server/SystemServer.java` + `frameworks/native/services/surfaceflinger/` + `system/core/lmkd/`
+>
 > **目标读者**:Android 系统架构师、性能架构师、稳定性架构师
+>
 > **前置阅读**:[12-进程启动全景](12-进程启动全景-Zygote-fork-第一帧.md) → [MM_v2 14-Android 进程内存类型学](../Memory_Management/MM_v2/14-Android进程内存类型学-zygote-system_server-app-kernel-native守护进程.md)(**对仗篇**)
+>
 > **下一篇**:[14-加载失败与启动期故障速查](14-加载失败与启动期故障速查.md)
 
 ---
@@ -943,3 +947,4 @@ init 直接 execve(/system/bin/<daemon>)
 > **本篇把"4 类进程"拆解到"zygote / system_server / app / native"5 个维度。**
 > **14 篇会在这个基础上,做全系列的"风险地图"收口。**
 > **记住 4 类进程的"加载策略 + 启动时间 + 内存 + 优先级",你的进程视角就立住了。**
+

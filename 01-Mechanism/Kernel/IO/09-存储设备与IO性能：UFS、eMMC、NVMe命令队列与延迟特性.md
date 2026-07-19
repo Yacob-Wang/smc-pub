@@ -1,10 +1,15 @@
-# 09-存储设备与 IO 性能：UFS / eMMC / NVMe 命令队列与延迟特性
+﻿# 09-存储设备与 IO 性能：UFS / eMMC / NVMe 命令队列与延迟特性
 
 > **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `drivers/ufs/`(UFSHCD/UFS 驱动)、`drivers/mmc/host/`(eMMC 驱动)、`drivers/nvme/`(NVMe 驱动)、`drivers/scsi/`;各代 UFS 性能差异见 §3)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) §6 / [02-IO 调度器](02-IO调度器与多队列架构.md) §8
+>
 > **下一篇**:[10-IO 风险全景与诊断工具链](10-IO稳定性风险全景与诊断工具链.md)
 
 ---

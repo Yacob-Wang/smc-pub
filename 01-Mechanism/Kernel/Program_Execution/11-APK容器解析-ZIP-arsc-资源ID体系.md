@@ -1,9 +1,13 @@
-# 11-APK 容器解析:ZIP + arsc + 资源 ID 体系
+﻿# 11-APK 容器解析:ZIP + arsc + 资源 ID 体系
 
 > **系列**:程序加载与执行深度解析(PLE,Program Loading & Execution)
+>
 > **源码基线**:AOSP `android-14.0.0_r1` + Kernel `android14-5.10` / `android14-5.15` / `android15-6.1`(Android 14 加强 ZIP 校验涉及 `finit_module` + `verify_pkcs7`,内核版本影响签名验证路径)+ `system/core/libziparchive/` + `frameworks/base/tools/aapt2/` + `frameworks/base/libs/androidfw/ApkAssets.cpp` + 工具 `aapt2`、`apksigner`、`zipinfo`
+>
 > **目标读者**:Android 系统架构师、性能架构师、稳定性架构师
+>
 > **前置阅读**:[10-资源加载:AssetManager / ApkAssets / ResTable](10-资源加载-AssetManager-ApkAssets-ResTable.md)
+>
 > **下一篇**:[12-进程启动全景:Zygote fork → 第一帧](12-进程启动全景-Zygote-fork-第一帧.md)
 
 ---
@@ -995,3 +999,4 @@ $ hexdump -C arsc.bin | head -1
 > **本篇把 APK 容器拆解到"ZIP 格式 + 签名机制 + arsc + aapt2 + Bundle"5 个维度。**
 > **12 篇会在这个基础上,讲 Zygote fork——APK 怎么被加载、进程怎么启动、第一帧怎么渲染。**
 > **记住 ZIP 3 结构、Android 14 严格签名校验、aapt2 optimize、Bundle 节省下载,你的 APK 视角就立住了。**
+

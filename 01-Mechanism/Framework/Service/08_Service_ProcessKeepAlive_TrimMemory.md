@@ -1,10 +1,15 @@
-# S08 · 进程保活与 onTrimMemory（横切专题）
+﻿# S08 · 进程保活与 onTrimMemory（横切专题）
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Service 系列 **第 8 篇 / 横切专题**（**破例：3 张图**）
+>
 > **强依赖**：[S01 · Service 全景](01_Service_Overview.md) §2.2、[S04 · FGS](04_Service_FGS_TypeRestricted.md)
+>
 > **承接自**：S01 §2.2 给出 OomScoreAdj 决策；S04 提到 FGS 提升进程优先级。本篇**专门展开 onTrimMemory / onTaskRemoved / START_STICKY 行为 + 进程保活真相**
+>
 > **衔接去**：[S09 · 跨进程 Binder 限制与 Service 上限](09_Service_BinderLimit_ServiceCap.md) — S08 收尾横切专题；S09 进入诊断治理
+>
 > **不重复内容**：与 S01 §2.2 OomScoreAdj 不重复；与 S04 FGS 进程优先级不重复
 
 ## 破例决策记录
@@ -586,3 +591,4 @@ FGS 启动失败?
 下一篇 [S09 · 跨进程 Binder 限制与 Service 上限](09_Service_BinderLimit_ServiceCap.md) 把 S08 的进程保活视角过渡到"Binder 限制 + Service 数量上限"——**`MAX_CACHED_PROCESSES` 32 个上限 + Binder 线程池 15 个上限 + Binder transaction 1MB 上限 + 实战案例**。S09 是诊断治理（破例：章节重排"风险→工具→案例"）。
 
 预计阅读时间 25-35 分钟。
+

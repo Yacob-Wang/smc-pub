@@ -1,10 +1,15 @@
-# 04-Native 堆内存与分配器（AOSP 14）
+﻿# 04-Native 堆内存与分配器（AOSP 14）
 
 > **系列**：面向稳定性的 Android 内存架构深度解析系列（MM_v2）
+>
 > **源码基线**：AOSP `android-14.0.0_r1`（`refs/heads/android14-release`）
+>
 > **内核矩阵**：`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`（scudo 是用户态分配器，不直接受内核版本影响；memcg 行为受 cgroup v2 内核版本演进影响，详见 §5）
+>
 > **目标读者**：Android 稳定性框架架构师
+>
 > **前置阅读**：[01-内存系统总览：从进程视角到硬件的完整链路](01-内存系统总览：从进程视角到硬件的完整链路.md)、[02-进程内存地图与 VMA 体系](02-进程内存地图与 VMA 体系.md)、[03-ART 堆内存与 GC 全景](03-ART 堆内存与 GC 全景.md)
+>
 > **下一篇**：[05-AMS 内存治理与进程优先级](05-AMS 内存治理与进程优先级.md)
 
 ---
@@ -2196,3 +2201,4 @@ cat $CGROUP_PATH/memory.stat          # 详细分项
 > - 与 **[06-LMKD 用户态内存杀手](06-LMKD 用户态内存杀手.md)** 关联：本篇 §1.3 引用其"杀谁不杀谁"决策（与 scudo hard limit + memcg 联动）
 > - 与 **[07-PSI、vmpressure、memcg 压力传递](07-PSI、vmpressure、memcg 压力传递.md)** 关联：本篇 §5 引用其 memcg PSI 接口与 cgroup v2 压力传递
 > - 与 **[12-内存稳定性风险全景](12-内存稳定性风险全景.md)** 关联：本篇 §1.4 引用其"Graphics 行泄漏"分类，§7 引用其五大类风险框架
+

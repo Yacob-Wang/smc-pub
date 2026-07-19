@@ -1,10 +1,15 @@
-# ContentProvider 系列导读
+﻿# ContentProvider 系列导读
 
 > **作者角色**：Android 稳定性架构师
+>
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **写作规范**：[PROMPT-技术系列文章写作指南-v4.md](../../../PROMPT-技术系列文章写作指南-v4.md)
+>
 > **本系列起始**：2026-07-18
+>
 > **本系列规划文档**：[三系列重写规划-2026-07-18.md](../三系列重写规划-2026-07-18.md)（基于此扩展到四系列）
+>
 > **依赖前序系列**：[Activity 系列](../Activity/README.md)、[Service 系列](../Service/README.md)、[Broadcast 系列](../Broadcast/README.md)（已发布）
 
 ---
@@ -247,3 +252,4 @@ C01 → C02 → C03 → C04 → C05 → C06 → C07 → C08 → C09
 | C09 | Activity | A09 内存治理 | 内存治理与 ContentProvider 缓存 | [Activity · 内存治理](../Activity/09_Activity_Memory_Governance.md) | 2026-07-18 |
 
 > 链路有效性最后核查：2026-07-18。本矩阵不重复 §2.3 的简化版，**与正文 inline 引用一一对应**。
+

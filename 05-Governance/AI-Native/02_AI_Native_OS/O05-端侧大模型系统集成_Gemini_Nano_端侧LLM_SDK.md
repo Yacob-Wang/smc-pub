@@ -1,12 +1,19 @@
-# O05 端侧大模型系统集成：Gemini Nano / 端侧 LLM SDK
+﻿# O05 端侧大模型系统集成：Gemini Nano / 端侧 LLM SDK
 
 > **本系列**：AI_Native_OS（操作系统级 AI 架构）
+>
 > **本篇定位**：**横切专题 2/2**（5/6）—— 在 O03 AICore 之上，把 R08 端侧 LLM 的 Runtime 视角**升级到 OS 集成层**——回答"Gemini Nano / 端侧 LLM SDK 怎么被集成进 Android 系统、冷启动怎么优化、内存怎么管理、功耗怎么调度"
+>
 > **基线版本**：AOSP android-14.0.0_r1（AICore 引入 + Gemini Nano 集成 API 实验性）；android-15.0.0_r1（AICore 1.5 + Gemini Nano 2 正式集成）；Android 16（AICore 2.0 + Nano 多模态）；Gemini Nano 1.0/2.0（Pixel 8/9）、Qwen2.5-1.5B-Instruct（开源）、Llama-3.2-1B-Instruct（开源）、Phi-3-Mini-3.8B-Instruct（开源）。
+>
 > **对线 JD**：
+>
 > - 职责 3「端侧 AI、大模型等前沿智能技术与 Android/OS 底层框架的系统级融合」——**核心对线**
+>
 > - 职责 4「跟踪 AOSP、Linux Kernel **及 AI 领域**最新技术动态」——Gemini Nano + 端侧 LLM 是 2024-2026 最前沿
+>
 > - 加分项 3「AI 加速器 + AI 平台架构」——NPU 调度 + 端侧 LLM SDK 是加分项核心
+>
 > **与 v2.1 主干耦合**：与 `AI_Native_Runtime R08` 强耦合（Runtime 视角 vs OS 集成视角）；与 `Runtime/ART M8 启动` 强耦合（冷启动）；与 `Runtime/ART M4 内存 GC` 强耦合（LLM 内存布局）；与 `Linux_Kernel/Power PM08 Thermal` 强耦合（功耗调度）。
 
 ---

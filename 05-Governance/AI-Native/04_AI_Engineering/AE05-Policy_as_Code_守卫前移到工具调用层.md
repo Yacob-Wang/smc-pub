@@ -1,12 +1,19 @@
-# AE05 · Policy-as-Code：守卫前移到工具调用层
+﻿# AE05 · Policy-as-Code：守卫前移到工具调用层
 
 > **系列**：04_AI_Engineering（AI 工程师视角的工程实践）
+>
 > **篇号**：AE05（共 12 篇，本篇为第 5 篇）
+>
 > **写作时间**：2026-06-30
+>
 > **前置阅读**：
+>
 > - [AE01 · 从 Prompt 到 Skill 到 Tools 到 Context](AE01-从Prompt到Skill到Tools到Context_AI工程师的四层架构.md)
+>
 > - [AE03 · Durable Execution](AE03-Durable_Execution_长任务的Checkpoint_幂等_Resume.md)
+>
 > - [AE04 · Trajectory Evals](AE04-Trajectory_Evals_评路径不只评答案.md)
+>
 > **目标读者**：所有搭生产 Agent 的工程师；想用"代码化策略"替代"Prompt 软约束"的团队
 
 ---

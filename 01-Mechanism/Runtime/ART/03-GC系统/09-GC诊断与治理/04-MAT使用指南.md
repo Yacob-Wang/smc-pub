@@ -1,8 +1,11 @@
 ﻿# 9.4 MAT（Memory Analyzer）使用指南（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 4/10）
+>
 > **本篇定位**：**hprof 深度分析**（4/10）——Shallow Size / Retained Size / Dominator Tree / OQL + ART 17 hprof 格式变更 + Class Extent 元数据
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -875,3 +878,4 @@ ORDER BY obj.@retainedHeapSize DESC
 ---
 
 > **下一篇**：本子模块剩余 6 篇（05-Perfetto中的GC事件、06-JVMTI监控GC、07-监控指标体系、08-治理工具箱、09-实战案例1、10-实战案例2）按需 v2 升级。**当前 4 篇 v2 升级完成**。
+

@@ -1,11 +1,17 @@
-# 11-内存回收-kswapd,Direct Reclaim,LRU,MGLRU（GKI 5.10）
+﻿# 11-内存回收-kswapd,Direct Reclaim,LRU,MGLRU（GKI 5.10）
 
 > **系列**：面向稳定性的 Android 内存架构深度解析系列（MM_v2）· 第 11 篇
+>
 > **源码基线**：AOSP `android-14.0.0_r1`（`refs/heads/android14-release`）
+>
 > **内核矩阵**：`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`（本篇涉及 `mm/vmscan.c` / `include/linux/swap.h` / `mm/workingset.c`；5.10 引入 MGLRU 替代传统 LRU；5.15 引入 MGLRU per-numa 优化；6.1/6.6 引入 MGLRU 异步扫描）
+>
 > **目标读者**：Android 稳定性框架架构师
+>
 > **前置阅读**：[09-页分配器与伙伴系统(GKI 5.10)](09-页分配器与伙伴系统(GKI 5.10).md) [10-SLAB,SLUB 分配器与小对象分配(GKI 5.10)](10-SLAB,SLUB 分配器与小对象分配(GKI 5.10).md)
+>
 > **下一篇**：[12-内存稳定性风险全景](12-内存稳定性风险全景.md)
+>
 > **横向引用**：本篇是"内核 mm/ 子系统四篇"中的**第 4 篇**——把"分配器无空闲时怎么办"这条链路打通。前三篇讲[物理组织](08-物理内存组织-Node,Zone,Page,memblock(GKI 5.10).md)、[页分配器](09-页分配器与伙伴系统(GKI 5.10).md)、[SLAB](10-SLAB,SLUB 分配器与小对象分配(GKI 5.10).md)；后接[12 风险全景](12-内存稳定性风险全景.md) 把回收抖动 / OOM 收口到五大类稳定性问题里。
 
 ---
@@ -1577,3 +1583,4 @@ r_active_file 异常 | /proc/vmstat per-LRU 计数 | §3.6 |
 ---
 
 **下一篇**：[12-内存稳定性风险全景](12-内存稳定性风险全景.md) 将把本章 Direct Reclaim 抖动 / swap 抖动 / kswapd 卡死 / memcg 误杀 / MGLRU 切换异常等 8 类风险收口到五大类稳定性问题（OOM / 泄漏 / 抖动 / 杀进程 / 卡顿）里，给出跨篇速查表与排查流程图。
+

@@ -1,10 +1,15 @@
-# 08-Android 存储栈：从 FUSE / sdcardfs / StorageManager 到块设备
+﻿# 08-Android 存储栈：从 FUSE / sdcardfs / StorageManager 到块设备
 
 > **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `fs/fuse/` 内核模块、`fs/sdcardfs.c`(已弃用,迁移到 FUSE passthrough)、`drivers/scsi/sd.c`、`drivers/ufs/`;Android 14 sdcardfs 弃用与 FUSE passthrough 演化见 §3)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) / [FS 15-Android存储架构概述](../FS/15-Android存储架构概述.md)
+>
 > **下一篇**:[09-存储设备与 IO 性能](09-存储设备与IO性能：UFS、eMMC、NVMe命令队列与延迟特性.md)
 
 ---

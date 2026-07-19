@@ -1,10 +1,15 @@
-# C06 · Android 11+ 包可见性与 exported 错配
+﻿# C06 · Android 11+ 包可见性与 exported 错配
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：ContentProvider 系列 **第 6 篇 / 风险地图**
+>
 > **强依赖**：[C04 · 跨进程通信](C04_ContentProvider_CrossProcess.md)、[B07 · 后台广播限制](../Broadcast/B07_Broadcast_BackgroundRestriction.md)
+>
 > **承接自**：C04 §3.4 提到 URI 权限校验；B07 详述 AOSP 11+ 收紧的"系列化策略"。本篇**专门展开 AOSP 11+ 包可见性 + ContentProvider exported 错配 + SecurityException 5 大根因 + 实战案例**
+>
 > **衔接去**：[C07 · Binder 限制与 ANR](C07_ContentProvider_Binder_ANR.md) — C06 讲"跨 App 访问失败"；C07 讲"跨 App ANR"
+>
 > **不重复内容**：与 C04 §3.4 URI 权限校验不重复；与 B07 §2 跨 App 收紧不重复
 
 ---
@@ -445,3 +450,4 @@ logcat:
 下一篇 [C07 · Binder 限制与 ANR](C07_ContentProvider_Binder_ANR.md) 是"风险地图"篇——**ContentProvider 5 个 ANR 阈值 + AnrHelper 异步检测 + 5 大根因详细分析 + 实战案例**。C07 是 ContentProvider 系列最重的一篇（12-15k 字），是 A07 启动 ANR 的姊妹篇。
 
 预计阅读时间 30-45 分钟。
+

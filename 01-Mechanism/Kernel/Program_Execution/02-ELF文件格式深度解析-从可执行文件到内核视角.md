@@ -1,9 +1,13 @@
-# 02-ELF 文件格式深度解析:从可执行文件到内核视角
+﻿# 02-ELF 文件格式深度解析:从可执行文件到内核视角
 
 > **系列**:程序加载与执行深度解析(PLE,Program Loading & Execution)
+>
 > **源码基线**:AOSP `android-14.0.0_r1` + Kernel `android14-5.10` / `android14-5.15`(本篇涉及内核 `load_elf_binary` 路径,内核侧差异在 5.10/5.15 显著) + `arm64-linux-gnu-readelf` (binutils 2.39)
+>
 > **目标读者**:Android 系统架构师、性能架构师、稳定性架构师
+>
 > **前置阅读**:[01-程序加载与执行全景图](01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md)
+>
 > **下一篇**:[03-Bionic 动态链接器:linker64 的工作机制](03-Bionic动态链接器-linker64的工作机制.md)
 
 ---
@@ -1439,3 +1443,4 @@ readelf -S libfoo.so | grep -E "got|plt"        # 查 GOT/PLT
 > **本篇把 ELF 拆解到"字段级",目的是让你拿到任何 .so 都能在 5 分钟内用 readelf 看清它的关键属性。**
 > **03 篇会在这个基础上,讲 linker64 怎么用这些字段——把"静态文件"变成"运行时实例"。**
 > **记住 3 个段、3 个安全开关、3 类异常映射,你的 ELF 视角就立住了。**
+

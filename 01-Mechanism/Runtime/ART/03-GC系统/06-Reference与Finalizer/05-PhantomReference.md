@@ -1,8 +1,11 @@
 ﻿# 6.5 PhantomReference：真正的析构语义（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 06-Reference与Finalizer（专题篇 5/9）
+>
 > **本篇定位**：**PhantomReference**（5/9）—— 真正的析构语义 + ART 17 与 Cleaner 集成强化 + DirectByteBuffer 释放链路
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -925,3 +928,4 @@ public class NativeResource {
 ---
 
 > **下一篇**：[06-Cleaner](06-Cleaner.md) 深入 **Cleaner 实现机制 + ART 17 强化 + AutoCloseable 模式 + 4 大应用场景**——轻量析构的工程实现。
+

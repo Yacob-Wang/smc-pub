@@ -1,8 +1,11 @@
 ﻿# v2 升级版
 
 > **本子模块**：03-GC 系统 / 07-GC 调度与触发（GC 调度与触发 · 3/8）
+>
 > **本篇定位**：**ConcurrentGCTask 后台任务**（3/8）——ConcurrentGCTask 提交 / 执行 / ART 17 任务调度精细化 + 与 Background GC 配合 + Native 分配限流联动
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -875,3 +878,4 @@ adb shell top -p <pid>
 ---
 
 > **下一篇**：[04-GC_FOR_ALLOC路径](04-GC_FOR_ALLOC路径.md) 深入 **分配触发的同步 GC**——TLAB 失败 → 全局分配失败 → kGcCauseForAlloc 同步 GC 完整路径 + GenCC 配合。
+

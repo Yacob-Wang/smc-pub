@@ -1,13 +1,21 @@
-# AE09 · Human-in-the-Loop 工程化 · Interrupt / Approval Packet
+﻿# AE09 · Human-in-the-Loop 工程化 · Interrupt / Approval Packet
 
 > **系列**：04_AI_Engineering（AI 工程师视角的工程实践）
+>
 > **篇号**：AE09（共 12 篇，本篇为第 9 篇，簇 3「交互与发布」开篇）
+>
 > **写作时间**：2026-07-07
+>
 > **前置阅读**：
+>
 > - [AE03 · Durable Execution](AE03-Durable_Execution_长任务的Checkpoint_幂等_Resume.md)（Interrupt 依赖 Checkpoint）
+>
 > - [AE05 · Policy-as-Code](AE05-Policy_as_Code_守卫前移到工具调用层.md)（谁触发 HITL 由 Policy 决定）
+>
 > - [AE07 · Indirect Prompt Injection](AE07-Indirect_Prompt_Injection_工具响应里的信任边界.md)（HITL 是 IPI 的最后一道人肉防线）
+>
 > - [AE08 · Tool Idempotency](AE08-Tool_Idempotency_副作用边界与重试安全.md)（HITL 通过后仍需幂等兜底）
+>
 > **目标读者**：所有搭生产级 Agent 的工程师；想知道"Agent 要 delete_prod_db 时人怎么安全地拦下来、改一改、再放行"的人
 
 ---
@@ -1076,3 +1084,4 @@ hitl:
 > 审批质量不取决于按钮长什么样，取决于 Approval Packet 让人能不能"1 眼看出问题"；
 > 触发权必须在 Agent 够不着的地方，暂停必须无损可恢复，执行必须幂等防重放。
 > 下篇 **AE10 · Release Control for Agent Assets** 进入"Prompt/Skill/Tool Profile 的变更怎么走发版门禁"——从"运行时守卫"走向"发布时守卫"。
+

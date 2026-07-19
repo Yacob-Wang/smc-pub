@@ -1,10 +1,15 @@
-# C01 · ContentProvider 全景：4 种 URI 分类与协作组件
+﻿# C01 · ContentProvider 全景：4 种 URI 分类与协作组件
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：ContentProvider 系列 **第 1 篇 / 总览篇**（破例：风险地图简版 / 无实战案例）
+>
 > **强依赖**：[Activity 系列 · A01 全景](../Activity/01_Activity_Overview.md)、[Service 系列 · S01 全景](../Service/01_Service_Overview.md)、[Broadcast 系列 · B01 全景](../Broadcast/B01_Broadcast_Overview.md)
+>
 > **承接自**：无（系列根文章）
+>
 > **衔接去**：[C02 · 启动与初始化](C02_ContentProvider_Init.md) — 把 C01 §3.1 的初始化骨架下沉到源码级
+>
 > **不重复内容**：与 A01/S01/B01 §2.1 四大组件协作图不重复
 
 ## 破例决策记录
@@ -531,3 +536,4 @@ ContentProvider ANR?
 下一篇 [C02 · 启动与初始化：冷启动"看不见的瓶颈"](C02_ContentProvider_Init.md) 将把 C01 §3.2 的初始化骨架下沉到源码级——**attachApplicationProviders 时序 + ContentProviderHelper 源码 + onCreate 慢的实战案例 + ContentProvider 与 Application 的初始化顺序**。C02 是 C03 数据操作的前置知识。
 
 预计阅读时间 25-35 分钟。
+

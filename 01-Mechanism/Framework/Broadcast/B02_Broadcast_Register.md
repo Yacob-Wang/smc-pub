@@ -1,10 +1,15 @@
-# B02 · 注册机制：静态注册 vs 动态注册
+﻿# B02 · 注册机制：静态注册 vs 动态注册
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Broadcast 系列 **第 2 篇 / 核心机制**
+>
 > **强依赖**：[B01 · Broadcast 全景](B01_Broadcast_Overview.md) §3.2（注册机制骨架）
+>
 > **承接自**：B01 §3.2 给出注册决策树；本篇**专门展开静态注册 + 动态注册的源码 + AOSP 14+ RECEIVER_EXPORTED 强制 + IntentFilter 匹配**
+>
 > **衔接去**：[B03 · 发送流程：sendBroadcast → BroadcastQueue → Receiver](B03_Broadcast_Send.md) — B02 解决"谁来收"；B03 解决"怎么发"
+>
 > **不重复内容**：与 B01 §3.2 注册骨架不重复
 
 ---
@@ -765,3 +770,4 @@ Activity 泄漏?
 下一篇 [B03 · 发送流程：sendBroadcast → BroadcastQueue → Receiver](B03_Broadcast_Send.md) 把 B02 §3.3 的动态注册路径展开为"发送"视角——**AMS 端 broadcastIntent 校验 + BroadcastQueue 调度 + ParallelBroadcasts 跨进程 + handleReceiver Receiver 实例化**。B03 是 B04 有序广播的前置知识。
 
 预计阅读时间 30-45 分钟。
+

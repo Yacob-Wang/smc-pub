@@ -1,13 +1,21 @@
-# AE11 · Compound Agent · Agent + Workflow 分层架构
+﻿# AE11 · Compound Agent · Agent + Workflow 分层架构
 
 > **系列**：04_AI_Engineering（AI 工程师视角的工程实践）
+>
 > **篇号**：AE11（共 12 篇，本篇为第 11 篇，**簇 4「架构与可观测」开篇**）
+>
 > **写作时间**：2026-07-07
+>
 > **前置阅读**：
+>
 > - [AE02 · Context Engineering](AE02-Context_Engineering_Token预算_缓存_记忆_压缩.md)（Context budget 限制是 Agent 分层的根因之一）
+>
 > - [AE03 · Durable Execution](AE03-Durable_Execution_长任务的Checkpoint_幂等_Resume.md)（Workflow 编排依赖 Checkpoint）
+>
 > - [AE08 · Tool Idempotency](AE08-Tool_Idempotency_副作用边界与重试安全.md)（Workflow 重试必须幂等）
+>
 > - [AE10 · Release Control](AE10-Release_Control_for_Agent_Assets_Prompt_Skill变更走发版门禁.md)（分层后每个 Worker 都要独立发版）
+>
 > **目标读者**：所有把生产 Agent 从"demo 跑通"推到"扛万级并发 / 跨天长任务"的工程负责人；想知道"为什么单一 Agent 跑不长 / 扛不住 / 跨不了天"的人
 
 ---

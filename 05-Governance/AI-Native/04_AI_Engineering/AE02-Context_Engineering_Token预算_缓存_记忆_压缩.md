@@ -1,9 +1,13 @@
-# AE02 · Context Engineering：Token 预算 / 缓存 / 记忆 / 压缩
+﻿# AE02 · Context Engineering：Token 预算 / 缓存 / 记忆 / 压缩
 
 > **系列**：04_AI_Engineering（AI 工程师视角的工程实践）
+>
 > **篇号**：AE02（共 12 篇，本篇为第 2 篇）
+>
 > **写作时间**：2026-06-30
+>
 > **前置阅读**：[AE01 · 从 Prompt 到 Skill 到 Tools 到 Context](AE01-从Prompt到Skill到Tools到Context_AI工程师的四层架构.md)
+>
 > **目标读者**：所有需要"用 LLM 搭生产系统"的工程师；想用 LLM Coding 但一直被"上下文太长 / Token 烧得凶 / 回答变烂"困扰的人
 
 ---

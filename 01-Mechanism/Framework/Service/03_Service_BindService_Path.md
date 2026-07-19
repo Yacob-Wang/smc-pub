@@ -1,10 +1,15 @@
-# S03 · bindService 路径：Connection 池与跨进程 Binder
+﻿# S03 · bindService 路径：Connection 池与跨进程 Binder
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Service 系列 **第 3 篇 / 核心机制**
+>
 > **强依赖**：[S01 · Service 全景](01_Service_Overview.md) §3.3、[S02 · startService 路径](02_Service_StartService_Path.md)
+>
 > **承接自**：S01 §3.3 给出 bindService 8 步骨架；S02 已覆盖 handleCreateService。本篇**专门展开 bindService 链路 + ServiceConnection 状态机 + Connection 池**
+>
 > **衔接去**：[S06 · 多客户端与死亡链路](06_Service_MultiClient_Death.md) — S03 是单客户端基础；S06 展开多客户端并发场景
+>
 > **不重复内容**：与 S01 §3.3 bindService 骨架不重复；与 S02 handleCreateService 源码不重复
 
 ---
@@ -838,3 +843,4 @@ bindService ANR?
 下一篇 [S04 · 前台服务 FGS：Android 14+ 后台启动限制与类型化](04_Service_FGS_TypeRestricted.md) 把 S02 的 startService 链路深入 FGS（前台服务）场景——**API 26+ 5s 内必须 startForeground**、**API 34+ 强制 FGS 类型化**、**后台启动 FGS 收紧**。S04 是 Service 系列风险地图的重头戏。
 
 预计阅读时间 25-35 分钟。
+

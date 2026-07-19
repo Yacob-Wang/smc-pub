@@ -1,10 +1,15 @@
-# A05 · Intent 与组件匹配：PMS 端 resolve + IntentFilter
+﻿# A05 · Intent 与组件匹配：PMS 端 resolve + IntentFilter
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Activity 系列 **第 5 篇 / 核心机制**
+>
 > **强依赖**：[A01 · Activity 全景](01_Activity_Overview.md) §3.4（Intent 解析骨架）、[A02 · 启动流程源码深潜](02_Activity_Start_SourceCode.md) §3.2.3（`ActivityStarter.startActivity` 入口）
+>
 > **承接自**：A02 §3.2.3 提到 `mSupervisor.resolveActivity(intent)` 会跨进程调用 PMS；A04 §2.3 提到 Intent flags 优先级。本篇**专门展开 PMS 端 `queryIntentActivities` + IntentFilter 匹配算法 + Android 11+ 包可见性 + Android 14+ 隐式 Intent 强制 setPackage**
+>
 > **衔接去**：[A06 · ConfigurationChange 与 Activity 重建](06_Activity_ConfigChange.md) — A05 收尾"启动链路"的核心机制篇；A06 进入横切专题
+>
 > **不重复内容**：与 A02 §3.2.3 `resolveActivity` 入口不重复；与 A04 §2.3 Intent flags 优先级不重复
 
 ---
@@ -762,3 +767,4 @@ intent.setType(cleanMimeType("image/*;charset=utf-8"));
 下一篇 [A06 · ConfigurationChange 与 Activity 重建](06_Activity_ConfigChange.md) 从 A05 的"启动链路核心机制"过渡到"横切专题"——**横竖屏切换、字体大小变化、语言切换、Dark Mode 切换**这些场景下，**Activity 为什么会重建、怎么避免重建、资源怎么重新加载**。本篇涉及 `WindowProcessController`、`ResourcesManager`、`Configuration` 类的源码，是 A07 启动 ANR 全景的前置知识。
 
 预计阅读时间 20-30 分钟。
+

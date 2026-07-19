@@ -1,8 +1,11 @@
 ﻿# 3.5 STW 时间分析：Remark 为什么可能飙到 50ms+（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 03-CMS-GC（CMS-GC · 5/7）
+>
 > **本篇定位**：**稳定性风险**（5/7）——CMS Remark 阶段 STW 不可控的 3 大瓶颈 + ART 17 STW 优化（Initial 5ms→1-2ms / Remark 50ms→20-30ms / 总 STW 55ms→24ms）
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级到 AOSP 17 + android17-6.18）
 
 ---
@@ -695,3 +698,4 @@ adb shell setprop dalvik.vm.gctype GenCC
 ---
 
 > **下一篇**：[06-内存碎片化](06-内存碎片化.md) 深入**CMS 死穴——内存碎片化**——三大根源（不压缩 + RosAlloc 分桶 + LOS 标记-清除）+ ART 17 碎片化治理（LOS 压缩 / 增量压缩 / 与 GenCC 对比）。
+

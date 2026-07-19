@@ -1,8 +1,11 @@
 ﻿# 6.6 Cleaner：JDK 8 引入的轻量析构（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 06-Reference与Finalizer（专题篇 6/9）
+>
 > **本篇定位**：**Cleaner**（6/9）—— JDK 8+ 轻量析构机制 + ART 17 Cleaner 强化 + AutoCloseable 模式 + 4 大应用场景
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -1185,3 +1188,4 @@ public class NettyBufferResource implements AutoCloseable {
 ---
 
 > **下一篇**：[07-FinalizerDaemon源码](07-FinalizerDaemon源码.md) 深入 **FinalizerDaemon 源码 + ART 17 4 线程池化 + 优先级调度 + 慢对象提前标记机制**——理解 finalize() 治理的底层实现。
+

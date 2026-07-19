@@ -1,10 +1,15 @@
-# InputDispatcher：Input 系统的"大脑"——窗口选择、事件投递与 ANR 裁决
+﻿# InputDispatcher：Input 系统的"大脑"——窗口选择、事件投递与 ANR 裁决
 
 > **系列**：面向稳定性的 Android Input 子系统深度解析系列(Input_FWK)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `frameworks/native/services/inputflinger/dispatcher/`;Android 14 InputDispatcher 异步化重构见 §4)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-Input 系统总览](01-Input系统总览.md) / [02-EventHub 与 InputReader](02-EventHub与InputReader.md)
+>
 > **下一篇**:[04-InputChannel 与跨进程投递](04-InputChannel与跨进程投递.md)
 
 ---
@@ -1386,3 +1391,4 @@ public abstract class BaseActivity extends AppCompatActivity {
 | WindowInfo.h | `frameworks/native/libs/gui/include/gui/WindowInfo.h` | 窗口信息结构定义 |
 | PhoneWindowManager.java | `frameworks/base/services/core/java/com/android/server/policy/PhoneWindowManager.java` | 按键拦截策略 |
 | InputManagerService.java | `frameworks/base/services/core/java/com/android/server/input/InputManagerService.java` | ANR 通知桥接 |
+

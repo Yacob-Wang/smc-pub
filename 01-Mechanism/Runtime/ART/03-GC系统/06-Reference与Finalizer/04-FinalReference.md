@@ -1,8 +1,11 @@
 ﻿# 6.4 FinalReference：finalize() 的本质（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 06-Reference与Finalizer（专题篇 4/9）
+>
 > **本篇定位**：**FinalReference**（4/9）—— finalize() 机制 + Finalizer 线程池化 + Watchdog 10s 超时 + Cleaner 替代方案
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -942,3 +945,4 @@ public class ManagedResource {
 ---
 
 > **下一篇**：[appendix/A-源码索引](appendix/A-源码索引.md) 完整的 Reference 与 Finalizer 源码索引 + ART 17 新增源码。
+

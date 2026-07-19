@@ -1,8 +1,11 @@
-# 02-Mainline 与 APEX：Android 模块化机制深度解析（v2 升级版）
+﻿# 02-Mainline 与 APEX：Android 模块化机制深度解析（v2 升级版）
 
 > **本子模块**：08-对比与演进（横切对比 · 8/9）
+>
 > **本篇定位**：**横切对比 2/4**——Android Mainline 模块化机制：APEX 容器、ART 模块独立更新、Mainline 与 ART 17 协同
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，EOL 2030-07-01）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -510,3 +513,4 @@ ART 17 强化 static final 不可变，**老 App 通过反射改 BuildConfig 常
 ---
 
 > **下一篇**：[03-Hook 框架与 ART v2](03-Hook框架与ART-v2.md)（待升级）将深入 **Hook 框架与 ART 17 兼容**——ART 17 类去重、static final 不可变对 Hook 框架的破坏与应对。
+

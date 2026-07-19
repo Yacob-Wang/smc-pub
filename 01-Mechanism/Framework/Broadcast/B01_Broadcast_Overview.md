@@ -1,10 +1,15 @@
-# B01 · Broadcast 全景：分类、机制与协作组件
+﻿# B01 · Broadcast 全景：分类、机制与协作组件
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Broadcast 系列 **第 1 篇 / 总览篇**（破例：风险地图简版 / 无实战案例）
+>
 > **强依赖**：[Activity 系列 · A01 全景](../Activity/01_Activity_Overview.md)、[Service 系列 · S01 全景](../Service/01_Service_Overview.md)
+>
 > **承接自**：无（系列根文章）
+>
 > **衔接去**：[B02 · 注册机制：静态注册 vs 动态注册](B02_Broadcast_Register.md) — 把 B01 §3.1 的注册骨架下沉到源码级
+>
 > **不重复内容**：与 A01 §2.1 四大组件协作图不重复；与 S01 §2.1 Service 协作图不重复
 
 ## 破例决策记录
@@ -479,3 +484,4 @@ Broadcast ANR?
 下一篇 [B02 · 注册机制：静态注册 vs 动态注册](B02_Broadcast_Register.md) 将把 B01 §3.2 的注册骨架下沉到源码级——**静态注册 PMS 解析 + 动态注册 LoadedApk 调度 + AOSP 14+ RECEIVER_EXPORTED 强制 + IntentFilter 匹配机制**。B02 是 B03 发送流程的前置知识。
 
 预计阅读时间 25-35 分钟。
+

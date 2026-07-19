@@ -1,10 +1,15 @@
-# A02 · Activity 启动流程源码深潜：launcher → AMS → ActivityThread
+﻿# A02 · Activity 启动流程源码深潜：launcher → AMS → ActivityThread
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Activity 系列 **第 2 篇 / 核心机制**
+>
 > **强依赖**：[A01 · Activity 全景](01_Activity_Overview.md) §3.2（启动流程骨架）
+>
 > **承接自**：A01 已覆盖 Activity 启动的 6 步协作骨架，本篇不重复介绍
+>
 > **衔接去**：[A03 · 生命周期](03_Activity_Lifecycle.md) — A02 末段会讲到"handleLaunchActivity → onCreate → onStart → onResume"，A03 深入每个回调的细节
+>
 > **不重复内容**：与 A01 §3.2 启动流程骨架的协作图不重复；A01 已给的 6 步概览，本篇直接下沉到源码方法。
 
 ---
@@ -992,3 +997,4 @@ protected void onCreate(Bundle savedInstanceState) {
 下一篇 [A03 · 生命周期：onCreate → onDestroy 全链路](03_Activity_Lifecycle.md) 将深入 A02 §3.4 提到的 `performLaunchActivity` 之后的链路——`onCreate → onStart → onResume` 的源码细节、Activity 异常情况下的状态恢复（`onSaveInstanceState`）、以及 AOSP 10+ `servertransaction` 调度下的生命周期事件分发机制。
 
 预计阅读时间 25-35 分钟。
+

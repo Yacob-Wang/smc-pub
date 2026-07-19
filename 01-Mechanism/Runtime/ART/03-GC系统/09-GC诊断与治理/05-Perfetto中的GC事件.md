@@ -1,8 +1,11 @@
 ﻿# 9.5 Perfetto 中的 GC 事件（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 5/10）
+>
 > **本篇定位**：**GC 卡顿分析工具**（5/10）——Perfetto 完整 track 体系 + ART 17 Perfetto 集成（GC 事件追踪 / ART 内部状态时间轴）+ 卡顿关联
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -1026,3 +1029,4 @@ Perfetto 最佳实践（AOSP 17）：
 ---
 
 > **下一篇**：[06-JVMTI监控GC](06-JVMTI监控GC.md) 深入**JVMTI 自动监控**——GCStart/GCFinish 回调 + ObjectFree 事件 + AOSP 17 集成 + JVMTI GC 监控集成。
+

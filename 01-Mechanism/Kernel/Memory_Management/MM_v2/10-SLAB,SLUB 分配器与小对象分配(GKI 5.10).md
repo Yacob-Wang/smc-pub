@@ -1,11 +1,17 @@
-# 10-SLAB,SLUB 分配器与小对象分配（GKI 5.10）
+﻿# 10-SLAB,SLUB 分配器与小对象分配（GKI 5.10）
 
 > **系列**：面向稳定性的 Android 内存架构深度解析系列（MM_v2）· 第 10 篇
+>
 > **源码基线**：AOSP `android-14.0.0_r1`（`refs/heads/android14-release`）
+>
 > **内核矩阵**：`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`（本篇涉及 `mm/slub.c` / `include/linux/slub_def.h`；5.10 → 5.15 引入 KASAN 异步模式；6.1/6.6 引入 KFENCE）
+>
 > **目标读者**：Android 稳定性框架架构师
+>
 > **前置阅读**：[09-页分配器与伙伴系统(GKI 5.10)](09-页分配器与伙伴系统(GKI 5.10).md)
+>
 > **下一篇**：[11-内存回收-kswapd,Direct Reclaim,LRU,MGLRU(GKI 5.10)](11-内存回收-kswapd,Direct Reclaim,LRU,MGLRU(GKI 5.10).md)
+>
 > **横向引用**：本篇是"内核 mm/ 子系统四篇"中的**第 3 篇**——把"小对象（< 4 KB）的高频分配/释放"这条链路打通。前两篇讲[物理组织](08-物理内存组织-Node,Zone,Page,memblock(GKI 5.10).md)与[页分配器](09-页分配器与伙伴系统(GKI 5.10).md)；后一篇讲[内存回收](11-内存回收-kswapd,Direct Reclaim,LRU,MGLRU(GKI 5.10).md)。
 
 ---

@@ -1,8 +1,11 @@
 ﻿# 附录 B：路径对账（CC GC · v2 升级版）
 
 > **本子模块**：03-GC 系统 / 04-CC-GC（CC-GC · 附录 B）
+>
 > **本附录定位**：**CC-GC 路径对账**（B/4）——AOSP 版本与 commit 对账表 + Android 版本与默认 GC + 调试命令速查
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -361,3 +364,4 @@ adb pull /data/misc/trace/com.example.app.trace
 ---
 
 > **下一篇**：[附录 D 工程基线](D-工程基线.md) 详述 **CC GC 工程参数基线表** + **监控指标** + **Hook 兼容性 checklist** + **APM 监控** + **CC GC 时代的稳定性策略**。
+

@@ -1,10 +1,15 @@
-# A03 · 生命周期：onCreate → onDestroy 全链路
+﻿# A03 · 生命周期：onCreate → onDestroy 全链路
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Activity 系列 **第 3 篇 / 核心机制**
+>
 > **强依赖**：[A02 · 启动流程源码深潜](02_Activity_Start_SourceCode.md) §3.4（`handleLaunchActivity` 之后链路）
+>
 > **承接自**：A02 已覆盖 `ContextImpl.startActivity → ActivityThread.handleLaunchActivity` 主链路；本篇**不重复启动链**，只深入"Activity 实例化之后"的 8 个生命周期回调细节
+>
 > **衔接去**：[A04 · 启动模式与 Task 管理](04_Activity_LaunchMode_Task.md) — A03 假设每个 Activity 都是 `standard` 模式；A04 展开 `singleTop` / `singleTask` / `singleInstance` 对生命周期的影响
+>
 > **不重复内容**：与 A02 §3.4 `performLaunchActivity`（A03 §1 简述、不再贴代码）、A01 §3.1 生命周期骨架图（不重复贴）
 
 ---
@@ -991,3 +996,4 @@ protected void onStop() {
 下一篇 [A04 · 启动模式与 Task 管理：standard/singleTop/singleTask/singleInstance](04_Activity_LaunchMode_Task.md) 把 A03 §4.1 状态机里的 `singleTop` 复用分支展开——四种 launchMode 的源码实现、Task 模型与 launchMode flags 的转换矩阵、taskAffinity 配错的踩坑案例。
 
 预计阅读时间 25-35 分钟。
+

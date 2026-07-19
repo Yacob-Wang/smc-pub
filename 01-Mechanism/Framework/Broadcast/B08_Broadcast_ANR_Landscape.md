@@ -1,10 +1,15 @@
-# B08 · Broadcast ANR 全景：10s/60s 阈值与根因分类
+﻿# B08 · Broadcast ANR 全景：10s/60s 阈值与根因分类
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Broadcast 系列 **第 8 篇 / 风险地图**（重头戏）
+>
 > **强依赖**：[B03 · 发送](B03_Broadcast_Send.md)、[B04 · 有序广播](B04_Broadcast_Ordered.md)、[B07 · 后台限制](B07_Broadcast_BackgroundRestriction.md)
+>
 > **承接自**：B03 §4 简版风险地图；B04 涉及有序广播 ANR；B07 涉及后台广播 ANR。本篇**专门展开 Broadcast ANR 完整机制 + 4 个阈值常量 + AnrHelper 强化 + 5 大根因详细分析**
+>
 > **衔接去**：[B09 · 系统广播与开机广播](B09_Broadcast_SystemBoot.md) — B08 收尾 ANR 风险；B09 进入诊断治理
+>
 > **不重复内容**：与 B03 §4 简版不重复；与 B04 有序广播 ANR 不重复；与 B07 后台 ANR 不重复
 
 ---
@@ -522,3 +527,4 @@ Broadcast ANR?
 下一篇 [B09 · 系统广播与开机广播](B09_Broadcast_SystemBoot.md) 把 B08 §4.1 提到的"静态注册冷启动慢"作为引子，**专门展开系统广播（BOOT_COMPLETED / LOCALE / 时间广播）的完整机制 + 开机广播的进程冷启动 + 实战案例**。B09 是 Broadcast 系列的最后一篇（诊断治理，破例：章节重排"风险→工具→案例"）。
 
 预计阅读时间 25-35 分钟。
+

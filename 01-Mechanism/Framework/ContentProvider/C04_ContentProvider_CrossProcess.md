@@ -1,10 +1,15 @@
-# C04 · 跨进程通信机制：Binder 链路 + URI 权限
+﻿# C04 · 跨进程通信机制：Binder 链路 + URI 权限
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：ContentProvider 系列 **第 4 篇 / 核心机制**
+>
 > **强依赖**：[C01 · 全景](C01_ContentProvider_Overview.md) §3.4、[C03 · CRUD](C03_ContentProvider_CRUD.md)
+>
 > **承接自**：C01 §3.4 给出跨进程通信骨架；C03 §3.3 给出 Binder 链路。本篇**专门展开 IContentProvider Binder 接口 + URI 权限校验 + ContentProviderConnection 死亡链路**
+>
 > **衔接去**：[C05 · ContentObserver](C05_ContentProvider_Observer.md) — C04 讲跨进程读；C05 讲跨进程通知
+>
 > **不重复内容**：与 C01 §3.4 跨进程通信骨架不重复；与 C03 §3.3 Binder 链路不重复
 
 ---
@@ -612,3 +617,4 @@ CursorWindow 跨进程泄漏?
 下一篇 [C05 · ContentObserver：观察者模式与跨进程通知](C05_ContentProvider_Observer.md) 把 C04 §3.7 的死亡链路展开为"跨进程通知"——**ContentObserver 观察者模式 + ContentService 跨进程通知 + AOSP 17 批量通知优化**。C05 是 C06 AOSP 11+ 包可见性的前置知识。
 
 预计阅读时间 25-35 分钟。
+

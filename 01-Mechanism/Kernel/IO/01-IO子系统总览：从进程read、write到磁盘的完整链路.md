@@ -1,10 +1,15 @@
-# 01-IO 子系统总览：从进程 read/write 到磁盘的完整链路
+﻿# 01-IO 子系统总览：从进程 read/write 到磁盘的完整链路
 
 > **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `fs/read_write.c`、`mm/filemap.c`、`block/blk-mq.c`、`mm/page_io.c`;各内核版本差异见 §4.4 PageCache 与 xarray 迁移、§7 blk-mq 多队列变化)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:(本篇是大纲展开)
+>
 > **下一篇**:[02-IO 调度器与多队列架构](02-IO调度器与多队列架构.md)
 
 ---

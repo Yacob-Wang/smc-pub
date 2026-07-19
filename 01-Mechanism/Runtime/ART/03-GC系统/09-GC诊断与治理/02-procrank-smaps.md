@@ -1,8 +1,11 @@
 ﻿# 9.2 procrank 与 smaps（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 2/10）
+>
 > **本篇定位**：**进程级内存排名 + VMA 粒度**（2/10）——procrank 进程排名 + smaps VMA 详情 + ART 17 Native 堆分类细化 + sheaves 内存统计
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -799,3 +802,4 @@ Pss:                  8 kB
 ---
 
 > **下一篇**：[03-LeakCanary原理](03-LeakCanary原理.md) 深入**自动内存泄漏检测**——KeyedWeakReference + 5 秒延迟 + Shark 引擎 + ART 17 类去重后的引用追踪。
+

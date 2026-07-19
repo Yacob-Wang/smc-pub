@@ -1,10 +1,15 @@
-# B04 · 有序广播：优先级 + 串行调度 + abort
+﻿# B04 · 有序广播：优先级 + 串行调度 + abort
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Broadcast 系列 **第 4 篇 / 核心机制**
+>
 > **强依赖**：[B03 · 发送流程](B03_Broadcast_Send.md)
+>
 > **承接自**：B03 §3.4 提到 `mOrderedBroadcasts` 串行调度；本篇**专门展开有序广播完整机制 + 优先级 + abort + 串行分发**
+>
 > **衔接去**：[B05 · 粘性广播与 Android 17 演进](B05_Broadcast_Sticky_Evolution.md) — B04 讲有序广播；B05 讲已废弃的粘性广播演进
+>
 > **不重复内容**：与 B03 §3.4 串行调度入口不重复
 
 ---
@@ -575,3 +580,4 @@ abortBroadcast 失败?
 下一篇 [B05 · 粘性广播与 Android 17 演进](B05_Broadcast_Sticky_Evolution.md) 是"演进型"专题（破例：3 张图 + 2 张对比表）——**粘性广播的完整生命周期：API 1 引入 → API 21 deprecated → API 31 完全移除**，以及替代方案。 B05 是 Broadcast 系列的"考古"篇。
 
 预计阅读时间 15-25 分钟。
+

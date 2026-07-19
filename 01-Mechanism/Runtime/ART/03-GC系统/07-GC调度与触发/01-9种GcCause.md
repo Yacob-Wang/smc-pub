@@ -1,8 +1,11 @@
 ﻿# v2 升级版
 
 > **本子模块**：03-GC 系统 / 07-GC 调度与触发（GC 调度与触发 · 1/8）
+>
 > **本篇定位**：**GcCause 枚举与触发条件**（1/8）——9 种 GcCause 完整定义 + ART 17 扩展（kSoftThreshold / kYoungGenerationCollect / kBackgroundGenCC）+ 触发场景 → GC 策略映射
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -843,3 +846,4 @@ adb logcat -d -s "art" | grep "Cause=" | awk -F'Cause=' '{print $2}' | sort | un
 ---
 
 > **下一篇**：[02-HeapTaskDaemon](02-HeapTaskDaemon.md) 深入 **GC 调度线程**——HeapTaskDaemon 的工作循环、CPU 负载动态调度、ART 17 强化。
+

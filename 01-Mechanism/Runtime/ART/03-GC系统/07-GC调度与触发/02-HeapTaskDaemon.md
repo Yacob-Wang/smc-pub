@@ -1,8 +1,11 @@
 ﻿# v2 升级版
 
 > **本子模块**：03-GC 系统 / 07-GC 调度与触发（GC 调度与触发 · 2/8）
+>
 > **本篇定位**：**HeapTaskDaemon 调度线程**（2/8）——单线程 daemon 工作循环 + ART 17 CPU 负载动态调度（0.5-2s）+ 软阈值 kSoftThresholdPercent=30% 联动 + 多 HeapTask 类型优先级
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -852,3 +855,4 @@ adb logcat -s "art" | grep "Soft threshold triggered"
 ---
 
 > **下一篇**：[03-ConcurrentGCTask](03-ConcurrentGCTask.md) 深入 **后台 GC 任务的执行细节**——ConcurrentGCTask 的提交、Run 实现、与 HeapTaskDaemon 的协作。
+

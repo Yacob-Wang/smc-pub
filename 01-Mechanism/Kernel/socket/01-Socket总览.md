@@ -1,10 +1,15 @@
-# Socket 深度解析（01）：从 Linux 内核到 Android 稳定性实战
+﻿# Socket 深度解析（01）：从 Linux 内核到 Android 稳定性实战
 
 > **系列**：面向稳定性的 Android Socket 子系统深度解析系列(Socket)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `net/socket.c`、`net/ipv4/tcp.c`、`include/net/sock.h`、`include/linux/socket.h`;各内核版本 MPTCP 与 SO_REUSEPORT 差异见 §3;Android 14 启用 io_uring 限制 socket 见 §6)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**: / [epoll 01-总览与核心机制](../epoll/01-epoll总览与核心机制.md)
+>
 > **下一篇**:[02-Socket 内核 API 与核心数据结构](02-Socket内核API与数据结构.md)
 
 > 面向 Android 稳定性架构师：理解 socket 在 Linux 内核的定位、它在 Android 关键场景下的使用、与 pipe/Binder 的边界，以及「FD 耗尽/连接堆积/主线程阻塞」三大稳定性风险的全景。
@@ -1003,4 +1008,5 @@ socket 相关问题
 
 
 ---
+
 

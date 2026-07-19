@@ -1,8 +1,11 @@
-# AE01 · 从 Prompt 到 Skill 到 Tools 到 Context：AI 工程师的四层架构
+﻿# AE01 · 从 Prompt 到 Skill 到 Tools 到 Context：AI 工程师的四层架构
 
 > **系列**：04_AI_Engineering（AI 工程师视角的工程实践）
+>
 > **篇号**：AE01（共 12 篇，本篇为开篇）
+>
 > **写作时间**：2026-06-30
+>
 > **目标读者**：用 LLM 协作但还没建立"工程语言基线"的资深工程师；想从"AI 用户"升级为"AI 工程师"的技术 Lead
 
 ---

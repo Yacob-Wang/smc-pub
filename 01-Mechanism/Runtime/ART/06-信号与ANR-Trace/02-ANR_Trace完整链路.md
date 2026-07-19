@@ -1,8 +1,11 @@
-# 02-ANR_Trace 完整链路：AMS 检测 → SIGQUIT → traces.txt 落盘（v2 升级版）
+﻿# 02-ANR_Trace 完整链路：AMS 检测 → SIGQUIT → traces.txt 落盘（v2 升级版）
 
 > **本子模块**：06-信号与 ANR-Trace（横切 · 6/9）
+>
 > **本篇定位**：**横切 2/2**（6/9）——ANR 触发的完整链路：AMS 四种超时检测、sendSignal(SIGQUIT)、SignalCatcher 接收、全线程栈 dump、traces.txt 落盘、用户弹窗
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，EOL 2030-07-01）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -519,3 +522,4 @@ ioExecutor.submit(() -> {
 ---
 
 > **下一篇**：[01-从 app_process 到第一行 Java 代码](../07-启动流程/01-从app_process到第一行Java代码.md) 将深入 **Android 应用启动流程**——从 Zygote fork 到 ActivityThread.main 的完整路径、ART 17 启动期优化、AppFunctions 集成。详见 [02-ART17启动期与AppFunctions集成 v2](../07-启动流程/02-ART17启动期与AppFunctions集成-v2.md)。
+

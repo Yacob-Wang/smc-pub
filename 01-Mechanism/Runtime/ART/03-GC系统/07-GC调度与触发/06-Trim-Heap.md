@@ -1,8 +1,11 @@
 ﻿# v2 升级版
 
 > **本子模块**：03-GC 系统 / 07-GC 调度与触发（GC 调度与触发 · 6/8）
+>
 > **本篇定位**：**Trim Heap 主动收缩**（6/8）——Heap::Trim() 主动缩容 + ART 17 强化（API 30+ / 主动释放 / 与 GenCC 配合 / Region 池化）
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -861,3 +864,4 @@ adb logcat -d -s "art" | grep "kGcCauseForTrim" | wc -l
 ---
 
 > **下一篇**：[07-Background-Foreground](07-Background-Foreground.md) 深入 **Background GC 与 Foreground GC 优先级**——ART 17 后台/前台 GC 优化（Background 调度策略 / 前台响应）。
+

@@ -1,10 +1,15 @@
-# S07 · Service ANR 全景：20s/200s/10s 阈值与根因分类
+﻿# S07 · Service ANR 全景：20s/200s/10s 阈值与根因分类
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Service 系列 **第 7 篇 / 风险地图**（重头戏）
+>
 > **强依赖**：[S02 · startService](02_Service_StartService_Path.md)、[S03 · bindService](03_Service_BindService_Path.md)、[S04 · FGS](04_Service_FGS_TypeRestricted.md)
+>
 > **承接自**：S02 §4 给出 Service ANR 5 大根因简版；S04 提到 FGS 5s 启动超时；S06 涉及多客户端 ANR。本篇**专门展开 Service ANR 完整机制 + 阈值常量 + AnrHelper 强化 + 5 大根因详细分析**
+>
 > **衔接去**：[S08 · 进程保活与 onTrimMemory](08_Service_ProcessKeepAlive_TrimMemory.md) — S07 收尾 ANR 风险；S08 进入横切专题
+>
 > **不重复内容**：与 S02 §4 简版不重复；与 A07 启动 ANR 不重复（Service 是 A07 子类）
 
 ---
@@ -596,3 +601,4 @@ Service ANR?
 下一篇 [S08 · 进程保活与 onTrimMemory](08_Service_ProcessKeepAlive_TrimMemory.md) 把 S07 的 Service ANR 视角过渡到"Service 进程保活"——**onTrimMemory / onTaskRemoved / START_STICKY / 系统级进程回收**。S08 是横切专题（破例：3 张图），涉及 ProcessList / OomAdjuster 协作。
 
 预计阅读时间 20-30 分钟。
+

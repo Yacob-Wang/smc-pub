@@ -1,8 +1,11 @@
 ﻿# 2.5 分配器 2：Region-based（CC / GenCC 时代）（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 02-Heap 与分配器（分配器 · 5/8）
+>
 > **本篇定位**：**Region-based 分配器**（5/8）——CC GC / GenCC 时代 ART 怎么在 Allocation Space 中高效分配对象：Region 状态机 + Bump Pointer + TLAB + ART 17 Region 划分（Young/Old/Humongous）强化
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -1020,3 +1023,4 @@ Region-based 异常（GC 频繁 / 分配慢 / OOM）
 ---
 
 > **下一篇**：[06-Concurrent分配器](06-Concurrent分配器.md) 深入**Concurrent Allocator**——CC GC 怎么做到"业务线程在 GC 并发期间安全分配"、to-space 与 from-space 切换、读屏障保护新对象、AOSP 17 锁优化（CAS 替代全局锁）。
+

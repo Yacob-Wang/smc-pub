@@ -1,6 +1,7 @@
-# Hprof 系列:Android 内存稳定性的"黑匣子"
+﻿# Hprof 系列:Android 内存稳定性的"黑匣子"
 
 > **目录**:`Android_Framework/Hprof/`
+>
 > **基线**:AOSP `android-14.0.0_r1` + Perfetto upstream `v43+` + Kernel `android14-5.15` GKI
 
 ---

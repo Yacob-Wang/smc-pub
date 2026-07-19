@@ -1,9 +1,13 @@
-# 08-类加载生命周期:Loading → Linking → Initializing
+﻿# 08-类加载生命周期:Loading → Linking → Initializing
 
 > **系列**:程序加载与执行深度解析(PLE,Program Loading & Execution)
+>
 > **源码基线**:AOSP `android-14.0.0_r1` + Kernel `android14-5.10` / `android14-5.15` / `android15-6.1`(Android 14 强化 verify 涉及 `prctl(PR_SET_VMA)` 内核调用,版本差异显著)+ `art/runtime/class_linker.cc` + `art/runtime/verifier/method_verifier.cc` + `art/runtime/class_init.cc` + JVMS(The Java Virtual Machine Specification)第 12 章
+>
 > **目标读者**:Android 系统架构师、性能架构师、稳定性架构师
+>
 > **前置阅读**:[01-程序加载与执行全景图](01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md) → [06-DEX](06-DEX-ODEX-VDEX格式-为mmap而生的字节码.md) → [07-ClassLoader](07-ART-ClassLoader体系-从BootClassLoader到PathClassLoader.md)
+>
 > **下一篇**:[09-AOT / JIT 编译流水线:dex2oat 与 ART 运行时编译](09-AOT-JIT编译流水线-dex2oat与ART运行时编译.md)
 
 ---
@@ -921,3 +925,4 @@ java.lang.ClassCircularityError: com/example/A
 > **本篇把类加载拆解到"7 阶段 + 5 类失败 + 5 类主动引用 + 4 类被动引用"5 个维度。**
 > **09 篇会在这个基础上,讲 AOT/JIT——类加载完成后,字节码怎么变成可执行的机器码。**
 > **记住 7 阶段、Verify 强化、`<clinit>` 一次性、Android 无卸载,你的类加载视角就立住了。**
+

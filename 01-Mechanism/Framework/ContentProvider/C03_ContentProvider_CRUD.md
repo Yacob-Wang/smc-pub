@@ -1,10 +1,15 @@
-# C03 · 数据操作 CRUD：query/insert/update/delete 全链路
+﻿# C03 · 数据操作 CRUD：query/insert/update/delete 全链路
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：ContentProvider 系列 **第 3 篇 / 核心机制**
+>
 > **强依赖**：[C01 · 全景](C01_ContentProvider_Overview.md) §3.3、[C02 · 启动与初始化](C02_ContentProvider_Init.md)
+>
 > **承接自**：C01 §3.3 给出 ContentResolver 调用链；C02 §3.6 给出 LoadedApk.getProvider 跨进程。本篇**专门展开 query/insert/update/delete 完整链路 + Cursor 管理 + AOSP 17 MAX_QUERY_RESULTS 限制**
+>
 > **衔接去**：[C04 · 跨进程通信机制](C04_ContentProvider_CrossProcess.md) — C03 覆盖同进程/跨进程操作；C04 深入跨进程细节
+>
 > **不重复内容**：与 C01 §3.3 调用链骨架不重复；与 C02 §3.6 getProvider 不重复
 
 ---
@@ -692,3 +697,4 @@ MAX_QUERY_RESULTS 超限?
 下一篇 [C04 · 跨进程通信机制：Binder 链路 + URI 权限](C04_ContentProvider_CrossProcess.md) 把 C03 §3.3 跨进程调用展开为"跨进程通信"——**IContentProvider Binder 接口 + URI 权限校验 + ContentProviderConnection 死亡链路**。C04 是 C05 ContentObserver 的前置知识。
 
 预计阅读时间 25-35 分钟。
+

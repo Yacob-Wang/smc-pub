@@ -1,10 +1,15 @@
-# 07-程序加载与链接的 IO 路径：从 execve 到 AOT 文件 mmap
+﻿# 07-程序加载与链接的 IO 路径：从 execve 到 AOT 文件 mmap
 
 > **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `fs/exec.c`、`mm/filemap.c`、`mm/elf_loader.c`、`fs/binfmt_elf.c`;Android 14 默认 zram + swap 配比对冷启动 mmap 缺页影响见 §6)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) / [05-IO 与内存](05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md) / [06-IO 与进程](06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md) / [PLE 01-程序加载全景图](../Program_Execution/01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md)
+>
 > **下一篇**:[08-Android 存储栈](08-Android存储栈：从FUSE、sdcardfs、StorageManager到块设备.md)
 
 ---

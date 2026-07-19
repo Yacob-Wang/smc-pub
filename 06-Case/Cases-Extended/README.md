@@ -1,7 +1,9 @@
-# Cases-Extended · 跨系列案例扩展
+﻿# Cases-Extended · 跨系列案例扩展
 
 > **状态**：🟡 占位（计划 2026-08 启动）
+>
 > **目标读者**：Android 稳定性架构师 / 性能架构师 / oncall 工程师
+>
 > **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 
 ## 计划内容
@@ -28,3 +30,4 @@
 - 上游：[06-Case/Startup](../Startup/) 启动场景案例（E01-E11）
 - 上游：[05-Governance/OEM-BSP](../../05-Governance/OEM-BSP/) 5 大厂商
 - 上游：[05-Governance/AI-Native](../../05-Governance/AI-Native/) AI 系列
+

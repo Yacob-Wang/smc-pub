@@ -1,8 +1,11 @@
 ﻿# 8.1 GC × JNI：Critical 区的阻塞问题（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 08-GC与其他子系统（横切专题 · 1/8）
+>
 > **本篇定位**：**横切专题**（1/8）——GC 与 JNI Critical 区的协作：为什么 Critical 区阻塞 GC + ART 17 Slot Pool 强化 + 实战治理
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -824,3 +827,4 @@ adb shell cmd art metrics | grep "critical_section"
 ---
 
 > **下一篇**：[02-GC与JNI-GlobalRef v2](02-GC与JNI-GlobalRef.md) 深入 **Global Ref 的 GC 责任**——Global Ref 泄漏 = Java 堆泄漏，ART 17 Reference Table 压缩 20%。
+

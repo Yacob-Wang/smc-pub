@@ -1,9 +1,13 @@
-# 06-Watchdog 实战案例与排查体系:从 traces / dmesg / dumpsys 三件套还原触发链路
+﻿# 06-Watchdog 实战案例与排查体系:从 traces / dmesg / dumpsys 三件套还原触发链路
 
 > **系列**:面向稳定性的 Android Watchdog 子系统深度解析系列(Watchdog)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `frameworks/base/services/core/java/com/android/server/Watchdog.java`、`frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java`、内核 `kernel/watchdog/`、`system/core/init/watchdogd.cpp` 的协同解读;Android 14 dumpsys watchdog 输出格式见 §3)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:本系列 01-05 全篇
 
 ---

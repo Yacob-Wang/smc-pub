@@ -1,10 +1,15 @@
-# 05-IO 与内存的深度耦合：Page Cache 脏页回写、回收路径、swap IO
+﻿# 05-IO 与内存的深度耦合：Page Cache 脏页回写、回收路径、swap IO
 
 > **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `mm/page-writeback.c`、`mm/filemap.c`、`mm/vmscan.c`、`mm/swapfile.c`;5.10→5.15 MGLRU 引入改变了 writeback 与 reclaim 顺序,详见 §6)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) / [MM_v2 11-内存回收](../Memory_Management/MM_v2/11-内存回收：kswapd、DirectReclaim、LRU.md)
+>
 > **下一篇**:[06-IO 与进程的深度耦合](06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md)
 
 ---

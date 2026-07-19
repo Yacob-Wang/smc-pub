@@ -1,9 +1,13 @@
-# 06-DEX / ODEX / VDEX 格式:为 mmap 而生的字节码
+﻿# 06-DEX / ODEX / VDEX 格式:为 mmap 而生的字节码
 
 > **系列**:程序加载与执行深度解析(PLE,Program Loading & Execution)
+>
 > **源码基线**:AOSP `android-14.0.0_r1` + Kernel `android14-5.10` / `android14-5.15`(DEX mmap 涉及内核 VMA + 缺页 IO,内核版本影响 page cache 行为)+ ART `art/libdexfile/dex/dex_file.h`、`art/libdexfile/dex/dex_file.cc`、`art/libdexfile/dex/compact_dex_file.h` + 工具 `dexdump` / `baksmali`
+>
 > **目标读者**:Android 系统架构师、性能架构师、稳定性架构师
+>
 > **前置阅读**:[01-程序加载与执行全景图](01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md) → [02-ELF](02-ELF文件格式深度解析-从可执行文件到内核视角.md) → [05-.init_array](05-init_array与构造函数链-静态初始化的执行顺序.md)
+>
 > **下一篇**:[07-ART ClassLoader 体系:从 BootClassLoader 到 PathClassLoader](07-ART-ClassLoader体系-从BootClassLoader到PathClassLoader.md)
 
 ---
@@ -1259,3 +1263,4 @@ $ dex2oat --dex-input=app.dex --oat-file=app.oat --instruction-set=arm64
 > **本篇把 DEX 拆解到"格式 + 5 大 id 表 + 4 种产物 + 工具链"5 个维度。**
 > **07 篇会在这个基础上,讲 ClassLoader 体系——DEX 怎么被加载、Class 怎么被解析、可见性怎么隔离。**
 > **记住 3 个问题、5 大 id 表、4 种产物,你的 DEX 视角就立住了。**
+

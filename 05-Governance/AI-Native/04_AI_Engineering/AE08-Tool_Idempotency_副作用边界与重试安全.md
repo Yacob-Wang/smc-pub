@@ -1,13 +1,21 @@
-# AE08 · Tool Idempotency · 副作用边界与重试安全
+﻿# AE08 · Tool Idempotency · 副作用边界与重试安全
 
 > **系列**：04_AI_Engineering（AI 工程师视角的工程实践）
+>
 > **篇号**：AE08（共 12 篇，本篇为第 8 篇）
+>
 > **写作时间**：2026-06-30
+>
 > **前置阅读**：
+>
 > - [AE01 · 从 Prompt 到 Skill 到 Tools 到 Context](AE01-从Prompt到Skill到Tools到Context_AI工程师的四层架构.md)
+>
 > - [AE03 · Durable Execution](AE03-Durable_Execution_长任务的Checkpoint_幂等_Resume.md)
+>
 > - [AE05 · Policy-as-Code](AE05-Policy_as_Code_守卫前移到工具调用层.md)
+>
 > - [AE07 · Indirect Prompt Injection](AE07-Indirect_Prompt_Injection_工具响应里的信任边界.md)
+>
 > **目标读者**：所有搭 Agent / 多工具集成 / 自动化系统的工程师；想知道"为什么我的 Agent 重复执行 send_email 给我造成损失"的人
 
 ---

@@ -1,10 +1,15 @@
-# 02-多层 Watchdog 架构:内核 / watchdogd / Java 三层职责边界与协作接口
+﻿# 02-多层 Watchdog 架构:内核 / watchdogd / Java 三层职责边界与协作接口
 
 > **系列**:面向稳定性的 Android Watchdog 子系统深度解析系列(Watchdog)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `kernel/watchdog.c`、`drivers/watchdog/qcom-wdt.c`(高通)、`system/core/init/watchdogd.cpp`、`hardware/interfaces/watchdog/` HAL;Android 14 HAL Watchdog 4.0 接口与 SELinux 限制见 §4)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-Watchdog 总览与体系位置](01-Watchdog概述与体系位置.md)
+>
 > **下一篇**:[03-Java Watchdog 核心机制](03-Java-Watchdog核心机制.md)
 
 ---
@@ -682,4 +687,5 @@ Java Watchdog 优先处理:
 下一篇 [03-Java Watchdog 核心机制](03-Java-Watchdog核心机制.md) 将深入 Java Watchdog 的 HandlerChecker 状态机、Monitor 接口契约、检查循环算法——**为什么空载优化能省电、为什么 Monitor 必须在被监控线程执行、为什么不能加全局锁**,这些设计抉择的"性能艺术"。
 
 ---
+
 

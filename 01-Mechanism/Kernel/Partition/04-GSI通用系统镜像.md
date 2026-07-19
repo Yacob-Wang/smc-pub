@@ -1,10 +1,15 @@
-# 04-GSI 通用系统镜像：Treble 的兼容性验证体系
+﻿# 04-GSI 通用系统镜像：Treble 的兼容性验证体系
 
 > **基线**：AOSP android-14.0.0_r1 + GKI 5.15（统一分支 `refs/heads/android14-5.15`）
+>
 > **适用读者**：资深 Android 稳定性架构师 / OEM Treble 合规工程师
+>
 > **本篇定位**：《分区架构演进系列》第 4 篇，**深入 GSI（Generic System Image）这一 Treble 改革的"金丝雀"——system 与 vendor 解耦的运行时验证产物**
+>
 > **源码基线**：所有源码路径均经 `https://android.googlesource.com/platform/<repo>/+/refs/heads/android14-release/<path>` 实际 HTTP 200 验证
+>
 > **目录位置**：`Linux_Kernel/Partition/`
+>
 > **上篇**：01-分区演进史与三大架构改革 | **下篇**：05-Dynamic Partitions 深度解析
 
 ---
@@ -2320,3 +2325,4 @@ URL:    https://android.googlesource.com/platform/build/+/refs/heads/android14-r
 > **本篇验证日期**：2026-06-12
 > **AOSP 基线**：android-14.0.0_r1（refs/heads/android14-release）+ GKI 5.15（refs/heads/android14-5.15）
 > **所有源码路径均经 源码核对 实际 HTTP 200 验证**，详见「修复证据」章节。
+

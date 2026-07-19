@@ -1,10 +1,15 @@
-# 02-进程内存地图与 VMA 体系
+﻿# 02-进程内存地图与 VMA 体系
 
 > **系列**：面向稳定性的 Android 内存架构深度解析系列（MM_v2）
+>
 > **源码基线**：AOSP `android-14.0.0_r1`（`refs/heads/android14-release`）
+>
 > **内核矩阵**：`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`（本篇涉及 `mm/mmap.c` 与 `include/linux/mm_types.h`；各内核版本的差异点见 §3.3 vm_area_struct 字段变化、§5 合并/拆分逻辑）
+>
 > **目标读者**：Android 稳定性框架架构师
+>
 > **前置阅读**：[01-内存系统总览：从进程视角到硬件的完整链路](01-内存系统总览：从进程视角到硬件的完整链路.md)
+>
 > **下一篇**：[03-ART 堆内存与 GC 全景](03-ART 堆内存与 GC 全景.md)
 
 ---

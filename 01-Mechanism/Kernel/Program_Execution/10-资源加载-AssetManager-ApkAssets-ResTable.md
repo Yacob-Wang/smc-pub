@@ -1,9 +1,13 @@
-# 10-资源加载:AssetManager / ApkAssets / ResTable
+﻿# 10-资源加载:AssetManager / ApkAssets / ResTable
 
 > **系列**:程序加载与执行深度解析(PLE,Program Loading & Execution)
+>
 > **源码基线**:AOSP `android-14.0.0_r1` + Kernel `android14-5.10` / `android14-5.15`(arsc 解析涉及 mmap + page cache,内核版本影响 read-ahead 行为)+ `frameworks/base/core/java/android/content/res/AssetManager.java` + `frameworks/base/libs/androidfw/AssetManager.cpp` + `frameworks/base/libs/androidfw/ApkAssets.cpp` + `frameworks/base/libs/androidfw/ResourceTypes.cpp`
+>
 > **目标读者**:Android 系统架构师、性能架构师、稳定性架构师
+>
 > **前置阅读**:[01-程序加载与执行全景图](01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md) → [11-APK 容器解析](11-APK容器解析-ZIP-arsc-资源ID体系.md)(与本篇互补)
+>
 > **下一篇**:[11-APK 容器解析:ZIP + arsc + 资源 ID 体系](11-APK容器解析-ZIP-arsc-资源ID体系.md)
 
 ---
@@ -1152,3 +1156,4 @@ bitmap.recycle();
 > **本篇把资源加载拆解到"3 层结构 + ApkAssets + ResTable + Configuration + 缓存"5 个维度。**
 > **11 篇会在这个基础上,讲 APK 容器——ZIP 格式、arsc 在 ZIP 中的位置、aapt2 编译流程。**
 > **记住 3 层结构、资源 ID 编码、Configuration fallback、Drawable 缓存,你的资源加载视角就立住了。**
+

@@ -1,6 +1,7 @@
-# am profile 参数速查表
+﻿# am profile 参数速查表
 
 > **基线**:AOSP `android-14.0.0_r1` + adb `platform-tools 34+`
+>
 > **位置**:`Android_Framework/AmCommand/am_command_configs/am_profile_params.md`
 
 ---

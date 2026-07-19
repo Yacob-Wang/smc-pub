@@ -1,8 +1,11 @@
-# 01-SignalCatcher 与信号机制：ART 信号处理全解析（v2 升级版）
+﻿# 01-SignalCatcher 与信号机制：ART 信号处理全解析（v2 升级版）
 
 > **本子模块**：06-信号与 ANR-Trace（稳定性核心 · 6/9）
+>
 > **本篇定位**：**稳定性核心**（6/9）——ART 如何处理 Native 信号（SIGSEGV / SIGBUS / SIGABRT / SIGQUIT）、SignalCatcher 守护线程、Async-Signal-Safety 约束
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，EOL 2030-07-01）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -546,3 +549,4 @@ Field field = CLAZZ.getDeclaredField("id");
 ---
 
 > **下一篇**：[02-ANR_Trace 完整链路](02-ANR_Trace完整链路.md) 将深入 **ANR 检测机制**——AMS 如何检测 ANR、ANR trace 完整生成流程、ANR 与 ANR 弹窗、ANR 优化策略。详见 [03-ART17信号处理与ANR兜底 v2](03-ART17信号处理与ANR兜底v2-v2.md)。
+

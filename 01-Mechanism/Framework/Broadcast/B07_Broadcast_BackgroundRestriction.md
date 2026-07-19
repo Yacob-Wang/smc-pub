@@ -1,10 +1,15 @@
-# B07 · Android 14+ 后台广播限制：RECEIVER_EXPORTED 与隐式广播收紧
+﻿# B07 · Android 14+ 后台广播限制：RECEIVER_EXPORTED 与隐式广播收紧
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Broadcast 系列 **第 7 篇 / 风险地图**（重头戏）
+>
 > **强依赖**：[B02 · 注册](B02_Broadcast_Register.md)、[B03 · 发送](B03_Broadcast_Send.md)
+>
 > **承接自**：B02 §3.6 提到 AOSP 14+ 强制 RECEIVER_EXPORTED；B03 §3.2 提到 AOSP 14+ 后台广播限制。本篇**专门展开 AOSP 14+ 收紧的完整机制 + 收不到广播 5 大根因 + 实战案例**
+>
 > **衔接去**：[B08 · Broadcast ANR 全景](B08_Broadcast_ANR_Landscape.md) — B07 讲"收不到"；B08 讲"ANR"
+>
 > **不重复内容**：与 B02 §3.6 RECEIVER_EXPORTED 不重复；与 B03 §3.2 后台限制不重复
 
 ---
@@ -399,3 +404,4 @@ sendBroadcast(intent);
 下一篇 [B08 · Broadcast ANR 全景](B08_Broadcast_ANR_Landscape.md) 把 B07 提到的"AOSP 14+ 后台广播触发 BROADCAST_BG_TIMEOUT"作为引子，**专门展开 Broadcast ANR 完整机制 + 10s/60s 阈值 + AnrHelper 强化 + 5 大根因详细分析**。B08 是 Broadcast 系列最重的一篇（12-15k 字）。
 
 预计阅读时间 30-45 分钟。
+

@@ -1,8 +1,11 @@
 ﻿# 5.5 Minor GC vs Major GC（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 05-Generational-CC（分代 CC · 5/8）
+>
 > **本篇定位**：**分代 CC**（5/8）——GenCC 的 GC 分类（Young GC vs Full GC）、Minor GC < 1ms / Major GC 5-20ms、ART 17 软阈值 kSoftThresholdPercent=30% 触发
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -1018,3 +1021,4 @@ public List<Result> process(List<RawData> data) {
 ---
 
 > **下一篇**：[06-对象晋升](06-对象晋升.md) 深入 **对象晋升机制**——AOSP 17 自适应晋升阈值（5-30 次）、软阈值对晋升的影响、跨 Region 引用的晋升优化。
+

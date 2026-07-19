@@ -1,7 +1,9 @@
-# AI-Debug · AI 辅助调试
+﻿# AI-Debug · AI 辅助调试
 
 > **状态**：🟡 占位（计划 2026-09 启动 P3）
+>
 > **目标读者**：稳定性架构师 / AI 应用工程师
+>
 > **版本基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 
 ## 计划内容（5-7 篇）
@@ -19,3 +21,4 @@
 - 上游：[05-Governance/AI-Native/04_AI_Engineering](../AI-Native/04_AI_Engineering/) 12 篇 AI 工程
 - 上游：[03-Forensics](../03-Forensics/) 8 大取证
 - 配套：[05-Governance/APM](../APM/) 智能 APM
+

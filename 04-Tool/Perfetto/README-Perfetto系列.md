@@ -1,6 +1,7 @@
-# Perfetto 系列:Android 系统级追踪的"瑞士军刀"
+﻿# Perfetto 系列:Android 系统级追踪的"瑞士军刀"
 
 > **目录**:`Android_Framework/Perfetto/`
+>
 > **基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)+ Kernel `android14-5.15` GKI。
 
 ---
@@ -309,3 +310,4 @@ Perfetto 配置错误是线上最高频的问题来源(占比 ~40%)。本系列:
 读本 README 后:
 - 想知道 Perfetto **是什么、在哪、怎么开始** → [01-Perfetto系统总览与架构设计](01-Perfetto系统总览与架构设计.md)
 - 想直接落地 **ANR 自动抓取** → [04-Perfetto定制化实战:ANR后自动抓取trace](04-Perfetto定制化实战：ANR后自动抓取trace.md)
+

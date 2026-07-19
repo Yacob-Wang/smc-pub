@@ -1,10 +1,15 @@
-# S06 · 多客户端与死亡链路：unbindService 与 binderDied
+﻿# S06 · 多客户端与死亡链路：unbindService 与 binderDied
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Service 系列 **第 6 篇 / 核心机制**
+>
 > **强依赖**：[S03 · bindService 路径](03_Service_BindService_Path.md)
+>
 > **承接自**：S03 已覆盖单客户端 bindService 链路。本篇**专门展开多客户端并发场景 + 死亡链路 + AppBindRecord 状态机**
+>
 > **衔接去**：[S07 · Service ANR 全景](07_Service_ANR_Landscape.md) — S06 收尾核心机制；S07 进入风险地图
+>
 > **不重复内容**：与 S03 §3.1-S3.6 单客户端链路不重复
 
 ---
@@ -735,3 +740,4 @@ unbind 后 Service 仍存活?
 下一篇 [S07 · Service ANR 全景](07_Service_ANR_Landscape.md) 把 S02-S06 的 Service 机制整合到风险地图视角——**5s/10s/20s/200s 阈值常量详解 + 5 大根因分类 + ANR trace 实战分析**。S07 是 Service 系列最重的一篇（12-15k 字），是 A07 启动 ANR 的姊妹篇。
 
 预计阅读时间 30-45 分钟。
+

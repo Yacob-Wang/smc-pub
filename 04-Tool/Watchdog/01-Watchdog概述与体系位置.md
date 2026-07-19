@@ -1,10 +1,15 @@
-# 01-Watchdog 总览与体系位置:Android 三层看门狗的政治地位与设计哲学
+﻿# 01-Watchdog 总览与体系位置:Android 三层看门狗的政治地位与设计哲学
 
 > **系列**:面向稳定性的 Android Watchdog 子系统深度解析系列(Watchdog)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `kernel/watchdog.c`、`drivers/watchdog/`、`system/core/init/watchdogd.cpp`、`frameworks/base/services/core/java/com/android/server/Watchdog.java`;Android 14 Java Watchdog 与 HAL Watchdog 解耦见 §3)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:无(系列首篇)
+>
 > **下一篇**:[02-多层 Watchdog 架构](02-多层Watchdog架构.md)
 
 ---
@@ -496,4 +501,5 @@ Blockers:
 下一篇 [02-多层 Watchdog 架构](02-多层Watchdog架构.md) 将深入展开 kernel / watchdogd / Java 三层 Watchdog 的**职责边界**与**协作接口**——内核层如何通过 `/dev/watchdog` 与 watchdogd 通信,watchdogd 如何与 Java Watchdog 通过 HAL 抽象解耦,以及各层在整机重启路径上的优先级排序。
 
 ---
+
 

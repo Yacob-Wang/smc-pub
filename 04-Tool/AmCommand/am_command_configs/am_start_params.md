@@ -1,6 +1,7 @@
-# am_command_configs/am_start_params.md
+﻿# am_command_configs/am_start_params.md
 
 > **配套文章**:[01-am命令全景与Activity触发 §4.2 五大参数矩阵](../01-am命令全景与Activity触发.md#42-五大参数矩阵)
+>
 > **基线**:AOSP `android-14.0.0_r1`
 
 `am start-activity` 参数速查表,按"日常用得多"排序。
@@ -179,3 +180,4 @@ adb shell am start-activity --user 0 -n com.example.app/.MainActivity  # 推荐
 # 跨 user 操作
 adb shell am start-activity --user 10 -n com.example.app/.MainActivity
 ```
+

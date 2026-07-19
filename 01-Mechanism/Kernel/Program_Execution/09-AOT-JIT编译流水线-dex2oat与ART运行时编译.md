@@ -1,9 +1,13 @@
-# 09-AOT / JIT 编译流水线:dex2oat 与 ART 运行时编译
+﻿# 09-AOT / JIT 编译流水线:dex2oat 与 ART 运行时编译
 
 > **系列**:程序加载与执行深度解析(PLE,Program Loading & Execution)
+>
 > **源码基线**:AOSP `android-14.0.0_r1` + Kernel `android14-5.10` / `android14-5.15`(dex2oat 是 CPU/IO 双密集任务,内核版本影响 `madvise(MADV_HUGEPAGE)` / `ion` 分配;Android 14 强化使用 `madvise(MADV_POPULATE_WRITE)`)+ `art/dex2oat/dex2oat.cc` + `art/compiler/` + `art/runtime/jit/` + `art/runtime/oat_file_manager.cc` + 工具 `oatdump`
+>
 > **目标读者**:Android 系统架构师、性能架构师、稳定性架构师
+>
 > **前置阅读**:[01-程序加载与执行全景图](01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md) → [06-DEX](06-DEX-ODEX-VDEX格式-为mmap而生的字节码.md) → [08-类加载生命周期](08-类加载生命周期-Loading-Linking-Initializing.md)
+>
 > **下一篇**:[10-资源加载:AssetManager / ApkAssets / ResTable](10-资源加载-AssetManager-ApkAssets-ResTable.md)
 
 ---
@@ -1018,3 +1022,4 @@ $ adb shell cmd package compile -m speed-profile -f com.example.app
 > **本篇把 AOT/JIT 拆解到"3 模式 + dex2oat + OAT + PGC + JIT cache"5 个维度。**
 > **10 篇会在这个基础上,讲 Resources 加载——APK 里另一半内容(非 DEX)怎么被加载。**
 > **记住三态混合、dex2oat、PGC、Baseline Profile、JIT cache,你的 AOT/JIT 视角就立住了。**
+

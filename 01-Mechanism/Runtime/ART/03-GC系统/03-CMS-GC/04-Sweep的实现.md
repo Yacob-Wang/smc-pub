@@ -1,8 +1,11 @@
 ﻿# 3.4 Sweep 的实现：Bitmap 标记 + 空闲链表（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 03-CMS-GC（CMS-GC · 4/7）
+>
 > **本篇定位**：**回收机制**（4/7）——Mark Bitmap + RosAlloc Free List + ART 17 Bitmap-based Sweep 优化
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级到 AOSP 17 + android17-6.18）
 
 ---
@@ -931,3 +934,4 @@ adb logcat -d -s art:V | grep "PreSweep"
 ---
 
 > **下一篇**：[3.5 STW 时间分析](./05-STW时间分析.md) 深入**STW 时间分析**——为什么 CMS Remark STW 不可控 + ART 17 如何优化 STW。
+

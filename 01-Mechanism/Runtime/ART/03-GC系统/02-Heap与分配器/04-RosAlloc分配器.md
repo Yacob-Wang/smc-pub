@@ -1,8 +1,11 @@
 ﻿# 2.4 分配器 1：RosAlloc（CMS 时代）（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 02-Heap与分配器（Heap · 4/4）
+>
 > **本篇定位**：**Heap 与分配器**（4/4）——RosAlloc 分配器（CMS 时代）的设计、TLAB、Run-of-Slots、ART 17 RosAlloc 优化（Run + Brk 分离、TLS 缓存）
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -971,3 +974,4 @@ adb shell dumpsys gfxinfo com.example.app framestats
 ---
 
 > **下一篇**：[05-Region-based分配器](05-Region-based分配器.md) 深入**Region-based 分配器**——CC/GenCC 时代的 Region + TLAB + bump pointer + AOSP 17 Region 强化。
+

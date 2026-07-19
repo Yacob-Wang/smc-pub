@@ -1,10 +1,15 @@
-# Socket 06：Unix Domain Socket 与 Android 中的使用
+﻿# Socket 06：Unix Domain Socket 与 Android 中的使用
 
 > **系列**：面向稳定性的 Android Socket 子系统深度解析系列(Socket)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `net/unix/af_unix.c`、`net/unix/garbage.c`、`include/net/af_unix.h`;5.15+ SCM_RIGHTS fd passing 校验加强见 §4;Android 14 SocketConnectivityManager 限制见 §6)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-Socket 总览](01-Socket总览.md) / [04-Socket 缓冲区](04-Socket缓冲区与数据收发.md) / [05-listen backlog](05-listen_backlog与连接队列.md)
+>
 > **下一篇**:[07-Socket 稳定性风险全景](07-Socket稳定性风险全景.md)
 
 ---
@@ -1038,5 +1043,6 @@ UDS 相关问题
 本篇 §3.2 讲的 UDS 缓冲机制、§4 讲的 6 大场景展开、§5 风险速查表——都会在 07 收口。
 
 ---
+
 
 

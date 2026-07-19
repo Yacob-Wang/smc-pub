@@ -1,8 +1,11 @@
 ﻿# 4.5 Region Space 在 CC GC 中的角色（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 04-CC-GC（CC-GC · 5/8）
+>
 > **本篇定位**：**CC-GC Region Space 角色**（5/8）——Region 是 CC GC 的物理基础；Region 状态机、CC GC 在 Region 上的工作流；ART 17 Region 强化（GenCC 演进 / Young-Old Region 划分 / Region Pool CAS 优化）
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -917,3 +920,4 @@ try {
 
 > **上一篇**：[04-Invariant不变式](04-Invariant不变式.md) 详解 CC GC 的 **Invariant 维护** —— 读屏障保证读到已搬迁对象 + to-space 不变量。
 > **下一篇**：[06-Thread-Roots栈扫描](06-Thread-Roots栈扫描.md) 详解 **STW 时如何冻结线程 + 栈扫描 + Thread 字段扫描 + ART 17 栈扫描并行化**。
+

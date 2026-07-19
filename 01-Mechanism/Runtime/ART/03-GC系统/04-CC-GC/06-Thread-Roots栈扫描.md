@@ -1,8 +1,11 @@
 ﻿# 4.6 Thread Roots 与栈扫描（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 04-CC-GC（CC-GC · 6/8）
+>
 > **本篇定位**：**CC-GC Thread Roots 栈扫描**（6/8）——STW 时如何冻结线程 + 栈扫描完整流程 + Thread 字段扫描 + ART 17 栈扫描优化（Initial Copy 并行化 / 反射 Roots 处理 / Stack Map 缓存）
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -932,3 +935,4 @@ GC 触发 → Initial Copy 阶段 → 关键线程栈扫描（~0.5ms）
 
 > **上一篇**：[05-Region-Space角色](05-Region-Space角色.md) 详解 CC GC 的**物理基础 Region**——状态机 + 工作流 + ART 17 Region 强化（GenCC 演进 / Young-Old 划分）。
 > **下一篇**：[07-实战案例](07-实战案例.md) 5 个真实崩溃案例 + 何时选 CC vs GenCC 决策树 + ART 17 调优实战。
+

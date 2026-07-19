@@ -1,10 +1,15 @@
-# B05 · 粘性广播与 Android 17 演进（演进型）
+﻿# B05 · 粘性广播与 Android 17 演进（演进型）
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Broadcast 系列 **第 5 篇 / 演进型**（**破例：3 张图 + 2 张对比表**）
+>
 > **强依赖**：[B01 · 全景](B01_Broadcast_Overview.md) §3.4
+>
 > **承接自**：B01 §3.4 简述粘性广播已废弃；本篇**专门展开粘性广播完整生命周期 + AOSP 21+ deprecated + AOSP 31+ 完全移除 + 替代方案**
+>
 > **衔接去**：[B06 · LocalBroadcast 已死](B06_Beadcast_LocalBroadcast_Alternative.md) — B05 讲已废弃的粘性广播；B06 讲已废弃的 LocalBroadcast
+>
 > **不重复内容**：与 B01 §3.4 简述不重复
 
 ## 破例决策记录
@@ -475,3 +480,4 @@ SecurityException: Sticky broadcast not allowed?
 下一篇 [B06 · LocalBroadcast 已死，进程内事件总线怎么选](B06_Broadcast_LocalBroadcast_Alternative.md) 是"横切专题"（破例：3 张图）——**LocalBroadcastManager 已废弃的来龙去脉 + LiveData / Flow / RxBus / EventBus 替代方案对比 + 实战迁移**。B06 是 Broadcast 系列的第二个"考古"篇。
 
 预计阅读时间 20-30 分钟。
+

@@ -1,7 +1,9 @@
-# 第 06 篇 · Target —— 5 大核心 Target 详解
+﻿# 第 06 篇 · Target —— 5 大核心 Target 详解
 
 > **本系列**：Device Mapper 深度解析系列（10 篇）
+>
 > **本篇系列角色**：**核心机制（6/10）**——Target 详解，把 5 大核心 Target 的原理、源码、实操讲透
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 
 ---
@@ -797,3 +799,4 @@ Step 5: 如果验证通过 → 检查物理设备（sector bad block）
 > **本文档**：[第 06 篇 · Target — 5 大核心 Target 详解](06-DM-5大Target详解.md)
 > **所属系列**：[Device Mapper 深度解析系列 · v2](../README-DM系列.md)
 > **基线**：AOSP 17 + android17-6.18
+

@@ -1,8 +1,11 @@
 ﻿# 8.2 GC × JNI：Global Reference 的 GC 责任（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 08-GC与其他子系统（横切专题 · 2/8）
+>
 > **本篇定位**：**横切专题**（2/8）——JNI Global Ref 的 GC Root 责任 + 泄漏治理 + ART 17 Reference Table 压缩 20%
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -927,3 +930,4 @@ AOSP 17 (新机器):
 ---
 
 > **下一篇**：[03-GC与Zygote v2](03-GC与Zygote.md) 深入 **Zygote fork 后的 GC 状态**——AOSP 17 Zygote Space 优化 + Class 共享 + GC Root 减少。
+

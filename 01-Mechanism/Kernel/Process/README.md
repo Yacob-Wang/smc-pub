@@ -1,8 +1,11 @@
-# Kernel 进程系列文章（共 13 篇）
+﻿# Kernel 进程系列文章（共 13 篇）
 
 > 本系列基于 Linux Kernel 5.10 / 5.15（Android 12-14 主流内核）+ Android 14 GKI。
+>
 > **视角**：Kernel 层（与 `Android_Framework/Process` 镜像分工——见末尾）。
+>
 > **目标读者**：Android 稳定性 SE、性能工程师、Framework 工程师。
+>
 > **主线**：一个进程在 Linux Kernel 内部是如何被"管起来"的——结构 → 行为 → 调度 → 控制 → 协作 → 调试。
 
 ---

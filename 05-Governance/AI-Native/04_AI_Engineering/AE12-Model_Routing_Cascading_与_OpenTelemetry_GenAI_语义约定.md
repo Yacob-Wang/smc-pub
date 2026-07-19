@@ -1,15 +1,25 @@
-# AE12 · Model Routing / Cascading · 与 OpenTelemetry GenAI 语义约定
+﻿# AE12 · Model Routing / Cascading · 与 OpenTelemetry GenAI 语义约定
 
 > **系列**：04_AI_Engineering（AI 工程师视角的工程实践）
+>
 > **篇号**：AE12（共 12 篇，本篇为第 12 篇，**簇 4「架构与可观测」收尾 · 整个 AE 系列收官之作**）
+>
 > **写作时间**：2026-07-07
+>
 > **前置阅读**：
+>
 > - [AE01 · Prompt→Skill→Tools→Context](AE01-从Prompt到Skill到Tools到Context_AI工程师的四层架构.md)（Model 是 Skill / Tool 的执行载体）
+>
 > - [AE02 · Context Engineering](AE02-Context_Engineering_Token预算_缓存_记忆_压缩.md)（Context budget 决定模型选择）
+>
 > - [AE04 · Trajectory Evals](AE04-Trajectory_Evals_评路径不只评答案.md)（Eval 是 Cascading 的依据）
+>
 > - [AE09 · Human-in-the-Loop](AE09-Human_in_the_Loop_工程化_Interrupt_Approval_Packet.md)（Cascading 不确定时升级 HITL）
+>
 > - [AE10 · Release Control](AE10-Release_Control_for_Agent_Assets_Prompt_Skill变更走发版门禁.md)（新模型上线也走 Pipeline）
+>
 > - [AE11 · Compound Agent](AE11-Compound_Agent_Agent加Workflow分层架构.md)（Routing 在分层架构里是关键组件）
+>
 > **目标读者**：所有要为生产 Agent 选模型 / 算成本 / 接可观测的工程负责人；想知道"为什么不能全用 Opus""怎么让成本下降 60%""线上 Agent 慢在哪、错在哪、贵在哪"的人
 
 ---

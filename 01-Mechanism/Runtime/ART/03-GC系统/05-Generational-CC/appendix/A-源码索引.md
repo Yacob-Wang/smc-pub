@@ -1,8 +1,11 @@
 ﻿# 附录 A：核心源码路径索引（GenCC · v2 升级版）
 
 > **本附录**：05-Generational-CC 子模块 / 附录 A（源码索引）
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
+>
 > **v1 旧稿标记段**：已删除（v1 → v2 实质升级）
 
 ---
@@ -262,3 +265,4 @@ adb logcat -s "art" | grep "PromotionThreshold"
 ---
 
 > **下一篇**：[B-路径对账.md](B-路径对账.md) — 源码路径对账 + 基线纠正（android17-6.18）+ ART 17 commit 列表
+

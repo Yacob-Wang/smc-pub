@@ -1,8 +1,11 @@
 ﻿# 8.5 GC × APEX 模块（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 08-GC与其他子系统（横切专题 · 5/8）
+>
 > **本篇定位**：**横切专题**（5/8）——com.android.art APEX 模块的 GC 演进 + ART 17 APEX 中 GC 强化（Mainline 7-30 天可下发）+ 升级治理
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -898,3 +901,4 @@ adb shell cmd apd revert com.android.art
 ---
 
 > **下一篇**：[06-GC与SystemServer v2](06-GC与SystemServer.md) 详述 **APEX 升级后 SystemServer 的 GC 调优**——SystemServer OOM = 系统重启，APEX 升级后调优要点全梳理。
+

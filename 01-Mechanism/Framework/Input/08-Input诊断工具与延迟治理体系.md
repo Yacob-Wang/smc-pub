@@ -1,10 +1,15 @@
-# 08-Input 诊断工具与延迟治理体系
+﻿# 08-Input 诊断工具与延迟治理体系
 
 > **系列**：面向稳定性的 Android Input 子系统深度解析系列(Input_FWK)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇工具涉及 `frameworks/native/services/inputflinger/`、`system/core` 工具链;Android 14 perfetto 增强 input event tracing 见 §3)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:本系列 01-07 全篇
+>
 > **下一篇**:无(系列收官)
 
 ---
@@ -944,3 +949,4 @@ Input 稳定性治理的"三能"体系
 ```
 
 从"出了问题再排查"到"版本发布前就能防住"，这就是 Input 稳定性治理的完整闭环。
+

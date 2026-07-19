@@ -1,13 +1,21 @@
-# 程序加载与执行深度解析系列 — 系列总览
+﻿# 程序加载与执行深度解析系列 — 系列总览
 
 > **系列代号**:PLE(Program Loading & Execution)
+>
 > **目录**:`Linux_Kernel/Program_Execution/`
+>
 > - **骨架对齐**:MM_v2 系列的"锚点+分层+对仗"
+>
 > - **风格对齐**:Android_Framework/Process 系列(8 篇)的"场景+机制+风险"
+>
 > **源码基线**:
+>
 > - **AOSP**:`android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > - **Linux Kernel 多版本矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本系列涉及内核侧 execve / mmap / 缺页 / VMA / cgroup / schedtune,各篇头部按需标注适用版本)
+>
 > - **工具**:`arm64-linux-gnu-readelf` + `dexdump` + `baksmali` + `oatdump` + `apksigner`
+>
 > **每篇文章头部必须包含**:(1) 本篇定位 5 字段段(系列角色 / 强依赖 / 承接自 / 衔接去 / 不重复内容);(2) 多版本内核基线;(3) 案例可验证 4 件套(环境/复现/logcat/diff)
 
 ---
@@ -440,3 +448,4 @@ MM_v2 篇                PLE 篇                    对仗关系
 > **本系列 14 篇 + 1 大纲 + 1 README = 16 个文件 / ~570KB / ~8200 行**。
 > **从"execve 入口"到"加载失败速查"——我们走完了"程序加载与执行"的全景。**
 > **记住 8 阶段流水线、四元动作、4 类进程类型、5 秒定位法,你的加载视角就立住了。**
+

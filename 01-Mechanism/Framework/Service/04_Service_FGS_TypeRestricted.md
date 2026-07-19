@@ -1,10 +1,15 @@
-# S04 · 前台服务 FGS：Android 14+ 后台启动限制与类型化
+﻿# S04 · 前台服务 FGS：Android 14+ 后台启动限制与类型化
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Service 系列 **第 4 篇 / 风险地图**（重头戏）
+>
 > **强依赖**：[S01 · Service 全景](01_Service_Overview.md) §3.4、[S02 · startService 路径](02_Service_StartService_Path.md)
+>
 > **承接自**：S01 §3.4 提到 FGS 5s 内 startForeground + 通知；S02 已覆盖 startService 链路。本篇**专门展开 FGS 完整机制 + AOSP 14+ 收紧 + 类型化 + 后台启动限制**
+>
 > **衔接去**：[S05 · WorkManager 演进](05_Service_WorkManager_Evolution.md) — S04 讲 FGS（前台服务）；S05 讲 WorkManager（后台任务替代）
+>
 > **不重复内容**：与 S01 §3.4 FGS 骨架不重复；与 S02 startService 基础不重复
 
 ---
@@ -613,3 +618,4 @@ FGS 启动慢?
 下一篇 [S05 · WorkManager 演进：JobScheduler 之上的后台任务最佳实践](05_Service_WorkManager_Evolution.md) 把 S04 提到的"FGS 后台启动限制"作为引子，**专门展开 WorkManager 作为 Service 替代方案的完整机制**。S05 涉及 `JobSchedulerService` + androidx.work 的源码，是 AOSP 14+ 收紧后"业务方应该用什么替代 Service"的标准答案。
 
 预计阅读时间 25-35 分钟。
+

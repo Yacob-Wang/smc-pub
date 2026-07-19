@@ -1,8 +1,11 @@
 ﻿# v2 升级版
 
 > **本子模块**：03-GC 系统 / 07-GC 调度与触发（GC 调度与触发 · 5/8）
+>
 > **本篇定位**：**Native 内存触发 GC**（5/8）——Native 内存压力怎么触发 Java GC + ART 17 强化（NativeAllocationRegistry 监控 / 跨 Native/Java 边界 / 与 Linux 6.18 sheaves 联动）
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线 + ART 17 硬变化升级）
 
 ---
@@ -877,3 +880,4 @@ adb logcat -d -s "art" | grep "Native pressure" | head -10
 ---
 
 > **下一篇**：[06-Trim-Heap](06-Trim-Heap.md) 深入 **Trim Heap 主动收缩**——ART 17 Trim 优化（API 30+ / 主动释放 / 与 GenCC 配合）。
+

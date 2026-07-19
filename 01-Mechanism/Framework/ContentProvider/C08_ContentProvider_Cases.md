@@ -1,10 +1,15 @@
-# C08 · 实战案例集：5 大稳定性问题排查（横切专题）
+﻿# C08 · 实战案例集：5 大稳定性问题排查（横切专题）
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：ContentProvider 系列 **第 8 篇 / 横切专题**（**破例：3 张图**）
+>
 > **强依赖**：[C01-C07 全部 7 篇](C01_ContentProvider_Overview.md)
+>
 > **承接自**：C01-C07 已分别覆盖 5 大场景的机制与案例；本篇**精选 5 个真实场景案例的完整排查过程**，作为"案例集"
+>
 > **衔接去**：[C09 · ContentProvider 优化与监控](C09_ContentProvider_Optimize_Monitor.md) — C08 收尾横切；C09 进入诊断治理
+>
 > **不重复内容**：与 C01-C07 单篇案例不重复；本篇是"案例集"视角
 
 ## 破例决策记录
@@ -540,3 +545,4 @@ ContentProvider 5 大场景?
 下一篇 [C09 · ContentProvider 优化与监控](C09_ContentProvider_Optimize_Monitor.md) 是"诊断治理"篇（破例：章节重排"风险→工具→案例"）——**ContentProvider 优化 5 大策略 + 监控工具（dumpsys providers / perfetto / LeakCanary）+ 实战案例**。C09 是 ContentProvider 系列的最后一篇。
 
 预计阅读时间 25-35 分钟。
+

@@ -1,10 +1,15 @@
-# 06-IO 与进程的深度耦合：D 状态、iowait、IO hang、进程阻塞
+﻿# 06-IO 与进程的深度耦合：D 状态、iowait、IO hang、进程阻塞
 
 > **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `kernel/sched/core.c`、`include/linux/wait.h`、`kernel/signal.c`、`fs/proc/array.c`(D 状态导出);5.15+ TASK_KILLABLE 状态扩展见 §3.2)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) §8 / [Process 20-D 状态详解](../Process/20-D状态详解.md)
+>
 > **下一篇**:[07-程序加载与链接的 IO 路径](07-程序加载与链接的IO路径：从execve到AOT文件mmap.md)
 
 ---

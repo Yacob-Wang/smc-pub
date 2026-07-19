@@ -1,12 +1,19 @@
-# AE04 · Trajectory Evals：评路径不只评答案
+﻿# AE04 · Trajectory Evals：评路径不只评答案
 
 > **系列**：04_AI_Engineering（AI 工程师视角的工程实践）
+>
 > **篇号**：AE04（共 12 篇，本篇为第 4 篇）
+>
 > **写作时间**：2026-06-30
+>
 > **前置阅读**：
+>
 > - [AE01 · 从 Prompt 到 Skill 到 Tools 到 Context](AE01-从Prompt到Skill到Tools到Context_AI工程师的四层架构.md)
+>
 > - [AE02 · Context Engineering](AE02-Context_Engineering_Token预算_缓存_记忆_压缩.md)
+>
 > - [AE03 · Durable Execution](AE03-Durable_Execution_长任务的Checkpoint_幂等_Resume.md)
+>
 > **目标读者**：所有需要"对 Agent 改 Prompt / Skill / Tool 后回归"的人；正在搭 Eval 平台的 AI 工程师
 
 ---

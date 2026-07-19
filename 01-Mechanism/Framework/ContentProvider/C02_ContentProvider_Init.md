@@ -1,10 +1,15 @@
-# C02 · 启动与初始化：冷启动"看不见的瓶颈"
+﻿# C02 · 启动与初始化：冷启动"看不见的瓶颈"
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：ContentProvider 系列 **第 2 篇 / 核心机制**
+>
 > **强依赖**：[C01 · ContentProvider 全景](C01_ContentProvider_Overview.md) §3.2（启动初始化骨架）
+>
 > **承接自**：C01 §3.2 给出 ContentProvider 初始化时序；本篇**专门展开 attachApplicationProviders 源码 + onCreate 慢的实战案例 + ContentProvider 与 Application 的初始化顺序**
+>
 > **衔接去**：[C03 · 数据操作 CRUD](C03_ContentProvider_CRUD.md) — C02 解决"怎么初始化"；C03 解决"怎么用"
+>
 > **不重复内容**：与 C01 §3.2 初始化骨架不重复；与 A02 §3.3 Application 启动不重复
 
 ---
@@ -615,3 +620,4 @@ systrace:
 下一篇 [C03 · 数据操作 CRUD：query/insert/update/delete 全链路](C03_ContentProvider_CRUD.md) 把 C02 §3.6 的 `LoadedApk.getProvider` 展开为"数据操作"视角——**ContentResolver 链路 + Binder 跨进程 + Cursor 关闭 + AOSP 17 MAX_QUERY_RESULTS 限制**。C03 是 C04 跨进程通信的前置知识。
 
 预计阅读时间 30-45 分钟。
+

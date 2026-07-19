@@ -1,10 +1,15 @@
-# 04-内核 Watchdog 与 watchdogd:soft lockup、hard lockup、NMI 与喂狗机制
+﻿# 04-内核 Watchdog 与 watchdogd:soft lockup、hard lockup、NMI 与喂狗机制
 
 > **系列**:面向稳定性的 Android Watchdog 子系统深度解析系列(Watchdog)
+>
 > **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+>
 > **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `kernel/watchdog/softlockup.c`、`kernel/watchdog/hardlockup.c`、`kernel/watchdog/nmi_watchdog.c`、`drivers/watchdog/qcom-wdt.c`、`system/core/init/watchdogd.cpp`;5.10→5.15→6.6 内核 API 演进见 §3)
+>
 > **目标读者**:Android 稳定性框架架构师
+>
 > **前置阅读**:[01-Watchdog 总览](01-Watchdog概述与体系位置.md) / [02-多层 Watchdog 架构](02-多层Watchdog架构.md) / [03-Java Watchdog 核心机制](03-Java-Watchdog核心机制.md)
+>
 > **下一篇**:[05-Watchdog 超时判定与杀进程链路](05-Watchdog超时判定与杀进程链路.md)
 
 ---
@@ -645,4 +650,5 @@ ro.boottime.watchdogd = 125ms
 下一篇 [05-Watchdog 超时判定与杀进程链路](05-Watchdog超时判定与杀进程链路.md) 将深入 Java Watchdog 的"kill system_server" 完整流程——**traces 如何采集、信号如何发送、Init 如何接收重启通知、整机从 kill 到恢复的 90-105s 时间都花在哪里**。
 
 ---
+
 

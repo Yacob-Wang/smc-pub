@@ -1,8 +1,11 @@
-# 07-启动流程 · 02-ART 17 启动期与 AppFunctions 集成（v2 新篇）
+﻿# 07-启动流程 · 02-ART 17 启动期与 AppFunctions 集成（v2 新篇）
 
 > **本系列**：ART 深度解析系列 v2（9 大子模块）
+>
 > **本子模块**：07-启动流程 · 生命周期
+>
 > **本篇系列角色**：**生命周期 · v2 增量新篇**
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`
 
 ---
@@ -526,3 +529,4 @@ Step 5: ART 17 启动期监控（Trace + Perfetto）
 > **本文档**：[07-启动 · 02-ART 17 启动期与 AppFunctions 集成 v2](02-ART17启动期与AppFunctions集成-v2.md)
 > **所属系列**：[ART 深度解析系列 v2](../../README-ART系列-v2.md)
 > **基线**：AOSP 17 + android17-6.18
+

@@ -1,8 +1,11 @@
 ﻿# 6.2 SoftReference：LRU 缓存的根基（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 06-Reference与Finalizer（专题篇 2/9）
+>
 > **本篇定位**：**SoftReference**（2/9）—— 软引用保留率公式 + 时钟值机制 + Glide Bitmap 缓存 + ART 17 软阈值联动
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -680,3 +683,4 @@ adb shell setprop dalvik.vm.softthresholdpercent 40
 ---
 
 > **下一篇**：[03-WeakReference](03-WeakReference.md) 深入**弱引用 + WeakHashMap + LeakCanary 原理**——下次 GC 一定回收的工程实现。
+

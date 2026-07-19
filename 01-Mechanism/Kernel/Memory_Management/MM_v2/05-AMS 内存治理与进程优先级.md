@@ -1,10 +1,15 @@
-# 05-AMS 内存治理与进程优先级
+﻿# 05-AMS 内存治理与进程优先级
 
 > **系列**：面向稳定性的 Android 内存架构深度解析系列（MM_v2）
+>
 > **源码基线**：AOSP `android-14.0.0_r1`（`refs/heads/android14-release`）
+>
 > **内核矩阵**：`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`（AMS 是 Framework Java 层，不直接涉及内核版本差异；adj 决策影响后续 LMKD/OOM Killer 行为，详见 06 篇）
+>
 > **目标读者**：Android 稳定性框架架构师
+>
 > **前置阅读**：[01-内存系统总览：从进程视角到硬件的完整链路](01-内存系统总览：从进程视角到硬件的完整链路.md)、[02-进程内存地图与 VMA 体系](02-进程内存地图与 VMA 体系.md)、[03-ART 堆内存与 GC 全景](03-ART 堆内存与 GC 全景.md)、[04-Native 堆内存与分配器（AOSP 14）](04-Native 堆内存与分配器（AOSP 14）.md)
+>
 > **下一篇**：[06-LMKD 用户态内存杀手](06-LMKD 用户态内存杀手.md)
 
 ---
@@ -1568,3 +1573,4 @@ adb shell cat /proc/<pid>/oom_score_adj
 - 当前篇：05-AMS 内存治理与进程优先级
 - 下一篇：[06-LMKD 用户态内存杀手](06-LMKD 用户态内存杀手.md)
 - 后篇：[07-PSI / vmpressure / memcg 压力传递](07-PSI、vmpressure、memcg 压力传递.md) → [12-内存稳定性风险全景](12-内存稳定性风险全景.md) → [13-内存稳定性诊断工具链](13-内存稳定性诊断工具链.md)
+

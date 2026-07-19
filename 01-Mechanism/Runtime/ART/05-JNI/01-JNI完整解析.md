@@ -1,8 +1,11 @@
-# 01-JNI 完整解析：Java ↔ Native 互调 + 引用表 + 异常处理（v2 升级版）
+﻿# 01-JNI 完整解析：Java ↔ Native 互调 + 引用表 + 异常处理（v2 升级版）
 
 > **本子模块**：05-JNI（横切能力 · 5/9）
+>
 > **本篇定位**：**横切能力**（5/9）——Java 与 Native 互调的完整机制、引用表管理、JNI 错误排查
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，EOL 2030-07-01）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -608,3 +611,4 @@ static const JNINativeMethod methods[] = {
 ---
 
 > **下一篇**：[01-SignalCatcher 与信号机制](../06-信号与ANR-Trace/01-SignalCatcher与信号机制.md) 将深入 **ART 信号处理**——SIGQUIT / SIGSEGV / SIGBUS 等信号如何在 Native 层处理、SignalCatcher 守护线程、ANR 触发机制。详见 [03-ART17信号处理与ANR兜底 v2](../06-信号与ANR-Trace/03-ART17信号处理与ANR兜底v2-v2.md)。
+

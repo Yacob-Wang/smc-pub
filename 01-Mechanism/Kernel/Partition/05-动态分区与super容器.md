@@ -1,10 +1,15 @@
-# 05-Dynamic Partitions 与 super 容器：device-mapper 的分区革命
+﻿# 05-Dynamic Partitions 与 super 容器：device-mapper 的分区革命
 
 > **基线**：AOSP android-14.0.0_r1 + GKI 5.15（统一分支 `refs/heads/android14-5.15`）+ 主线 Linux LTS 5.10
+>
 > **适用读者**：资深 Android 稳定性架构师 / OEM 系统工程师 / 启动时序与 OTA 链路 owner
+>
 > **本篇定位**：《分区架构演进系列》第 5 篇，**深入 Dynamic Partitions（动态分区）和 super 容器——AOSP 10 引入的、基于 device-mapper linear 的运行时分区方案**
+>
 > **源码基线**：所有源码路径均经 `https://android.googlesource.com/platform/<repo>/+/refs/heads/android14-release/<path>` 实际 HTTP 200 验证（`modaliases_handlers.cpp` 的 `disk` 拼写由源码实测确认）
+>
 > **目录位置**：`Linux_Kernel/Partition/`
+>
 > **上篇**：04-GSI 通用系统镜像 | **下篇**：06-APEX 主线模块深度解析
 
 ---
@@ -2680,3 +2685,4 @@ URL:    https://elixir.bootlin.com/linux/v5.10/source/drivers/md/dm-linear.c
 > **本篇验证日期**：2026-06-13
 > **AOSP 基线**：android-14.0.0_r1（refs/heads/android14-release）+ GKI 5.15（refs/heads/android14-5.15）+ Linux LTS 5.10
 > **所有源码路径均经 源码核对 实际 HTTP 200 验证**，详见「修复证据」章节。
+

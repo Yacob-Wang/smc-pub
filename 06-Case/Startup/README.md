@@ -1,7 +1,9 @@
-# 启动场景案例（06-Case/Startup/）
+﻿# 启动场景案例（06-Case/Startup/）
 
 > **位置**：06-Case/Startup/（启动场景案例库，跨分类）
+>
 > **承接自**：[02-Symptom/S11-Startup/](../../02-Symptom/S11-Startup/)（AOSP_Startup 22 篇 v4）
+>
 > **完成日期**：2026-07-19
 
 ## 当前状态
@@ -43,3 +45,4 @@
 - E01-E03 与 02-Symptom/S11-Startup/ 4 大模块（A-D）一一对应
 - 新增案例请在 E04-E11 占位后写
 - 案例文件命名格式：`EXX-主题简写.md`（如 E01-冷启动8s-1s.md）
+

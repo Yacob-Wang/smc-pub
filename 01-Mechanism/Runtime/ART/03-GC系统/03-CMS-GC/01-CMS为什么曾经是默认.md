@@ -1,8 +1,11 @@
 ﻿# 3.1 CMS 为什么曾经是默认（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 03-CMS-GC（CMS-GC · 1/7）
+>
 > **本篇定位**：**历史演进**（1/7）——CMS 的历史使命 + 三代 GC 演进逻辑 + CMS 在 ART 17 中的地位变化
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级到 AOSP 17 + android17-6.18）
 
 ---
@@ -762,3 +765,4 @@ adb shell setprop dalvik.vm.gctype CC
 ---
 
 > **下一篇**：[02-标记-清除的4阶段](02-标记-清除的4阶段.md) 深入**CMS 4 阶段实现**——Initial Mark / Concurrent Mark / Remark / Concurrent Sweep 的源码级实现 + ART 17 对各阶段的优化。
+

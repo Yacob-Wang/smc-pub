@@ -1,10 +1,15 @@
-# C07 · Binder 限制与 ANR：CONTENT_PROVIDER_PUBLISH_TIMEOUT 详解
+﻿# C07 · Binder 限制与 ANR：CONTENT_PROVIDER_PUBLISH_TIMEOUT 详解
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：ContentProvider 系列 **第 7 篇 / 风险地图**（重头戏）
+>
 > **强依赖**：[C02 · 启动与初始化](C02_ContentProvider_Init.md)、[C03 · 数据操作 CRUD](C03_ContentProvider_CRUD.md)、[C04 · 跨进程通信](C04_ContentProvider_CrossProcess.md)
+>
 > **承接自**：C02 §3.4 提到 `publishContentProviders` 触发 ANR 监控；C03 §4 简版风险地图；C04 涉及跨进程 ANR。本篇**专门展开 ContentProvider ANR 完整机制 + 5 个阈值常量 + AnrHelper 强化 + 5 大根因详细分析**
+>
 > **衔接去**：[C08 · 实战案例集](C08_ContentProvider_Cases.md) — C07 收尾 ANR 风险；C08 进入横切专题
+>
 > **不重复内容**：与 C03 §4 简版不重复；与 A07 启动 ANR 不重复
 
 ---
@@ -496,3 +501,4 @@ ContentProvider ANR?
 下一篇 [C08 · 实战案例集：5 大稳定性问题排查](C08_ContentProvider_Cases.md) 是"横切专题"（破例：3 张图）——**精选 5 个真实场景案例（冷启动慢 / 跨 App 失败 / 内存泄漏 / 性能退化 / CursorWindow 事务异常）的完整排查过程**。C08 是 ContentProvider 系列的"案例集"。
 
 预计阅读时间 25-35 分钟。
+

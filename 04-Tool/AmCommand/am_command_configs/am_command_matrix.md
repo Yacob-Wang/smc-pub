@@ -1,6 +1,7 @@
-# am_command_configs/am_command_matrix.md
+﻿# am_command_configs/am_command_matrix.md
 
 > **配套文章**:[README-AmCommand系列 §3 am 全命令矩阵](../README-AmCommand系列.md#3-am-全命令矩阵)
+>
 > **基线**:AOSP `android-14.0.0_r1`
 
 am 命令全量矩阵,按"用得最多"排序,标注系列篇目。
@@ -226,3 +227,4 @@ adb shell am list-users
 > 起:`start` / `startservice` / `broadcast`
 > 采集:`dumpheap` / `profile`
 > 监控:`hang` / `monitor` / `stack`
+

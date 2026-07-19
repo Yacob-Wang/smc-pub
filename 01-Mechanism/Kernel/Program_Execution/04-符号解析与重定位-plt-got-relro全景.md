@@ -1,9 +1,13 @@
-# 04-符号解析与重定位:.plt / .got / .relro 全景
+﻿# 04-符号解析与重定位:.plt / .got / .relro 全景
 
 > **系列**:程序加载与执行深度解析(PLE,Program Loading & Execution)
+>
 > **源码基线**:AOSP `android-14.0.0_r1` + Kernel `android14-5.10` / `android14-5.15` / `android15-6.1`(本篇涉及 aarch64 重定位类型 + `mprotect` RELRO,内核版本影响 `.relr.dyn` 处理)+ Bionic linker(`bionic/linker/linker_reloc_iterate.cpp`)+ `arch/arm64/kernel/module.c`(参考)
+>
 > **目标读者**:Android 系统架构师、性能架构师、稳定性架构师
+>
 > **前置阅读**:[01-程序加载与执行全景图](01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md) → [02-ELF 文件格式深度解析](02-ELF文件格式深度解析-从可执行文件到内核视角.md) → [03-Bionic 动态链接器](03-Bionic动态链接器-linker64的工作机制.md)
+>
 > **下一篇**:[05-.init_array 与构造函数链:静态初始化的执行顺序](05-init_array与构造函数链-静态初始化的执行顺序.md)
 
 ---
@@ -1064,3 +1068,4 @@ $ adb shell setprop debug.ld.debug.files 1
 > **本篇把"重定位"拆解到 4 张表 + RELRO + 符号解析 + arm64 类型 + 失败诊断 5 个维度。**
 > **05 篇会在这个基础上,讲 .init_array——.so 加载完成后,那些"看不见的初始化"到底跑了什么。**
 > **记住 4 张表、RELRO 两种、5 类失败映射,你的重定位视角就立住了。**
+

@@ -1,8 +1,11 @@
 ﻿# 9.9 实战案例 1：从 dumpsys 到 Heap Dump 完整诊断（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 09-GC 诊断与治理（诊断与治理 · 9/10）
+>
 > **本篇定位**：**综合实战 · dumpsys 诊断**（9/10）——从 dumpsys meminfo 到 ART 17 软阈值诊断、Native 堆分析、Heap Dump 治理的端到端流程
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -970,3 +973,4 @@ public class ChatManager {
 ---
 
 > **下一篇**：[10-实战案例2-APM搭建](10-实战案例2-APM搭建.md) 完整 APM 集成案例——自建 APM 中的 JVMTI + Perfetto + LeakCanary 三件套 + AOSP 17 增强。
+

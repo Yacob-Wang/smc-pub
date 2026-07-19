@@ -1,8 +1,11 @@
 ﻿# 8.3 GC × Zygote：fork 后的 GC 状态（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 08-GC与其他子系统（横切专题 · 3/8）
+>
 > **本篇定位**：**横切专题**（3/8）——Zygote fork 后的 GC 状态 + ART 17 Zygote Space 优化 + Class 共享 + GC Root 减少
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -871,3 +874,4 @@ Runtime.getRuntime().disableClassLoaderDedup();
 ---
 
 > **下一篇**：[04-GC与Hook框架 v2](04-GC与Hook框架.md) 深入 **Hook 框架与 GC 的协作**——ART 17 重要变化：类去重对插件隔离的破坏 / 反射改 final 失效 / newHook API。
+

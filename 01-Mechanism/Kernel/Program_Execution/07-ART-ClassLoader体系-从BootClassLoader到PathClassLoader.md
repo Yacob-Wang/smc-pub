@@ -1,9 +1,13 @@
-# 07-ART ClassLoader 体系:从 BootClassLoader 到 PathClassLoader
+﻿# 07-ART ClassLoader 体系:从 BootClassLoader 到 PathClassLoader
 
 > **系列**:程序加载与执行深度解析(PLE,Program Loading & Execution)
+>
 > **源码基线**:AOSP `android-14.0.0_r1` + Kernel `android14-5.10` / `android14-5.15`(ClassLoader 通过 `open() + mmap()` 读 DEX,内核版本影响 VMA 行为)+ `libcore/ojluni/src/main/java/java/lang/ClassLoader.java` + `art/runtime/native/java_lang_ClassLoader.cc` + `art/runtime/class_linker.cc`
+>
 > **目标读者**:Android 系统架构师、性能架构师、稳定性架构师
+>
 > **前置阅读**:[01-程序加载与执行全景图](01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md) → [06-DEX/ODEX/VDEX 格式](06-DEX-ODEX-VDEX格式-为mmap而生的字节码.md)
+>
 > **下一篇**:[08-类加载生命周期:Loading → Linking → Initializing](08-类加载生命周期-Loading-Linking-Initializing.md)
 
 ---
@@ -980,3 +984,4 @@ DexPathList 构造:
 > **本篇把 ClassLoader 拆解到"5 种类型 + 5 步路径 + 4 个动作 + 5 类失败"5 个维度。**
 > **08 篇会在这个基础上,讲"类加载生命周期"——7 个阶段里到底发生了什么、故障在哪里注入。**
 > **记住 5 种 ClassLoader、5 步路径、可见性单向、-keep 第三方 SDK,你的 ClassLoader 视角就立住了。**
+

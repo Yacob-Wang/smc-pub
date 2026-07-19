@@ -1,10 +1,15 @@
-# Service 系列导读
+﻿# Service 系列导读
 
 > **作者角色**：Android 稳定性架构师
+>
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **写作规范**：[PROMPT-技术系列文章写作指南-v4.md](../../../PROMPT-技术系列文章写作指南-v4.md)
+>
 > **本系列起始**：2026-07-18
+>
 > **本系列规划文档**：[三系列重写规划-2026-07-18.md](../三系列重写规划-2026-07-18.md)
+>
 > **依赖前序系列**：[Activity 系列](../Activity/README.md)（已发布）
 
 ---
@@ -242,4 +247,5 @@ S01 → S02 → S03 → S04 → S05 → S06 → S07 → S08 → S09
 | R15 | S09 §3.4 | [ContentProvider C04 跨进程通信](../ContentProvider/C04_ContentProvider_CrossProcess.md) | §3.1 | 跨进程 Binder 限制 |
 
 > **路径待定说明**：Binder 系列目标目录 `Linux_Kernel/Binder/` 与 Window 系列目标目录 `Android_Framework/Window/` 暂未发布，对应 3 条引用（R05 / R06 / R08）在正文中以"路径待定"形式标记，待对应系列文章发布后回填具体路径。
+
 

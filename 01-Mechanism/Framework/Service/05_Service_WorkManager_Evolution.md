@@ -1,10 +1,15 @@
-# S05 · WorkManager 演进：JobScheduler 之上的后台任务最佳实践
+﻿# S05 · WorkManager 演进：JobScheduler 之上的后台任务最佳实践
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Service 系列 **第 5 篇 / 核心机制**
+>
 > **强依赖**：[S04 · 前台服务 FGS](04_Service_FGS_TypeRestricted.md)
+>
 > **承接自**：S04 §1.3 提到 WorkManager 是 Service 替代方案。本篇**专门展开 WorkManager 完整机制 + JobScheduler 调度 + Worker 线程模型**
+>
 > **衔接去**：[S06 · 多客户端与死亡链路](06_Service_MultiClient_Death.md) — S05 收尾核心机制；S06 进入多客户端场景
+>
 > **不重复内容**：与 S04 §1.3 FGS 限制不重复；与 S02/S03 Service 基础不重复
 
 ---
@@ -559,3 +564,4 @@ Worker 重试死循环?
 下一篇 [S06 · 多客户端与死亡链路：unbindService 与 binderDied](06_Service_MultiClient_Death.md) 把 S03 §1.3 的"单客户端"展开为"多客户端"场景——**AppBindRecord 状态机 + binderDied 触发 + 多客户端并发管理**。S06 是 bindService 进阶篇。
 
 预计阅读时间 20-30 分钟。
+

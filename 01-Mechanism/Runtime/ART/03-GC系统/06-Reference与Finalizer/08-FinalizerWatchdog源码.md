@@ -1,8 +1,11 @@
 ﻿# 6.8 FinalizerWatchdogDaemon 源码深潜（v2 升级版）
 
 > **本子模块**：03-GC 系统 / 06-Reference与Finalizer（专题篇 8/9）
+>
 > **本篇定位**：**FinalizerWatchdogDaemon 源码**（8/9）—— 10s 超时监控源码 + ART 17 慢对象 dump 机制 + 多阈值检测（5s/10s）
+>
 > **基线版本**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS，2024-11-17 发布，EOL 2026-12）
+>
 > **v2 升级日期**：2026-07-18（v1 旧文按 v4 规范 + 新基线升级）
 
 ---
@@ -987,3 +990,4 @@ public class CursorWrapper implements AutoCloseable {
 ---
 
 > **下一篇**：[09-实战案例](09-实战案例.md) 深入 **Reference 调优综合实战 + ART 17 GenCC 软阈值 kSoftThresholdPercent=30% 联动 + 4 大生产案例完整分析**——Reference 与 Finalizer 9 子模块的压轴实战。
+

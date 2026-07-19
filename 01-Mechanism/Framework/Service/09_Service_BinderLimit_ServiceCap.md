@@ -1,10 +1,15 @@
-# S09 · 跨进程 Binder 限制与 Service 上限（诊断治理）
+﻿# S09 · 跨进程 Binder 限制与 Service 上限（诊断治理）
 
 > **基线**：AOSP `android-17.0.0_r1`（API 37） + Linux `android17-6.18` LTS
+>
 > **本篇角色**：Service 系列 **第 9 篇 / 诊断治理**（**破例：章节重排为"风险→工具→案例"**）
+>
 > **强依赖**：[S03 · bindService](03_Service_BindService_Path.md)、[S08 · 进程保活](08_Service_ProcessKeepAlive_TrimMemory.md)
+>
 > **承接自**：S03 §3.1 提到 Binder 线程池 15 个；S08 §1.1 提到 MAX_CACHED_PROCESSES 32 个。本篇**专门展开跨进程 Binder 3 大限制 + Service 数量上限 + 工具 + 实战案例**
+>
 > **衔接去**：**[Broadcast 系列预告] [B01 · Broadcast 全景](../Broadcast/B01_Broadcast_Overview.md)** — Service 系列完成后进入 Broadcast 系列
+>
 > **不重复内容**：与 S03 §3.1 Binder 基础不重复；与 S08 §1.1 进程上限不重复
 
 ## 破例决策记录
@@ -663,3 +668,4 @@ S09 是 Service 系列的**第 9 篇 / 最后一篇**。**Service 系列（M2）
 ---
 
 **下一篇**：[B01 · Broadcast 全景：分类、机制与协作组件](../Broadcast/B01_Broadcast_Overview.md) — Service 系列完成后进入 Broadcast 系列（M3）。
+
