@@ -242,35 +242,53 @@ def _series_blurb(series_dir: Path) -> str:
 
 
 # Material icon for each module's series landing page
+# 注意：Material for MkDocs 的 emoji 短码用 **连字符**「-」而非斜杠「/」
+# 详见 https://squidfunk.github.io/mkdocs-material/reference/icons-emojis/
 _MODULE_ICONS = {
-    "00-Meta": "material/map-outline",
-    "01-Mechanism": "material/layers-triple",
-    "02-Symptom": "material/alert-octagon-outline",
-    "03-Forensics": "material/magnify-scan",
-    "04-Tool": "material/tools",
-    "05-Governance": "material/shield-check-outline",
-    "06-Case": "material/book-open-page-variant-outline",
-    "06-Foundation": "material/cube-outline",
+    "00-Meta": "material-map-outline",
+    "01-Mechanism": "material-layers-triple",
+    "02-Symptom": "material-alert-octagon-outline",
+    "03-Forensics": "material-magnify-scan",
+    "04-Tool": "material-tools",
+    "05-Governance": "material-shield-check-outline",
+    "06-Case": "material-book-open-page-variant-outline",
+    "06-Foundation": "material-cube-outline",
 }
 
-# 每个 series 根的图标（按 module + 索引）
+# 每个 series 根的图标（按 module + 索引）— 语义化映射
+# 02-Symptom 单独覆盖：11 大症状 → 直觉图标（架构师视角的视觉锚点）
+_SYMPTOM_ICONS = {
+    "S01-ANR": "material-timer-alert-outline",       # 计时器 + 警报（ANR 卡死超时）
+    "S02-JE": "material-bug-outline",                # Java Exception = bug
+    "S03-NE": "material-memory",                     # Native = 内存/芯片层
+    "S04-SWT": "material-shield-alert-outline",      # Watchdog 守门 + 警报
+    "S05-HANG": "material-pause-octagon-outline",    # HANG = 暂停/卡死
+    "S06-REBOOT": "material-restart",                # 重启
+    "S07-KE": "material-skull-outline",              # Kernel 死亡
+    "S08-AOSP17-K618": "material-source-pull",       # 演进/拉取新代码
+    "S09-PerfVsStab": "material-scale-balance",      # 性能 vs 稳定性 = 天平
+    "S10-Measure": "material-gauge",                 # 度量 = 仪表
+    "S11-Startup": "material-rocket-launch-outline", # 启动 = 火箭
+}
+
+# 默认 series icon 池（未在 _SYMPTOM_ICONS 里的 series 循环用）
 _SERIES_ICON_POOL = [
-    "material/cube-outline",
-    "material/layers-outline",
-    "material/puzzle-outline",
-    "material/sitemap-outline",
-    "material/vector-triangle",
-    "material/chart-line-variant",
-    "material/server-network",
-    "material/cog-outline",
-    "material/hammer-wrench",
-    "material/bookshelf",
-    "material/rocket-launch-outline",
-    "material/memory",
-    "material/cpu-64-bit",
-    "material/speedometer",
-    "material/connection",
-    "material/radar",
+    "material-cube-outline",
+    "material-layers-outline",
+    "material-puzzle-outline",
+    "material-sitemap-outline",
+    "material-vector-triangle",
+    "material-chart-line-variant",
+    "material-server-network",
+    "material-cog-outline",
+    "material-hammer-wrench",
+    "material-bookshelf",
+    "material-rocket-launch-outline",
+    "material-memory",
+    "material-cpu-64-bit",
+    "material-speedometer",
+    "material-connection",
+    "material-radar",
 ]
 
 
@@ -351,7 +369,12 @@ def build_module_index(module: str, mod_dir: Path) -> str:
             short = _short_title(module, sub.name, sub)
             blurb_s = _series_blurb(sub)
             count = _count_articles_in_series(sub)
-            icon = _SERIES_ICON_POOL[i % len(_SERIES_ICON_POOL)]
+            # 优先用语义化 icon（02-Symptom 等有显式映射的 module），
+            # 否则回退到循环池
+            if module == "02-Symptom" and sub.name in _SYMPTOM_ICONS:
+                icon = _SYMPTOM_ICONS[sub.name]
+            else:
+                icon = _SERIES_ICON_POOL[i % len(_SERIES_ICON_POOL)]
             link = f"{sub.name}/"
             card_block = [
                 f"-   :{icon}:{{ .lg .middle }} **{short}**",
