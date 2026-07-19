@@ -116,7 +116,9 @@ extra_css:
   - stylesheets/fonts.css
   - stylesheets/extra.css
 
-extra_javascript: []
+extra_javascript:
+  - javascripts/search.js
+  - javascripts/filter.js
 
 copyright: Copyright &copy; JacobKing · Stability Matrix Course
 
