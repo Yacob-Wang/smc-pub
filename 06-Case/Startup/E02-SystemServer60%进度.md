@@ -14,7 +14,7 @@
 
 - **本篇系列角色**：**E 模块 · 实战案例 2**（v4 §9 破例：单篇 800+ 行 / 图表 5-7 张）
 - **强依赖**：
-  - [A04-Zygote + SystemServer](../../01-Mechanism/Framework/SystemServer/A04-Zygote+SystemServer.md)
+  - [A04-Zygote + SystemServer](../../02-Symptom/S11-Startup/A-启动机制/A04-Zygote+SystemServer.md)
   - [C02-启动死锁](../../02-Symptom/S11-Startup/C-启动稳定性/C02-启动死锁.md)
   - [C04-启动崩溃](../../02-Symptom/S11-Startup/C-启动稳定性/C04-启动崩溃.md)
   - [C05-开机无限重启](../../02-Symptom/S11-Startup/C-启动稳定性/C05-开机无限重启.md)
@@ -658,7 +658,7 @@ adb shell dumpsys activity processes | head -50
 ## 14.2 与现有系列的关系
 
 > **本篇不重复**：
-> - [A04-Zygote + SystemServer](../../01-Mechanism/Framework/SystemServer/A04-Zygote+SystemServer.md) 已深入的 SystemServer 启动
+> - [A04-Zygote + SystemServer](../../02-Symptom/S11-Startup/A-启动机制/A04-Zygote+SystemServer.md) 已深入的 SystemServer 启动
 > - [C02-启动死锁](../../02-Symptom/S11-Startup/C-启动稳定性/C02-启动死锁.md) 已深入的启动死锁
 > - [C04-启动崩溃](../../02-Symptom/S11-Startup/C-启动稳定性/C04-启动崩溃.md) 已深入的启动崩溃
 > - [C05-开机无限重启](../../02-Symptom/S11-Startup/C-启动稳定性/C05-开机无限重启.md) 已深入的 BootLoop

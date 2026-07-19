@@ -22,7 +22,7 @@
 - **衔接去**：
   - 下一篇 [A03-Init 进程与 init.rc](../../../02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc.md) 深入 A3 阶段
   - 然后 A04-A06 拆解 A4-A5 阶段
-  - 风险排查跳转 [C05-开机无限重启](../Stability/C05-开机无限重启与bootstat.md)（如已写）或 [C04-启动崩溃](../Framework/SystemServer/A04-Zygote+SystemServer.md#6-风险地图强制))
+  - 风险排查跳转 [C05-开机无限重启](../Stability/C05-开机无限重启与bootstat.md)（如已写）或 [C04-启动崩溃](../../../02-Symptom/S11-Startup/A-启动机制/A04-Zygote+SystemServer.md#6-风险地图强制))
 - **不重复内容**：
   - **不重复** [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/) 已深入的 Linux 进程机制
   - **不重复** A01 已有的 5 大阶段总览
