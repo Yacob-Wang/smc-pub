@@ -14,7 +14,7 @@
   - [07-Binder 风险全景](07-Binder稳定性风险全景.md) 6 类风险
   - [09-Binder debugfs 日志解读实战](09-Binder-debugfs日志解读实战.md) 节点字段
   - [10-Binder oneway 限流](10-Binder-oneway限流与防护方案.md)
-  - [12-Binder 节点文件全景](12-Binder节点文件全景.md) 节点体系
+  - [12-Binder 节点文件全景](12-Binder节点文件全景与问题实战.md) 节点体系
 - **承接自**：07 已给风险地图，本篇给"完整工具链"。
 - **衔接去**：
   - [09-Binder debugfs 日志解读实战](09-Binder-debugfs日志解读实战.md) 是 debugfs 字段字典

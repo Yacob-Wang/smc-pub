@@ -413,6 +413,6 @@ Phase 4（特殊 + 治理）
 
 ---
 
-> **系列导航**：[← Stability 系列](../Stability/README-Stability系列.md) | [本系列 README 顶部](#) | [F00 总览 →](F00-取证体系总览.md)
+> **系列导航**：[← Stability 系列](../Stability/README-Stability系列.md) | [本系列 README 顶部](#) | [F00 总览 →](F00-Overview/01-取证机制.md)
 >
 > **最后更新**：2026-07-18（v1.0 骨架建立）

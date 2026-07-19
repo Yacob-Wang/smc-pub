@@ -12,11 +12,11 @@
 
 1. **文件系统基础**
    - ✅ **文件系统开篇介绍** - 文件系统定义、架构层次、学习路径
-   - 文档：[FileSystem_Introduction.md](01_Introduction/FileSystem_Introduction.md)
+   - 文档：[FileSystem_Introduction.md](FileSystem_Introduction.md)
 
 2. **VFS（虚拟文件系统）核心**
    - ✅ **文件系统架构与 IO 路径** - 完整架构图、F2FS/eMMC 位置、从系统调用到硬件存储的完整路径
-   - 文档：[FileSystem_Architecture_IO_Path_Deep_Dive.md](02_VFS_Core/FileSystem_Architecture_IO_Path_Deep_Dive.md)
+   - 文档：[FileSystem_Architecture_IO_Path_Deep_Dive.md](FileSystem_Architecture_IO_Path_Deep_Dive.md)
 
 #### 建议补充 ⚠️
 

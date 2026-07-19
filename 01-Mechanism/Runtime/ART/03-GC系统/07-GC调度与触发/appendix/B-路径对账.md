@@ -215,34 +215,34 @@ adb shell cmd art-heap-task-daemon status
 | 引用方向 | 来源 | 目标 | 关联内容 |
 |:---|:---|:---|:---|
 | 被 [01-9种GcCause] 引用 | — | — | — |
-| 被 [02-HeapTaskDaemon] 引用 | [01-9种GcCause](01-9种GcCause.md) | GcCause 触发源 | 任务来源 |
-| 被 [03-ConcurrentGCTask] 引用 | [02-HeapTaskDaemon](02-HeapTaskDaemon.md) | HeapTaskDaemon 主循环 | 执行者 |
-| 被 [04-GC_FOR_ALLOC路径] 引用 | [01-9种GcCause](01-9种GcCause.md) | kGcCauseForAlloc | 触发源 |
-| 被 [04-GC_FOR_ALLOC路径] 引用 | [02-HeapTaskDaemon](02-HeapTaskDaemon.md) | HeapTaskDaemon | 对比 |
-| 被 [04-GC_FOR_ALLOC路径] 引用 | [03-ConcurrentGCTask](03-ConcurrentGCTask.md) | 后台 GC 路径 | 对比 |
+| 被 [02-HeapTaskDaemon] 引用 | [01-9种GcCause](../01-9种GcCause.md) | GcCause 触发源 | 任务来源 |
+| 被 [03-ConcurrentGCTask] 引用 | [02-HeapTaskDaemon](../02-HeapTaskDaemon.md) | HeapTaskDaemon 主循环 | 执行者 |
+| 被 [04-GC_FOR_ALLOC路径] 引用 | [01-9种GcCause](../01-9种GcCause.md) | kGcCauseForAlloc | 触发源 |
+| 被 [04-GC_FOR_ALLOC路径] 引用 | [02-HeapTaskDaemon](../02-HeapTaskDaemon.md) | HeapTaskDaemon | 对比 |
+| 被 [04-GC_FOR_ALLOC路径] 引用 | [03-ConcurrentGCTask](../03-ConcurrentGCTask.md) | 后台 GC 路径 | 对比 |
 
 ### 4.2 跨子模块引用
 
 | 引用方向 | 来源（本子模块） | 目标（其他子模块） | 关联内容 |
 |:---|:---|:---|:---|
-| 来自 | [01-9种GcCause](01-9种GcCause.md) | [10-ART17分代GC强化专章 v2](../../10-ART17分代GC强化专章-v2.md) | ART 17 软阈值强化 |
-| 来自 | [02-HeapTaskDaemon](02-HeapTaskDaemon.md) | [10-ART17分代GC强化专章 v2](../../10-ART17分代GC强化专章-v2.md) | ART 17 HeapTaskDaemon 强化 |
-| 来自 | [03-ConcurrentGCTask](03-ConcurrentGCTask.md) | [10-ART17分代GC强化专章 v2](../../10-ART17分代GC强化专章-v2.md) | ART 17 BackgroundGenCC |
-| 来自 | [04-GC_FOR_ALLOC路径](04-GC_FOR_ALLOC路径.md) | [10-ART17分代GC强化专章 v2](../../10-ART17分代GC强化专章-v2.md) | ART 17 Minor 优先 |
-| 来自 | [04-GC_FOR_ALLOC路径](04-GC_FOR_ALLOC路径.md) | [05-Generational-CC](../../05-Generational-CC/) | GenCC 完整算法 |
-| 来自 | [04-GC_FOR_ALLOC路径](04-GC_FOR_ALLOC路径.md) | [02-Heap 与分配器 2.7](../../02-Heap与分配器/07-慢速分配路径.md) | 分配器详解 |
-| 来自 | [03-ConcurrentGCTask](03-ConcurrentGCTask.md) | [04-CC-GC](../../04-CC-GC/) | CC GC 算法 |
-| 来自 | [02-HeapTaskDaemon](02-HeapTaskDaemon.md) | [08-GC 线程模型](08-GC线程模型.md) | 完整线程模型 |
+| 来自 | [01-9种GcCause](../01-9种GcCause.md) | [10-ART17分代GC强化专章 v2](../../10-ART17分代GC强化专章-v2.md) | ART 17 软阈值强化 |
+| 来自 | [02-HeapTaskDaemon](../02-HeapTaskDaemon.md) | [10-ART17分代GC强化专章 v2](../../10-ART17分代GC强化专章-v2.md) | ART 17 HeapTaskDaemon 强化 |
+| 来自 | [03-ConcurrentGCTask](../03-ConcurrentGCTask.md) | [10-ART17分代GC强化专章 v2](../../10-ART17分代GC强化专章-v2.md) | ART 17 BackgroundGenCC |
+| 来自 | [04-GC_FOR_ALLOC路径](../04-GC_FOR_ALLOC路径.md) | [10-ART17分代GC强化专章 v2](../../10-ART17分代GC强化专章-v2.md) | ART 17 Minor 优先 |
+| 来自 | [04-GC_FOR_ALLOC路径](../04-GC_FOR_ALLOC路径.md) | [05-Generational-CC](../../05-Generational-CC/) | GenCC 完整算法 |
+| 来自 | [04-GC_FOR_ALLOC路径](../04-GC_FOR_ALLOC路径.md) | [02-Heap 与分配器 2.7](../../02-Heap与分配器/07-慢速分配路径.md) | 分配器详解 |
+| 来自 | [03-ConcurrentGCTask](../03-ConcurrentGCTask.md) | [04-CC-GC](../../04-CC-GC/) | CC GC 算法 |
+| 来自 | [02-HeapTaskDaemon](../02-HeapTaskDaemon.md) | [08-GC 线程模型](../08-GC线程模型.md) | 完整线程模型 |
 
 ### 4.3 跨系列引用（ART ↔ Linux Kernel）
 
 | 引用方向 | 来源 | 目标 | 关联内容 |
 |:---|:---|:---|:---|
-| 来自 | [01-9种GcCause](01-9种GcCause.md) | Linux 6.18 sheaves | Native 内存 |
-| 来自 | [02-HeapTaskDaemon](02-HeapTaskDaemon.md) | Linux 6.18 sched | CPU 负载 |
-| 来自 | [03-ConcurrentGCTask](03-ConcurrentGCTask.md) | Linux 6.18 sheaves | Native 内存 |
-| 来自 | [04-GC_FOR_ALLOC路径](04-GC_FOR_ALLOC路径.md) | Linux 6.18 sheaves | Native 内存 |
-| 被引用 | Linux_Kernel/DM/09-DM-调优-性能与pcache | [01-9种GcCause](01-9种GcCause.md) §6.3 | sheaves 关联 |
+| 来自 | [01-9种GcCause](../01-9种GcCause.md) | Linux 6.18 sheaves | Native 内存 |
+| 来自 | [02-HeapTaskDaemon](../02-HeapTaskDaemon.md) | Linux 6.18 sched | CPU 负载 |
+| 来自 | [03-ConcurrentGCTask](../03-ConcurrentGCTask.md) | Linux 6.18 sheaves | Native 内存 |
+| 来自 | [04-GC_FOR_ALLOC路径](../04-GC_FOR_ALLOC路径.md) | Linux 6.18 sheaves | Native 内存 |
+| 被引用 | Linux_Kernel/DM/09-DM-调优-性能与pcache | [01-9种GcCause](../01-9种GcCause.md) §6.3 | sheaves 关联 |
 
 ---
 

@@ -23,7 +23,7 @@
   - [09-Binder debugfs 日志解读实战](09-Binder-debugfs日志解读实战.md) 是 debugfs 节点的"逐字段字典"
   - [10-Binder oneway 限流](10-Binder-oneway限流与防护方案.md) 是 oneway 滥发的深度方案
   - [11-Binder 厂商方案调研](11-Binder厂商预防与治理方案调研报告.md) 是 Google/芯片商/OEM 的现成方案
-  - [12-Binder 节点文件全景](12-Binder节点文件全景.md) 是所有节点文件的"全景图"
+  - [12-Binder 节点文件全景](12-Binder节点文件全景与问题实战.md) 是所有节点文件的"全景图"
 - **不重复内容**：
   - 不重复 03-06 的机制讲解
   - 不重复 08-12 的工具与方案
@@ -577,7 +577,7 @@ binder: 1234 BINDER_SET_MAX_THREADS to 31 (com.example.aiassistant raised to 31)
 
 **现象**：Frida 16.x、Xposed 等 hook 工具找不到 Rust Binder 符号，监控失败。
 
-**详细分析**：详见 [13-Rust Binder 专题](13-Rust%20Binder专题.md) §7.1
+**详细分析**：详见 [13-Rust Binder 专题](13-Rust Binder专题.md) §7.1
 
 **修复方案**：
 - 升级 Frida 到 17+（Rust ABI 模式）
@@ -587,7 +587,7 @@ binder: 1234 BINDER_SET_MAX_THREADS to 31 (com.example.aiassistant raised to 31)
 
 **现象**：6.18 起 eBPF 程序必须签名才能 attach，未签名的监控工具失效。
 
-**详细分析**：详见 [13-Rust Binder 专题](13-Rust%20Binder专题.md) §7.2
+**详细分析**：详见 [13-Rust Binder 专题](13-Rust Binder专题.md) §7.2
 
 **修复方案**：
 - 用厂商签名通道编译 eBPF 工具
@@ -597,7 +597,7 @@ binder: 1234 BINDER_SET_MAX_THREADS to 31 (com.example.aiassistant raised to 31)
 
 **现象**：6.18 起 debugfs 节点的字段名变化，旧监控脚本失效。
 
-**详细分析**：详见 [09-Binder debugfs 日志解读实战](09-Binder-debugfs日志解读实战.md) + [12-Binder 节点文件全景](12-Binder节点文件全景.md)
+**详细分析**：详见 [09-Binder debugfs 日志解读实战](09-Binder-debugfs日志解读实战.md) + [12-Binder 节点文件全景](12-Binder节点文件全景与问题实战.md)
 
 **修复方案**：
 - 监控脚本必须适配新字段
@@ -924,4 +924,4 @@ public void binderDied() {
 ---
 
 **本篇状态**：v2 新写版 1.0（2026-07-18 完稿）  
-**下一步**：阶段 3 收尾——[12-Binder 节点文件全景](12-Binder节点文件全景.md)（~10000 字 / 5 图 / 2 案例）
+**下一步**：阶段 3 收尾——[12-Binder 节点文件全景](12-Binder节点文件全景与问题实战.md)（~10000 字 / 5 图 / 2 案例）

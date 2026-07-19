@@ -13,9 +13,9 @@
 - **强依赖**：
   - [09-Binder debugfs 日志解读实战](09-Binder-debugfs日志解读实战.md) proc 节点字段字典
   - [02-Binder 驱动](02-Binder驱动.md) §3.1-3.2 入口 + 数据结构
-  - [13-Rust Binder 专题](13-Rust%20Binder专题.md) §2.2 双栈并存
+  - [13-Rust Binder 专题](13-Rust Binder专题.md) §2.2 双栈并存
 - **承接自**：09 已讲 proc 节点字段，本篇给**所有节点文件 + 内核生成机制 + binderfs**的全景。
-- **衔接去**：[13-Rust Binder 专题](13-Rust%20Binder专题.md) 是系列收官。
+- **衔接去**：[13-Rust Binder 专题](13-Rust Binder专题.md) 是系列收官。
 - **不重复内容**：
   - 不重复 09 的 proc 字段字典
   - 不重复 02 的数据结构字段定义
@@ -565,7 +565,7 @@ proc 1234
 
 ## 10. 下一篇衔接
 
-[13-Rust Binder 专题](13-Rust%20Binder专题.md) 是**系列收官篇**——独立专题深入 Rust Binder 决策层、迁移路径、厂商 GKI 影响、性能对比、未来展望。
+[13-Rust Binder 专题](13-Rust Binder专题.md) 是**系列收官篇**——独立专题深入 Rust Binder 决策层、迁移路径、厂商 GKI 影响、性能对比、未来展望。
 
 ---
 

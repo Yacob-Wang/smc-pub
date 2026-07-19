@@ -35,7 +35,7 @@
 
 **强依赖**：
 - [O03-AICore](O03-AICore_System_Service_AOSP中的AI调度核心.md)（AICore 4 层架构 + AI Scheduler 调度 + 沙箱机制）
-- [AI_Native_Runtime R08-端侧 LLM 落地](AI_Native_X/01_AI_Native_Runtime/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md)（Runtime 层视角：怎么跑得动）
+- [AI_Native_Runtime R08-端侧 LLM 落地](../01_AI_Native_Runtime/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md)（Runtime 层视角：怎么跑得动）
 - [AI_Native_Runtime R07-NPU 驱动三大厂商 SDK](AI_Native_X/01_AI_Native_Runtime/R07-NPU驱动_高通联发科华为三大厂商SDK与NNAPI_Driver实现.md)（NPU 调度基础）
 
 **跨系列引用**：

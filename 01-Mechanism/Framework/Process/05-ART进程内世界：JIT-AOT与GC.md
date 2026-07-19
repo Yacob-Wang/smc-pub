@@ -717,7 +717,7 @@ Java 业务: Thread.currentThread() 走 TLS
 
 - [04-应用进程首生:从 fork 到 ActivityThread.main](04-应用进程首生-fork到ActivityThread.md) —— 本篇 T6 起点
 - [06-Kernel 进程实现:task_struct、cgroup、namespace 与 procfs](06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) —— 本篇 §4 协作接口的下一站
-- [07-调度与资源:CFS、schedtune、cpuset、memcg、blkio 与进程生死](07-调度与资源:CFS与进程生死.md) —— 本篇 §3.3 JIT 调度的内核侧
+- [07-调度与资源:CFS、schedtune、cpuset、memcg、blkio 与进程生死](07-调度与资源：CFS与进程生死.md) —— 本篇 §3.3 JIT 调度的内核侧
 - [08-进程稳定性风险全景:ANR/OOM/进程泄漏/僵尸与跨层治理](08-进程稳定性风险全景与跨层治理.md) —— 本篇 §5 风险地图的总收口
 
 ---

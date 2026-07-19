@@ -345,7 +345,7 @@ A02 Bootloader→Kernel 与 Linux_Kernel/Process 1-5 强联动。
 ---
 
 > **系列导航**：
-> - **本系列 README**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
+> - **本系列 README**：[README-AOSP_Startup系列.md](README.md)
 > - **学习路线**：[L00-稳定性架构师学习路线](../Stability/README-学习路线-稳定性架构师.md)
 > - **机制联动**：[Stability S00-S10](../Stability/S00-稳定性症状总览.md) · [Process 系列](../Process/README-进程架构演进系列.md) · [Window 系列](../Window/README-Window系列.md)
 > - **工具联动**：[Dumpsys 系列](../Dumpsys/01-dumpsys总览与架构.md) · [Perfetto 系列](../Perfetto/01-Perfetto系统总览与架构设计.md)

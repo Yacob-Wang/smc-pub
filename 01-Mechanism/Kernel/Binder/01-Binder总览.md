@@ -275,7 +275,7 @@ Binder 不是一个单一模块，而是**横跨四层**的完整体系。理解
 - buffer 是**共享的**——C 版分配的 buffer，Rust 版可以读取
 - 用户态 libbinder 代码**零修改**——ioctl 协议不变
 
-**详细分析**见 [13-Rust Binder 专题](13-Rust%20Binder专题.md)。
+**详细分析**见 [13-Rust Binder 专题](13-Rust Binder专题.md)。
 
 ---
 
@@ -297,11 +297,11 @@ Binder 不是一个单一模块，而是**横跨四层**的完整体系。理解
 
 | # | 变化 | 对本系列的影响 | 详细篇 |
 |---|------|--------------|--------|
-| 1 | **Rust Binder 上主线**（与 C 版并存）| 02 篇新增 §2.7 + 13 整篇专题 | [02 §2.7](02-Binder驱动.md#27-618-新增binder_internalrs-概览rust-binder-基础) + [13-Rust Binder 专题](13-Rust%20Binder专题.md) |
+| 1 | **Rust Binder 上主线**（与 C 版并存）| 02 篇新增 §2.7 + 13 整篇专题 | [02 §2.7](02-Binder驱动.md#27-618-新增binder_internalrs-概览rust-binder-基础) + [13-Rust Binder 专题](13-Rust Binder专题.md) |
 | 2 | **binder_alloc sparse memory 默认** | 04 篇内存模型重写 | [04-Binder 内存模型](04-Binder内存模型.md) |
 | 3 | **`binder_flush` 新增入口** | 02 §3.4 展开 | [02 §3.4](02-Binder驱动.md#34-618-新增binder_flush) |
 | 4 | **pidfds 扩展支持内核命名空间** | 06 篇死亡通知新机制 | [06-Binder 对象生命周期](06-Binder对象生命周期.md) |
-| 5 | **eBPF 加密签名强制** | 08 篇可观测性影响 + 13 篇生态影响 | [08](08-Binder诊断工具与治理体系.md) + [13 §7.2](13-Rust%20Binder专题.md#72-ebpf-监控适配) |
+| 5 | **eBPF 加密签名强制** | 08 篇可观测性影响 + 13 篇生态影响 | [08](08-Binder诊断工具与治理体系.md) + [13 §7.2](13-Rust Binder专题.md#72-ebpf-监控适配)) |
 
 ### 4.3 6.18 周边变化
 
@@ -558,7 +558,7 @@ W ServiceManager: Wait for activity service published
 
 4. **AIDL 是 Android 跨进程接口的事实标准**——AOSP 11+ 全面 AIDL 化；AOSP 17 引入 `IExample.Default` 简化跨进程实现。**指向 02 §5 + [11 厂商方案](11-Binder厂商预防与治理方案调研报告.md)**。
 
-5. **AOSP 17 + 6.18 时代的核心新风险**——端侧 AI 高频 Binder 通路、Rust 兼容性、sparse memory 大事务 3 类风险。**指向 [07 风险全景](07-Binder稳定性风险全景.md) + [13 Rust Binder 专题](13-Rust%20Binder专题.md)**。
+5. **AOSP 17 + 6.18 时代的核心新风险**——端侧 AI 高频 Binder 通路、Rust 兼容性、sparse memory 大事务 3 类风险。**指向 [07 风险全景](07-Binder稳定性风险全景.md) + [13 Rust Binder 专题](13-Rust Binder专题.md)**。
 
 ---
 

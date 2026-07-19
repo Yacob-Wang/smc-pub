@@ -11,9 +11,9 @@
 
 - **本篇系列角色**：**横切路线图**（Stability 系列的伴生文档，不属于 S00-S07 主线）
 - **强依赖**：
-  - 阅读前**先读** [S00-稳定性症状总览](S00-稳定性症状总览.md)（7 大症状的边界立住后再看路线更顺）
+  - 阅读前**先读** [S00-稳定性症状总览](S00-症状总览.md)（7 大症状的边界立住后再看路线更顺）
   - 也可独立阅读（本篇会自包含所有引用）
-- **承接自**：[README-Stability系列.md](README-Stability系列.md) §0 系列总定位
+- **承接自**：[README-Stability系列.md](../README.md) §0 系列总定位
 - **衔接去**：
   - **上层为主**：[S01-S07 症状学](#stability-系列-s00-s07) + [Phase 1 机制学](#phase-2机制学--4-层栈核心子系统) 上半部
   - **需要深挖下层时**：[Phase 4 下层根因](#phase-4按需深挖下层稳定性的根因)
@@ -118,7 +118,7 @@
 
 | 顺序 | 文章 | 核心抓手 |
 |:-----|:-----|:---------|
-| 1 | **[S00-稳定性症状总览](S00-稳定性症状总览.md)**（✅ 已完成，2026-07-18） | 7 大症状严格定义 + 系统栈映射 + cascade 链路 + 速查表 |
+| 1 | **[S00-稳定性症状总览](S00-症状总览.md)**（✅ 已完成，2026-07-18） | 7 大症状严格定义 + 系统栈映射 + cascade 链路 + 速查表 |
 
 > S00 已写完（46KB / 800+ 行），先精读 §3 边界 + §4 cascade + §6 排查体系。
 
@@ -507,8 +507,8 @@ Phase 0（必读，2-3h）+ Phase 1 跳过 S04/S06 → Phase 2 偏 ART/Process
 ---
 
 > **系列导航**：
-> - **本文档**：[README-学习路线-稳定性架构师.md](README-学习路线-稳定性架构师.md)（L00）
-> - **症状入口**：[S00-稳定性症状总览](S00-稳定性症状总览.md) · [README-Stability系列.md](README-Stability系列.md)
+> - **本文档**：[README-学习路线-稳定性架构师.md](README-学习路线.md)（L00）
+> - **症状入口**：[S00-稳定性症状总览](S00-症状总览.md) · [README-Stability系列.md](../README.md)
 > - **质量评估**：[README-系列质量评估报告.md](README-系列质量评估报告.md)
 > - **机制入口**：[Process 系列](../Process/) · [Watchdog 系列](../Watchdog/) · [Handler 系列](../01-Mechanism/App/Handler-MessageQueue-Looper/)
 > - **工具入口**：[Perfetto](../Perfetto/) · [Hprof](../Hprof/) · [AmCommand](../AmCommand/)

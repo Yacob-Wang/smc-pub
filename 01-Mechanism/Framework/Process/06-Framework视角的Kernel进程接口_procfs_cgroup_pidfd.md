@@ -1,7 +1,7 @@
 # Framework 视角的 Kernel 进程接口:procfs、cgroup fs 与 pidfd
 
 > **本篇定位**:Framework 工程师视角下的 **Kernel 进程接口手册**。
-> 同样的"app 进程",[05 篇](05-ART进程内世界:JIT-AOT与GC.md)讲了 **ART 视角**,本篇讲 **Framework 视角下,Framework 工程师通过哪些 Kernel 接口观测、配置、终止一个进程**。
+> 同样的"app 进程",[05 篇](05-ART进程内世界：JIT-AOT与GC.md)讲了 **ART 视角**,本篇讲 **Framework 视角下,Framework 工程师通过哪些 Kernel 接口观测、配置、终止一个进程**。
 >
 > **与 Kernel/Process 系列的分工**(本篇核心边界):
 >
@@ -12,7 +12,7 @@
 >
 > 一句话:**Kernel 系列讲"内部是什么",本篇讲"Framework 怎么用它"**。
 >
-> **主线索**:同一个驻留期 app 进程(对应 [01 篇 §2 的 T9 时间点](01-进程总览:从点图标看app进程的诞生消亡与全栈抽象.md)),Framework 工程师通过 4 类 Kernel 接口对它做 4 件事:
+> **主线索**:同一个驻留期 app 进程(对应 [01 篇 §2 的 T9 时间点](01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)),Framework 工程师通过 4 类 Kernel 接口对它做 4 件事:
 >
 > 1. **观测** —— `procfs`(`/proc/<pid>/{status,smaps,sched,cgroup,oom_score_adj}`)
 > 2. **配置** —— `cgroup fs`(`cpu.uclamp.{min,max}` / `cpuset.cpus` / `memory.high` / `io.max`)
@@ -27,8 +27,8 @@
 >
 > **目录位置**:`Android_Framework/Process/`
 >
-> **上一篇**:[05-ART 进程内世界:JIT/AOT、OAT 加载、信号处理与 GC 线程](05-ART进程内世界:JIT-AOT与GC.md)
-> **下一篇**:[07-调度与资源:CFS、schedtune、cpuset、memcg、blkio 与进程生死](07-调度与资源:CFS与进程生死.md)
+> **上一篇**:[05-ART 进程内世界:JIT/AOT、OAT 加载、信号处理与 GC 线程](05-ART进程内世界：JIT-AOT与GC.md)
+> **下一篇**:[07-调度与资源:CFS、schedtune、cpuset、memcg、blkio 与进程生死](07-调度与资源：CFS与进程生死.md)
 >
 > **关联已有系列**(本篇末"附录 C"展开):
 > - Kernel/Process/02(`task_struct` 字段详解)—— 本篇的"内部实现"镜像
@@ -37,7 +37,7 @@
 > - Kernel/Process/12(IPC / Binder 驱动)—— 本篇 §7 的"内部实现"镜像
 > - Kernel/Process/13(进程调试与稳定性)—— 本篇 §2 / §8 / §9 的"内部实现"镜像
 > - Memory_Management 系列 —— `smaps_rollup` 的 VMA 来源
-> - ART 系列 —— [05 篇](05-ART进程内世界:JIT-AOT与GC.md) §4"ART ↔ Kernel 协作的 4 个接口"是本篇的上游
+> - ART 系列 —— [05 篇](05-ART进程内世界：JIT-AOT与GC.md) §4"ART ↔ Kernel 协作的 4 个接口"是本篇的上游
 
 ---
 
@@ -191,7 +191,7 @@ ProcessList.updateOomAdjLocked(com.tencent.mm)
 
 ## 2. 主线案例:T9 驻留期 Framework 工程师的 4 个观测动作
 
-> **场景设定**:T9 时刻(参 [01 篇 §2 12 时间点](01-进程总览:从点图标看app进程的诞生消亡与全栈抽象.md)),微信已驻留,用户反馈"消息列表滑动卡顿"。
+> **场景设定**:T9 时刻(参 [01 篇 §2 12 时间点](01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)),微信已驻留,用户反馈"消息列表滑动卡顿"。
 > 你是 oncall Framework 工程师,需要 5 分钟内出第一份现场报告。
 
 **第 1 动作 —— `dumpsys meminfo --pid <pid>` 看内存投影**
@@ -2297,7 +2297,7 @@ se.sum_exec_runtime: 89234100                  ← CPU 时间
 
 ## 附录 D:本篇 Takeaway → T 编号 → 排查入口 速查表
 
-> **本附录是 §10 Takeaway 的"可执行版"**——把 5 条 Takeaway 拆成具体动作,绑定到 T 编号(对应 [01 篇 §2 的 12 时间点](01-进程总览:从点图标看app进程的诞生消亡与全栈抽象.md))和具体排查命令。
+> **本附录是 §10 Takeaway 的"可执行版"**——把 5 条 Takeaway 拆成具体动作,绑定到 T 编号(对应 [01 篇 §2 的 12 时间点](01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md))和具体排查命令。
 
 | Takeaway | 核心动作 | T 编号 | 关键排查命令 | 对应章节 |
 |---|---|---|---|---|

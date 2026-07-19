@@ -14,10 +14,10 @@
 
 - **本篇系列角色**：**E 模块 · 实战案例 2**（v4 §9 破例：单篇 800+ 行 / 图表 5-7 张）
 - **强依赖**：
-  - [A04-Zygote + SystemServer](A04-Zygote+SystemServer.md)
-  - [C02-启动死锁](C02-启动死锁与SystemServer卡死.md)
-  - [C04-启动崩溃](C04-启动崩溃与SystemServer-crash.md)
-  - [C05-开机无限重启](C05-开机无限重启与bootstat.md)
+  - [A04-Zygote + SystemServer](../../01-Mechanism/Framework/SystemServer/A04-Zygote+SystemServer.md)
+  - [C02-启动死锁](../../02-Symptom/S11-Startup/C-启动稳定性/C02-启动死锁.md)
+  - [C04-启动崩溃](../../02-Symptom/S11-Startup/C-启动稳定性/C04-启动崩溃.md)
+  - [C05-开机无限重启](../../02-Symptom/S11-Startup/C-启动稳定性/C05-开机无限重启.md)
   - [D01-D04 启动调试工具](../AOSP_Startup/)（4 篇）
 - **承接自**：[E01-案例 1：冷启动 8s → 1s](E01-案例1_冷启动8s-1s优化全过程.md)
 - **衔接去**：
@@ -658,10 +658,10 @@ adb shell dumpsys activity processes | head -50
 ## 14.2 与现有系列的关系
 
 > **本篇不重复**：
-> - [A04-Zygote + SystemServer](A04-Zygote+SystemServer.md) 已深入的 SystemServer 启动
-> - [C02-启动死锁](C02-启动死锁与SystemServer卡死.md) 已深入的启动死锁
-> - [C04-启动崩溃](C04-启动崩溃与SystemServer-crash.md) 已深入的启动崩溃
-> - [C05-开机无限重启](C05-开机无限重启与bootstat.md) 已深入的 BootLoop
+> - [A04-Zygote + SystemServer](../../01-Mechanism/Framework/SystemServer/A04-Zygote+SystemServer.md) 已深入的 SystemServer 启动
+> - [C02-启动死锁](../../02-Symptom/S11-Startup/C-启动稳定性/C02-启动死锁.md) 已深入的启动死锁
+> - [C04-启动崩溃](../../02-Symptom/S11-Startup/C-启动稳定性/C04-启动崩溃.md) 已深入的启动崩溃
+> - [C05-开机无限重启](../../02-Symptom/S11-Startup/C-启动稳定性/C05-开机无限重启.md) 已深入的 BootLoop
 > - [D01-D04 启动调试工具](../AOSP_Startup/) 已深入的 4 大工具
 >
 > **视角互补**：
@@ -751,9 +751,9 @@ adb shell dumpsys activity processes | head -50
 > **系列导航**：
 > - **上一篇**：[E01-案例 1：冷启动 8s → 1s](E01-案例1_冷启动8s-1s优化全过程.md)
 > - **下一篇**：[E03-案例 3：开机黑屏 30s SurfaceFlinger 卡死](E03-案例3_开机黑屏30s-SurfaceFlinger卡死.md)
-> - **本系列 README**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
-> - **机制联动**：[C02-启动死锁](C02-启动死锁与SystemServer卡死.md) · [C04-启动崩溃](C04-启动崩溃与SystemServer-crash.md) · [C05-开机无限重启](C05-开机无限重启与bootstat.md)
-> - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [D01-Perfetto Boot Trace](D01-Perfetto-Boot-Trace抓全栈启动时序.md)
+> - **本系列 README**：[README-AOSP_Startup系列.md](../../02-Symptom/S11-Startup/README.md)
+> - **机制联动**：[C02-启动死锁](../../02-Symptom/S11-Startup/C-启动稳定性/C02-启动死锁.md) · [C04-启动崩溃](../../02-Symptom/S11-Startup/C-启动稳定性/C04-启动崩溃.md) · [C05-开机无限重启](../../02-Symptom/S11-Startup/C-启动稳定性/C05-开机无限重启.md)
+> - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [D01-Perfetto Boot Trace](../../02-Symptom/S11-Startup/D-启动工具/D01-Perfetto-Boot-Trace抓全栈启动时序.md)
 
 ---
 

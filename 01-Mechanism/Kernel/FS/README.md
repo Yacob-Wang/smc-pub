@@ -54,7 +54,7 @@
 | 序号 | 文章 | 核心内容 |
 |-----|------|---------|
 | 15 | [Android存储架构概述](15-Android存储架构概述.md) | 分区布局、StorageManager、Vold、FUSE |
-| 16 | [Scoped Storage与文件访问](16-Scoped%20Storage与文件访问.md) | MediaStore、SAF、DocumentsProvider |
+| 16 | [Scoped Storage与文件访问](16-Scoped Storage与文件访问.md) | MediaStore、SAF、DocumentsProvider |
 | 17 | [文件权限与安全机制](17-文件权限与安全机制.md) | Unix 权限、Capabilities、SELinux、文件沙箱 |
 
 ### 第六部分：性能与调试（18-20）

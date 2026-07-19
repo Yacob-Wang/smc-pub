@@ -1211,7 +1211,7 @@ public PackageManagerService(Context context) {
 > **系列导航**：
 > - **上一篇**：[A03-Init 进程与 init.rc](A03-Init进程与init.rc.md)
 > - **下一篇**：[A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md)
-> - **本系列 README**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
+> - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
 > - **机制联动**：[Stability S04-SWT 专题](../Stability/S04-SWT卡死与Watchdog专题.md) · [Process 系列 · 03](../Process/) · [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md)
 > - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [Perfetto 系列](../Perfetto/)
 

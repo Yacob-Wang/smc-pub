@@ -34,103 +34,103 @@
 
 ### 第二部分：编译系统
 
-5. **[AOSP编译环境搭建](02_Build_System/01_AOSP_Build_Environment.md)**
+5. **[AOSP编译环境搭建](01_AOSP_Build_Environment.md)**
    - 编译环境要求
    - 源码获取和配置
    - 工具链配置
 
-6. **[分区编译流程](02_Build_System/02_Partition_Build_Process.md)** ⭐
+6. **[分区编译流程](02_Partition_Build_Process.md)** ⭐
    - 所有分区的编译方法
    - 编译命令和流程
    - 编译产物说明
 
-7. **[镜像生成和打包](02_Build_System/03_Image_Generation_And_Packaging.md)**
+7. **[镜像生成和打包](03_Image_Generation_And_Packaging.md)**
    - 镜像生成工具详解
    - 镜像打包流程
    - 镜像格式转换
 
-8. **[编译配置和选项](02_Build_System/04_Build_Configuration_And_Options.md)**
+8. **[编译配置和选项](04_Build_Configuration_And_Options.md)**
    - BoardConfig.mk 配置
    - 分区大小配置
    - 编译选项说明
 
 ### 第三部分：系统集成
 
-9. **[系统组成和启动流程](03_System_Integration/01_System_Composition_And_Boot.md)**
+9. **[系统组成和启动流程](../System-Integration/01_System_Composition_And_Boot.md)**
    - Android系统启动流程
    - 各分区在启动中的作用
    - 分区加载顺序
 
-10. **[分区挂载和使用](03_System_Integration/02_Partition_Mount_And_Usage.md)**
+10. **[分区挂载和使用](../System-Integration/02_Partition_Mount_And_Usage.md)**
     - fstab文件的作用
     - 分区挂载时机和挂载点
     - 运行时分区访问
 
-11. **[系统初始化流程](03_System_Integration/03_System_Initialization_Flow.md)**
+11. **[系统初始化流程](../System-Integration/03_System_Initialization_Flow.md)**
     - init进程的作用
     - rc文件解析
     - 服务启动顺序
 
 ### 第四部分：动态更新
 
-12. **[OTA更新机制](04_Dynamic_Updates/01_OTA_Update_Mechanism.md)**
+12. **[OTA更新机制](../Dynamic-Updates/01_OTA_Update_Mechanism.md)**
     - OTA更新的基本原理
     - 增量更新 vs 全量更新
     - 更新包生成
 
-13. **[可更新分区详解](04_Dynamic_Updates/02_Updatable_Partitions.md)**
+13. **[可更新分区详解](../Dynamic-Updates/02_Updatable_Partitions.md)**
     - 哪些分区可以动态更新
     - 更新限制和原因
     - 更新方式对比
 
-14. **[A/B分区系统](04_Dynamic_Updates/03_A_B_Partition_System.md)**
+14. **[A/B分区系统](../Dynamic-Updates/03_A_B_Partition_System.md)**
     - A/B分区的设计原理
     - 无缝更新机制
     - 回滚机制
 
-15. **[更新验证和回滚](04_Dynamic_Updates/04_Update_Verification_And_Rollback.md)**
+15. **[更新验证和回滚](../Dynamic-Updates/04_Update_Verification_And_Rollback.md)**
     - AVB验证机制
     - 签名验证
     - 更新失败处理
 
 ### 第五部分：编译专家专题
 
-16. **[动态分区深度解析](05_Expert_Topics/01_Dynamic_Partitions_Deep_Dive.md)**
+16. **[动态分区深度解析](01_Dynamic_Partitions_Deep_Dive.md)**
     - super分区的内部结构
     - 逻辑分区管理
     - 分区大小动态调整
 
-17. **[分区表和GPT详解](05_Expert_Topics/02_Partition_Table_And_GPT.md)**
+17. **[分区表和GPT详解](02_Partition_Table_And_GPT.md)**
     - GPT分区表结构
     - 分区表工具使用
     - 分区表修复方法
 
-18. **[镜像格式和工具详解](05_Expert_Topics/03_Image_Format_And_Tools.md)**
+18. **[镜像格式和工具详解](03_Image_Format_And_Tools.md)**
     - sparse image格式详解
     - 镜像格式转换
     - 镜像文件解析工具
 
-19. **[分区大小计算和规划](05_Expert_Topics/04_Partition_Size_Calculation.md)**
+19. **[分区大小计算和规划](04_Partition_Size_Calculation.md)**
     - 分区大小计算原则
     - 文件系统开销计算
     - 分区大小优化
 
-20. **[AVB验证和签名机制](05_Expert_Topics/05_AVB_And_Signing.md)**
+20. **[AVB验证和签名机制](05_AVB_And_Signing.md)**
     - Android Verified Boot原理
     - 分区签名流程
     - 密钥管理
 
-21. **[分区刷写和工具](05_Expert_Topics/06_Partition_Flashing_And_Tools.md)**
+21. **[分区刷写和工具](06_Partition_Flashing_And_Tools.md)**
     - fastboot协议详解
     - 分区刷写流程
     - 刷写工具对比
 
-22. **[分区调试和故障排查](05_Expert_Topics/07_Partition_Debugging_And_Troubleshooting.md)**
+22. **[分区调试和故障排查](07_Partition_Debugging_And_Troubleshooting.md)**
     - 分区问题诊断方法
     - 常见错误和解决方案
     - 调试工具使用
 
-23. **[不同厂商的分区差异](05_Expert_Topics/08_Vendor_Specific_Differences.md)**
+23. **[不同厂商的分区差异](08_Vendor_Specific_Differences.md)**
     - 主流厂商分区对比
     - 厂商特定分区说明
     - 兼容性考虑

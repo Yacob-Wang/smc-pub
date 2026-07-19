@@ -17,8 +17,8 @@
   - [10-Binder oneway 限流](10-Binder-oneway限流与防护方案.md) 4 道防线
 - **承接自**：08 已给工具地图，10 已给 oneway 限流，本篇是**五方方案横向对标**。
 - **衔接去**：
-  - [12-Binder 节点文件全景](12-Binder节点文件全景.md) 节点体系
-  - [13-Rust Binder 专题](13-Rust%20Binder专题.md) Rust 影响
+  - [12-Binder 节点文件全景](12-Binder节点文件全景与问题实战.md) 节点体系
+  - [13-Rust Binder 专题](13-Rust Binder专题.md) Rust 影响
 - **不重复内容**：
   - 不重复 08/10 的工具与方案
   - 本篇是**横向对标**——按"角色"组织
@@ -271,7 +271,7 @@ OEM 公开信息有限，主要通过：
 | **Substrate** | ❌ 不兼容 | 高 |
 | **eBPF / bpftrace** | ⚠️ 需签名 | 中（厂商签名）|
 
-**6.18 关键变化**：Rust ABI hook 需要 Frida 17+（详见 [13 §7.1](13-Rust%20Binder专题.md#71-hook-框架兼容性)）。
+**6.18 关键变化**：Rust ABI hook 需要 Frida 17+（详见 [13 §7.1](13-Rust Binder专题.md#71-hook-框架兼容性))）。
 
 ### 6.2 监控工具
 
@@ -516,7 +516,7 @@ OEM 公开信息有限，主要通过：
 
 ## 14. 下一篇衔接
 
-[12-Binder 节点文件全景](12-Binder节点文件全景.md) 是**所有 debugfs 节点 + binderfs** 的全景图——把诊断视角的内核态入口讲透。
+[12-Binder 节点文件全景](12-Binder节点文件全景与问题实战.md) 是**所有 debugfs 节点 + binderfs** 的全景图——把诊断视角的内核态入口讲透。
 
 ---
 

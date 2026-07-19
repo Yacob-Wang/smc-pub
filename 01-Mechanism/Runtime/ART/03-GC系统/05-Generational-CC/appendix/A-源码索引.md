@@ -188,10 +188,10 @@ enum RegionState : uint8_t {
 
 | AOSP 版本 | 关键变更 | 文档引用 |
 |:---|:---|:---|
-| AOSP 10.0 | GenCC 引入（Young/Old 分代） | [01-分代假说](01-分代假说.md) |
-| AOSP 11.0 | Card Table 优化 | [03-Card-Table基石](03-Card-Table基石.md) |
-| AOSP 12.0 | rbcc + 分代优化 | [03-Card-Table基石](03-Card-Table基石.md) |
-| AOSP 14.0 | 自适应晋升阈值 + 细粒度卡表 | [02-Young-Old划分](02-Young-Old划分.md) |
+| AOSP 10.0 | GenCC 引入（Young/Old 分代） | [01-分代假说](../01-分代假说.md) |
+| AOSP 11.0 | Card Table 优化 | [03-Card-Table基石](../03-Card-Table基石.md) |
+| AOSP 12.0 | rbcc + 分代优化 | [03-Card-Table基石](../03-Card-Table基石.md) |
+| AOSP 14.0 | 自适应晋升阈值 + 细粒度卡表 | [02-Young-Old划分](../02-Young-Old划分.md) |
 | **AOSP 17.0** | **GenCC 默认 + 软阈值 + Mod Union Table + 256 byte 卡表** | **本附录 + [10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md)** |
 
 ### 4.1 AOSP 17 关键 commit

@@ -1054,7 +1054,7 @@ public void handleResumeActivity(IBinder token, ...) {
 > **系列导航**：
 > - **上一篇**：[A04-Zygote + SystemServer](A04-Zygote+SystemServer.md)
 > - **下一篇**：[A06-第一帧与 Choreographer](A06-第一帧与Choreographer.md)
-> - **本系列 README**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
+> - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
 > - **机制联动**：[Stability S01-ANR 专题](../Stability/S01-ANR卡死与Input响应专题.md) · [Process 系列 · 02](../Process/) · [Activity 系列 · 01](../Activity/) · [Window 系列 · 01](../Window/)
 > - **工具联动**：[Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md) · [D03-WMS 视角](../Dumpsys/03-Window与WMS视角.md) · [D06-Package 视角](../Dumpsys/06-Package与权限.md)
 

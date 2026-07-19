@@ -23,7 +23,7 @@
 - **衔接去**：
   - A 模块收口 → 进入 B 模块（启动性能优化 B01-B04）
   - 风险排查跳转 [C03-启动黑屏](../Stability/C03-启动黑屏与SurfaceFlinger卡.md)（如已写）
-  - 工具跳转 [D04-启动期综合调试](D04-启动期dumpsys-systrace-traceview综合.md)
+  - 工具跳转 [D04-启动期综合调试](../D-启动工具/D04-启动期dumpsys-systrace-traceview综合.md)
 - **不重复内容**：
   - **不重复** [Window 系列](../Window/) 已深入的 WMS 通用视角
   - **不重复** A01-A05 已有的启动链路
@@ -1062,10 +1062,10 @@ private void scheduleVsyncLocked() {
 
 > **系列导航**：
 > - **上一篇**：[A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md)
-> - **A 模块收口**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
+> - **A 模块收口**：[README-AOSP_Startup系列.md](../README.md)
 > - **下一步（待写）**：B01-B04 启动性能优化
 > - **机制联动**：[Stability S05-HANG 专题](../Stability/S05-HANG与黑屏专题.md) · [Window 系列](../Window/) · [Dumpsys D05-Graphics](../Dumpsys/05-Graphics与渲染.md)
-> - **工具联动**：[Dumpsys D05-Graphics](../Dumpsys/05-Graphics与渲染.md) · [Perfetto 系列](../Perfetto/) · [D04-启动期综合调试](D04-启动期dumpsys-systrace-traceview综合.md)
+> - **工具联动**：[Dumpsys D05-Graphics](../Dumpsys/05-Graphics与渲染.md) · [Perfetto 系列](../Perfetto/) · [D04-启动期综合调试](../D-启动工具/D04-启动期dumpsys-systrace-traceview综合.md)
 
 ---
 

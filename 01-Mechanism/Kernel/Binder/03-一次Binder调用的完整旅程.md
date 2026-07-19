@@ -424,7 +424,7 @@ Arc<Process> 引用计数（编译期保证）
 - Rust 版：用 `Arc<T>` 自动管理，编译期保证无悬空
 
 **对读者有什么用**：
-- 6.18 升级后，`/sys/kernel/debug/binder/proc/<pid>` 的字段可能与 C 版不同——参考 [13 篇 §2.3](13-Rust%20Binder专题.md#23-关键数据结构rust-版)
+- 6.18 升级后，`/sys/kernel/debug/binder/proc/<pid>` 的字段可能与 C 版不同——参考 [13 篇 §2.3](13-Rust Binder专题.md#23-关键数据结构rust-版))
 - 监控工具需要适配 Rust 版字段
 
 ### 5.2 C 版 binder_transaction（参考 02 篇 §3.3）

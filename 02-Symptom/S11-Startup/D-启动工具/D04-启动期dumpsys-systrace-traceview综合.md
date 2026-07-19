@@ -696,7 +696,7 @@ adb shell dumpsys activity processes | grep "system_server"
 
 > **系列导航**：
 > - **上一篇**：[D03-bootchart 工具链](D03-bootchart工具链.md)
-> - **D 模块收口**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
+> - **D 模块收口**：[README-AOSP_Startup系列.md](../README.md)
 > - **下一步（待写）**：E01-E03 实战案例
 > - **机制联动**：[D01-Perfetto Boot Trace](D01-Perfetto-Boot-Trace抓全栈启动时序.md) · [D02-dumpsys + dropbox + bootstat 联用](D02-dumpsys+dropbox+bootstat联用.md) · [D03-bootchart 工具链](D03-bootchart工具链.md)
 > - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [Perfetto 系列](../Perfetto/)

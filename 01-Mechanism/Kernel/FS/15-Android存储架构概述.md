@@ -234,7 +234,7 @@ VFS 层
 
 ### 后续学习
 
-- [Scoped Storage与文件访问](16-Scoped%20Storage与文件访问.md) - 深入理解 Scoped Storage
+- [Scoped Storage与文件访问](16-Scoped Storage与文件访问.md) - 深入理解 Scoped Storage
 - [文件权限与安全机制](17-文件权限与安全机制.md) - 权限管理
 
 ## 参考资源

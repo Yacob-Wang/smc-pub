@@ -10,7 +10,7 @@
 >
 > **目录位置**:`Android_Framework/Process/`
 >
-> **上一篇**:[01-进程总览:从「点图标」看 app 进程的诞生、消亡与全栈抽象](01-进程总览:从点图标看app进程的诞生消亡与全栈抽象.md)
+> **上一篇**:[01-进程总览:从「点图标」看 app 进程的诞生、消亡与全栈抽象](01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)
 > **下一篇**:[03-Zygote 孵化:Android 进程工厂](03-Zygote孵化:Android进程工厂.md)
 >
 > **关联已有系列**(本篇末「附录 C」展开):
@@ -167,7 +167,7 @@
 
 **任何一层的契约被破坏,AMS 都会做错决策**——决策错的结果可能延迟 1.5s 出首帧(轻),也可能导致 ANR / 进程错乱 / 账号串号(重)。
 
-> **跨篇引用**:01 篇 [§3.5 四层关系总图](01-进程总览:从点图标看app进程的诞生消亡与全栈抽象.md#35-四层关系总图) 给出了完整的 4 层抽象地图。本篇是这张地图的「第一段切面」—— [T1] → [T2] 段。
+> **跨篇引用**:01 篇 [§3.5 四层关系总图](01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md#35-四层关系总图)) 给出了完整的 4 层抽象地图。本篇是这张地图的「第一段切面」—— [T1] → [T2] 段。
 
 ---
 
@@ -239,7 +239,7 @@
 
 ### 2.2 ActivityTaskManager 内部架构
 
-> **AOSP 14 的关键演进**:01 篇 [§3.2 Framework 层](01-进程总览:从点图标看app进程的诞生消亡与全栈抽象.md#32-framework-层看到的进程) 提到的 `ActivityTaskManager` 已经从 AOSP 13 之前的「单类入口 + StartActivityRequest」模式**完全重构**为 AOSP 14 的「3 类协作 + builder 链式」模式。
+> **AOSP 14 的关键演进**:01 篇 [§3.2 Framework 层](01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md#32-framework-层看到的进程)) 提到的 `ActivityTaskManager` 已经从 AOSP 13 之前的「单类入口 + StartActivityRequest」模式**完全重构**为 AOSP 14 的「3 类协作 + builder 链式」模式。
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
@@ -331,7 +331,7 @@
 
 > **这 5 个状态**在 AOSP 14 中都集中在 `ProcessList` / `ActivityManagerService` / `ActivityTaskSupervisor` 三个类里。**任何一个被改错,都会被「时间放大」**——本篇 [T2] 决策时的 5ms 错误,会演变成 [T8] `onCreate` 时的 1.5s 卡顿。
 
-> **跨篇引用**:本系列 [07-调度与资源](07-调度与资源:CFS与进程生死.md) 会展开 `mLruProcesses` 的 adj 排序机制 + lmkd 选进程。本篇只讲 AMS 决策的「入口」,不深入 lmkd。
+> **跨篇引用**:本系列 [07-调度与资源](07-调度与资源：CFS与进程生死.md) 会展开 `mLruProcesses` 的 adj 排序机制 + lmkd 选进程。本篇只讲 AMS 决策的「入口」,不深入 lmkd。
 
 ---
 
@@ -675,7 +675,7 @@ boolean startProcessLocked(ProcessRecord app, HostingRecord hostingRecord,
 
 4. **5 判定全过的「line 2003」入口**才是真正调 `Process.start()`——**这是 AOSP 14 关键演进**:AOSP 13 之前,`startProcessLocked` 重载 3 不存在,**判定全过直接调 `Process.start()`**;AOSP 14 加了 `HostingRecord hostingRecord, String entryPoint, ...` 参数化,支持 4 种 zygote fork 路径(详见 §3.7)。
 
-> **跨篇引用**:01 篇 [§3.2 Framework 层](01-进程总览:从点图标看app进程的诞生消亡与全栈抽象.md#32-framework-层看到的进程) 简要列出了 `mProcessNames` (line 774) 和 `mLruProcesses` (line 457) 两个核心容器 + adj 16 档常量。本篇深入 `mProcessNames` 在判定 ① 时的注册时序。
+> **跨篇引用**:01 篇 [§3.2 Framework 层](01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md#32-framework-层看到的进程)) 简要列出了 `mProcessNames` (line 774) 和 `mLruProcesses` (line 457) 两个核心容器 + adj 16 档常量。本篇深入 `mProcessNames` 在判定 ① 时的注册时序。
 
 ### 3.5 HostingRecord:AMS 决策的「完整上下文」封装
 
@@ -910,7 +910,7 @@ public static final int FLAG_ACTIVITY_NO_HISTORY = 0x40000000;         // 无历
 
 2. **`singleInstance` 的「强制新进程」 是「内存隔离」 的双刃剑**——好处:WebView 进程崩溃不影响主进程;坏处:每个 `singleInstance` 进程**消耗独立内存**(Java heap 独立,无法共享)。**OEM 误用 `singleInstance` 给「启动器」 Activity**,会导致每次启动器启动都新 fork 一个进程,冷启动 3s+。
 
-> **跨篇引用**:本系列 [07-调度与资源](07-调度与资源:CFS与进程生死.md) §2.2 会展开 `singleInstance` 进程的 adj 计算。
+> **跨篇引用**:本系列 [07-调度与资源](07-调度与资源：CFS与进程生死.md) §2.2 会展开 `singleInstance` 进程的 adj 计算。
 
 ### 3.7 ZygotePolicyFlags:4 个 bit 决定 Zygote fork 的优先级
 
@@ -1633,13 +1633,13 @@ public class MyApplication extends Application {
 
 **与本系列「上承下接」 的内部链接**(后续 6 篇写完后,这里会更新为相对路径):
 
-- [01-进程总览:从「点图标」看 app 进程的诞生、消亡与全栈抽象](01-进程总览:从点图标看app进程的诞生消亡与全栈抽象.md)
+- [01-进程总览:从「点图标」看 app 进程的诞生、消亡与全栈抽象](01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)
 - [02-AMS 决策:从「Launcher 触达」到「冷启动判定」的 100ms 链路](02-AMS-冷启动判定与进程启动链路.md)(本篇)
 - [03-Zygote 孵化:Android 进程工厂](03-Zygote孵化:Android进程工厂.md)
 - [04-应用进程首生:从 fork 到 ActivityThread.main](04-应用进程首生:从fork到ActivityThread.main.md)
-- [05-ART 进程内世界:JIT/AOT、OAT 加载、信号处理与 GC 线程](05-ART进程内世界:JIT-AOT与GC.md)
+- [05-ART 进程内世界:JIT/AOT、OAT 加载、信号处理与 GC 线程](05-ART进程内世界：JIT-AOT与GC.md)
 - [06-Kernel 进程实现:task_struct、cgroup、namespace 与 procfs](06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)
-- [07-调度与资源:CFS、schedtune、cpuset、memcg、blkio 与进程生死](07-调度与资源:CFS与进程生死.md)
+- [07-调度与资源:CFS、schedtune、cpuset、memcg、blkio 与进程生死](07-调度与资源：CFS与进程生死.md)
 - [08-进程稳定性风险全景:ANR/OOM/进程泄漏/僵尸与跨层治理](08-进程稳定性风险全景与跨层治理.md)
 
 ---

@@ -43,7 +43,7 @@ kernel/fs/io_uring.c                                      # io_uring（heap dump
 
 ## 二、关键函数清单（按 4 篇正文分类）
 
-### 2.1 [01-9种GcCause](01-9种GcCause.md) 相关函数
+### 2.1 [01-9种GcCause](../01-9种GcCause.md) 相关函数
 
 | 函数 | 文件 | 功能 | AOSP 17 变化 |
 |:---|:---|:---|:---|
@@ -53,7 +53,7 @@ kernel/fs/io_uring.c                                      # io_uring（heap dump
 | `GcCause` 枚举 | `gc_cause.h` | 11 种 GcCause 定义 | **★ 扩展 3 个** |
 | `Heap::ShouldTriggerSoftThreshold` ★ | `heap.cc` | 软阈值触发检查 | **AOSP 17 新增** |
 
-### 2.2 [02-HeapTaskDaemon](02-HeapTaskDaemon.md) 相关函数
+### 2.2 [02-HeapTaskDaemon](../02-HeapTaskDaemon.md) 相关函数
 
 | 函数 | 文件 | 功能 | AOSP 17 变化 |
 |:---|:---|:---|:---|
@@ -69,7 +69,7 @@ kernel/fs/io_uring.c                                      # io_uring（heap dump
 | `TrimHeapTask::Run` | `heap_task.h` | Trim Heap 任务 | 不变 |
 | `NativeAllocGCTask::Run` | `heap_task.h` | Native 触发的 GC 任务 | 不变 |
 
-### 2.3 [03-ConcurrentGCTask](03-ConcurrentGCTask.md) 相关函数
+### 2.3 [03-ConcurrentGCTask](../03-ConcurrentGCTask.md) 相关函数
 
 | 函数 | 文件 | 功能 | AOSP 17 变化 |
 |:---|:---|:---|:---|
@@ -84,7 +84,7 @@ kernel/fs/io_uring.c                                      # io_uring（heap dump
 | `Heap::ScheduleBackgroundGenCC` ★ | `heap.cc` | 后台分代 CC 调度 | **AOSP 17 新增** |
 | `Heap::ScheduleThrottledNativeGC` ★ | `heap.cc` | 限流后重试 | **AOSP 17 新增** |
 
-### 2.4 [04-GC_FOR_ALLOC路径](04-GC_FOR_ALLOC路径.md) 相关函数
+### 2.4 [04-GC_FOR_ALLOC路径](../04-GC_FOR_ALLOC路径.md) 相关函数
 
 | 函数 | 文件 | 功能 | AOSP 17 变化 |
 |:---|:---|:---|:---|
@@ -257,9 +257,9 @@ static constexpr int kDefaultHeapTaskDaemonPriority = -19;
 
 | 引用方向 | 来源 | 目标 | 关联内容 |
 |:---|:---|:---|:---|
-| 来自 | [02-HeapTaskDaemon](02-HeapTaskDaemon.md) | `heap_task_daemon.cc` | HeapTaskDaemon 主循环 |
-| 来自 | [03-ConcurrentGCTask](03-ConcurrentGCTask.md) | `heap_task.h` | ConcurrentGCTask |
-| 来自 | [04-GC_FOR_ALLOC路径](04-GC_FOR_ALLOC路径.md) | `heap.cc` | Heap::TryToAllocate |
+| 来自 | [02-HeapTaskDaemon](../02-HeapTaskDaemon.md) | `heap_task_daemon.cc` | HeapTaskDaemon 主循环 |
+| 来自 | [03-ConcurrentGCTask](../03-ConcurrentGCTask.md) | `heap_task.h` | ConcurrentGCTask |
+| 来自 | [04-GC_FOR_ALLOC路径](../04-GC_FOR_ALLOC路径.md) | `heap.cc` | Heap::TryToAllocate |
 | 被引用 | [10-ART17分代GC强化专章 v2](../../10-ART17分代GC强化专章-v2.md) | `generational_cc.h` | kSoftThresholdPercent |
 | 被引用 | [05-Generational-CC](../../05-Generational-CC/) | `generational_cc.cc` | GenCC 完整算法 |
 | 被引用 | [01-可达性分析](../../01-基础理论/01-可达性分析.md) | `concurrent_copying.cc` | 可达性分析 |

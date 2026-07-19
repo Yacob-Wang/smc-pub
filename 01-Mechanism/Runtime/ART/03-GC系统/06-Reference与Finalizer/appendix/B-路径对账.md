@@ -308,10 +308,10 @@ adb shell setprop dalvik.vm.softthresholdpercent 20
 
 | 引用方向 | 来源 | 目标 |
 |:---|:---|:---|
-| 被引用 | [01-可达性状态机](01-可达性状态机.md) | 6.2/6.3/6.4 软/弱/Final 详解 |
-| 被引用 | [02-SoftReference](02-SoftReference.md) | 6.1 可达性基础 |
-| 被引用 | [03-WeakReference](03-WeakReference.md) | 6.1 可达性基础 + 6.2 软引用 |
-| 被引用 | [04-FinalReference](04-FinalReference.md) | 6.1 可达性基础 + 6.3 弱引用 |
+| 被引用 | [01-可达性状态机](../01-可达性状态机.md) | 6.2/6.3/6.4 软/弱/Final 详解 |
+| 被引用 | [02-SoftReference](../02-SoftReference.md) | 6.1 可达性基础 |
+| 被引用 | [03-WeakReference](../03-WeakReference.md) | 6.1 可达性基础 + 6.2 软引用 |
+| 被引用 | [04-FinalReference](../04-FinalReference.md) | 6.1 可达性基础 + 6.3 弱引用 |
 
 ### 6.2 跨子模块引用
 

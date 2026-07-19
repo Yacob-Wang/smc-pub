@@ -534,10 +534,10 @@ Finalizer 优先级：MIN_PRIORITY
 |:---|:---|:---|
 | 引用 | [appendix/A-源码索引](A-源码索引.md) | 完整源码路径 |
 | 引用 | [appendix/B-路径对账](B-路径对账.md) | AOSP 17 版本对账 + 调试命令 |
-| 引用 | [01-可达性状态机](01-可达性状态机.md) | Reference 状态机 |
-| 引用 | [02-SoftReference](02-SoftReference.md) | 软引用保留率 |
-| 引用 | [03-WeakReference](03-WeakReference.md) | 弱引用 + LeakCanary |
-| 引用 | [04-FinalReference](04-FinalReference.md) | Finalizer 线程池化 |
+| 引用 | [01-可达性状态机](../01-可达性状态机.md) | Reference 状态机 |
+| 引用 | [02-SoftReference](../02-SoftReference.md) | 软引用保留率 |
+| 引用 | [03-WeakReference](../03-WeakReference.md) | 弱引用 + LeakCanary |
+| 引用 | [04-FinalReference](../04-FinalReference.md) | Finalizer 线程池化 |
 | 引用 | [10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) | ART 17 分代 GC 强化 |
 
 ---

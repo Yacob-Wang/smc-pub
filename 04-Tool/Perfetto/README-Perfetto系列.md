@@ -168,7 +168,7 @@ Perfetto 是 Android 新一代系统级追踪框架,统一了 ftrace/atrace/syst
 | §6 | 配置管理最佳实践:分场景模板 + 动态下发 | - | 避免配置爆炸 |
 | §7 | 实战:IO 劣化 statsd 发现 → Perfetto 抓取 → 根因定位 | - | 完整闭环演示 |
 
-### 3.4 第 4 篇:[04-Perfetto 定制化实战:ANR 后自动抓取 trace](04-Perfetto定制化实战:ANR后自动抓取trace.md)
+### 3.4 第 4 篇:[04-Perfetto 定制化实战:ANR 后自动抓取 trace](04-Perfetto定制化实战：ANR后自动抓取trace.md)
 
 **本篇定位**:落地实战。从"看教程"到"上线用"的关键一步。
 
@@ -308,4 +308,4 @@ Perfetto 配置错误是线上最高频的问题来源(占比 ~40%)。本系列:
 
 读本 README 后:
 - 想知道 Perfetto **是什么、在哪、怎么开始** → [01-Perfetto系统总览与架构设计](01-Perfetto系统总览与架构设计.md)
-- 想直接落地 **ANR 自动抓取** → [04-Perfetto定制化实战:ANR后自动抓取trace](04-Perfetto定制化实战:ANR后自动抓取trace.md)
+- 想直接落地 **ANR 自动抓取** → [04-Perfetto定制化实战:ANR后自动抓取trace](04-Perfetto定制化实战：ANR后自动抓取trace.md)

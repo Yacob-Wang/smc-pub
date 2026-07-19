@@ -15,15 +15,15 @@
 - **本篇系列角色**：**A 链路 · 阶段 A5 详解**（v4 §9 破例：单篇 700+ 行 / 图表 5-7 张）
 - **强依赖**：
   - [A01-启动链路总览](A01-启动链路总览.md)（必读前置）
-  - [A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md)（必读前置 · onResume 之后）
+  - [A05-AMS/PMS/WMS 四大组件启动](../../02-Symptom/S11-Startup/A-启动机制/A05-AMS-PMS-WMS四大组件启动.md)（必读前置 · onResume 之后）
   - [Window 系列 · 01-WMS 总览](../Window/01-WMS-总览与架构.md)（如有）
   - [Stability S05-HANG 专题](../Stability/S05-HANG与黑屏专题.md)（启动期黑屏）
   - [Dumpsys D05-Graphics 与渲染](../Dumpsys/05-Graphics与渲染.md)
-- **承接自**：[A05 §5.2 Step 7-8 onResume + 第一帧](A05-AMS-PMS-WMS四大组件启动.md) → ViewRootImpl.performTraversals
+- **承接自**：[A05 §5.2 Step 7-8 onResume + 第一帧](../../02-Symptom/S11-Startup/A-启动机制/A05-AMS-PMS-WMS四大组件启动.md) → ViewRootImpl.performTraversals
 - **衔接去**：
   - A 模块收口 → 进入 B 模块（启动性能优化 B01-B04）
   - 风险排查跳转 [C03-启动黑屏](../Stability/C03-启动黑屏与SurfaceFlinger卡.md)（如已写）
-  - 工具跳转 [D04-启动期综合调试](D04-启动期dumpsys-systrace-traceview综合.md)
+  - 工具跳转 [D04-启动期综合调试](../../02-Symptom/S11-Startup/D-启动工具/D04-启动期dumpsys-systrace-traceview综合.md)
 - **不重复内容**：
   - **不重复** [Window 系列](../Window/) 已深入的 WMS 通用视角
   - **不重复** A01-A05 已有的启动链路
@@ -942,7 +942,7 @@ private void scheduleVsyncLocked() {
 
 > **本篇不重复**：
 > - [Window 系列](../Window/) 已深入的 WMS 通用机制
-> - [A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md) 已深入的 onCreate + onResume
+> - [A05-AMS/PMS/WMS 四大组件启动](../../02-Symptom/S11-Startup/A-启动机制/A05-AMS-PMS-WMS四大组件启动.md) 已深入的 onCreate + onResume
 > - [Dumpsys D05-Graphics](../Dumpsys/05-Graphics与渲染.md) 已深入的 gfxinfo 工具
 >
 > **视角互补**：
@@ -956,10 +956,10 @@ private void scheduleVsyncLocked() {
 
 **A 模块 6 篇完结**：
 - [A01-启动链路总览](A01-启动链路总览.md)：5 大阶段 + 22 个时间锚点
-- [A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md)：A1+A2 阶段详解
-- [A03-Init 进程与 init.rc](A03-Init进程与init.rc.md)：A3 上半段详解
-- [A04-Zygote + SystemServer](A04-Zygote+SystemServer.md)：A3 下半段 + A4 详解
-- [A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md)：A4 下半段详解
+- [A02-Bootloader 到 Kernel](../../02-Symptom/S11-Startup/A-启动机制/A02-Bootloader到Kernel.md)：A1+A2 阶段详解
+- [A03-Init 进程与 init.rc](../Native/A03-Init进程与init.rc.md)：A3 上半段详解
+- [A04-Zygote + SystemServer](SystemServer/A04-Zygote+SystemServer.md)：A3 下半段 + A4 详解
+- [A05-AMS/PMS/WMS 四大组件启动](../../02-Symptom/S11-Startup/A-启动机制/A05-AMS-PMS-WMS四大组件启动.md)：A4 下半段详解
 - **A06（本文）**：A5 阶段详解
 
 **下一步**：
@@ -1061,11 +1061,11 @@ private void scheduleVsyncLocked() {
 ---
 
 > **系列导航**：
-> - **上一篇**：[A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md)
-> - **A 模块收口**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
+> - **上一篇**：[A05-AMS/PMS/WMS 四大组件启动](../../02-Symptom/S11-Startup/A-启动机制/A05-AMS-PMS-WMS四大组件启动.md)
+> - **A 模块收口**：[README-AOSP_Startup系列.md](../../02-Symptom/S11-Startup/README.md)
 > - **下一步（待写）**：B01-B04 启动性能优化
 > - **机制联动**：[Stability S05-HANG 专题](../Stability/S05-HANG与黑屏专题.md) · [Window 系列](../Window/) · [Dumpsys D05-Graphics](../Dumpsys/05-Graphics与渲染.md)
-> - **工具联动**：[Dumpsys D05-Graphics](../Dumpsys/05-Graphics与渲染.md) · [Perfetto 系列](../Perfetto/) · [D04-启动期综合调试](D04-启动期dumpsys-systrace-traceview综合.md)
+> - **工具联动**：[Dumpsys D05-Graphics](../Dumpsys/05-Graphics与渲染.md) · [Perfetto 系列](../Perfetto/) · [D04-启动期综合调试](../../02-Symptom/S11-Startup/D-启动工具/D04-启动期dumpsys-systrace-traceview综合.md)
 
 ---
 

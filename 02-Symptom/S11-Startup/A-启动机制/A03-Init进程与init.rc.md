@@ -23,7 +23,7 @@
 - **衔接去**：
   - 下一篇 [A04-Zygote + SystemServer](A04-Zygote+SystemServer.md) 深入 A3 下半段 + A4 阶段
   - 风险排查跳转 [C01-启动 ANR](../Stability/C01-启动ANR与BootCompleted.md)（如已写）
-  - 工具跳转 [D02-dumpsys + dropbox + bootstat 联用](D02-dumpsys+dropbox+bootstat联用.md)
+  - 工具跳转 [D02-dumpsys + dropbox + bootstat 联用](../D-启动工具/D02-dumpsys+dropbox+bootstat联用.md)
 - **不重复内容**：
   - **不重复** [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/) 已深入的进程机制
   - **不重复** A01+A02 已有的硬件层内容
@@ -1217,7 +1217,7 @@ on boot
 > **系列导航**：
 > - **上一篇**：[A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md)
 > - **下一篇**：[A04-Zygote + SystemServer](A04-Zygote+SystemServer.md)
-> - **本系列 README**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
+> - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
 > - **机制联动**：[Stability S04-SWT 专题](../Stability/S04-SWT卡死与Watchdog专题.md) · [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md) · [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/)
 > - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [Perfetto 系列](../Perfetto/)
 

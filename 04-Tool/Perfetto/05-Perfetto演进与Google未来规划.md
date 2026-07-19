@@ -14,7 +14,7 @@
 > **数据来源**:Google 公开文档 + Android Dev Summit 演讲 + 上游 commit history + AOSP TODO/FIXME 注释推断
 >
 > **目录位置**:`Android_Framework/Perfetto/`
-> **上一篇**:[04-Perfetto 定制化实战:ANR 后自动抓取 trace](04-Perfetto定制化实战:ANR后自动抓取trace.md)
+> **上一篇**:[04-Perfetto 定制化实战:ANR 后自动抓取 trace](04-Perfetto定制化实战：ANR后自动抓取trace.md)
 > **下一篇**:无(系列收尾)
 
 ---

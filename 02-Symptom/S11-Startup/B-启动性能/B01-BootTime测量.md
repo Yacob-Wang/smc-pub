@@ -14,17 +14,17 @@
 
 - **本篇系列角色**：**B 模块 · 性能测量篇**（v4 §9 破例：单篇 700+ 行 / 图表 5-7 张）
 - **强依赖**：
-  - [A01-启动链路总览](A01-启动链路总览.md)（必读前置 · 5 大阶段）
-  - [A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md)（测量 Kernel initcall 耗时）
-  - [A03-Init 进程与 init.rc](A03-Init进程与init.rc.md)（测量 init.rc 解析耗时）
-  - [A04-Zygote + SystemServer](A04-Zygote+SystemServer.md)（测量 50+ 服务启动耗时）
+  - [A01-启动链路总览](../A-启动机制/A01-启动链路总览.md)（必读前置 · 5 大阶段）
+  - [A02-Bootloader 到 Kernel](../A-启动机制/A02-Bootloader到Kernel.md)（测量 Kernel initcall 耗时）
+  - [A03-Init 进程与 init.rc](../A-启动机制/A03-Init进程与init.rc.md)（测量 init.rc 解析耗时）
+  - [A04-Zygote + SystemServer](../A-启动机制/A04-Zygote+SystemServer.md)（测量 50+ 服务启动耗时）
   - [Perfetto 系列 · 01-总览](../Perfetto/01-Perfetto系统总览与架构设计.md)（如有）
   - [Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md)（bootstat 工具）
-- **承接自**：[A06-第一帧与 Choreographer](A06-第一帧与Choreographer.md)（A 模块收口）
+- **承接自**：[A06-第一帧与 Choreographer](../A-启动机制/A06-第一帧与Choreographer.md)（A 模块收口）
 - **衔接去**：
-  - 下一篇 [B02-启动时间优化](B02-启动时间优化_dex2oat与Zygote预加载.md) 介绍优化方法
+  - 下一篇 [B02-启动时间优化](B02-启动时间优化.md) 介绍优化方法
   - 然后 B03（黑屏）+ B04（启动卡顿）
-  - 工具跳转 [D01-Perfetto Boot Trace](D01-Perfetto-Boot-Trace抓全栈启动时序.md)（规划中）
+  - 工具跳转 [D01-Perfetto Boot Trace](../D-启动工具/D01-Perfetto-Boot-Trace抓全栈启动时序.md)（规划中）
 - **不重复内容**：
   - **不重复** [Perfetto 系列](../Perfetto/) 已深入的 Perfetto 通用机制
   - **不重复** A01-A06 已深入的启动链路
@@ -879,7 +879,7 @@ adb shell dmesg | grep "initcall.*returned.*[0-9]\{4,\}"
 
 ## 12.3 下一步
 
-- 下一篇 [B02-启动时间优化](B02-启动时间优化_dex2oat与Zygote预加载.md) 介绍优化方法
+- 下一篇 [B02-启动时间优化](B02-启动时间优化.md) 介绍优化方法
 - 然后 B03（黑屏）+ B04（启动卡顿）
 - 工具跳转 [D01-Perfetto Boot Trace](D01-Perfetto-Boot-Trace抓全栈启动启动时序.md)（规划中）
 
@@ -959,11 +959,11 @@ adb shell dmesg | grep "initcall.*returned.*[0-9]\{4,\}"
 ---
 
 > **系列导航**：
-> - **上一篇**：[A06-第一帧与 Choreographer](A06-第一帧与Choreographer.md)
-> - **下一篇**：[B02-启动时间优化](B02-启动时间优化_dex2oat与Zygote预加载.md)
-> - **本系列 README**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
+> - **上一篇**：[A06-第一帧与 Choreographer](../A-启动机制/A06-第一帧与Choreographer.md)
+> - **下一篇**：[B02-启动时间优化](B02-启动时间优化.md)
+> - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
 > - **机制联动**：[Perfetto 系列 · 01](../Perfetto/01-Perfetto系统总览与架构设计.md) · [Stability S05-HANG 专题](../Stability/S05-HANG与黑屏专题.md)
-> - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [D01-Perfetto Boot Trace](D01-Perfetto-Boot-Trace抓全栈启动时序.md)（规划中）
+> - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [D01-Perfetto Boot Trace](../D-启动工具/D01-Perfetto-Boot-Trace抓全栈启动时序.md)（规划中）
 
 ---
 

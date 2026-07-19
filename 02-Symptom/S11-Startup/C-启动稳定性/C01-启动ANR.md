@@ -14,13 +14,13 @@
 
 - **本篇系列角色**：**C 模块 · 启动 ANR 专题**（v4 §9 破例：单篇 600+ 行 / 图表 4-6 张）
 - **强依赖**：
-  - [A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md)（必读 · ANR 阈值）
+  - [A05-AMS/PMS/WMS 四大组件启动](../A-启动机制/A05-AMS-PMS-WMS四大组件启动.md)（必读 · ANR 阈值）
   - [Stability S01-ANR 专题](../Stability/S01-ANR卡死与Input响应专题.md)（必读）
   - [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md)
   - [Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md)
-- **承接自**：[B04-启动卡顿](B04-启动卡顿_onCreate卡死与主线程任务.md)（B 模块收口）
+- **承接自**：[B04-启动卡顿](../B-启动性能/B04-启动卡顿.md)（B 模块收口）
 - **衔接去**：
-  - 下一篇 [C02-启动死锁](C02-启动死锁与SystemServer卡死.md)
+  - 下一篇 [C02-启动死锁](C02-启动死锁.md)
   - 然后 C03（启动黑屏）+ C04（启动崩溃）+ C05（开机无限重启）
 - **不重复内容**：
   - **不重复** [S01-ANR 专题](../Stability/S01-ANR卡死与Input响应专题.md) 已深入的 ANR 通用机制
@@ -602,8 +602,8 @@ adb shell dumpsys dropbox --print SYSTEM_BOOT
 
 > **本篇不重复**：
 > - [Stability S01-ANR 专题](../Stability/S01-ANR卡死与Input响应专题.md) 已深入的 ANR 通用机制
-> - [A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md) 已深入的四大组件启动
-> - [B04-启动卡顿](B04-启动卡顿_onCreate卡死与主线程任务.md) 已深入的启动卡顿
+> - [A05-AMS/PMS/WMS 四大组件启动](../A-启动机制/A05-AMS-PMS-WMS四大组件启动.md) 已深入的四大组件启动
+> - [B04-启动卡顿](../B-启动性能/B04-启动卡顿.md) 已深入的启动卡顿
 >
 > **视角互补**：
 > - **本篇**：**"启动期 ANR"场景专项**——5 类 + BOOT_COMPLETED
@@ -614,7 +614,7 @@ adb shell dumpsys dropbox --print SYSTEM_BOOT
 
 ## 9.3 下一步
 
-- 下一篇 [C02-启动死锁](C02-启动死锁与SystemServer卡死.md) 介绍启动死锁
+- 下一篇 [C02-启动死锁](C02-启动死锁.md) 介绍启动死锁
 - 然后 C03（启动黑屏）+ C04（启动崩溃）+ C05（开机无限重启）
 
 ## 9.4 5 条 Takeaway
@@ -695,11 +695,11 @@ adb shell dumpsys dropbox --print SYSTEM_BOOT
 ---
 
 > **系列导航**：
-> - **上一篇**：[B04-启动卡顿](B04-启动卡顿_onCreate卡死与主线程任务.md)
-> - **下一篇**：[C02-启动死锁](C02-启动死锁与SystemServer卡死.md)
-> - **本系列 README**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
+> - **上一篇**：[B04-启动卡顿](../B-启动性能/B04-启动卡顿.md)
+> - **下一篇**：[C02-启动死锁](C02-启动死锁.md)
+> - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
 > - **机制联动**：[Stability S01-ANR 专题](../Stability/S01-ANR卡死与Input响应专题.md) · [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md) · [Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md)
-> - **工具联动**：[Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md) · [D04-启动期综合调试](D04-启动期dumpsys-systrace-traceview综合.md)（规划中）
+> - **工具联动**：[Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md) · [D04-启动期综合调试](../D-启动工具/D04-启动期dumpsys-systrace-traceview综合.md)（规划中）
 
 ---
 

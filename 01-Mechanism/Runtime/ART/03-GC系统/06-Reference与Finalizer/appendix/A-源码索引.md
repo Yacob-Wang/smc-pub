@@ -17,7 +17,7 @@
 | 调试命令 | ✓ dumpsys + logcat 命令 | [appendix/B-路径对账](B-路径对账.md) 详细 |
 | 工程基线 | — | [appendix/D-工程基线](D-工程基线.md) 详细 |
 
-**承接自**：本附录为 [01-可达性状态机](01-可达性状态机.md)（重写为 v2 升级版）~ [04-FinalReference](04-FinalReference.md)（重写为 v2 升级版）4 篇的源码索引汇总。
+**承接自**：本附录为 [01-可达性状态机](../01-可达性状态机.md)（重写为 v2 升级版）~ [04-FinalReference](../04-FinalReference.md)（重写为 v2 升级版）4 篇的源码索引汇总。
 
 **衔接去**：[appendix/B-路径对账](B-路径对账.md) 路径对账（重写为 v2 升级版）；[appendix/D-工程基线](D-工程基线.md) 工程基线（重写为 v2 升级版）；[10-ART17分代GC强化专章 v2](../10-ART17分代GC强化专章-v2.md) ART 17 分代 GC 强化。
 

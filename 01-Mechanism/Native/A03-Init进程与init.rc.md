@@ -14,16 +14,16 @@
 
 - **本篇系列角色**：**A 链路 · 阶段 A3 上半段详解**（v4 §9 破例：单篇 700+ 行 / 图表 5-7 张）
 - **强依赖**：
-  - [A01-启动链路总览](A01-启动链路总览.md)（必读前置）
-  - [A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md)（必读前置）
+  - [A01-启动链路总览](../Framework/A01-启动链路总览.md)（必读前置）
+  - [A02-Bootloader 到 Kernel](../../02-Symptom/S11-Startup/A-启动机制/A02-Bootloader到Kernel.md)（必读前置）
   - [Linux_Kernel/Process · 01-子系统全景](../01-Mechanism/Kernel/Process/01-进程子系统全景与边界契约.md)
   - [Stability S04-SWT 专题](../Stability/S04-SWT卡死与Watchdog专题.md)（init 卡死 → Watchdog 杀进程）
   - [Dumpsys D02-Activity 与 AMS 视角](../Dumpsys/02-Activity与AMS视角.md)
-- **承接自**：[A02 §4.2 T10 rest_init](A02-Bootloader到Kernel.md) → init 进程创建
+- **承接自**：[A02 §4.2 T10 rest_init](../../02-Symptom/S11-Startup/A-启动机制/A02-Bootloader到Kernel.md) → init 进程创建
 - **衔接去**：
-  - 下一篇 [A04-Zygote + SystemServer](A04-Zygote+SystemServer.md) 深入 A3 下半段 + A4 阶段
+  - 下一篇 [A04-Zygote + SystemServer](../Framework/SystemServer/A04-Zygote+SystemServer.md) 深入 A3 下半段 + A4 阶段
   - 风险排查跳转 [C01-启动 ANR](../Stability/C01-启动ANR与BootCompleted.md)（如已写）
-  - 工具跳转 [D02-dumpsys + dropbox + bootstat 联用](D02-dumpsys+dropbox+bootstat联用.md)
+  - 工具跳转 [D02-dumpsys + dropbox + bootstat 联用](../../02-Symptom/S11-Startup/D-启动工具/D02-dumpsys+dropbox+bootstat联用.md)
 - **不重复内容**：
   - **不重复** [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/) 已深入的进程机制
   - **不重复** A01+A02 已有的硬件层内容
@@ -1105,7 +1105,7 @@ on boot
 
 > **本篇不重复**：
 > - [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/) 已深入的进程机制
-> - [A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md) 已深入的硬件层
+> - [A02-Bootloader 到 Kernel](../../02-Symptom/S11-Startup/A-启动机制/A02-Bootloader到Kernel.md) 已深入的硬件层
 > - [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md) 已深入的 AMS dumpsys
 >
 > **视角互补**：
@@ -1117,7 +1117,7 @@ on boot
 
 ## 13.3 下一步
 
-- 下一篇 [A04-Zygote + SystemServer](A04-Zygote+SystemServer.md) 深入 A3 下半段 + A4 阶段
+- 下一篇 [A04-Zygote + SystemServer](../Framework/SystemServer/A04-Zygote+SystemServer.md) 深入 A3 下半段 + A4 阶段
 - 然后 A05-A06 拆解 A4-A5 阶段
 - 风险排查跳转 [C01-启动 ANR](../Stability/C01-启动ANR与BootCompleted.md)（规划中）
 
@@ -1215,9 +1215,9 @@ on boot
 ---
 
 > **系列导航**：
-> - **上一篇**：[A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md)
-> - **下一篇**：[A04-Zygote + SystemServer](A04-Zygote+SystemServer.md)
-> - **本系列 README**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
+> - **上一篇**：[A02-Bootloader 到 Kernel](../../02-Symptom/S11-Startup/A-启动机制/A02-Bootloader到Kernel.md)
+> - **下一篇**：[A04-Zygote + SystemServer](../Framework/SystemServer/A04-Zygote+SystemServer.md)
+> - **本系列 README**：[README-AOSP_Startup系列.md](../../02-Symptom/S11-Startup/README.md)
 > - **机制联动**：[Stability S04-SWT 专题](../Stability/S04-SWT卡死与Watchdog专题.md) · [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md) · [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/)
 > - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [Perfetto 系列](../Perfetto/)
 

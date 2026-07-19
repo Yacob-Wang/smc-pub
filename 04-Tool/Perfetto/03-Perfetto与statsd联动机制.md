@@ -4,7 +4,7 @@
 >
 > **强依赖**:必须先读 [01 §3 三层架构](01-Perfetto系统总览与架构设计.md#3-三层架构producer--traced--consumer) 和 [02 §6 触发器机制](02-Perfetto核心实现深度解析.md#6-触发器机制trigger-config-的工作原理)
 > **承接自**:02 篇已讲触发器本身的实现,本篇讲触发器"被谁唤醒、唤醒后做什么"
-> **衔接去**:[04-Perfetto 定制化实战:ANR 后自动抓取 trace](04-Perfetto定制化实战:ANR后自动抓取trace.md) 会给出完整的 ANR 自动抓取配置 + 代码
+> **衔接去**:[04-Perfetto 定制化实战:ANR 后自动抓取 trace](04-Perfetto定制化实战：ANR后自动抓取trace.md) 会给出完整的 ANR 自动抓取配置 + 代码
 >
 > **不重复内容**:
 > - statsd 完整架构(留到 statsd 专题)
@@ -15,7 +15,7 @@
 >
 > **目录位置**:`Android_Framework/Perfetto/`
 > **上一篇**:[02-Perfetto 核心实现深度解析](02-Perfetto核心实现深度解析.md)
-> **下一篇**:[04-Perfetto 定制化实战:ANR 后自动抓取 trace](04-Perfetto定制化实战:ANR后自动抓取trace.md)
+> **下一篇**:[04-Perfetto 定制化实战:ANR 后自动抓取 trace](04-Perfetto定制化实战：ANR后自动抓取trace.md)
 
 ---
 
@@ -769,7 +769,7 @@ ts               dur      name                              depth
 
 ## 篇尾衔接
 
-[04-Perfetto 定制化实战:ANR 后自动抓取 trace](04-Perfetto定制化实战:ANR后自动抓取trace.md) 将深入:
+[04-Perfetto 定制化实战:ANR 后自动抓取 trace](04-Perfetto定制化实战：ANR后自动抓取trace.md) 将深入:
 - **ANR 检测链路与触发点**——AMS 如何检测 ANR,信号如何传到 trigger_emitter
 - **循环 buffer 配置细节**——RING_BUFFER 的工程取舍
 - **触发器配置详解**——STOP_TRACING / START_TRACING / 延迟时间的多组合玩法

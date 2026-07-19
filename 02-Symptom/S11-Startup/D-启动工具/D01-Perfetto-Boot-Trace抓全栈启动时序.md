@@ -14,10 +14,10 @@
 
 - **本篇系列角色**：**D 模块 · Perfetto Boot Trace 工具篇**（v4 §9 破例：单篇 600+ 行 / 图表 4-6 张）
 - **强依赖**：
-  - [B01-Boot Time 测量](B01-BootTime测量_bootchart与perfetto-boot-trace.md)（必读 · perfetto 配置）
+  - [B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md)（必读 · perfetto 配置）
   - [Perfetto 系列 · 01-总览](../Perfetto/01-Perfetto系统总览与架构设计.md)
   - [A01-A06 启动链路](../AOSP_Startup/)（4 层栈基础）
-- **承接自**：[C05-开机无限重启](C05-开机无限重启与bootstat.md)（C 模块收口）
+- **承接自**：[C05-开机无限重启](../C-启动稳定性/C05-开机无限重启.md)（C 模块收口）
 - **衔接去**：
   - 下一篇 [D02-dumpsys + dropbox + bootstat 联用](D02-dumpsys+dropbox+bootstat联用.md)
   - 然后 D03（bootchart）+ D04（综合工具）
@@ -703,7 +703,7 @@ for e in slow_events:
 ## 11.2 与现有系列的关系
 
 > **本篇不重复**：
-> - [B01-Boot Time 测量](B01-BootTime测量_bootchart与perfetto-boot-trace.md) 已深入的 perfetto 通用机制
+> - [B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md) 已深入的 perfetto 通用机制
 > - [Perfetto 系列](../Perfetto/01-Perfetto系统总览与架构设计.md) 已深入的 Perfetto 通用机制
 > - [A01-A06 启动链路](../AOSP_Startup/) 已深入的 4 层栈
 >
@@ -782,11 +782,11 @@ for e in slow_events:
 ---
 
 > **系列导航**：
-> - **上一篇**：[C05-开机无限重启](C05-开机无限重启与bootstat.md)
+> - **上一篇**：[C05-开机无限重启](../C-启动稳定性/C05-开机无限重启.md)
 > - **下一篇**：[D02-dumpsys + dropbox + bootstat 联用](D02-dumpsys+dropbox+bootstat联用.md)
-> - **本系列 README**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
-> - **机制联动**：[B01-Boot Time 测量](B01-BootTime测量_bootchart与perfetto-boot-trace.md) · [Perfetto 系列 · 01](../Perfetto/01-Perfetto系统总览与架构设计.md)
-> - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [B01-Boot Time 测量](B01-BootTime测量_bootchart与perfetto-boot-trace.md)
+> - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
+> - **机制联动**：[B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md) · [Perfetto 系列 · 01](../Perfetto/01-Perfetto系统总览与架构设计.md)
+> - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md)
 
 ---
 

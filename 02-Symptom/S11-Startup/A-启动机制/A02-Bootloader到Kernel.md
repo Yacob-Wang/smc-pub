@@ -1169,7 +1169,7 @@ loglevel=0          # 关闭 printk
 > **系列导航**：
 > - **上一篇**：[A01-启动链路总览](A01-启动链路总览.md)
 > - **下一篇**：[A03-Init 进程与 init.rc](A03-Init进程与init.rc.md)
-> - **本系列 README**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
+> - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
 > - **机制联动**：[Stability S06-重启专题](../Stability/S06-重启与REBOOT专题.md) · [Stability S07-KE 专题](../Stability/S07-KE内核与硬件异常专题.md) · [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/)
 > - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md)
 

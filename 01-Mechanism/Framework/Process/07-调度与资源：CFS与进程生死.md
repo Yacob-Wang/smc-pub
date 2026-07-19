@@ -874,7 +874,7 @@ void do_exit(long code) {
 |--------------|------------|---------|
 | CFS / PELT | [`../01-Mechanism/Kernel/Memory_Management/`](../Memory_Management/)(如存在) | 内存分配 + 调度延迟 |
 | cgroup v2 + memory.peak | [06 篇](06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) | 06 篇 §4 cgroup 字段 |
-| UClamp 取代 schedtune | [05 篇](05-ART进程内世界:JIT-AOT与GC.md) | ART JIT 调度的内核侧 |
+| UClamp 取代 schedtune | [05 篇](05-ART进程内世界：JIT-AOT与GC.md) | ART JIT 调度的内核侧 |
 | lmkd + pidfd | [06 篇 §5.3](06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) | lmkd 用 pidfd 不是 PID 信号 |
 | OOM kill | [`../Watchdog/`](../Watchdog/)、[`../ANR_Detection/`](../ANR_Detection/) | 进程级 ANR/OOM 监控 |
 | Game Mode | (无现有系列) | Android 14 新特性 |

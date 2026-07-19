@@ -14,9 +14,9 @@
 
 - **本篇系列角色**：**D 模块 · bootchart 工具链篇**（v4 §9 破例：单篇 600+ 行 / 图表 4-6 张）
 - **强依赖**：
-  - [B01-Boot Time 测量](B01-BootTime测量_bootchart与perfetto-boot-trace.md)（必读前置）
-  - [A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md)（A1+A2 阶段）
-  - [A03-Init 进程与 init.rc](A03-Init进程与init.rc.md)
+  - [B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md)（必读前置）
+  - [A02-Bootloader 到 Kernel](../A-启动机制/A02-Bootloader到Kernel.md)（A1+A2 阶段）
+  - [A03-Init 进程与 init.rc](../A-启动机制/A03-Init进程与init.rc.md)
   - [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/)
 - **承接自**：[D02-dumpsys + dropbox + bootstat 联用](D02-dumpsys+dropbox+bootstat联用.md)
 - **衔接去**：
@@ -604,9 +604,9 @@ adb shell cat /proc/bootprof | grep "initcall"
 ## 11.2 与现有系列的关系
 
 > **本篇不重复**：
-> - [B01-Boot Time 测量](B01-BootTime测量_bootchart与perfetto-boot-trace.md) 已深入的 bootchart 基础
-> - [A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md) 已深入的 A1+A2 阶段
-> - [A03-Init 进程与 init.rc](A03-Init进程与init.rc.md) 已深入的 init 阶段
+> - [B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md) 已深入的 bootchart 基础
+> - [A02-Bootloader 到 Kernel](../A-启动机制/A02-Bootloader到Kernel.md) 已深入的 A1+A2 阶段
+> - [A03-Init 进程与 init.rc](../A-启动机制/A03-Init进程与init.rc.md) 已深入的 init 阶段
 >
 > **视角互补**：
 > - **本篇**：**"启动场景" bootchart 视角**——A1+A2 阶段 + initcall 优化
@@ -690,8 +690,8 @@ adb shell cat /proc/bootprof | grep "initcall"
 > **系列导航**：
 > - **上一篇**：[D02-dumpsys + dropbox + bootstat 联用](D02-dumpsys+dropbox+bootstat联用.md)
 > - **下一篇**：[D04-启动期综合调试](D04-启动期dumpsys-systrace-traceview综合.md)
-> - **本系列 README**：[README-AOSP_Startup系列.md](README-AOSP_Startup系列.md)
-> - **机制联动**：[B01-Boot Time 测量](B01-BootTime测量_bootchart与perfetto-boot-trace.md) · [A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md) · [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/)
+> - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
+> - **机制联动**：[B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md) · [A02-Bootloader 到 Kernel](../A-启动机制/A02-Bootloader到Kernel.md) · [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/)
 > - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [D01-Perfetto Boot Trace](D01-Perfetto-Boot-Trace抓全栈启动时序.md)
 
 ---
