@@ -102,6 +102,8 @@
   font-family: var(--md-text-font);
   font-feature-settings: "ss01", "cv11";
   color: var(--jk-text-main);
+  font-size: 0.9rem;  /* Material 默认 0.8rem (12.8px) 偏小，调到 0.9rem (14.4px) 适合中文阅读 */
+  line-height: 1.7;
 }
 
 .md-typeset h1,
@@ -465,22 +467,71 @@ pre,
 }
 
 /* ==========================================================================
-   左侧主侧栏（白底 + Filter 框 + 蓝激活）
+   全屏布局：左栏贴左 + 右 TOC 贴右 + 中间撑满
+   - 取消 Material 默认的 .md-grid max-width: 61rem + margin: 0 auto 居中
+   - 取消 .md-content 的 max-width
+   - 让 content 撑满中间剩余空间
    ========================================================================== */
 
+/* 全局：取消 md-grid 居中和最大宽度（让所有 .md-grid 内容撑满） */
+.md-grid {
+  max-width: none;
+  margin: 0;
+}
+
+/* 顶栏：让 .md-grid 横向撑满 */
+.md-header__row {
+  padding: 0 1.2rem;
+}
+
+/* 取消 main 区域的内边距限制（让左栏紧贴左、右 TOC 紧贴右） */
+.md-main {
+  padding: 0;
+  max-width: none;
+}
+
+/* 内容区：左右 padding 收紧（默认 0.8rem → 1.5rem，让正文居中感更强） */
+.md-content {
+  padding: 0 1.5rem;
+  max-width: none;
+}
+
+.md-content__inner {
+  margin: 0;
+  padding: 0;
+}
+
+/* 主内容：紧贴侧栏（不要再 margin auto 居中） */
 @media screen and (min-width: 60em) {
   .md-sidebar--primary {
-    width: 16rem;
+    width: 13rem;
     background: var(--jk-bg-side);
     border-right: 1px solid var(--jk-line);
   }
 
   [dir=ltr] .md-content {
-    margin-left: 16rem;
+    margin-left: 13rem;
   }
 
   .md-sidebar--primary .md-sidebar__scrollwrap {
     padding: 0.4rem 0.6rem 1.4rem;
+  }
+}
+
+/* 右侧 TOC：紧贴屏幕右 */
+@media screen and (min-width: 76.25em) {
+  .md-sidebar--secondary {
+    width: 11rem;
+    margin-left: 0;
+  }
+
+  [dir=ltr] .md-content__inner {
+    max-width: calc(100% - 1.6rem);
+  }
+
+  /* 取消 .md-typeset 的 61rem max-width，让 content 撑满中间 */
+  .md-content__inner .md-typeset {
+    max-width: none;
   }
 }
 
@@ -577,20 +628,27 @@ pre,
    右侧 TOC（On this page）
    ========================================================================== */
 
-@media screen and (min-width: 76.25em) {
-  .md-sidebar--secondary {
-    width: 14rem;
-    margin-left: 0;
-  }
-
-  [dir=ltr] .md-content__inner {
-    max-width: calc(100% - 1.6rem);
-  }
-}
-
 .md-sidebar--secondary .md-nav--secondary {
   border-left: 1px solid var(--jk-line);
   padding-left: 0.8rem;
+  position: relative;
+}
+
+/* "ON THIS PAGE" 标题（source.android.com 风格） */
+@media screen and (min-width: 76.25em) {
+  .md-sidebar--secondary .md-nav--secondary::before {
+    content: "ON THIS PAGE";
+    display: block;
+    margin: 0.4rem 0 0.5rem;
+    padding: 0 0 0.5rem;
+    border-bottom: 1px solid var(--jk-line);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--jk-text-faint);
+    text-transform: uppercase;
+    font-family: var(--jk-font-mono);
+  }
 }
 
 .md-sidebar--secondary .md-nav--secondary .md-ellipsis {
@@ -760,10 +818,10 @@ article > h1:first-child,
 
 .md-typeset blockquote:first-of-type p {
   display: grid;
-  grid-template-columns: 6rem 1fr;
-  gap: 0.3rem 1rem;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 0.3rem 1.25rem;
   align-items: baseline;
-  margin: 0.25rem 0;
+  margin: 0.3rem 0;
 }
 
 .md-typeset blockquote:first-of-type p > strong:first-child {
