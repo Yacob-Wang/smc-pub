@@ -529,8 +529,11 @@ pre,
     max-width: calc(100% - 1.6rem);
   }
 
-  /* 取消 .md-typeset 的 61rem max-width，让 content 撑满中间 */
-  .md-content__inner .md-typeset {
+  /* 取消 .md-typeset 的 61rem max-width，让 content 撑满中间
+     修正：原写法 ".md-content__inner .md-typeset" 是后代选择器，但 Material 把
+     md-content__inner 和 md-typeset 放在同一元素上（<article class="md-content__inner md-typeset">），
+     后代选择器永远不匹配。应改成无空格的复合选择器。 */
+  .md-content__inner.md-typeset {
     max-width: none;
   }
 }

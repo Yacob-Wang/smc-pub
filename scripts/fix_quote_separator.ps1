@@ -98,7 +98,7 @@ foreach ($f in $files) {
     $newText = Fix-FirstBlockquote -Text $text
     if ($null -eq $newText) { continue }
     if ($Do) {
-        [System.IO.File]::WriteAllText($f.FullName, $newText, [System.Text.Encoding]::UTF8)
+        [System.IO.File]::WriteAllText($f.FullName, $newText, (New-Object System.Text.UTF8Encoding $false))
     }
     $fixed += $f.FullName.Substring($root.Length + 1)
 }
