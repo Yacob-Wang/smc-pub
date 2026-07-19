@@ -4,7 +4,7 @@
 >
 > **承接上三篇**:
 > - **01 锚点篇**:[01-进程总览:从点图标看 app 进程的诞生消亡与全栈抽象](../Process/01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)(12 时间点 + 四层抽象 + 代表数据结构总图)
-> - **02 AMS 决策**:[02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](../Process/02-AMS决策：冷启动判定与进程启动链路.md)(T1→T2 — `startActivity` 路由 + `ProcessList.startProcessLocked` 的 5 个判定条件)
+> - **02 AMS 决策**:[02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](../Process/02-AMS-冷启动判定与进程启动链路.md)(T1→T2 — `startActivity` 路由 + `ProcessList.startProcessLocked` 的 5 个判定条件)
 > - **03 Zygote 孵化**:[03-Zygote 孵化:Android 进程工厂](../Process/03-Zygote孵化：Android进程工厂.md)(T3→T5 — `ZygoteProcess.startViaZygote` + `Zygote.forkAndSpecialize` + `zygote::ForkCommon`)
 >
 > **基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)+ Kernel `android14-5.15` GKI。所有源码路径经 `https://android.googlesource.com/platform/<repo>/+/refs/heads/android14-release/<path>?format=TEXT` 实测 HTTP 200 验证。
@@ -189,7 +189,7 @@
 - 卡在 **T8 bindApplication**:profile 数据未就绪 / Configuration 缺失 → 业务侧看到"配置丢失"
 - 卡在 **T8 scheduleTransaction**:IPC 队列拥塞 → 冷启动延迟
 
-> **线上 80% 的"冷启动慢" 故障,根因落在 T6→T8 这 3 跳里**——而不是 T2→T5 的 fork 阶段。[02 篇](../Process/02-AMS决策：冷启动判定与进程启动链路.md) 处理"为什么 fork",[03 篇](../Process/03-Zygote孵化：Android进程工厂.md) 处理"怎么 fork",**本篇处理"fork 之后到 main 之间的 Java 化变身"**——这才是冷启动的"重头戏"。
+> **线上 80% 的"冷启动慢" 故障,根因落在 T6→T8 这 3 跳里**——而不是 T2→T5 的 fork 阶段。[02 篇](../Process/02-AMS-冷启动判定与进程启动链路.md) 处理"为什么 fork",[03 篇](../Process/03-Zygote孵化：Android进程工厂.md) 处理"怎么 fork",**本篇处理"fork 之后到 main 之间的 Java 化变身"**——这才是冷启动的"重头戏"。
 
 ### 1.2 稳定性视角:T5→T8 这 4 跳在冷启动耗时中的占比
 
@@ -303,7 +303,7 @@ T8.3 (第一帧绘制)                     +1320ms   [80ms View 树 measure/layo
 T5→T8 段总耗时                         1070ms(占比 81%)
 ```
 
-> **速记**:**"T5→T8 占冷启动 80%,T7→T8 占 T5→T8 60%"**——任何冷启动优化,先看 T7→T8 是否被 system_server 阻塞,再看 T6 是否被 ART 加载阻塞,最后才看 [02 篇](../Process/02-AMS决策：冷启动判定与进程启动链路.md) 的 AMS 决策是否过慢。
+> **速记**:**"T5→T8 占冷启动 80%,T7→T8 占 T5→T8 60%"**——任何冷启动优化,先看 T7→T8 是否被 system_server 阻塞,再看 T6 是否被 ART 加载阻塞,最后才看 [02 篇](../Process/02-AMS-冷启动判定与进程启动链路.md) 的 AMS 决策是否过慢。
 
 ---
 
@@ -2314,7 +2314,7 @@ grep -E "(ContentResolver|FileInputStream|Socket|SharedPreferences)" trace.html
 **与本系列"上承下接" 的内部链接**:
 
 - [01-进程总览:从点图标看 app 进程的诞生消亡与全栈抽象](../Process/01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)
-- [02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](../Process/02-AMS决策：冷启动判定与进程启动链路.md)
+- [02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](../Process/02-AMS-冷启动判定与进程启动链路.md)
 - [03-Zygote 孵化:Android 进程工厂](../Process/03-Zygote孵化：Android进程工厂.md)
 - **04-应用进程首生:从 fork 到 ActivityThread.main(本篇)**
 - [05-ART 进程内世界:JIT/AOT、OAT 加载、信号处理与 GC 线程](../Process/05-ART进程内世界：JIT-AOT与GC.md)

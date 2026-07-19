@@ -237,7 +237,7 @@
 | # | 文章 | 主题 | 关键产出 | 涉及 T 编号 | 关键源文件 |
 |---|------|------|----------|------------|------------|
 | [01](./01-进程总览:从点图标看app进程的诞生消亡与全栈抽象.md) | 进程总览 | 全局观 + 12 个时间点 + 4 层抽象 | 25+ 路径索引 / 18 行风险速查 | T0-T12 | Process.java / ProcessList.java / ActivityThread.java |
-| [02](./02-AMS决策:冷启动判定与进程启动链路.md) | AMS 决策 | 100ms 决策链路 | 5 判定条件 + HostingRecord 14 常量 | T1-T2 | ActivityTaskManagerService.java / ProcessList.java |
+| [02](./02-AMS-冷启动判定与进程启动链路.md) | AMS 决策 | 100ms 决策链路 | 5 判定条件 + HostingRecord 14 常量 | T1-T2 | ActivityTaskManagerService.java / ProcessList.java |
 | [03](./03-Zygote-Android进程工厂.md) | Zygote 孵化 | USAP 池 + 18 参数 fork | 4 socket name + ForkCommon 7 步 | T3-T5 | Zygote.java / ZygoteProcess.java / com_android_internal_os_Zygote.cpp |
 | [04](./04-应用进程首生-fork到ActivityThread.md) | 进程首生 | 3 阶段变身 | 5 大时间锚点 + ApplicationThread 双向桥 | T5-T8 | app_process.cpp / ActivityThread.java / ClientTransaction.java |
 | [05](./05-ART进程内世界:JIT-AOT与GC.md) | ART 进程内 | Runtime::Init 14 步 + GC 5 守护 | SignalCatcher 源码 + ART ↔ Kernel 4 接口 | T6 + T11 | art/runtime/runtime.cc / signal_catcher.cc / gc/heap.cc |
@@ -288,7 +288,7 @@
 |:------:|------|------|
 | **必读** | [01](./01-进程总览:从点图标看app进程的诞生消亡与全栈抽象.md) | 全局观——所有进程故障的根因都在 4 层接缝 |
 | **必读** | [08](./08-进程稳定性风险全景与跨层治理.md) | 30 分钟内定位"是哪类进程故障" 的实战地图 |
-| 按需 | [02-07](./02-AMS决策:冷启动判定与进程启动链路.md) | 按告警类型对应查阅 |
+| 按需 | [02-07](./02-AMS-冷启动判定与进程启动链路.md) | 按告警类型对应查阅 |
 
 ### 6.2 如果你是 **OEM BSP 工程师**(高通/MTK/展锐适配)
 
@@ -321,7 +321,7 @@
 
 | 优先级 | 篇章 | 理由 |
 |:------:|------|------|
-| **必读** | [02 §3](./02-AMS决策:冷启动判定与进程启动链路.md) | AMS 测试用例 |
+| **必读** | [02 §3](./02-AMS-冷启动判定与进程启动链路.md) | AMS 测试用例 |
 | **必读** | [08 §5 监控指标](./08-进程稳定性风险全景与跨层治理.md) | 风险地图是测试用例设计输入 |
 | 按需 | [04 §3](./04-应用进程首生-fork到ActivityThread.md) | 进程首生测试用例 |
 
@@ -361,7 +361,7 @@
 | 篇章 | 文件大小 | 字数 | 行数 | 源码路径 | 实战案例 |
 |------|---------|------|------|---------|---------|
 | [01 锚点篇](./01-进程总览:从点图标看app进程的诞生消亡与全栈抽象.md) | 44 KB | ~13K 字 | ~850 行 | 25+ | 1(冷启动 4 段日志) |
-| [02 AMS 决策](./02-AMS决策:冷启动判定与进程启动链路.md) | 132 KB | ~28K 字 | ~1400 行 | 17+ | 2(mLruProcesses 残留 / 多账号 uid) |
+| [02 AMS 决策](./02-AMS-冷启动判定与进程启动链路.md) | 132 KB | ~28K 字 | ~1400 行 | 17+ | 2(mLruProcesses 残留 / 多账号 uid) |
 | [03 Zygote 孵化](./03-Zygote-Android进程工厂.md) | 136 KB | ~37K 字 | ~1900 行 | 40+ | 3(USAP 池耗尽 / M_PURGE_ALL 失败 / preload 阻塞) |
 | [04 进程首生](./04-应用进程首生-fork到ActivityThread.md) | 144 KB | ~28K 字 | ~2000 行 | 8+ | 2(attach 阻塞 / onCreate IO) |
 | [05 ART 进程内](./05-ART进程内世界:JIT-AOT与GC.md) | 46 KB | ~16K 字 | ~750 行 | 20+ | 2(OAT 缺失 / GC 风暴) |

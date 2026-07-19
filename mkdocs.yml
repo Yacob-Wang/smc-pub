@@ -25,6 +25,9 @@ theme:
     - navigation.sections
     - navigation.indexes
     - navigation.prune
+    # 默认折叠：访问 /01-Mechanism/Framework/A01-.../ 时点顶部 tab 回 01-Mechanism/，
+    # 侧栏只显示 6 个 AOSP 分层入口，不展开 Kernel/FS/Binder 等子分类
+    # （与 01-Mechanism/.pages 的 `collapse: true` 配合）
     - navigation.top
     - navigation.footer
     - navigation.path

@@ -103,12 +103,20 @@ def yaml_quote(text: str) -> str:
     return f'"{escaped}"'
 
 
-def write_pages_file(dir_path: Path, nav_entries: list[tuple[str, str]]) -> None:
-    if not nav_entries:
+def write_pages_file(
+    dir_path: Path,
+    nav_entries: list[tuple[str, str]],
+    collapse: bool = False,
+) -> None:
+    if not nav_entries and not collapse:
         return
-    lines = ["nav:"]
-    for title, target in nav_entries:
-        lines.append(f"  - {yaml_quote(title)}: {target}")
+    lines: list[str] = []
+    if collapse:
+        lines.append("collapse: true")
+    if nav_entries:
+        lines.append("nav:")
+        for title, target in nav_entries:
+            lines.append(f"  - {yaml_quote(title)}: {target}")
     (dir_path / ".pages").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -233,38 +241,140 @@ def _series_blurb(series_dir: Path) -> str:
     return s
 
 
+# Material icon for each module's series landing page
+_MODULE_ICONS = {
+    "00-Meta": "material/map-outline",
+    "01-Mechanism": "material/layers-triple",
+    "02-Symptom": "material/alert-octagon-outline",
+    "03-Forensics": "material/magnify-scan",
+    "04-Tool": "material/tools",
+    "05-Governance": "material/shield-check-outline",
+    "06-Case": "material/book-open-page-variant-outline",
+    "06-Foundation": "material/cube-outline",
+}
+
+# 每个 series 根的图标（按 module + 索引）
+_SERIES_ICON_POOL = [
+    "material/cube-outline",
+    "material/layers-outline",
+    "material/puzzle-outline",
+    "material/sitemap-outline",
+    "material/vector-triangle",
+    "material/chart-line-variant",
+    "material/server-network",
+    "material/cog-outline",
+    "material/hammer-wrench",
+    "material/bookshelf",
+    "material/rocket-launch-outline",
+    "material/memory",
+    "material/cpu-64-bit",
+    "material/speedometer",
+    "material/connection",
+    "material/radar",
+]
+
+
+def _count_articles_in_series(series_dir: Path) -> int:
+    """统计 series 下的文章数（含子目录的 md，不含 README/index）。"""
+    total = 0
+    for p in series_dir.rglob("*.md"):
+        name = p.name.lower()
+        if name.startswith("readme") or name == "index.md":
+            continue
+        total += 1
+    return total
+
+
+def _module_stats(mod_dir: Path, subdirs: list[Path]) -> tuple[int, int]:
+    """(series 数, 总文章数)。"""
+    series_count = len(subdirs)
+    article_count = sum(_count_articles_in_series(sub) for sub in subdirs)
+    return series_count, article_count
+
+
 def build_module_index(module: str, mod_dir: Path) -> str:
+    """生成 module 落地页（Material grid cards 卡片式）。
+
+    卡片语法见 https://squidfunk.github.io/mkdocs-material/reference/grids/#cards-grid
+    """
     title = MODULE_TITLES.get(module, module)
     blurb = MODULE_BLURBS.get(module, "")
     subdirs = _list_nav_subdirs(mod_dir)
-    lines = [
-        f"# {title}",
+    series_count, article_count = _module_stats(mod_dir, subdirs)
+    module_icon = _MODULE_ICONS.get(module, "material/folder-outline")
+
+    lines: list[str] = [
+        f"# :{module_icon}: {{ .lg }} &nbsp; {title}",
         "",
-        f"{blurb}。" if blurb else "",
-        "",
-        "选择下方**系列**进入总览；单篇请在系列总览的目录表中打开。",
-        "",
-        "## 系列目录",
-        "",
-        "| 系列 | 说明 |",
-        "|------|------|",
     ]
+    if blurb:
+        lines.append(f"> {blurb}")
+    if series_count:
+        lines.append(
+            f"> 本模块共 **{series_count}** 个系列、约 **{article_count}** 篇文章。"
+        )
+    lines.extend([
+        "",
+        "选择下方卡片进入系列总览；单篇请在系列总览的目录表中打开。",
+        "",
+        '<div class="grid cards" markdown>',
+        "",
+    ])
+
     if not subdirs:
-        # 模块本身就是一个系列（如 Hook）
+        # 模块本身就是一个系列（如 Hook）—— 用单卡片占位
         readme = _pick_readme(mod_dir)
         if readme:
-            lines.append(f"| [系列总览]({readme.name}) | {_series_blurb(mod_dir)} |")
+            link = f"{readme.name}"
+            count = _count_articles_in_series(mod_dir)
+            lines.extend([
+                f"-   :material-folder-open-outline:{{ .lg .middle }} **本系列**",
+                "",
+                "    ---",
+                "",
+                f"    {_series_blurb(mod_dir)}（约 {count} 篇）",
+                "",
+                f"    [进入总览 →]({link})",
+                "",
+            ])
         else:
-            lines.append("| （暂无系列） | — |")
+            lines.extend([
+                "-   :material-folder-open-outline:{ .lg .middle } **（暂无系列）**",
+                "",
+                "    ---",
+                "",
+                "    暂无内容",
+                "",
+            ])
     else:
-        for sub in subdirs:
+        for i, sub in enumerate(subdirs):
             short = _short_title(module, sub.name, sub)
-            readme = _pick_readme(sub)
-            link = f"{sub.name}/" if not readme else f"{sub.name}/{readme.name}"
-            # index 优先：链到目录，由 indexes 打开总览
+            blurb_s = _series_blurb(sub)
+            count = _count_articles_in_series(sub)
+            icon = _SERIES_ICON_POOL[i % len(_SERIES_ICON_POOL)]
             link = f"{sub.name}/"
-            lines.append(f"| [{short}]({link}) | {_series_blurb(sub)} |")
-    lines.extend(["", "---", "", "返回 [站点首页](../index.md)。", ""])
+            card_block = [
+                f"-   :{icon}:{{ .lg .middle }} **{short}**",
+                "",
+                "    ---",
+                "",
+                f"    {blurb_s}",
+                "",
+                f"    :material-file-document-multiple-outline: 约 **{count}** 篇",
+                "",
+                f"    [进入总览 →]({link})",
+                "",
+            ]
+            lines.extend(card_block)
+
+    lines.extend([
+        "</div>",
+        "",
+        "---",
+        "",
+        "返回 [站点首页](../index.md)。",
+        "",
+    ])
     return "\n".join(lines)
 
 
@@ -317,17 +427,18 @@ def _ensure_series_overview(dir_path: Path, module: str | None) -> str:
 
 
 def generate_module_pages(mod_dir: Path, module: str) -> None:
-    """module 层 .pages：本模块总览 + 子分类列表。
+    """module 层 .pages：本模块总览（卡片式 index.md） + 子分类列表。
 
     系列层不写 .pages —— 让 awesome-pages plugin 自动递归列出该系列单篇
     （用户进入某系列时，侧栏只显示本系列的内容 + 子分类）。
+
+    `collapse: true` —— 侧栏默认折叠所有 AOSP 分层下的子分类，
+    用户点顶部 tab 回 module 落地页时侧栏不会铺满 500+ 篇。
     """
     nav: list[tuple[str, str]] = []
 
-    # 1) 模块总览（README.md 优先；否则用 index.md）
-    if (mod_dir / "README.md").is_file():
-        nav.append(("本模块总览", "README.md"))
-    elif (mod_dir / "index.md").is_file():
+    # 1) 模块总览：强制 index.md（卡片式落地页）
+    if (mod_dir / "index.md").is_file():
         nav.append(("本模块总览", "index.md"))
 
     # 2) 子分类（按 MODULE_SERIES_ORDER 排序）
@@ -335,16 +446,18 @@ def generate_module_pages(mod_dir: Path, module: str) -> None:
     for sub in subdirs:
         nav.append((_short_title(module, sub.name, sub), sub.name))
 
-    write_pages_file(mod_dir, nav)
+    write_pages_file(mod_dir, nav, collapse=True)
 
 
 def generate_pages_tree(docs_root: Path) -> None:
-    """新导航策略：
+    """导航策略：
 
     1. 顶层 .pages：8 大分类 tab（按 MODULE_TITLES 排序）
-    2. module 层 .pages：本模块总览 + 子分类列表
-    3. series 层不写 .pages：让 awesome-pages 自动递归列出所有单篇
-    4. 子系列层不写 .pages：让 awesome-pages 自动递归
+    2. module 层强制生成 index.md（Material grid cards 卡片式落地页）
+       —— 无论仓库里有没有 README.md；README.md 仍会复制到 docs/ 作为扩展
+       —— 从 index.md 链过去，但不进侧栏
+    3. module 层 .pages：「本模块总览」指向 index.md + 子分类列表
+    4. series 层不写 .pages：让 awesome-pages 自动递归列出所有单篇
     """
     top_nav: list[tuple[str, str]] = [("首页", "index.md")]
     for mod in MODULE_DIRS:
@@ -353,13 +466,11 @@ def generate_pages_tree(docs_root: Path) -> None:
             continue
         title = MODULE_TITLES.get(mod, mod)
         top_nav.append((title, mod))
-        # 模块落地页：若已有 README.md（手写），不生成 index.md 以避免冲突
-        has_readme = any((mod_dir / name).is_file() for name in ("README.md", "readme.md"))
-        if not has_readme:
-            (mod_dir / "index.md").write_text(
-                build_module_index(mod, mod_dir),
-                encoding="utf-8",
-            )
+        # 强制生成 index.md（卡片式）—— 覆盖可能存在的手写 README 索引
+        (mod_dir / "index.md").write_text(
+            build_module_index(mod, mod_dir),
+            encoding="utf-8",
+        )
         # series 层不写 .pages（让 awesome-pages 自动递归）
         generate_module_pages(mod_dir, mod)
     write_pages_file(docs_root, top_nav)

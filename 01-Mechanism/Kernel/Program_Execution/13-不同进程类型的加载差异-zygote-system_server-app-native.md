@@ -17,7 +17,7 @@
 - **不重复内容**:
   - **进程启动细节** → 详见 [PLE-12](12-进程启动全景-Zygote-fork-第一帧.md)
   - **运行时内存布局** → 详见 [MM_v2 14](../Memory_Management/MM_v2/14-Android进程内存类型学-zygote-system_server-app-kernel-native守护进程.md)
-  - **AMS 调度策略** → 详见 [Android_Framework/Process/02-AMS](../01-Mechanism/Framework/Process/02-AMS决策：冷启动判定与进程启动链路.md)
+  - **AMS 调度策略** → 详见 [Android_Framework/Process/02-AMS](../01-Mechanism/Framework/Process/02-AMS-冷启动判定与进程启动链路.md)
   - **lmkd 杀进程策略** → 详见 [Android_Framework/Process/06-Kernel进程接口](../01-Mechanism/Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)
 
 ## 0. 写在前面:为什么"进程类型"单独成篇

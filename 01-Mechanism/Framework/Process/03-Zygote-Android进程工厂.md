@@ -9,7 +9,7 @@
 >
 > **目录位置**:`Android_Framework/Process/`
 >
-> **上一篇**:[02-AMS 决策-从 Launcher 触达到"必须冷启动" 的判定](../02-AMS决策-冷启动判定与进程启动链路.md)
+> **上一篇**:[02-AMS 决策-从 Launcher 触达到"必须冷启动" 的判定](../02-AMS-冷启动判定与进程启动链路.md)
 > **下一篇**:[04-应用进程首生-从 fork 到 ActivityThread.main](../04-应用进程首生-从fork到ActivityThread.main.md)
 >
 > **关联已有系列**(本篇末"附录 C"展开):
@@ -2188,7 +2188,7 @@ private static final String USAP_POOL_SECONDARY_SOCKET_NAME = "usap_pool_seconda
 | 本系列涉及主题 | 跨系列引用 | 引用理由 |
 |--------------|------------|---------|
 | LocalSocket(`AF_UNIX` + Zygote 协议) | `../../Binder/`(如该系列存在) | Binder 系列讲 Binder 跨进程 IPC;**LocalSocket 是 4 个翻译官之一,与 Binder 平行** |
-| AMS startProcessLocked → Zygote | [02-AMS 决策-冷启动判定与进程启动链路](02-AMS决策-冷启动判定与进程启动链路.md) | 02 篇讲 AMS 怎么决定"要冷启动";**本篇接 02 篇 §"T2→T3" 段** |
+| AMS startProcessLocked → Zygote | [02-AMS 决策-冷启动判定与进程启动链路](02-AMS-冷启动判定与进程启动链路.md) | 02 篇讲 AMS 怎么决定"要冷启动";**本篇接 02 篇 §"T2→T3" 段** |
 | fork() 之后子进程的 ART 初始化 | `../01-Mechanism/Runtime/`(如该系列存在) | ART 运行时是 Zygote preload 的"产物";05 篇深入 ART |
 | `do_fork` / `task_struct` / cgroup | `../01-Mechanism/Kernel/Partition/`(如该系列存在) | Kernel 视角的进程实现;06 篇展开 |
 | `startSystemServer` 启动 | `../AOSP_Startup/`(早期稿) | Zygote 第一个子进程是 system_server;**02 篇 §"fork system_server" 段** |
@@ -2197,7 +2197,7 @@ private static final String USAP_POOL_SECONDARY_SOCKET_NAME = "usap_pool_seconda
 **与本系列"上承下接" 的内部链接**:
 
 - [01-进程总览-从点图标看 app 进程的诞生消亡与全栈抽象](../01-进程总览-从点图标看app进程的诞生消亡与全栈抽象.md)
-- [02-AMS 决策-冷启动判定与进程启动链路](../02-AMS决策-冷启动判定与进程启动链路.md)
+- [02-AMS 决策-冷启动判定与进程启动链路](../02-AMS-冷启动判定与进程启动链路.md)
 - [03-Zygote 孵化-Android 进程工厂](../03-Zygote-Android进程工厂.md) ← **本篇**
 - [04-应用进程首生-从 fork 到 ActivityThread.main](../04-应用进程首生-从fork到ActivityThread.main.md)
 - [05-ART 进程内世界-JIT/AOT、OAT 加载、信号处理与 GC 线程](../05-ART进程内世界-JIT-AOT与GC.md)

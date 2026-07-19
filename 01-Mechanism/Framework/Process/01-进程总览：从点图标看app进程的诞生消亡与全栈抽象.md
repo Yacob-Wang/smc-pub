@@ -12,7 +12,7 @@
 > **目录位置**:`Android_Framework/Process/`
 >
 > **上一篇**:无(系列起点)
-> **下一篇**:[02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](02-AMS决策：冷启动判定与进程启动链路.md)
+> **下一篇**:[02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](02-AMS-冷启动判定与进程启动链路.md)
 >
 > **关联已有系列**(本篇末"附录 C"展开):
 > - Binder 系列 → `../Binder/`(跨进程 IPC 是进程管理的"血脉")
@@ -568,7 +568,7 @@ Application (App)         ActivityThread (App)
 
 **与本系列"上承下接" 的内部链接**(后续 7 篇写完后,这里会更新为相对路径):
 
-- [02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](02-AMS决策：冷启动判定与进程启动链路.md)
+- [02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](02-AMS-冷启动判定与进程启动链路.md)
 - [03-Zygote 孵化:Android 进程工厂](03-Zygote孵化：Android进程工厂.md)
 - [04-应用进程首生:从 fork 到 ActivityThread.main](04-应用进程首生：从fork到ActivityThread.main.md)
 - [05-ART 进程内世界:JIT/AOT、OAT 加载、信号处理与 GC 线程](05-ART进程内世界：JIT-AOT与GC.md)
@@ -620,4 +620,4 @@ Application (App)         ActivityThread (App)
 
 **《进程总览:从"点图标"看 app 进程的诞生、消亡与全栈抽象》至此结束。**
 
-下一篇 [02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](02-AMS决策：冷启动判定与进程启动链路.md) 将深入 `ActivityTaskManager.startActivity` 与 `ProcessList.startProcessLocked` 的 5 个判定条件——把"T1→T2" 这段 100ms 链路拆给你看。
+下一篇 [02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](02-AMS-冷启动判定与进程启动链路.md) 将深入 `ActivityTaskManager.startActivity` 与 `ProcessList.startProcessLocked` 的 5 个判定条件——把"T1→T2" 这段 100ms 链路拆给你看。
