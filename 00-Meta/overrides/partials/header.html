@@ -1,4 +1,15 @@
-{#- Custom header: sticky top bar with fixed author brand JacobKing -#}
+{#-
+  Custom header: single-row, white-background, Source-style layout.
+
+  Layout: [logo + site name + "source" suffix]  [tabs (middle)]
+          [inline search input]  [avatar]  [palette toggle]
+
+  Notes:
+  - 顶栏白底，1px 灰边，沿用 Material 8+ 风格
+  - logo 用 brand 绿 Android robot，旁标 "source" 灰字
+  - 内联搜索框（jk-search）+ 圆形头像（jk-avatar）
+  - 隐藏 Material 原生搜索触发按钮（搜索永远可见在顶栏右侧）
+-#}
 {% set class = "md-header" %}
 {% if "navigation.tabs.sticky" in features %}
   {% set class = class ~ " md-header--shadow md-header--lifted" %}
@@ -6,69 +17,86 @@
   {% set class = class ~ " md-header--shadow" %}
 {% endif %}
 <header class="{{ class }}" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="{{ lang.t('header') }}">
-    <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" title="{{ config.site_name | e }}" class="md-header__button md-logo" aria-label="{{ config.site_name }}" data-md-component="logo">
-      {% include "partials/logo.html" %}
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      {% set icon = config.theme.icon.menu or "material/menu" %}
-      {% include ".icons/" ~ icon ~ ".svg" %}
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">
-            {{ config.site_name }}
-          </span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            {% if page.meta and page.meta.title %}
-              {{ page.meta.title }}
-            {% else %}
-              {{ page.title }}
-            {% endif %}
-          </span>
+  <div class="md-header__row md-grid">
+    <nav class="md-header__primary" aria-label="{{ lang.t('header') }}">
+      <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" title="{{ config.site_name | e }}" class="md-header__button md-logo" aria-label="{{ config.site_name }}" data-md-component="logo">
+        {% include "partials/logo.html" %}
+      </a>
+      <label class="md-header__button md-icon" for="__drawer">
+        {% set icon = config.theme.icon.menu or "material/menu" %}
+        {% include ".icons/" ~ icon ~ ".svg" %}
+      </label>
+      <div class="md-header__title" data-md-component="header-title">
+        <div class="md-header__ellipsis">
+          <div class="md-header__topic">
+            <span class="md-ellipsis">
+              {{ config.site_name }}<span class="jk-brand-suffix">source</span>
+            </span>
+          </div>
+          <div class="md-header__topic" data-md-component="header-topic">
+            <span class="md-ellipsis">
+              {% if page.meta and page.meta.title %}
+                {{ page.meta.title }}
+              {% else %}
+                {{ page.title }}
+              {% endif %}
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-
-    {#- Fixed author identity in top bar -#}
-    <a class="jk-author" href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" title="JacobKing" aria-label="JacobKing">
-      <span class="jk-author__mark" aria-hidden="true"></span>
-      <span class="jk-author__name">JacobKing</span>
-    </a>
-
-    {% if config.theme.palette %}
-      {% if not config.theme.palette is mapping %}
-        {% include "partials/palette.html" %}
-      {% endif %}
-    {% endif %}
-    {% if not config.theme.palette is mapping %}
-      {% include "partials/javascripts/palette.html" %}
-    {% endif %}
-    {% if config.extra.alternate %}
-      {% include "partials/alternate.html" %}
-    {% endif %}
-    {% if "material/search" in config.plugins %}
-      {% set search = config.plugins["material/search"] | attr("config") %}
-      {% if search.enabled %}
-        <label class="md-header__button md-icon" for="__search">
-          {% set icon = config.theme.icon.search or "material/magnify" %}
-          {% include ".icons/" ~ icon ~ ".svg" %}
-        </label>
-        {% include "partials/search.html" %}
-      {% endif %}
-    {% endif %}
-    {% if config.repo_url %}
-      <div class="md-header__source">
-        {% include "partials/source.html" %}
-      </div>
-    {% endif %}
-  </nav>
-  {% if "navigation.tabs.sticky" in features %}
+    </nav>
     {% if "navigation.tabs" in features %}
       {% include "partials/tabs.html" %}
     {% endif %}
-  {% endif %}
+    <div class="md-header__actions" data-md-component="header-actions">
+      {#- 内联搜索框：always visible，js 调 mkdocs search index -#}
+      <div class="jk-search" role="search" data-md-component="jk-search">
+        <input
+          type="text"
+          class="jk-search__input"
+          name="jk-query"
+          placeholder="搜索文档…"
+          aria-label="搜索文档"
+          autocomplete="off"
+          spellcheck="false"
+          data-jk-search-input
+        >
+        <kbd class="jk-search__shortcut" data-jk-search-shortcut>/</kbd>
+        <div class="jk-search__results" role="listbox" data-jk-search-results></div>
+      </div>
+
+      {% if config.theme.palette %}
+        {% if not config.theme.palette is mapping %}
+          {% include "partials/palette.html" %}
+        {% endif %}
+      {% endif %}
+      {% if not config.theme.palette is mapping %}
+        {% include "partials/javascripts/palette.html" %}
+      {% endif %}
+      {% if config.extra.alternate %}
+        {% include "partials/alternate.html" %}
+      {% endif %}
+
+      {#- 隐藏 Material 原生搜索触发按钮：搜索永远内联在顶栏 -#}
+      {% if "material/search" in config.plugins %}
+        {% set search = config.plugins["material/search"] | attr("config") %}
+        {% if search.enabled %}
+          <label class="md-header__button md-icon jk-hide-search-trigger" for="__search" aria-hidden="true" style="display:none">
+            {% set icon = config.theme.icon.search or "material/magnify" %}
+            {% include ".icons/" ~ icon ~ ".svg" %}
+          </label>
+          {% include "partials/search.html" %}
+        {% endif %}
+      {% endif %}
+
+      {#- 圆形头像：j 字母（替换原 JacobKing chip） -#}
+      <a class="jk-avatar" href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" title="JacobKing · Stability Matrix Course" aria-label="JacobKing">J</a>
+
+      {% if config.repo_url %}
+        <div class="md-header__source">
+          {% include "partials/source.html" %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
 </header>
