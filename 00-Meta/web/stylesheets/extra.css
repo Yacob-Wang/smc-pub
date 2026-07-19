@@ -127,14 +127,15 @@ pre,
 .md-tabs {
   background: linear-gradient(180deg, var(--md-primary-fg-color) 0%, var(--md-primary-fg-color--dark) 100%);
   color: var(--md-primary-bg-color);
+  min-height: 2.6rem;
 }
 
 .md-tabs__link {
   color: rgba(255, 255, 255, 0.86) !important;
   font-weight: 600;
-  font-size: 0.78rem;
-  letter-spacing: 0.02em;
-  padding: 0.85rem 0.9rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
+  padding: 0.7rem 0.7rem;
   transition: color 0.18s ease, background 0.18s ease;
 }
 
@@ -162,6 +163,17 @@ pre,
   background: var(--jk-green);
   border-radius: 3px 3px 0 0;
   box-shadow: 0 0 12px var(--jk-green);
+}
+
+/* 顶栏 header 本身也压一下高度 */
+.md-header__inner {
+  min-height: 2.6rem;
+  padding: 0.25rem 0;
+}
+
+.md-header__button.md-icon {
+  height: 1.6rem;
+  width: 1.6rem;
 }
 
 /* —— Author chip (JacobKing 角标) ————————————————— */

@@ -31,7 +31,7 @@
 - **不重复内容**：
   - **不重复** [Process 系列](../01-Mechanism/Framework/Process/) 已深入的 Zygote fork 细节
   - **不重复** [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/) 已深入的 Linux 进程机制
-  - **不重复** [Stability S00-S10](S00-症状总览.md) 已覆盖的 7 大症状机制
+  - **不重复** [Stability S00-S10](../S00-症状总览.md) 已覆盖的 7 大症状机制
   - 本系列与之关系：**"启动场景 × 性能 + 稳定性"专项**（其他系列是"机制 / 工具"通用视角）
 - **本篇贡献**：把"启动链路"作为 4 层栈穿透场景，**立住性能 + 稳定性专项 + 面试必考 + 22 篇规划**
 
