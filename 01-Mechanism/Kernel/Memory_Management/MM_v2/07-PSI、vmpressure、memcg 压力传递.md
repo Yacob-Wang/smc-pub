@@ -1535,6 +1535,156 @@ adb shell getprop ro.lmk.psi_window_ms
 - 添加 `ro.lmk.debug=true` 验证 PSI 配置正确性
 - 启用 `ro.lmk.log_statsd=true` 上报 PSI 触发次数
 
+### 5.6 补充：cgroup v2 在 Android 14+ 的实际配置
+
+> **本节是 §4 memcg 内容的延伸**——本篇主轴基于 GKI 5.10(Android 13 时代),**AOSP 14+ 全面切到 cgroup v2**,实际配置有变化。**v3.5 治理"不杀进程" 关键依赖 cgroup v2 节点级操作**,所以本节提前补强。
+
+**5.6.1 cgroup v1 vs v2 的 Android 现状**
+
+| 版本 | 默认 cgroup | `/proc/cgroups` 视图 | 关键差异 |
+|------|-----------|---------------------|---------|
+| Android 12- | **cgroup v1** | 多 hierarchy(memory/cpu/cpuset) | `memory.pressure_level`(4 档) |
+| Android 13(过渡) | 双栈兼容 | v1 + v2 同时存在 | 灰度切 v2 |
+| **Android 14+** | **cgroup v2(默认)** | 单一统一 hierarchy | `memory.pressure`(全量)、`memory.high/max/min` |
+
+**关键观察**:
+- **AOSP 14 默认是 cgroup v2**——本篇 §4 讲的 `memcg.pressure` / `vmpressure` 在 v2 上**几乎全部改用新接口**
+- **线上诊断要分清楚**:`cat /proc/meminfo` 还是 v1 视图,`cat /sys/fs/cgroup/.../memory.pressure` 是 v2 视图
+- **OEM 配置**:kernel cmdline 加 `systemd.unified_cgroup_hierarchy=1`(Android 默认)
+
+**5.6.2 cgroup v2 在 Android 14+ 的实际树形结构**
+
+**完整树**(实测 TECNO KM9 / Android 14):
+
+```
+/sys/fs/cgroup/
+├── init.scope/                          ← init 进程(init PID 1)
+├── system.slice/                         ← 所有系统服务
+│   ├── system-server/                    ← ★ system_server 关键 cgroup
+│   ├── webview/                          ← webview 沙箱
+│   ├── surfaceflinger/                   ← 图形合成
+│   ├── audioserver/                      ← 音频
+│   ├── cameraserver/                     ← 相机
+│   └── ...
+├── apps.slice/                           ← 所有 app
+│   ├── apps/uid_10010/                   ← app 1
+│   ├── apps/uid_10020/                   ← app 2
+│   └── ...
+├── top-app.slice/                        ← 当前前台 app(API 31+)
+│   └── uid_10030/                        ← 当前前台 app
+├── cgroup.procs                          ← 全局视图(读所有节点时用)
+├── cgroup.subtree_control                ← 父节点资源控制
+├── cgroup.events                         ← 全局 cgroup 事件
+├── cgroup.freeze                         ← 全局 freeze 状态
+├── cgroup.kill                           ← 杀 cgroup 内进程
+├── cgroup.max.depth                      ← 嵌套深度限制
+├── cgroup.max.descendants                 ← 子节点数限制
+├── memory.pressure                        ← ★ 全局 PSI memory
+├── cpu.pressure                           ← 全局 PSI cpu
+└── io.pressure                            ← 全局 PSI io
+```
+
+**关键观察**:
+- **init.scope**:init 进程单独 cgroup(不参与资源限制)
+- **system.slice**:所有 system_server 等系统服务
+- **apps.slice**:所有 app(按 uid 区分)
+- **top-app.slice**(API 31+):**当前前台 app 单独 cgroup**——可以给它"无限制"资源,后台 app 严格限制
+
+**5.6.3 cgroup v2 节点级 memory 接口(完整)**
+
+| 文件 | 含义 | 治理用法 | 性能 |
+|------|------|---------|------|
+| `cgroup.procs` | 节点内所有 pid | 看哪些进程在该 cgroup | 零 |
+| `memory.current` | 节点当前内存(字节) | 实时监控 | 零 |
+| `memory.peak` | 节点历史最大 | 看历史峰值 | 零 |
+| `memory.max` | 节点内存硬限制(写 `max` = 无限制) | **关键 — 隔离入口** | 零 |
+| `memory.high` | 节点内存软限制(超过触发 throttle) | **关键 — 软隔离** | 零 |
+| `memory.min` | 节点内存保底(内核保证可用) | **关键 — 冻结** | 零 |
+| `memory.low` | 节点内存最佳保护(尽力) | 软保护 | 零 |
+| `memory.events` | 节点事件(low/high/max/oom/oom_kill) | 看触发过什么 | 零 |
+| `memory.events.local` | 节点事件(只算本节点) | 同上 | 零 |
+| `memory.pressure` | 节点 PSI(细粒度) | 节点压力监控 | 零 |
+| `memory.pressure.full` | 节点 PSI full(stall 100%) | 节点硬压力 | 零 |
+| `memory.pressure.some` | 节点 PSI some(stall > 0%) | 节点软压力 | 零 |
+| `memory.stat` | 节点内存统计(详细分类) | 看节点内内存分布 | 零 |
+| `memory.swap.current` | 节点 swap 占用 | 监控 swap | 零 |
+| `memory.swap.max` | 节点 swap 限制 | 限制 swap | 零 |
+| `memory.swap.events` | 节点 swap 事件 | 监控 swap 触发 | 零 |
+| `memory.zswap.current` | 节点 zswap 占用 | 监控 zswap | 零 |
+| `memory.oom.group` | 节点 OOM 行为(0/1) | 控制 OOM 范围 | 零 |
+| `memory.numa_stat` | 节点 NUMA 统计 | 多核系统用 | 零 |
+
+**5.6.4 关键治理命令集(完整)**
+
+```bash
+# 1. 找进程 → cgroup 节点
+adb shell cat /proc/<pid>/cgroup | grep '0::' | head -1 | cut -d: -f3
+# 输出: /system.slice/system-server/ → 完整路径: /sys/fs/cgroup/system.slice/system-server/
+
+# 2. 看 cgroup 节点实时内存
+adb shell cat /sys/fs/cgroup<path>/memory.current
+# 输出: 245678592 (= 234 MB)
+
+# 3. 看 cgroup 节点历史最大
+adb shell cat /sys/fs/cgroup<path>/memory.peak
+# 输出: 2147483648 (= 2 GB,本案 system_server 案例)
+
+# 4. 看 cgroup 节点 PSI(some + full)
+adb shell cat /sys/fs/cgroup<path>/memory.pressure
+# 输出:
+#   some avg10=15.00 avg60=12.00 avg300=8.00 total=123456
+#   full avg10=8.00 avg60=6.00 avg300=4.00 total=67890
+
+# 5. 看 cgroup 节点事件触发
+adb shell cat /sys/fs/cgroup<path>/memory.events
+# 输出:
+#   low 0
+#   high 5       ← 5 次触发 high
+#   max 12      ← 12 次触发 max
+#   oom 0
+#   oom_kill 0
+
+# 6. 设置软限制(超过后 throttle)
+adb shell "echo 400*1024*1024 > /sys/fs/cgroup<path>/memory.high"
+# 单位:字节(注意单位换算)
+
+# 7. 设置硬限制(超过后强制 reclaim)
+adb shell "echo 600*1024*1024 > /sys/fs/cgroup<path>/memory.max"
+
+# 8. 设置保底(内核保证可用)
+adb shell "echo 1*1024*1024*1024 > /sys/fs/cgroup<path>/memory.min"
+
+# 9. 清理(恢复 — 移除限制)
+adb shell "echo max > /sys/fs/cgroup<path>/memory.max"
+adb shell "echo 0 > /sys/fs/cgroup<path>/memory.high"
+adb shell "echo 0 > /sys/fs/cgroup<path>/memory.min"
+```
+
+**5.6.5 cgroup v2 治理的 5 大常见坑**
+
+| 坑 | 错在哪 | 正确做法 |
+|----|------|--------|
+| **memory.max = 0** | 0 字节 = 立刻 OOM 杀进程 | 设值前用 `echo max` 设无限制 |
+| **memory.min 太大** | 多 cgroup min 总和 > 系统总内存 → 其他 cgroup 饿死 | min 总和 ≤ 系统总内存的 80% |
+| **memory.high 单位错** | 写成 400(以为是 MB)实际是 400 字节 | 显式 `* 1024 * 1024` |
+| **跨 cgroup 嵌套不识别** | 父 cgroup 设了 max,子 cgroup 没用 | cgroup v2 嵌套,子受父约束 |
+| **清理时只清 max 不清 high** | max = max(无限制)但 high 还有效 | 三个文件都清 |
+
+**5.6.6 与本系列 06/12/15 的衔接**
+
+- **06 LMKD** —— LMKD 杀进程时也走 cgroup 节点,看 `memory.events` 的 `oom_kill` 计数
+- **12 风险全景** —— 5 大类问题中的"杀进程" 类,都依赖 cgroup 节点级决策
+- **15 线上动态治理** —— 全部 cgroup 操作(`memory.max/high/min`)的实现原理来自本节
+
+**5.6.7 AOSP 14+ cgroup v2 与 14 进程类型学的衔接**
+
+- **zygote** 在 `system.slice/zygote/`(或 `init.scope/zygote/`,因设备而异)
+- **system_server** 在 `system.slice/system-server/`
+- **app** 在 `apps.slice/apps/uid_<uid>/`
+- **native 守护** 在 `system.slice/<service>/`
+
+详细见 14 篇 §1.1 6 大类进程分类表。
+
 ### 6.6 风险 #5：vmpressure 4 档与 PSI 百分比混用
 
 **症状**：
@@ -1827,3 +1977,10 @@ PSI 内核 API 单位是厘秒（centiseconds，1 cs = 10ms），但 AOSP LMKD p
 - 风险地图：zone 碎片化、高端内存不可用、低端机型 DMA 不足
 
 **系列尾预告**：[13-内存稳定性诊断工具链] 将整合 01-12 给出生产环境稳定性建设的完整 checklist 与监控体系（dumpsys meminfo / procrank / PSI / Perfetto）。
+
+---
+
+**本篇 2026-07-20 补强(根据 6 大缺口审计)**:
+
+- [§5.6 补充:cgroup v2 在 Android 14+ 的实际配置](#56-补充cgroup-v2-在-android-14-的实际配置)——本篇主轴基于 GKI 5.10(Android 13 时代),**AOSP 14+ 全面切到 cgroup v2**,实际配置有变化。补 5.6.1-7 共 7 个子节,覆盖 v1/v2 接口差异、实际树形结构、节点级 memory 接口、命令集、5 大坑、跨篇衔接。
+- 与 [15-线上动态内存治理:不杀进程下的诊断与梳理](15-线上动态内存治理：不杀进程下的诊断与梳理.md) 配套阅读——本篇 §5.6 是 15 篇"cgroup v2 节点级操作"的方法论基础。

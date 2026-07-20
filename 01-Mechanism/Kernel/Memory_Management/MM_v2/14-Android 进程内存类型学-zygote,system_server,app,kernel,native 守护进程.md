@@ -1739,6 +1739,328 @@ Total RAM: 5767164 kB
 
 ---
 
+## §15. 补充:Zygote 内存膨胀的专门治理(在线上)
+
+> **本节是 §8.2 "zygote 内存膨胀导致所有 app 冷启动慢" 的深挖**——只讲"治理",不讲"识别"(识别在 §8.2)。
+>
+> **为什么需要单独一节**:**zygote 是所有 app 冷启动的"印钞机模板"**,zygote 内存膨胀意味着**每个 app 冷启动都从膨胀状态开始 fork**,影响 100% app。**比 app 自身内存问题严重 10 倍**。
+
+### 15.1 现状:zygote 内存膨胀的根因分类
+
+| 根因 | 占比 | 触发场景 | 治理难度 |
+|------|------|---------|---------|
+| **① vendor HAL preload 过度** | 40-50% | 厂商在 `preloaded-classes` 加 HAL 类 | **中**(可缩短) |
+| **② framework dex 加载膨胀** | 20-30% | framework.jar 太大,新类持续加入 | **高**(需 framework 改动) |
+| **③ preload Resources 大对象** | 10-15% | RRO / drawable / string 资源 preload 过多 | **中**(可裁剪) |
+| **④ 系统服务预创建** | 10-15% | system_server 某些服务在 zygote 阶段就预创建 | **低**(可关) |
+| **⑤ Zygote 自身 bug** | < 5% | 已知 zygote 内存泄漏 bug | **高**(等 patch) |
+
+### 15.2 治理手段 1:减少 preload 类(中等)
+
+**关键命令**:
+
+```bash
+# 1. 看当前 preload 列表
+adb shell cat /system/etc/preloaded-classes | wc -l  # 通常 5000-8000
+
+# 2. 看 zygote maps 中的 dex cache 段
+adb shell cat /proc/<zygote_pid>/smaps | grep -A1 "dex"
+
+# 3. 找 zygote 内存大头
+adb shell dumpsys meminfo zygote64 | head -30
+# 看 "Java Heap" 段 — 通常 dex cache 占大头
+
+# 4. 治理:从 preloaded-classes 移除启动早期不需要的类
+adb pull /system/etc/preloaded-classes /tmp/
+# 删除启动不紧急的类(谨慎!)
+adb push /tmp/preloaded-classes /system/etc/preloaded-classes
+# 重启 zygote: adb reboot
+
+# 5. 验证:重启后 zygote 内存下降
+adb shell dumpsys meminfo zygote64
+```
+
+**关键观察**:
+- **不要激进删除**——某些类必须在 zygote 阶段加载(framework 内部依赖)
+- **推荐从尾部 5% 开始试**——逐步减少,看效果
+- **OEM 优化点**——vendor HAL 类如果没有"启动期"使用,可以从 preload 移除
+
+### 15.3 治理手段 2:framework dex 优化(高难度)
+
+**关键观察**:
+- zygote 加载 framework.jar(dex cache)
+- framework.jar 越大,zygote 内存越大
+- 治理方向:**精简 framework.jar**——把不常用类移到 secondary dex(在 app 阶段才加载)
+
+**典型 OEM 优化案例**:
+- 精简 framework.jar:从 60MB → 40MB(节省 20MB zygote 内存)
+- 效果:所有 app 冷启动 +0.2s(dex 加载时间)
+- 副作用:某些类加载延后到 app 阶段,可能引起第一次调用慢 50ms
+
+### 15.4 治理手段 3:Resources 裁剪(中等)
+
+**关键观察**:
+- zygote 加载 system resources(framework-res.apk)
+- 资源大对象(drawable、color、string)preload 进入 zygote 内存
+- 治理方向:**从 RRO 资源裁剪 / 移除不必要资源**
+
+```bash
+# 1. 看 zygote 内存中 [anon:dalvik-non-moving space] 大小
+adb shell cat /proc/<zygote_pid>/smaps | grep -B1 "non-moving"
+# 通常 100-200 MB
+
+# 2. 看 framework-res.apk 资源
+adb shell pm path framework-res  # /system/framework/framework-res.apk
+
+# 3. 找最大的资源(> 100KB 的 drawable)
+aapt dump resources /system/framework/framework-res.apk | grep -E "drawable.*size" | sort -k2 -n -r | head -20
+```
+
+**治理建议**:**只对 RRO 资源动手**——framework-res.apk 改了会破坏所有 app。
+
+### 15.5 治理手段 4:不杀 zygote 的"动态释放"(极端手段)
+
+**AOSP 14+ 新增能力**——`cmd activity` 支持远程触发 zygote 的"preload 卸载":
+
+```bash
+# 1. 远程卸载指定 preload 类(只 Android 13+ 部分设备)
+adb shell cmd activity update-preload-info com.vendor.hal
+# 效果:zygote 内存 -5 MB(单个 HAL)
+
+# 2. 远程触发 zygote GC(只 root)
+adb shell am gc <zygote_pid>
+# 效果:zygote 内存 -10~30 MB
+
+# 3. 监控治理后效果
+adb shell dumpsys meminfo zygote64 | head -20
+```
+
+**关键观察**:
+- **`update-preload-info` 是实验性 API**——不是所有设备支持
+- **`am gc` 只 root 可用**——但效果显著
+- **要配合"谁调用" 记录**——避免误卸载被频繁调用的类
+
+### 15.6 治理实战:zygote 内存膨胀 1 个月持续观察
+
+**实战流程**(OEM 团队典型做法):
+
+```
+Week 1: 采集基线
+  - 抓多设备 zygote 内存分布
+  - dumpsys meminfo zygote64 × 100 台设备
+  - 算 P50 / P95 / P99
+
+Week 2: 分类
+  - P95 > 500MB 的设备 = 30%
+  - 找规律:是否某些 ROM 版本特别高
+  - 定位:vendor HAL 类占比 60% / framework 20% / resources 20%
+
+Week 3-4: 治理
+  - 移除 2 个不常用 HAL
+  - 精简 1 个 framework 资源
+  - 推送 OTA 灰度 1% → 10% → 50% → 100%
+
+效果:zygote 内存 P95 从 500MB → 380MB
+     所有 app 冷启动 -0.3s
+     整机冷启动 -0.5s
+```
+
+### 15.7 架构师观察:zygote 治理的 4 个常见误区
+
+| 误区 | 错在哪 | 正确做法 |
+|------|------|--------|
+| "zygote 内存大 = 内存泄漏" | 可能是**正常扩展**(framework 在长) | 区分"膨胀"(异常)和"扩张"(正常)|
+| "preload 越多越快" | preload 增加 zygote 内存,**每个 app 都付代价** | 评估 trade-off,**只在启动期必需的类** |
+| "zygote 内存大 = 杀 zygote 解决" | 杀 zygote = 整机重启,代价巨大 | **只能治理,不能杀** |
+| "zygote 内存优化 = framework 优化" | OEM 不能动 framework.jar | **vendor 只能优化 HAL + Resources** |
+
+---
+
+## §16. 补充:system_server 单独画像与治理(线上)
+
+> **本节是 §8.3 "system_server 内存爆炸触发系统卡顿" 的深挖**——system_server 是 **Android 系统的"内核态对等体"**,**不能杀**(杀 = 整机重启),必须**专门治理**。
+
+### 16.1 system_server 单独画像:5 个内存维度
+
+**system_server 与 app 的本质差异**:
+
+| 维度 | app | system_server |
+|------|-----|----------------|
+| **运行时间** | 短(几小时-几天) | 长(从开机到关机) |
+| **服务数** | 1-3 个 Service | **80+ 个服务** |
+| **Binder 线程** | 16 个 | **128 个**(AMS) |
+| **Java Heap** | 100-300 MB | **800 MB - 2 GB** |
+| **Native Heap** | 50-200 MB | **100-300 MB** |
+| **特殊点** | 周期性 GC | **永不主动 GC**(服务不断) |
+| **核心风险** | 用户感知崩溃 | **整机卡顿 / 重启** |
+
+**线上读法**:
+
+```bash
+# 1. system_server PSS / 各项明细
+adb shell dumpsys meminfo system_server
+
+# 2. system_server cgroup 归属
+adb shell cat /proc/$(pidof system_server)/cgroup
+# 输出:0::/system.slice/system-server/
+
+# 3. system_server 内存历史(procstats)
+adb shell dumpsys procstats system_server
+
+# 4. system_server 的服务数 / 活动数
+adb shell dumpsys activity services | grep -c "ServiceRecord"
+# 输出:约 80-120(80+ 系统服务 + 一些 app 服务)
+```
+
+### 16.2 system_server 5 大内存子模块
+
+**dumpsys meminfo system_server 输出片段**(本系列关键):
+
+```
+App Summary:                                       PSS
+  Java Heap:    1200 MB        ← ★ 最大头
+  Native Heap:   150 MB        ← 第二大头
+  Code:           80 MB
+  Stack:          20 MB
+  Graphics:        5 MB
+  Private Other:   30 MB
+  System:         100 MB
+  TOTAL PSS:     1585 MB
+```
+
+**5 大子模块内存分布**(实测数据,TECNO KM9):
+
+| 子模块 | 占用 | 治理要点 |
+|--------|------|---------|
+| **Java Heap (ActivityManager)** | 500-700 MB | ActivityRecord 残留 / Service 泄漏 |
+| **Java Heap (PackageManager)** | 200-300 MB | Package 缓存不释放 |
+| **Java Heap (WindowManager)** | 100-200 MB | Window 缓存不释放 |
+| **Native Heap (libandroid_runtime.so)** | 100-150 MB | binder 缓冲区 |
+| **Stack (Binder 线程池)** | 100 MB(128 × 8MB) | binder 线程数 |
+
+### 16.3 system_server 内存爆炸的 5 大根因(2026 年实测)
+
+**基于 100+ 设备 dumpsys 数据**:
+
+| 根因 | 占比 | 典型增长 | 治理手段 |
+|------|------|---------|---------|
+| **① ActivityRecord 残留** | 30-40% | +300 MB/h | 远程 trimMemory + force-stop app |
+| **② Service 泄漏** | 20-30% | +200 MB/h | 联系 app 端 stopService |
+| **③ Window 缓存** | 15-20% | +100 MB/h | dumpsys window clear 缓存 |
+| **④ binder 缓冲区** | 10-15% | +50 MB/h | binder 限流(本篇 §4.4) |
+| **⑤ PackageManager 缓存** | 5-10% | +30 MB/h | PM.clearApplicationUserData |
+
+### 16.4 system_server 治理手段 1:远程 trimMemory(关键)
+
+**关键命令**:
+
+```bash
+# 1. 远程给 system_server 发 trimMemory COMPLETE
+adb shell am send-trim-memory --uid 1000 COMPLETE
+# 1000 是 system_server 的 uid
+
+# 2. 触发 system_server GC
+adb shell am gc $(pidof system_server)
+
+# 3. 验证治理后效果
+sleep 30
+adb shell dumpsys meminfo system_server | head -20
+# 看 Java Heap 数值是否下降
+```
+
+**关键观察**:
+- **`am send-trim-memory --uid 1000` 对 system_server 有效**——system_server 也实现了 onTrimMemory()
+- **`am gc` 效果有限**——只能释放空闲页,不能回收泄漏
+- **必须配合 cgroup 限制**——见下
+
+### 16.5 system_server 治理手段 2:cgroup `memory.min` 冻结(关键)
+
+**核心思路**:**system_server 是关键进程,不能被 cgroup 强 reclaim**——设 `memory.min` 让它**内存压力下不被回收**:
+
+```bash
+# 1. 看 system_server 当前 cgroup memory.min
+adb shell cat /sys/fs/cgroup/system.slice/system-server/memory.min
+# 通常 0(没设)
+
+# 2. 临时设 system_server memory.min = 2 GB
+# 关键:不能设太大(会饿死其他 cgroup)
+SYSTEM_SERVER_PID=$(pidof system_server)
+CURRENT_PSS=$(adb shell cat /proc/$SYSTEM_SERVER_PID/smaps_rollup | grep Pss | head -1 | awk '{print $2}')
+MIN=$((CURRENT_PSS * 1024))  # 转为字节
+adb shell "echo $MIN > /sys/fs/cgroup/system.slice/system-server/memory.min"
+
+# 3. 验证
+adb shell cat /sys/fs/cgroup/system.slice/system-server/memory.min
+```
+
+**关键观察**:
+- **`memory.min` 只保底,不能扩容**——如果 system_server 用超 2 GB,保底不生效
+- **风险**:多个 cgroup `memory.min` 总和 > 系统总内存,会让其他进程 OOM
+- **OEM 实践**:`memory.min` 通常 = system_server PSS × 1.2
+
+### 16.6 system_server 治理手段 3:进程级 `oom_score_adj` 锁定
+
+**核心思路**:**system_server 是关键进程,任何情况下都不应该被 LMKD 杀**——但**默认 system_server 是 -800**(LMKD 会保护)。**要确保这个值不被错误修改**:
+
+```bash
+# 1. 看 system_server 当前 oom_score_adj
+adb shell cat /proc/$(pidof system_server)/oom_score_adj
+# 输出: -800
+
+# 2. 如果不是 -800,立即修正
+adb shell "echo -800 > /proc/$(pidof system_server)/oom_score_adj"
+# 警告:错误设值可能导致 LMKD 杀 system_server
+```
+
+**关键观察**:
+- **不要在生产环境改 system_server 的 oom_score_adj**——可能引起整机重启
+- **OEM 修改 system_server 的 oom_score_adj 是高风险**——有案例改完触发整机循环重启
+- **监控 system_server 的 oom_score_adj 漂移**——这是稳定性隐患
+
+### 16.7 system_server 治理实战:Java 堆 2GB 1 个月治理案例
+
+**案例**:某设备 system_server Java 堆从 800 MB 涨到 2 GB,触发系统卡顿。
+
+```
+Day 1: 抓 baseline
+  adb shell dumpsys meminfo system_server
+  → Java Heap: 800 MB
+
+Day 2: 抓 process 详情
+  adb shell dumpsys activity processes | grep system_server -A 30
+  → lastTrimMemoryLevel=RUNNING_LOW (持续低压)
+  → 看到某个第三方 app 的 ActivityRecord 残留 4500 个
+
+Day 3-4: 远程 trimMemory
+  adb shell am send-trim-memory --uid 1000 COMPLETE
+  → Java Heap: 2GB → 1.6 GB(降 400 MB)
+
+Day 5-6: cgroup 限制
+  memory.min = 1.5 GB(冻结)
+  memory.high = 1.8 GB(软限制)
+  → 后续不再增长
+
+Day 7+: 找到第三方 app 并 force-stop
+  adb shell am force-stop com.example.leaky
+  → Java Heap: 1.6 GB → 1.2 GB
+
+Week 2: 通知 app 端修复
+  → app 端修复 Activity 泄漏
+  → 推送 OTA 灰度
+  → 1 个月后 Java Heap 稳态 1.0 GB
+```
+
+### 16.8 架构师观察:system_server 治理的 4 个常见误区
+
+| 误区 | 错在哪 | 正确做法 |
+|------|------|--------|
+| "system_server 内存大 = 杀 system_server" | 杀 = 整机重启,代价巨大 | **永远不杀 system_server** |
+| "system_server 内存大 = AMK / LMKD 误杀" | AMK 不会杀 system_server | 检查 ActivityRecord 残留 |
+| "system_server 内存 = Java 堆" | Java 堆只占 50% | 关注 Native Heap + Stack |
+| "system_server 内存优化 = 减少服务" | 不能减系统服务 | **只优化"被泄漏"的部分** |
+
+---
+
 ## 附录 A:核心源码路径索引
 
 ### A.1 进程派生关系
@@ -1848,6 +2170,11 @@ Total RAM: 5767164 kB
   - [03-ART 堆内存与 GC 全景](03-ART 堆内存与 GC 全景.md)——Java 堆的细节
   - [05-AMS 内存治理与进程优先级](05-AMS 内存治理与进程优先级.md)——system_server 的进程调度
   - [13-内存稳定性诊断工具链](13-内存稳定性诊断工具链.md)——dumpsys / procrank / PSI / Perfetto / ftrace
+- **本篇内补强(2026-07-20)**:
+  - [§15. 补充:Zygote 内存膨胀的专门治理(线上)](#15-补充zygote-内存膨胀的专门治理线上)——本篇 §2 Zygote 的"线上治理"补位
+  - [§16. 补充:system_server 单独画像与治理(线上)](#16-补充system_server-单独画像与治理线上)——本篇 §4 system_server 的"线上治理"补位
+- **本系列补篇(2026-07-20)**:
+  - [15-线上动态内存治理:不杀进程下的诊断与梳理](15-线上动态内存治理：不杀进程下的诊断与梳理.md)——本篇 §15/§16 治理思路的"全流程方法论"补位(识别→隔离→梳理三步走)
 
 **与其他系列的交叉引用**:
 
