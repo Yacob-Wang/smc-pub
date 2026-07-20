@@ -27,7 +27,7 @@ def build_reader_homepage() -> str:
     cards_html = "\n".join(cards)
 
     return f"""---
-title: 首页
+title: Home
 hide:
   - navigation
   - toc

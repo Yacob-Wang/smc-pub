@@ -20,14 +20,14 @@ PUBLIC_MODULES = [
 ]
 
 MODULE_TITLES = {
-    "00-Meta": "项目地图",
-    "01-Mechanism": "机制 · AOSP 分层",
-    "02-Symptom": "症状 · S01-S11",
-    "03-Forensics": "取证 · F00-F07",
-    "04-Tool": "工具 · 7 类",
-    "05-Governance": "治理 · 8 主题",
-    "06-Case": "案例库",
-    "06-Foundation": "基础 · 4 主题",
+    "00-Meta": "Map",
+    "01-Mechanism": "Mechanism",
+    "02-Symptom": "Symptoms",
+    "03-Forensics": "Forensics",
+    "04-Tool": "Tools",
+    "05-Governance": "Governance",
+    "06-Case": "Cases",
+    "06-Foundation": "Foundation",
 }
 
 MODULE_BLURBS = {

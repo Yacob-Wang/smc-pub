@@ -482,7 +482,7 @@ def generate_pages_tree(docs_root: Path) -> None:
     3. module 层 .pages：「本模块总览」指向 index.md + 子分类列表
     4. series 层不写 .pages：让 awesome-pages 自动递归列出所有单篇
     """
-    top_nav: list[tuple[str, str]] = [("首页", "index.md")]
+    top_nav: list[tuple[str, str]] = [("Home", "index.md")]
     for mod in MODULE_DIRS:
         mod_dir = docs_root / mod
         if not mod_dir.is_dir():
