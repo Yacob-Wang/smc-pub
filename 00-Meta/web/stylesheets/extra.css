@@ -811,12 +811,28 @@ article > h1:first-child,
 }
 
 /* ==========================================================================
-   详情页 blockquote banner（系列 / 版本基线 / 目标读者）
-   - HTML 实际是单 <p> 包含多个 <strong> + 值，所以用 inline-block 对齐
-     不要用 display: grid（grid 会把 strong/code/text 当独立 item 散到两列）
+   模块落地页导语（非 blockquote，避免详情页 banner CSS 误伤）
    ========================================================================== */
 
-.md-typeset blockquote:first-of-type {
+.md-typeset .jk-module-lead {
+  margin: 0 0 1rem;
+  padding: 0.7rem 1rem;
+  border-left: 4px solid var(--jk-text-link);
+  border-radius: 0 var(--jk-radius) var(--jk-radius) 0;
+  background: var(--jk-bg-callout);
+  color: var(--jk-text-main);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  box-shadow: var(--jk-shadow-sm);
+}
+
+/* ==========================================================================
+   详情页 blockquote banner（系列 / 版本基线 / 目标读者）
+   - 仅当首段以 <strong> 标签行开头时启用（如 **基线**：**本篇角色**）
+   - 模块落地页导语已改用 .jk-module-lead，不再走这条路径
+   ========================================================================== */
+
+.md-typeset blockquote:first-of-type:has(p > strong:first-child) {
   border-left: 4px solid var(--jk-text-link);
   background: var(--jk-bg-callout);
   border-radius: var(--jk-radius);
@@ -827,14 +843,14 @@ article > h1:first-child,
   line-height: 1.55;
 }
 
-.md-typeset blockquote:first-of-type p {
+.md-typeset blockquote:first-of-type:has(p > strong:first-child) p {
   display: block;
   margin: 0.3rem 0;
   line-height: 1.6;
 }
 
 /* strong 当列标签：固定最小宽度，inline-block 让值自然跟在后面 inline 流 */
-.md-typeset blockquote:first-of-type p > strong:first-child {
+.md-typeset blockquote:first-of-type:has(p > strong:first-child) p > strong:first-child {
   display: inline-block;
   min-width: 5.25rem;
   margin-right: 0.5rem;
@@ -845,7 +861,7 @@ article > h1:first-child,
   vertical-align: top;
 }
 
-.md-typeset blockquote:first-of-type code {
+.md-typeset blockquote:first-of-type:has(p > strong:first-child) code {
   background: var(--jk-bg-active);
   color: var(--jk-text-active);
   padding: 0.05em 0.4em;
@@ -854,7 +870,7 @@ article > h1:first-child,
   font-weight: 500;
 }
 
-.md-typeset blockquote:first-of-type p:last-child {
+.md-typeset blockquote:first-of-type:has(p > strong:first-child) p:last-child {
   margin-top: 0.4rem;
   padding-top: 0.5rem;
   border-top: 1px dashed var(--jk-line);

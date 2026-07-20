@@ -19,7 +19,7 @@
 <header class="{{ class }}" data-md-component="header">
   <div class="md-header__row md-grid">
     <nav class="md-header__primary" aria-label="{{ lang.t('header') }}">
-      <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" title="{{ config.site_name | e }}" class="md-header__button md-logo" aria-label="{{ config.site_name }}" data-md-component="logo">
+      <a href="{{ nav.homepage.url | url }}" title="{{ config.site_name | e }}" class="md-header__button md-logo" aria-label="{{ config.site_name }}" data-md-component="logo">
         {% include "partials/logo.html" %}
       </a>
       <label class="md-header__button md-icon" for="__drawer">
@@ -90,7 +90,7 @@
       {% endif %}
 
       {#- 圆形头像：j 字母（替换原 JacobKing chip） -#}
-      <a class="jk-avatar" href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" title="JacobKing · Stability Matrix Course" aria-label="JacobKing">J</a>
+      <a class="jk-avatar" href="{{ nav.homepage.url | url }}" title="JacobKing · Stability Matrix Course" aria-label="JacobKing">J</a>
 
       {% if config.repo_url %}
         <div class="md-header__source">

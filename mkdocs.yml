@@ -108,9 +108,12 @@ validation:
   absolute_links: ignore
   unrecognized_links: ignore
 
+# GitHub Pages 项目站：logo / 站点根链接必须走相对路径（不要写 homepage: /，
+# 否则会跳到 yacob-wang.github.io 根域，而不是 /smc-pub/）
+site_url: https://yacob-wang.github.io/smc-pub/
+
 extra:
   generator: false
-  homepage: /
 
 extra_css:
   - stylesheets/fonts.css

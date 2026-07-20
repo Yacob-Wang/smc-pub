@@ -30,10 +30,18 @@ from content_policy import (  # noqa: E402
     is_excluded_path,
     is_meta_file,
 )
+from preamble_transform import (  # noqa: E402
+    audit_docs_for_preamble,
+    should_strip_module,
+    strip_author_preamble,
+)
 from public_readme import build_public_readme  # noqa: E402
 
 REPO_ROOT = _SCRIPTS.parent.parent  # 适配阶段 3 移到 00-Meta/scripts/（原 _SCRIPTS.parent 是仓库根）
 DOCS_DIR = REPO_ROOT / "docs"
+
+# 跨模块累计：文首作者前言剥离数（供 main 打印）
+_PREAMBLE_STRIPPED = 0
 
 MODULE_DIRS = PUBLIC_MODULES
 ROOT_FILES = [(name, name) for name in PUBLIC_ROOT_FILES]
@@ -321,18 +329,25 @@ def build_module_index(module: str, mod_dir: Path) -> str:
     series_count, article_count = _module_stats(mod_dir, subdirs)
     module_icon = _MODULE_ICONS.get(module, "material/folder-outline")
 
+    # 图标属性必须紧贴短码：`:icon:{ .lg }`（中间不能有空格，否则 {.lg} 会当正文漏出）
     lines: list[str] = [
-        f"# :{module_icon}: {{ .lg }} &nbsp; {title}",
+        f"# :{module_icon}:{{ .lg }} {title}",
         "",
     ]
+    # 模块导语不用 blockquote——详情页的 first-of-type banner CSS 会误伤
+    lead_parts: list[str] = []
     if blurb:
-        lines.append(f"> {blurb}")
+        lead_parts.append(blurb)
     if series_count:
-        lines.append(
-            f"> 本模块共 **{series_count}** 个系列、约 **{article_count}** 篇文章。"
+        lead_parts.append(
+            f"本模块共 **{series_count}** 个系列、约 **{article_count}** 篇文章。"
         )
+    if lead_parts:
+        lines.append(
+            f'<p class="jk-module-lead" markdown="1">{" · ".join(lead_parts)}</p>'
+        )
+        lines.append("")
     lines.extend([
-        "",
         "选择下方卡片进入系列总览；单篇请在系列总览的目录表中打开。",
         "",
         '<div class="grid cards" markdown>',
@@ -557,9 +572,22 @@ def fix_links_in_docs(docs_root: Path, name_map: dict[str, str]) -> int:
     return fixed_files
 
 
+def _write_stripped_md(src: Path, dst: Path) -> bool:
+    """写入 md；若命中作者前言则剥离。返回是否发生剥离。"""
+    global _PREAMBLE_STRIPPED
+    raw = src.read_text(encoding="utf-8", errors="replace")
+    new_text, changed = strip_author_preamble(raw)
+    if changed:
+        dst.write_text(new_text, encoding="utf-8", newline="\n")
+        _PREAMBLE_STRIPPED += 1
+        return True
+    shutil.copy2(src, dst)
+    return False
+
+
 def _ensure_series_index_md(src_sub: Path, dst_sub: Path) -> None:
     """递归确保 series 目录有 index.md：
-    - 有 README.md → 复制为 index.md
+    - 有 README.md → 复制为 index.md（同步剥离作者前言）
     - 没有 README.md 但有 .md → 自动生成 index.md（文件列表）
     递归处理子目录。
     """
@@ -570,7 +598,7 @@ def _ensure_series_index_md(src_sub: Path, dst_sub: Path) -> None:
         readme = src_sub / "README.md"
         if readme.is_file():
             try:
-                shutil.copy2(readme, index_md)
+                _write_stripped_md(readme, index_md)
             except FileNotFoundError:
                 pass
         else:
@@ -607,9 +635,13 @@ def _ensure_series_index_md(src_sub: Path, dst_sub: Path) -> None:
 
 
 def copy_tree(src: Path, dst: Path) -> int:
+    """复制模块树到 docs/；对开启剥离的模块，.md 写入前切除 v4 作者前言。"""
+    global _PREAMBLE_STRIPPED
     count = 0
     if not src.is_dir():
         return 0
+    module = src.name
+    strip = should_strip_module(module)
     for path in src.rglob("*"):
         if not should_copy(path):
             continue
@@ -620,7 +652,10 @@ def copy_tree(src: Path, dst: Path) -> int:
         new_name = sanitize_filename(path.name)
         target = dst / path.relative_to(src).parent / new_name
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(path, target)
+        if strip and path.suffix.lower() == ".md":
+            _write_stripped_md(path, target)
+        else:
+            shutil.copy2(path, target)
         count += 1
     # 阶段 4：递归确保每个有 README.md 的 series 目录都有 index.md
     for sub in src.iterdir():
@@ -630,6 +665,9 @@ def copy_tree(src: Path, dst: Path) -> int:
 
 
 def main() -> int:
+    global _PREAMBLE_STRIPPED
+    _PREAMBLE_STRIPPED = 0
+
     if DOCS_DIR.exists():
         shutil.rmtree(DOCS_DIR)
     DOCS_DIR.mkdir(parents=True)
@@ -700,6 +738,21 @@ def main() -> int:
 
     generate_pages_tree(DOCS_DIR)
     print(f"Prepared docs/ with {total} content files; skipped ~{skipped_meta} meta docs")
+    if _PREAMBLE_STRIPPED:
+        print(
+            f"  stripped author preamble from {_PREAMBLE_STRIPPED} pages "
+            f"(public site → Activity-style lead)"
+        )
+    leftovers = audit_docs_for_preamble(DOCS_DIR)
+    if leftovers:
+        print(
+            f"  WARN: {len(leftovers)} docs/ pages still have author preamble near top:",
+            file=sys.stderr,
+        )
+        for p in leftovers[:20]:
+            print(f"    - {p}", file=sys.stderr)
+        if len(leftovers) > 20:
+            print(f"    ... +{len(leftovers) - 20} more", file=sys.stderr)
     print("Generated layered .pages navigation")
     return 0
 

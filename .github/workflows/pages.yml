@@ -34,8 +34,14 @@ jobs:
       - name: Install MkDocs
         run: pip install -r 00-Meta/scripts/requirements-docs.txt
 
+      - name: Test preamble strip (public-site lead)
+        run: python 00-Meta/scripts/test_preamble_transform.py
+
       - name: Prepare docs/
         run: python 00-Meta/scripts/prepare_web_docs.py
+
+      - name: Audit docs/ for leftover author preamble
+        run: python 00-Meta/scripts/preamble_transform.py audit docs
 
       - name: Build site
         run: mkdocs build --verbose
