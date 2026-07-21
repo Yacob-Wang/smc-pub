@@ -734,8 +734,8 @@ ActivityManager: Process com.tencent.mm (pid 32100) has died
 | 5 | dumpsys meminfo 单进程输出行数 | ~30 行 | 实测 dumpsys 输出 |
 | 6 | `lastMemInfo` 完整字段数 | 24+（8 类 × 3 维）| AOSP 17 Debug.MemoryInfo 公开 API |
 | 7 | trimMemory 等级枚举 | 7 个（5/10/15/20/40/60/80）| AOSP 17 ComponentCallbacks2 |
-| 8 | MemoryLimiter 默认配额（可见态）| 256 MB | AOSP 17 MemoryLimiter 常量 |
-| 9 | MemoryLimiter 默认配额（cached 态）| 64 MB | AOSP 17 MemoryLimiter 常量 |
+| 8 | MemoryLimiter 默认配额（可见态）| 256 MB | AOSP 17 MemoryLimiter.java Java 常量 + `/vendor/etc/memory-limiter-config.xml` 设备可覆写（§5.1.1 已注）|
+| 9 | MemoryLimiter 默认配额（cached 态）| 64 MB | AOSP 17 MemoryLimiter.java Java 常量 + `/vendor/etc/memory-limiter-config.xml` 设备可覆写（§5.1.1 已注）|
 | 10 | mPssStatType 枚举 | 3 个（PSS_FULL/PSS_BASIC/PSS_RSS）| AOSP 17 Debug |
 | 11 | 14 字段的写入 trigger 数 | 5 个 | 5 类调用点（定时/状态切换/trimMemory/dumpsys/MemoryLimiter）|
 | 12 | 14 字段的读取消费者数 | 4 个 | adj/trimMemory/LMKD/dumpsys |
