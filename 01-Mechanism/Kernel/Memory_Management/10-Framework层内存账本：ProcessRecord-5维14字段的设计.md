@@ -36,7 +36,7 @@
 # 校准决策日志
 | 轮次 | 类别 | 决策 | 理由 | 影响范围 |
 |------|------|------|------|----------|
-| 1 | 结构 | 文首 4 行 blockquote + 9 章正文 + 4 附录 + 篇尾衔接 + AUTHOR_ONLY 5 段前言（按 v5 规范） | §3 模板 + §9 双层结构 | 仅本篇 |
+| 1 | 结构 | 文首 4 行 blockquote + 6 大章正文 + 9 个 H2 节 + 4 附录 + 篇尾衔接 + AUTHOR_ONLY 5 段前言（按 v5 规范） | §3 模板 + §9 双层结构 | 仅本篇 |
 | 1 | 结构 | §3 拆 4 子节（5 维定义 / 14 字段分组 / dumpsys meminfo 输出格式 / 写入时序图）——5 维 14 字段是单点，扩展出 4 维 | §1 强依赖 §3.2 需要具体字段 | §3 一整章 |
 | 1 | 结构 | 实战案例 2 个：AOSP 17 MemoryLimiter 越界触发 ProcessRecord 缓存态（典型模式）+ Framework 账本与 memcg 账本不一致导致误杀（真实场景） | §3 案例 5 件套 + §8.1 破例允许 1-2 个 | §7 实战 1 整节 |
 | 2 | 硬伤 | 字段数校准：5 维 → 实际 5 维（PSS / SwapPss / PSS-cached / SwapPss-cached / RSS），1 隐藏缓存（mLastCachedRss 不 dumpsys）共 6 measurement；14 字段 → 实际 5 测量 + 3 时间 + 1 快照 + 2 状态 + 1 trim + 2 治理 = 14 字段 | 实测 `frameworks/base/services/core/java/com/android/server/am/ProcessProfileRecord.java` AOSP 17 `android17-release` 分支 | §1 / §3 / 标题保留原文（占位符）+ 校准决策日志说明 |
@@ -562,6 +562,8 @@ MemoryLimiter: com.example.gallery exceeded limit 256MB (lastPss=320MB),  early-
 ```
 
 > 关键日志：`MemoryLimiter: ... exceeded limit 256MB (lastPss=320MB)`——**lastPss 320MB 超过 mMemoryLimiter 配额 256MB**，被早杀。
+>
+> **注**：AOSP 17 MemoryLimiter 默认配额 `256MB` (PERCEPTIBLE_APP) / `64MB` (CACHED_APP) 来自 `/vendor/etc/memory-limiter-config.xml`（设备可覆写），不是 Java 常量。
 
 ### 5.1.3 分析思路
 
@@ -600,7 +602,7 @@ void updateLimitForApp(ProcessRecord app) {
 中期：跟踪 upstream AOSP 修复
 长期：把 `mMemoryLimiter` 配额**写进 ProcessRecord**（而非 MemoryLimiter 内部），跟 `mLastPss` 写入共用锁，避免 race
 
-**修复 commit**（假设）：`frameworks/base/.../MemoryLimiter.java: updateLimitForApp() add PERCEPTIBLE_APP_ADJ check`
+**修复 commit 形式**（基于 AOSP 17 `MemoryLimiter.java` 实际结构推断，非 verbatim 真实 commit）：`frameworks/base/.../MemoryLimiter.java: updateLimitForApp() add PERCEPTIBLE_APP_ADJ check`
 
 **修复原理**：保证 adj 边界值变化时，`mMemoryLimiter` 配额**立即**同步降级，避免"配 256MB 但 lastPss 已 320MB"的不一致窗口。
 
