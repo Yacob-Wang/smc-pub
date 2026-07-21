@@ -447,7 +447,7 @@ mm_struct 真正的内容只有：
 | OOM Killer | **第 09 篇** | — | [Framework-Process-06 §6](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) | — |
 | PSI / 压力监控 | **第 07 篇** §回收子系统 + **第 09 篇** §LMKD | — | — | — |
 | AOSP 17 MemoryLimiter | **第 09 篇** + **第 14 篇** §未来方向 | — | — | — |
-| IO 与内存的耦合（Page Cache）| **第 07 篇** §回收（refault） | — | — | [IO 系列 04-05](../IO/04-...) |
+| IO 与内存的耦合（Page Cache）| **第 07 篇** §回收（refault） | — | — | [IO 系列 04-05](../IO/04-IO优先级与cgroup-IO控制器.md) + [05](../IO/05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md) |
 | zRAM / swap | **第 07 篇** §回收子系统 | — | — | — |
 | 一次 page fault 跨 5 层协作 | **第 10 篇** | ART §3 启动 | Framework §3 进程启动 | IO §4 文件 mmap |
 
@@ -493,7 +493,7 @@ Q2: 看哪？
      → dmesg | grep "Out of memory" → 本系列第 09 篇
 ```
 
-**结论**：**绝大多数内存问题，从 ART / Framework Process 系列入手（特别是 [ART 05](../Runtime/ART/03-GC系统/05-Generational-CC/01-分代假说.md) / [Process 06](../Framework/Process/06-...)）；只有 ART / Framework 看完仍定位不到根因时，才下沉到 Kernel 本系列**。本系列不是入门读物，是排查的"最后一公里"。
+**结论**：**绝大多数内存问题，从 ART / Framework Process 系列入手（特别是 [ART 05](../Runtime/ART/03-GC系统/05-Generational-CC/01-分代假说.md) / [Process 06](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)）；只有 ART / Framework 看完仍定位不到根因时，才下沉到 Kernel 本系列**。本系列不是入门读物，是排查的"最后一公里"。
 
 ---
 
