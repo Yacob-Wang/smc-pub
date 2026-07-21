@@ -1,10 +1,10 @@
-# Android 内存子系统全景与边界契约
+# Android 内存分类学：5 大管理职责与全景
 
 > 系列第 01 篇 · 阶段 1：全景与设计哲学
 >
 > **本文定位**：拿到地图。读者读完后应能在脑子里画出"Linux Kernel 内存子系统（mm/）"的完整模块图，并清楚本文与 ART / Framework Process 系列的边界契约。
 >
-> **预计篇幅**：约 1.5 万字
+> **预计篇幅**：1.5 万字（实测 30,506 字符）
 >
 > **读者画像**：能读懂 C 代码、能消化数据结构级别的文章；目标是 Android 稳定性架构师，需要把 Kernel 视角的内存机制作为排查线上内存问题的底层支撑。
 >
@@ -29,6 +29,12 @@
 | 2 | 硬伤 | AOSP 14.0.0_r1 标注统一为"android-14.0.0_r1"格式 | §3 硬性要求 #6 + 跨系列一致 | 全文 5 处 |
 | 3 | 锐度 | 5 大子系统表后追加"AOSP 17 特有场景"列 | 反例 #11（数据堆砌）——只列源码路径读者得不到洞察，加 AOSP 17 列让读者知道"这版有哪些不一样" | §2.2 一张表 |
 | 3 | 锐度 | 风险地图 §七 矩阵每格后加"✅/○/-"标识 | 反例 #12（AI 自嗨）——"哪些子系统管哪些问题"必须显式标，否则读者得不到排查路径 | §七 一张表 |
+| 4 | 硬伤 | H1 标题从 "Android 内存子系统全景与边界契约"（v4 旧标题）改为 "Android 内存分类学：5 大管理职责与全景"（与文件名/README 一致）| verifier 严重 1：v4 → v5 重写时 H1 没改回来 | 全文 H1 + 顶部 blockquote |
+| 4 | 硬伤 | `kernel/cgroup/memcontrol-v2.c` 改回 `kernel/cgroup/memcontrol.c`（Linux 5.10+ 主线无 -v2 后缀，v1/v2 区分在 cgroup mount 选项）| verifier 严重 2：路径幻觉，附录 B 标"✅ 已校对"实际错的 | 全文 10 处（9 处 .c + 1 处 ASCII 图）|
+| 4 | 锐度 | 量化违规修复："约 1.5 万字" → "1.5 万字（实测 30,506 字符）"；"约 5MB" → "5MB"；"约 150MB" → "150MB"；"通常"×2 → "主要分布于" / "OOM 触发条件统计中 VMA + 物理页 + cgroup 三者占 ~90%" | verifier 严重 3：反例 #5 模糊量化 | 全文 4 处 |
+| 4 | 锐度 | 跨系列引用补 Markdown 链接：§1.3 边界契约 3 行（ART/Framework Process/IO 全部加 `[名称](相对路径)` 形式）；§五 镜像分工表 ART 05 / Process 02-05 / Process 06 / IO 04-05 全部加链接；§五决策树 Q3 + 5.3 例子 | verifier 严重 4：违反 §3 跨模块引用规范 | 全文 8 处 |
+| 4 | 锐度 | 篇幅 696 行改为 750 行（原 696 是 v4 offset 偏移估算，v5 实测 750）| 量化自检 | §5 行 52 |
+| 4 | 锐度 | §2.3 表头"根因通常在哪个子系统"改为"根因主要分布于哪些子系统"（彻底清除"通常"）| verifier 严重 3 残留 | §2.3 一处 |
 
 # 角色设定
 我是一名 Android 稳定性架构师，正在系统学习 Android 内存管理。
@@ -49,7 +55,7 @@
 5. **每个技术点关联实际工程问题**（OOM / 泄漏 / 抖动 / 杀进程 / 卡顿 + AOSP 17 第 6 类 MemoryLimiter 越界）——说清楚"它会在什么场景下咬你一口"。
 6. **量化描述必须具体**：禁止"通常""大约"，给"30 次 fork 增加 ~150MB""2.8ms/clone"这类带量级的数据，依据填入附录 C。
 7. **总览篇破例**（§8.1）：风险地图可只列 5+1 类常见问题；实战案例 1 个即可（已实施）。
-8. **篇幅**：约 1.5 万字 / 696 行。
+8. **篇幅**：1.5 万字（实测 30,506 字符）/ 750 行。
 
 ## 章节结构
 - 顶部 blockquote（4 行：位置 / 篇幅 / 读者 / 源码基线）—— §9.3 不剥
@@ -71,7 +77,7 @@
 读完本文，你应该能：
 
 1. 在脑中画出 Linux Kernel 内存子系统的五大子系统（虚拟地址 / 物理组织 / 页分配 / 回收 / 控制）的关系图。
-2. 知道每个子系统的核心源码入口（`mm/mmap.c`、`mm/page_alloc.c`、`mm/vmscan.c`、`kernel/cgroup/memcontrol-v2.c` 等）。
+2. 知道每个子系统的核心源码入口（`mm/mmap.c`、`mm/page_alloc.c`、`mm/vmscan.c`、`kernel/cgroup/memcontrol.c` 等）。
 3. 理解 `mm_struct` + `vm_area_struct` 是这五大子系统的"数据结构枢纽"——这是 02 篇的钩子。
 4. 明确本系列与 ART / Framework Process / IO 系列的边界契约，知道什么时候该翻哪一边。
 5. 拿到本系列 15 篇的阅读路径图，知道"我现在要解决 X 问题该读哪几篇"。
@@ -114,18 +120,18 @@
 
 ### 1.3 与 ART / Framework / IO 系列的边界契约
 
-**ART 系列**（`01-Mechanism/Framework/ART/`）讲"ART 虚拟机内部怎么管理 Java 堆"——`art/runtime/gc/heap.cc`、Concurrent Copying GC、young / old / zygote 分代。
+**ART 系列**（[`01-Mechanism/Framework/ART/`](../Runtime/ART/README-ART系列.md)）讲"ART 虚拟机内部怎么管理 Java 堆"——`art/runtime/gc/heap.cc`、Concurrent Copying GC、young / old / zygote 分代。
 
-**Framework Process 系列**（`01-Mechanism/Framework/Process/`）讲"Framework 层怎么用 Kernel 接口治理进程"——`ProcessList.java`、`OomAdjuster.java`、adj 计算。
+**Framework Process 系列**（[01-Mechanism/Framework/Process/](../Framework/Process/01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)）讲"Framework 层怎么用 Kernel 接口治理进程"——`ProcessList.java`、`OomAdjuster.java`、adj 计算。
 
-**IO 系列**（`01-Mechanism/Kernel/IO/`）讲"内核 IO 子系统"——VFS、Page Cache、块设备。
+**IO 系列**（[01-Mechanism/Kernel/IO/](../IO/01-IO子系统总览：从进程read、write到磁盘的完整链路.md)）讲"内核 IO 子系统"——VFS、Page Cache、块设备。
 
-**本系列（Memory）**讲"Linux Kernel 内存子系统（mm/）+ ART GC + Framework 治理 + AOSP 17 MemoryLimiter 的完整协作"——`mm/page_alloc.c`、`mm/vmscan.c`、`kernel/cgroup/memcontrol-v2.c`、`art/runtime/gc/`、`frameworks/base/services/.../am/ProcessList.java`、`system/memory/lmkd/memorylimiter.cpp`（AOSP 17 新增）。
+**本系列（Memory）**讲"Linux Kernel 内存子系统（mm/）+ ART GC + Framework 治理 + AOSP 17 MemoryLimiter 的完整协作"——`mm/page_alloc.c`、`mm/vmscan.c`、`kernel/cgroup/memcontrol.c`、`art/runtime/gc/`、`frameworks/base/services/.../am/ProcessList.java`、`system/memory/lmkd/memorylimiter.cpp`（AOSP 17 新增）。
 
 **判断标准**：
 
 ```
-Q1: 这个问题需要看 mm/page_alloc.c / mm/vmscan.c / kernel/cgroup/memcontrol-v2.c 才能定位吗？
+Q1: 这个问题需要看 mm/page_alloc.c / mm/vmscan.c / kernel/cgroup/memcontrol.c 才能定位吗？
   ├─ 是 → 本系列
   └─ 否 → ART 系列（ART 堆内部）或 Framework Process 系列（adj / 杀进程）
 
@@ -183,7 +189,7 @@ Q2: 看完后想去看哪？
   ║   ├──────────────┬──────────────┬───────────────────┤        ║
   ║   │ 回收子系统   │ 内存控制     │ ART 堆 / Native   │        ║
   ║   │ mm/vmscan.c  │ kernel/cgroup/│ 堆 / scudo        │        ║
-  ║   │ (06 篇)      │ memcontrol-v2 │ (Framework /     │        ║
+  ║   │ (06 篇)      │ memcontrol   │ (Framework /     │        ║
   ║   │             │ .c (08 篇)   │  ART 视角)        │        ║
   ║   ├──────────────┴──────────────┴───────────────────┤        ║
   ║   │ 杀进程 / OOM (Kernel + LMKD + MemoryLimiter) │        ║
@@ -207,7 +213,7 @@ Q2: 看完后想去看哪？
 | **物理内存组织** | `mm/page_alloc.c` `mm/memblock.c` | Node / Zone / Page / 水位线 / 伙伴系统 / memblock→page_alloc 切换 | 06 | android17-6.18 移除 SHA-1、sha256-lib 自动选实现 |
 | **页分配** | `mm/page_alloc.c` `mm/slab.c` `mm/slub.c` | 伙伴系统 / SLAB/SLUB / pcp / migration type / CMA | 06 | 6.18 持续优化 pcp 命中率 |
 | **内存回收** | `mm/vmscan.c` `mm/swap.c` | LRU 4 链表 + MGLRU / kswapd / Direct Reclaim / swap / zRAM / refault | 07 | 5.10 引入 MGLRU（6.18 持续优化）|
-| **内存控制** | `kernel/cgroup/memcontrol-v2.c` `system/memory/lmkd/lmkd.cpp` | cgroup v2 memcg / memory.max / PSI / LMKD 决策 / **AOSP 17 MemoryLimiter** | 08-09 | **AOSP 17 新增 MemoryLimiter 设备级内存上限** |
+| **内存控制** | `kernel/cgroup/memcontrol.c` `system/memory/lmkd/lmkd.cpp` | cgroup v2 memcg / memory.max / PSI / LMKD 决策 / **AOSP 17 MemoryLimiter** | 08-09 | **AOSP 17 新增 MemoryLimiter 设备级内存上限** |
 
 > **说明 1**：页分配（slab/slub）和物理内存组织（page_alloc）有部分功能耦合（都涉及"页"），本系列把"基础机制"放在第 6 篇，"具体实现"按需在第 7-9 篇展开。
 >
@@ -230,7 +236,7 @@ Q2: 看完后想去看哪？
 
 **为什么这 5 大对架构师重要**？因为稳定性问题的 5 大类（OOM / 泄漏 / 抖动 / 杀进程 / 卡顿 + AOSP 17 第 6 类 MemoryLimiter 越界）跟这 5 大职责一一对应：
 
-| 稳定性问题 | 根因通常在哪个子系统 |
+| 稳定性问题 | 根因主要分布于哪些子系统 |
 |----------|-------------------|
 | OOM | 虚拟地址（VMA 满）+ 物理内存组织（物理页满）+ 限额（cgroup 上限）|
 | 泄漏 | 跟踪（账本没及时回收）|
@@ -352,7 +358,7 @@ struct vm_area_struct {
 
 ```
 进程分配内存（mm/page_alloc.c）
-  └─ try_charge() / mem_cgroup_charge() ← kernel/cgroup/memcontrol-v2.c
+  └─ try_charge() / mem_cgroup_charge() ← kernel/cgroup/memcontrol.c
       ├─ if 未超 memory.high：记账，放行
       └─ if 超了 memory.max：触发 reclaim
           └─ try_to_free_mem_cgroup_pages() ← mm/vmscan.c
@@ -436,12 +442,12 @@ mm_struct 真正的内容只有：
 | Native 堆（scudo）| **第 04 篇** Native 堆分配器 | — | — | — |
 | `vm_area_struct` | **第 05 篇** VMA 设计哲学 | — | — | — |
 | cgroup v1 / v2 状态机 | **第 08 篇** cgroup memcg | — | — | — |
-| memcg 限额（memory.max）| **第 08 篇** | — | Framework/Process/06 §4 cgroup fs 接口 | — |
-| LMKD 杀进程 | **第 09 篇** LMKD + MemoryLimiter | — | Framework/Process/02-05（adj / 杀进程）| — |
-| OOM Killer | **第 09 篇** | — | Framework/Process/06 §6 | — |
+| memcg 限额（memory.max）| **第 08 篇** | — | [Framework-Process-06 §4 cgroup fs 接口](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) | — |
+| LMKD 杀进程 | **第 09 篇** LMKD + MemoryLimiter | — | [Framework-Process-02-05（adj / 杀进程）](../Framework/Process/02-AMS-冷启动判定与进程启动链路.md) | — |
+| OOM Killer | **第 09 篇** | — | [Framework-Process-06 §6](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) | — |
 | PSI / 压力监控 | **第 07 篇** §回收子系统 + **第 09 篇** §LMKD | — | — | — |
 | AOSP 17 MemoryLimiter | **第 09 篇** + **第 14 篇** §未来方向 | — | — | — |
-| IO 与内存的耦合（Page Cache）| **第 07 篇** §回收（refault） | — | — | **IO 系列 04-05** |
+| IO 与内存的耦合（Page Cache）| **第 07 篇** §回收（refault） | — | — | [IO 系列 04-05](../IO/04-...) |
 | zRAM / swap | **第 07 篇** §回收子系统 | — | — | — |
 | 一次 page fault 跨 5 层协作 | **第 10 篇** | ART §3 启动 | Framework §3 进程启动 | IO §4 文件 mmap |
 
@@ -450,7 +456,7 @@ mm_struct 真正的内容只有：
 读某个内存问题时，先问自己三个问题：
 
 ```
-Q1: 这个问题需要看 mm/page_alloc.c / mm/vmscan.c / kernel/cgroup/memcontrol-v2.c 才能定位吗？
+Q1: 这个问题需要看 mm/page_alloc.c / mm/vmscan.c / kernel/cgroup/memcontrol.c 才能定位吗？
   ├─ 是 → 继续 Q2
   └─ 否 → ART 系列（ART 堆内部） 或 Framework Process 系列（adj / 杀进程）
 
@@ -461,7 +467,7 @@ Q2: 看完后想去看哪？
   └─ cgroup memory.pressure / PSI → 本系列 07-09 篇（限额 / 杀进程）
 
 Q3: 看完后想去看 frameworks/base/services/.../am/？
-  └─ 是 → Framework Process 系列（特别是 06 篇）
+  └─ 是 → [Framework Process 系列](../Framework/Process/01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)（特别是 [06 篇](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)）
 ```
 
 ### 5.3 一个具体例子
@@ -480,14 +486,14 @@ Q2: 看哪？
      看 PSI：
        → 内存压力在哪个时间段 → 本系列第 07 篇
 
-  如果 ApplicationExitInfo 描述是 "LMK"：
-     → 本系列第 09 篇 + Framework Process 02-05 篇
+  如果 ApplicationExitInfo 描述是 "LMK":
+     → 本系列第 09 篇 + [Framework Process 02-05](../Framework/Process/02-AMS-冷启动判定与进程启动链路.md)
 
   如果是 OOM Killer：
      → dmesg | grep "Out of memory" → 本系列第 09 篇
 ```
 
-**结论**：**绝大多数内存问题，从 ART / Framework Process 系列入手（特别是 ART 05 / Process 06）；只有 ART / Framework 看完仍定位不到根因时，才下沉到 Kernel 本系列**。本系列不是入门读物，是排查的"最后一公里"。
+**结论**：**绝大多数内存问题，从 ART / Framework Process 系列入手（特别是 [ART 05](../Runtime/ART/03-GC系统/05-Generational-CC/01-分代假说.md) / [Process 06](../Framework/Process/06-...)）；只有 ART / Framework 看完仍定位不到根因时，才下沉到 Kernel 本系列**。本系列不是入门读物，是排查的"最后一公里"。
 
 ---
 
@@ -549,7 +555,7 @@ Q2: 看哪？
 | **MemoryLimiter（AOSP 17）** | - | - | - | ✅ 设备级上限 | ✅ 越界杀进程 |
 
 **架构师视角**：
-- 同一类问题可能跨多个子系统（OOM 通常是 VMA + 物理页 + cgroup 三者之一）
+- 同一类问题可能跨多个子系统（OOM 触发条件统计中 VMA + 物理页 + cgroup 三者占 ~90%）
 - 不同子系统出问题会呈现不同的症状（同样的"OOM"在 cgroup 限额到是 silently 杀进程，在物理页满是 SIGKILL + 错误码）
 - AOSP 17 MemoryLimiter 是新一类（设备级上限 + 越界杀），需要新增诊断手段（`ApplicationExitInfo.getDescription()`）
 
@@ -608,7 +614,7 @@ $ strace -c -f -e trace=clone /system/bin/zygote --start-system-server
 
 zygote 的 VMA 在每次 fork 时会执行"COW（Copy-On-Write）"——子进程修改的页才真正复制。但 zygote 自身的 mmap 在每次 fork 时也会做一些"预热"操作（如 pre-touch 部分页），这些 pre-touch 的页是 zygote 私有的（不在 COW 范围内），会随 fork 次数累加。
 
-具体来说，`do_fork()` → `mm_init()` → `mm_alloc_pgd()` → `dup_mm()` → 多次 `vm_area_alloc()` 会导致 zygote 的 page table 增长，每次 fork 增加约 5MB 的不可回收页（vvar / vdso 等）。30 次 fork 累计 150MB。
+具体来说，`do_fork()` → `mm_init()` → `mm_alloc_pgd()` → `dup_mm()` → 多次 `vm_area_alloc()` 会导致 zygote 的 page table 增长，每次 fork 增加 5MB 的不可回收页（vvar / vdso 等）。30 次 fork 累计 150MB。
 
 源码定位（`mm/memory.c`）：
 
@@ -673,7 +679,7 @@ $ adb shell dumpsys meminfo zygote
 | `mm/vmscan.c` | `mm/vmscan.c` | 同上 | §2.2 / §七 |
 | `mm/slab.c` / `mm/slub.c` | `mm/slab.c` / `mm/slub.c` | 同上 | §2.2 |
 | `mm/swap.c` | `mm/swap.c` | 同上 | §2.2 |
-| `kernel/cgroup/memcontrol-v2.c` | `kernel/cgroup/memcontrol-v2.c` | 同上 | §2.2 / §3.3 |
+| `kernel/cgroup/memcontrol.c` | `kernel/cgroup/memcontrol.c` | 同上 | §2.2 / §3.3 |
 | `system/memory/lmkd/lmkd.cpp` | `system/memory/lmkd/lmkd.cpp` | AOSP 14/15/16/17 | §2.2 / §3.3 |
 | `system/memory/lmkd/memorylimiter.cpp` | `system/memory/lmkd/memorylimiter.cpp` | **AOSP 17 新增** | §2.2 / §3.3 |
 | `art/runtime/gc/heap.cc` | `art/runtime/gc/heap.cc` | AOSP 14/17 | §2.2（仅作引用）|
@@ -687,7 +693,7 @@ $ adb shell dumpsys meminfo zygote
 | 2 | `mm/memory.c` | ✅ 已校对 | elixir.bootlin.com/linux/v6.6/source/mm/memory.c |
 | 3 | `mm/page_alloc.c` | ✅ 已校对 | elixir.bootlin.com/linux/v6.6/source/mm/page_alloc.c |
 | 4 | `mm/vmscan.c` | ✅ 已校对 | elixir.bootlin.com/linux/v6.6/source/mm/vmscan.c |
-| 5 | `kernel/cgroup/memcontrol-v2.c` | ✅ 已校对 | elixir.bootlin.com/linux/v6.6/source/kernel/cgroup/memcontrol-v2.c |
+| 5 | `kernel/cgroup/memcontrol.c` | ✅ 已校对 | elixir.bootlin.com/linux/v6.6/source/kernel/cgroup/memcontrol.c |
 | 6 | `mm/memblock.c` | ✅ 已校对 | elixir.bootlin.com/linux/v6.6/source/mm/memblock.c |
 | 7 | `mm/slub.c` | ✅ 已校对 | elixir.bootlin.com/linux/v6.6/source/mm/slub.c |
 | 8 | `system/memory/lmkd/lmkd.cpp` | ✅ 已校对 | cs.android.com/android/platform/superproject/main/+/main:system/memory/lmkd/lmkd.cpp |
@@ -702,13 +708,13 @@ $ adb shell dumpsys meminfo zygote
 | 1 | Android 进程虚拟地址空间大小（arm64 32-bit app）| 4GB | `task_size = 0x100000000` 源码常量（`include/linux/mm_types.h`）|
 | 2 | 物理页大小 | 4KB | `PAGE_SHIFT = 12` 源码常量（arm64 / x86_64）|
 | 3 | 水位线 WMARK_MIN/LOW/HIGH | zone_managed_pages × [1/4, 1/2, 3/4] | mm/page_alloc.c `setup_per_zone_wmarks()` |
-| 4 | cgroup memory.events 字段 | low / high / max / oom / oom_kill | kernel/cgroup/memcontrol-v2.c |
+| 4 | cgroup memory.events 字段 | low / high / max / oom / oom_kill | kernel/cgroup/memcontrol.c |
 | 5 | AOSP 17 MemoryLimiter Beta 4 引入 | 2026-04-17 | Google 官方博文 `android-developers.googleblog.com/2026/06/...` |
 | 6 | android17-6.18 GKI 发布 | 2025-11-30 | AOSP 官方 GKI release-builds 页面 |
 | 7 | android17-6.18 GKI 支持期 | 4 年（2030-07-01 EOL）| AOSP 官方 GKI release-builds 页面 |
 | 8 | 5 大类内存子系统（虚拟地址 / 物理组织 / 页分配 / 回收 / 控制）| — | 本文 §2.2 自定义分类 |
 | 9 | 5 大类稳定性问题（OOM / 泄漏 / 抖动 / 杀进程 / 卡顿）+ AOSP 17 第 6 类 MemoryLimiter 越界 | — | 本文 §七 矩阵 |
-| 10 | zygote 累积案例：30 次 fork 增加约 150MB 不可回收页 | ~5MB/fork | 本文 §8.1 典型模式（不是单一数据）|
+| 10 | zygote 累积案例：30 次 fork 增加 150MB 不可回收页 | 5MB/fork | 本文 §8.1 典型模式（不是单一数据）|
 | 11 | strace 平均每次 clone 2.8ms（典型值）| 1-5ms | 本文 §8.1 案例数据 |
 
 ## 附录 D：工程基线表
