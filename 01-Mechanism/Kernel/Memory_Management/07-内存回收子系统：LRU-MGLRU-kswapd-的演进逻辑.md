@@ -445,7 +445,7 @@ alloc_pages 慢路径触发 Direct Reclaim
 | 2020-12-13 之后 | 5.11 / 5.12 / 5.13 / 5.14 / ... 持续优化 | 5.x |
 | 2025-11-30 | android17-6.18 GKI 默认启用 MGLRU | 6.18 |
 
-**MGLRU 的设计者**:Yuan Sun 和 Andrea Arcangeli(Red Hat),主要驱动是"5.10 之前 LRU 在大内存机器(128GB+)和云原生 workload 上的扫描开销爆炸"。
+**MGLRU 的设计者**:Yu Zhao (Google),主要驱动是"5.10 之前 LRU 在大内存机器(128GB+)和云原生 workload 上的扫描开销爆炸"。
 
 **commit ccd2a0d4 引入的核心变更**:
 - 替换 LRU 4 链表为多代 LRU(default 4 代,可调 1-8)
@@ -1419,7 +1419,7 @@ $ adb shell cat /sys/block/zram0/mm_stat
 | 9 | `drivers/block/zram/zram_drv.c` | ✅ 已校对 | elixir.bootlin.com/linux/v6.6/source/drivers/block/zram/zram_drv.c |
 | 10 | `kernel/cgroup/memcontrol.c` | ✅ 已校对 | 沿用 01/02 篇校准 |
 | 11 | `arch/arm64/include/asm/pgtable.h` | ✅ 已校对 | elixir.bootlin.com/linux/v6.6/source/arch/arm64/include/asm/pgtable.h |
-| 12 | `system/memory/lmkd/memorylimiter.cpp` | 🟡 **待确认** | 沿用 01 篇校准结论:AOSP 17 MemoryLimiter 实际文件路径需在第 09 篇校准时进一步确认 |
+| 12 | `system/memory/lmkd/memorylimiter.cpp` | 🟡 **待确认** | 09 篇主题(杀进程决策),不在 07 篇对账范围;沿用 01 篇校准结论:AOSP 17 MemoryLimiter 实际文件路径需在第 09 篇校准时进一步确认 |
 
 ## 附录 C:量化数据自检表
 
