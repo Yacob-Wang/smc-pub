@@ -558,10 +558,10 @@ int ashmem_unpin_region(int fd, size_t offset, size_t len) {
 }
 ```
 
-**ashmem 的 Kernel 实现**（`kernel/common/drivers/staging/android/ashmem.c`）：
+**ashmem 的 Kernel 实现**（`drivers/staging/android/ashmem.c`）：
 
 ```c
-// kernel/common/drivers/staging/android/ashmem.c  AOSP 17 简化版
+// drivers/staging/android/ashmem.c  AOSP 17 简化版
 static struct file_operations ashmem_fops = {
     .open = ashmem_open,           // 分配 ashmem_area 结构
     .mmap = ashmem_mmap,           // shmem_file_setup 创建 tmpfs 共享文件
@@ -1440,7 +1440,7 @@ dumpsys meminfo: 490 MB  (不变)
 | `bionic/libc/bionic/malloc.cpp` | `bionic/libc/bionic/malloc.cpp` | AOSP 17 | §2.2 |
 | `mm/mmap.c` | `mm/mmap.c` | android17-6.18 GKI | §2.2 / §3.1 |
 | `mm/memory.c` | `mm/memory.c` | android17-6.18 GKI | §3.1 |
-| `kernel/cgroup/memcontrol.c` | `kernel/cgroup/memcontrol.c` | android17-6.18 GKI | §5.2 / §6.2 |
+| `mm/memcontrol.c` | `mm/memcontrol.c` | android17-6.18 GKI | §5.2 / §6.2 |
 | `system/core/libcutils/ashmem-dev.cpp` | `system/core/libcutils/ashmem-dev.cpp` | AOSP 17 | §4.1 |
 | `hardware/libhardware/modules/gralloc/gralloc.cpp` | `hardware/libhardware/modules/gralloc/gralloc.cpp` | AOSP 17 | §4.2 |
 | `hardware/libhardware/modules/gralloc/framebuffer.cpp` | `hardware/libhardware/modules/gralloc/framebuffer.cpp` | AOSP 17 | §4.2 |
@@ -1461,7 +1461,7 @@ dumpsys meminfo: 490 MB  (不变)
 | 4 | `bionic/libc/bionic/scudo/chunk.h` | ✅ 已校对 | cs.android.com /android/platform/superproject/main/+/main:bionic/libc/bionic/scudo/chunk.h |
 | 5 | `mm/mmap.c` | ✅ 已校对 | elixir.bootlin.com/linux/v6.6/source/mm/mmap.c |
 | 6 | `mm/memory.c` | ✅ 已校对 | elixir.bootlin.com/linux/v6.6/source/mm/memory.c |
-| 7 | `kernel/cgroup/memcontrol.c` | ✅ 已校对 | elixir.bootlin.com/linux/v6.6/source/kernel/cgroup/memcontrol.c |
+| 7 | `mm/memcontrol.c` | ✅ 已校对 | elixir.bootlin.com/linux/v6.18/source/mm/memcontrol.c |
 | 8 | `system/core/libcutils/ashmem-dev.cpp` | ✅ 已校对 | cs.android.com /android/platform/superproject/main/+/main:system/core/libcutils/ashmem-dev.cpp |
 | 9 | `hardware/libhardware/modules/gralloc/gralloc.cpp` | ✅ 已校对 | cs.android.com /android/platform/superproject/main/+/main:hardware/libhardware/modules/gralloc/gralloc.cpp |
 | 10 | `frameworks/native/libs/binder/MemoryHeapBase.cpp` | ✅ 已校对 | cs.android.com /android/platform/superproject/main/+/main:frameworks/native/libs/binder/MemoryHeapBase.cpp |
@@ -1473,7 +1473,7 @@ dumpsys meminfo: 490 MB  (不变)
 | 序号 | 量化描述 | 数量级 | 依据 |
 |------|---------|--------|------|
 | 1 | ART 堆默认大小 | 256MB-512MB | `dalvik.vm.heapgrowthlimit=256m` + `dalvik.vm.heapsize=512m`（AOSP 17 默认） |
-| 2 | Native 堆无独立硬限额 | 受 cgroup memcg 限制 | `kernel/cgroup/memcontrol.c` memcg charge 路径 |
+| 2 | Native 堆无独立硬限额 | 受 cgroup memcg 限制 | `mm/memcontrol.c` memcg charge 路径 |
 | 3 | mmap 区域占 vaddr | 60-80% | 典型 App `.so` (50MB) + `.dex` (20MB) + `.oat` (30MB) + ashmem (variable) |
 | 4 | ashmem 单块最大 | ~2GB | 实际由 RAM 决定，理论上受限于 tmpfs / cgroup |
 | 5 | gralloc 单块最大 | ~256MB | 典型 GPU buffer（RGBA8888 @ 1080p ≈ 8MB，2K ≈ 16MB） |
@@ -1538,7 +1538,7 @@ dumpsys meminfo: 490 MB  (不变)
 
 ## 量化自检
 - ART 堆默认 256MB-512MB：`dalvik.vm.heapgrowthlimit` / `dalvik.vm.heapsize`（AOSP 17 默认）
-- Native 堆无独立硬限：来自 `kernel/cgroup/memcontrol.c` memcg charge 路径
+- Native 堆无独立硬限：来自 `mm/memcontrol.c` memcg charge 路径
 - mmap 60-80% / ashmem 2GB / gralloc 256MB：典型 App 经验值（具体由设备 RAM 决定）
 - 3 套账本采样频率 5s/5s/60s：来自 `ProcessList.updateAllProcessRecords()` AOSP 17
 
