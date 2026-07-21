@@ -1527,7 +1527,7 @@ Zygote Space 共享 + Fork 累积 VMA → ART 堆与 Kernel mmap 协作失败。
 - 同一个 App 的 Native 内存和 Java 内存怎么相互影响
 - 端侧 LLM 推理的 Native 堆挑战（KV Cache / 模型权重）
 
-→ [下一篇：第 4 篇 · Native 堆与分配器的设计动机](04-Native堆与分配器的设计动机：bionic-scudo-的取舍.md)
+→ [下一篇：第 4 篇 · Native 堆与分配器的设计动机](04-Native堆与分配器的设计动机：bionic-scudo的取舍.md)
 
 ---
 
