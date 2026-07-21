@@ -525,7 +525,7 @@ cgroup_destroy_work() → 节点真从 /sys/fs/cgroup 树删除
 **是，正常 am_proc_died 早于 cgroup 节点真销毁**。
 
 ```
-进程 15770 do_exit (单线程)              父进程 waitid (另一线程)
+目标进程 do_exit (单线程)              父进程 waitid (另一线程)
 ─────────────────────                ─────────────────────
 exit_mm (10s)                         [阻塞等 child TASK_DEAD]
 do_notify_parent_dead ──────→ am_proc_died (31.898)  ← FWK 感知
@@ -695,7 +695,7 @@ cgroup 节点真消失 (24s+ 后 / 失败)
 | **C. 资源回收拥堵** | cgroup 销毁 / reaper 排队 / 锁竞争 | 1-24s | `/sys/fs/cgroup/.../memory.events` oom_kill / `cgroup_mutex` 等待 | vendor cgroup 配置 / workqueue 调度优化 |
 
 **关键观察**：
-- **A. vma 状态异常是 Process 09 案的真正根因**——案发前 24min kernel log 4 次 `binder_alloc: 15770: no vma`，证明 vma 已被 transsion `process_reclaim` 预回收过
+- **A. vma 状态异常是 Process 09 案的真正根因**——案发前 24min kernel log 4 次 `binder_alloc: <pid>: no vma`，证明 vma 已被 OEM 自定义 `process_reclaim` 机制预回收过
 - **B. fd 关闭慢**是另一类常见根因（fuse FS / 相机 GPU flush），但跟本案无关
 - **C. 资源回收拥堵**影响 am_proc_died 之后的 cgroup 残留，但**不影响 12.24s 主耗时**
 
@@ -737,9 +737,9 @@ echo 0 > /sys/kernel/debug/tracing/tracing_on
 
 | 根因类别 | 治理方向 | 优先级 | 案例 |
 |---|---|---|---|
-| A. vma 状态异常 | (a) 修复 vendor process_reclaim 同步状态 (b) 减少 vma 预回收 (c) 加重启间隔做 mmap 校验 | P0 | **Process 09 案**（transsion process_reclaim） |
+| A. vma 状态异常 | (a) 修复 vendor process_reclaim 同步状态 (b) 减少 vma 预回收 (c) 加重启间隔做 mmap 校验 | P0 | **Process 09 案**（OEM process_reclaim） |
 | B. fd 关闭慢 | (a) 减少 fd 数 (b) 异步 close（background） (c) 优化 GPU 资源释放 | P1 | 相机 GPU flush 慢导致杀进程 1-2s |
-| C. 资源回收拥堵 | (a) vendor cgroup 配置优化 (b) cgroup.workqueue 调度优化 | P2 | transsion cgroup Device or resource busy |
+| C. 资源回收拥堵 | (a) vendor cgroup 配置优化 (b) cgroup.workqueue 调度优化 | P2 | OEM cgroup Device or resource busy |
 
 ---
 
@@ -779,7 +779,7 @@ echo 1 > events/mm/mm_page_free_batched/enable        # bulk free
 | do_exit 9 个 sub-step 源码深潜 | → 02 | 源码级 |
 | 真正根因判定 + 证伪方法 | → 03 | 框架 + 反例 |
 | 监控 + 告警 + 治理 | → 04 | 工程落地 |
-| 真实 case（TECNO KM9 / Android 16） | → Process 09 实战 | 案例 |
+| 真实 case（某 Android 16 设备 / OEM 厂商） | → Process 09 实战 | 案例 |
 
 ### 12.2 跨系列引用
 
