@@ -1862,10 +1862,10 @@ memcg 是"提前给每组进程设上限"——它定义了"什么时候会 OOM"
 | `page_counter.c` | `kernel/cgroup/page_counter.c` | 同上 | §4 page_counter_try_charge |
 | `vmscan.c` | `mm/vmscan.c` | 同上 | §5 memcg reclaim 路径 |
 | `oom_kill.c` | `mm/oom_kill.c` | 同上 | §5 memcg OOM 选择 |
-| `memcontrol-v2.h` | `include/linux/memcontrol.h` | 同上 | §4 / §5 数据结构 |
+| `memcontrol.h` | `include/linux/memcontrol.h` | 同上 | §4 / §5 数据结构 |
 | `page_counter.h` | `include/linux/page_counter.h` | 同上 | §4 page_counter 接口 |
 | `cgroup.h` | `include/linux/cgroup.h` | 同上 | §3 cgroup 子系统抽象 |
-| `memcg_policy.c` | `mm/memcontrol.c`(policy 部分) | 同上 | §5 memory.{min,low} 策略 |
+| `memcg_policy.c` | `kernel/cgroup/memcontrol.c`(policy 部分) | 同上 | §5 memory.{min,low} 策略 |
 | `lmkd.cpp` | `system/memory/lmkd/lmkd.cpp` | AOSP 14/17 | §8 LMKD 读 memory.events(详见 09 篇) |
 | `memorylimiter.cpp` | `system/memory/lmkd/memorylimiter.cpp` | AOSP 17 | §1 / §7 AOSP 17 新增(详见 09 篇) |
 | `ProcessList.java` | `frameworks/base/services/core/java/com/android/server/am/ProcessList.java` | AOSP 14/17 | §8 App memcg 分类(adj + cgroup 绑定) |
