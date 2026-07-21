@@ -626,13 +626,13 @@ C09 是 ContentProvider 系列的**第 9 篇 / 最后一篇**。**ContentProvide
 | **ContentProvider 系列** | 9 + README | ~200KB | ~80-110k | ✅ |
 | **合计** | **36 + 4 README** | **~807KB** | **~320-440k 字** | **✅** |
 
-按 v4 规范：每篇 ≥ 8000 字 / 4 附录 / 4-6 张图 / ≥ 1 个可验证实战案例 / AOSP 17 + Linux 6.18 LTS 基线。
+按 本规范：每篇 ≥ 8000 字 / 4 附录 / 4-6 张图 / ≥ 1 个可验证实战案例 / AOSP 17 + Linux 6.18 LTS 基线。
 
 ---
 
 ## 下一步：M5 跨四系列一致性回归
 
-按 v4 §8 跨系列一致性治理，M5 要做：
+按 §8 跨系列一致性治理，M5 要做：
 1. `Reference/术语表.md` — 全局术语表（禁止别名漂移）
 2. `Reference/案例索引.md` — 跨 4 系列案例索引（CASE-ACT-XX / CASE-SVC-XX / CASE-BC-XX / CASE-CP-XX）
 3. `Reference/引用矩阵.md` — 跨 4 系列引用矩阵

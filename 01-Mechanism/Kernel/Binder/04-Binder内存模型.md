@@ -35,7 +35,7 @@
 
 ## 1. 一次拷贝的物理实现
 
-### 1.0 为什么需要 binder_mmap（v4 §4.1 #2）
+### 1.0 为什么需要 binder_mmap（§4.1 #2）
 
 **背景**：传统 IPC（管道、消息队列、共享内存）有 3 大痛点：
 
@@ -118,7 +118,7 @@ static struct page *binder_alloc_get_page(
 - fault 处理中驱动按需分配物理页
 - 后续访问直接命中 LRU 缓存
 
-### 1.5 6.18 mmap 区域布局图（v4 §4.1 #3）
+### 1.5 6.18 mmap 区域布局图（§4.1 #3）
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -144,7 +144,7 @@ static struct page *binder_alloc_get_page(
 - **used 区**：已分配的事务 buffer（async 与 sync 物理隔离）
 - 6.18 起，used 区中**只有真正写入的页才占物理内存**——这就是 sparse memory 的核心收益
 
-### 1.6 BBinder/BpBinder 在内存模型里的角色（v4 §4.1 #19 术语）
+### 1.6 BBinder/BpBinder 在内存模型里的角色（§4.1 #19 术语）
 
 | 角色 | 内存映射 | buffer 操作 | 关键限制 |
 |------|---------|------------|---------|
@@ -588,7 +588,7 @@ binder: 5678 proc->alloc.buffer_size: 1048576
 
 ---
 
-## 9. 5 条架构师视角 Takeaway（v4 规范 #12 硬要求）
+## 9. 5 条架构师视角 Takeaway（本规范 #12 硬要求）
 
 1. **6.18 sparse memory 让 mmap 区域默认 1MB**——大事务需要拆分；监控脚本必须用 smaps 查真实物理页。**指向 02 §3.2 + 06 §8 案例**。
 
@@ -658,7 +658,7 @@ binder: 5678 proc->alloc.buffer_size: 1048576
 
 ---
 
-## 11. 3 轮校准决策日志（v4 规范 §7）
+## 11. 3 轮校准决策日志（本规范 §7）
 
 ### 第 1 轮 · 结构
 - 8 章节：一次拷贝 / buffer 分配 / BC_FREE_BUFFER / async / TransactionTooLarge / 实战

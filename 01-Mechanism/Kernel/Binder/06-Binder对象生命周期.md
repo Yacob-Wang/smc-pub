@@ -787,7 +787,7 @@ binder: 1234 BINDER_SET_MAX_THREADS to 31 (com.example.aiassistant raised to 31)
 
 ---
 
-## 10. 5 条架构师视角 Takeaway（v4 规范 #12 硬要求）
+## 10. 5 条架构师视角 Takeaway（本规范 #12 硬要求）
 
 1. **`proc->nodes` 数量是 system_server OOM 排查的 top 3 指标**——任何增长都意味着引用泄漏。**指向 07 篇 §5 资源泄漏**。
 
@@ -807,7 +807,7 @@ binder: 1234 BINDER_SET_MAX_THREADS to 31 (com.example.aiassistant raised to 31)
 
 ---
 
-## 附录 A：核心源码路径索引（v4 规范 #13 硬要求）
+## 附录 A：核心源码路径索引（本规范 #13 硬要求）
 
 | 文件名 | 完整路径 | 内核版本基线 | 说明 |
 |---|---|---|---|
@@ -826,7 +826,7 @@ binder: 1234 BINDER_SET_MAX_THREADS to 31 (com.example.aiassistant raised to 31)
 
 ---
 
-## 附录 B：源码路径对账表（v4 规范 #14 硬要求 · 强制）
+## 附录 B：源码路径对账表（本规范 #14 硬要求 · 强制）
 
 | 序号 | 文章中出现的路径 / 概念 | 校对状态 | 校对来源 |
 |---|---|---|---|
@@ -848,7 +848,7 @@ binder: 1234 BINDER_SET_MAX_THREADS to 31 (com.example.aiassistant raised to 31)
 
 ---
 
-## 附录 C：量化数据自检表（v4 规范 #15 硬要求 · 强制）
+## 附录 C：量化数据自检表（本规范 #15 硬要求 · 强制）
 
 | 序号 | 量化描述 | 数量级 | 依据来源 |
 |---|---|---|---|
@@ -865,7 +865,7 @@ binder: 1234 BINDER_SET_MAX_THREADS to 31 (com.example.aiassistant raised to 31)
 
 ---
 
-## 附录 D：工程基线表（v4 规范 #16 硬要求 · 按需）
+## 附录 D：工程基线表（本规范 #16 硬要求 · 按需）
 
 | 参数 | 典型默认 | 选用准则 | 踩坑提醒 |
 |---|---|---|---|
@@ -879,17 +879,17 @@ binder: 1234 BINDER_SET_MAX_THREADS to 31 (com.example.aiassistant raised to 31)
 
 ---
 
-## 12. 3 轮校准决策日志（v4 规范 §7 强制）
+## 12. 3 轮校准决策日志（本规范 §7 强制）
 
 ### 第 1 轮 · 结构（2026-07-18）
 
 | 决策 | 理由 | 影响范围 |
 |------|------|---------|
-| 8 章节结构（1 引用计数 / 2 BC 命令 / 3 死亡通知 / 4 DeadObject / 5 ServiceManager / 6 AppFunctions / 7 pidfds / 8 实战）| v4 规范 #11 硬要求 | 仅本篇 |
+| 8 章节结构（1 引用计数 / 2 BC 命令 / 3 死亡通知 / 4 DeadObject / 5 ServiceManager / 6 AppFunctions / 7 pidfds / 8 实战）| 本规范 #11 硬要求 | 仅本篇 |
 | AppFunctions（§6）独立成节 | AOSP 17 独家内容，独立的生命周期机制 | 仅本篇 |
 | pidfds 6.18 扩展（§7）独立成节 | 6.18 独家内容，替代死亡通知的新方案 | 仅本篇 |
 | 实战案例 2 个（A 引用泄漏 / B AppFunctions oneway）| 覆盖经典问题 + AOSP 17 新问题 | 仅本篇 |
-| 5 Takeaway 含 1-2 条指向 AppFunctions / pidfds | v4 规范 #12 | 仅本篇 |
+| 5 Takeaway 含 1-2 条指向 AppFunctions / pidfds | 本规范 #12 | 仅本篇 |
 
 **结构不动细节风格**。
 
@@ -913,7 +913,7 @@ binder: 1234 BINDER_SET_MAX_THREADS to 31 (com.example.aiassistant raised to 31)
 | 每章加"对读者有什么用" | v4 反例 #12 防范 | 全部章节 |
 | 删除"非常精妙"等 AI 自嗨词 | v4 反例 #12 防范 | 全文 |
 | 实战案例含 logcat + dmesg + 版本号 + 复现 + 修复 | v4 #7 案例可验证性 4 件套 | §8 |
-| AppFunctions 内容标注"AOSP 17 独家" | v4 规范 #21 版本基线统一 | §6 |
+| AppFunctions 内容标注"AOSP 17 独家" | 本规范 #21 版本基线统一 | §6 |
 
 **锐度不动骨架硬伤**。
 
@@ -923,7 +923,7 @@ binder: 1234 BINDER_SET_MAX_THREADS to 31 (com.example.aiassistant raised to 31)
 - 第 2 轮：硬伤 5 项校对
 - 第 3 轮：锐度 5 项决策
 - **总决策数**：15 项
-- **破例记录**（v4 规范 §9 强制）：
+- **破例记录**（本规范 §9 强制）：
   | 破例项 | 破例内容 | 破例理由 | 影响范围 | 是否传染 |
   |---|---|---|---|---|
   | 字数 13000+ | 本篇 13000+ 字 | 8 章 + AppFunctions + pidfds + 4 附录 | 仅本篇 | 否 |

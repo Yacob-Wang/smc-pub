@@ -194,7 +194,7 @@ smc-pub/
 3. `06-Foundation/Build-System/ + System-Integration/ + Dynamic-Updates/`
 4. `05-Governance/OEM-BSP/`（OEM 视角）
 
-## 📊 质量基线（v4 规范）
+## 📊 质量基线（本规范）
 
 - 单篇 300 行（破例最多 1000+ 行）
 - 9 项硬指标：本篇定位 / 校准决策日志 / 角色设定 / 写作标准 / 附录 A 源码索引 / 附录 B 路径对账【强制】/ 附录 C 量化自检 / 附录 D 工程基线 / 5 条 Takeaway

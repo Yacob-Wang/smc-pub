@@ -18,7 +18,7 @@
 
 | 轮次 | 类别 | 决策 | 理由 | 影响范围 |
 |------|------|------|------|----------|
-| 1 | 结构 | 不破例，按 v5 §3 标准 8 章（4-6 张图） | "设计意图"是核心机制型文章，不是演进型或横切专题 | 仅本篇 |
+| 1 | 结构 | 不破例，按 §3 标准 8 章（4-6 张图） | "设计意图"是核心机制型文章，不是演进型或横切专题 | 仅本篇 |
 | 1 | 结构 | 关键概念"4 个核心抽象"前置到 §1.2 关系图 | 反例 #1（纯科普）防御——先给"地图"再深入 | §1-§8 全篇 |
 | 2 | 硬伤 | 与 Process 10 §3-§5 严格分工：本篇讲"为什么这样设计"，Process 10 讲"具体实现代码" | README §"与已有 5 视角的边界声明" | 全文 6 处引用 |
 | 2 | 硬伤 | 引用 Process 10 时统一标注"基线 AOSP 14"——本篇基线 AOSP 17 | 项目版本基线已升级 | 全文 |
@@ -37,7 +37,7 @@
 
 # 写作标准
 
-## 硬性要求（v5 §3）
+## 硬性要求（§3）
 1. 目标读者：资深架构师。不需要解释"什么是 task_struct""什么是 vfs"，但需要解释 cgroup 特有的术语（subsys / css / cftype / hierarchy / domain）
 2. 每个章节先讲"这个抽象为什么需要、解决什么问题"，再讲"它怎么设计"——避免上来就贴数据结构
 3. 涉及源码时：AOSP 17 + android17-6.18 基线；引用已有 AOSP 14 文章时显式标注
@@ -46,7 +46,7 @@
 6. 工程基线：涉及 CONFIG 编译选项、API 兼容性时，给出"工程默认值"与"选用准则"
 7. 长度：1.5-2.0 万字
 
-## 章节结构（v5 §3 标准 8 章）
+## 章节结构（§3 标准 8 章）
 - §1 背景与定义：cgroup 设计的 4 个核心问题
 - §2 设计演进的 2 个关键转折
 - §3 4 个核心抽象的设计意图（核心章节）
@@ -62,7 +62,7 @@
 - 流程图：调用链 ASCII 时序图
 
 ## 图表密度
-- 标准 4-6 张 ASCII 图（v5 §3 规则）
+- 标准 4-6 张 ASCII 图（§3 规则）
 - 1 张核心图："4 个核心抽象关系图"（§1.2）
 
 ## 跨模块引用规范
@@ -653,7 +653,7 @@ SUBSYS(pids);  // 注册
 | `release` | task release 时 | 减少 css 引用计数 |
 | `exit` | task exit 时 | `mem_cgroup_exit` 释放 memory charge |
 
-**v5 §3 量化自检**：cgroup_subsys 包含约 12-15 个 ops（实际数取决于 kernel 版本），android17-6.18 是 15 个。
+**§3 量化自检**：cgroup_subsys 包含约 12-15 个 ops（实际数取决于 kernel 版本），android17-6.18 是 15 个。
 
 #### 3.1.5 一个真实例子：memory_cgrp_subsys
 
@@ -861,7 +861,7 @@ v2 设计（css_set 引用管理）：
 - `put_css_set(css_set)`：释放 css_set（refcount 归零时自动删除）
 - `css_set_move_task(task, from_cset, to_cset)`：task 在两个 css_set 之间移动
 
-**v5 §3 量化自检**：css_set 在系统中的实例数 = 活跃的 (cgroup × ss) 组合数。在 Android 17 设备上典型为 20-50 个（top-app/background/foreground/system-background/dexopt 等各 1 个 css_set × 6 ss）。
+**§3 量化自检**：css_set 在系统中的实例数 = 活跃的 (cgroup × ss) 组合数。在 Android 17 设备上典型为 20-50 个（top-app/background/foreground/system-background/dexopt 等各 1 个 css_set × 6 ss）。
 
 **对读者有什么用**：
 - 当你看到 `cat /proc/<pid>/cgroup` 时，看到的"0::/top-app.slice"就是 task 的 css_set 引用
@@ -1031,7 +1031,7 @@ static struct cftype memory_files[] = {
 - `file_offset` 是关键——通过 `container_of` 机制，cgroup_file 可以直接拿到 cftype 关联的字段
 - `flags` 控制 cftype 的可见性（如 `CFTYPE_NOT_ON_ROOT` 表示不在 root cgroup 显示）
 
-**v5 §3 量化自检**：memory subsystem 注册 30+ 个 cftype；cpu 注册 10+ 个；io 注册 5+ 个；freezer 注册 2+ 个；cpuset 注册 10+ 个；pids 注册 2+ 个。总计约 60+ 个 cftype（v2 时代）。
+**§3 量化自检**：memory subsystem 注册 30+ 个 cftype；cpu 注册 10+ 个；io 注册 5+ 个；freezer 注册 2+ 个；cpuset 注册 10+ 个；pids 注册 2+ 个。总计约 60+ 个 cftype（v2 时代）。
 
 **对读者有什么用**：
 - 当你看到 `/sys/fs/cgroup/web/memory.max` 出现时，是 memory subsystem 注册的 cftype 的副作用
@@ -1171,7 +1171,7 @@ cgroup_file_release()
   └─→ kfree(cfile->buf) + kfree(cfile)
 ```
 
-**v5 §3 量化自检**：典型 Android 17 设备上打开的 cgroup_file 数量 = 进程数 × 打开 cgroup 文件数。在 lmkd 高频场景（每分钟多次 cat /proc/pressure/memory），可达到 100-500 个活跃 cgroup_file。
+**§3 量化自检**：典型 Android 17 设备上打开的 cgroup_file 数量 = 进程数 × 打开 cgroup 文件数。在 lmkd 高频场景（每分钟多次 cat /proc/pressure/memory），可达到 100-500 个活跃 cgroup_file。
 
 **对读者有什么用**：
 - 当你看到 `cat memory.max` 卡住时，可能是 cgroup_file 缓存满了（罕见）
@@ -1364,7 +1364,7 @@ cgroup_file_release
   └─→ kfree(cfile->buf) + kfree(cfile)
 ```
 
-**v5 §3 量化自检**：完整 VFS 路径涉及 7 层调用（VFS → kernfs → cgroup_file → cftype → subsystem write → subsystem private）——每一层都有 hooks 性能损耗。Android 17 上 `echo 100M > memory.max` 典型耗时 50-200μs。
+**§3 量化自检**：完整 VFS 路径涉及 7 层调用（VFS → kernfs → cgroup_file → cftype → subsystem write → subsystem private）——每一层都有 hooks 性能损耗。Android 17 上 `echo 100M > memory.max` 典型耗时 50-200μs。
 
 ### 4.5 cgroup2 vs sysfs 的关系
 
@@ -1577,7 +1577,7 @@ int page_counter_set_max(struct page_counter *counter, unsigned long nr_pages) {
 
 ### 5.4 性能数据
 
-**v5 §3 量化自检**：
+**§3 量化自检**：
 
 | 操作 | 典型耗时 | 备注 |
 |---|---|---|
@@ -1769,7 +1769,7 @@ static struct cftype memcg_files[] = {
 - `select_victim` 可以选 cgroup 内任意 task 杀
 - cgroup OOM 恢复正常，**只杀 cgroup 内进程**而不是升级到系统级 OOM
 
-**6. 案例类型**：典型模式（v5 §25）
+**6. 案例类型**：典型模式（§25）
 
 **对稳定性架构师的启示**：
 - **cftype 漏注册是 cgroup 抽象层的典型 bug**——文件不存在，subsystem 行为就异常
@@ -1966,5 +1966,5 @@ static struct cftype memcg_files[] = {
 
 > **本篇 v1.0 完成**：作者前言 5 段 + §1 背景与定义 + §2 设计演进的 2 个关键转折 + §3 4 个核心抽象（subsys/css/cftype/cgroup_file）+ §4 cgroup 文件系统 + §5 完整调用链 + §6 风险地图 + §7 实战案例（cftype 漏注册导致 OOM 失控）+ §8 总结 + 附录 A/B/C/D + 篇尾衔接
 > 计划字数 1.8 万，实际落地约 1.85 万字
-> 符合 v5 §3 一站式模板 + v5 §10 读者视图规范
+> 符合 §3 一站式模板 + §10 读者视图规范
 

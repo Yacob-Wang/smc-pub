@@ -23,7 +23,7 @@
   - 不重复 04 的 async buffer 机制
   - 本篇展开**限流 + 防护**方案
 
-### 为什么需要"oneway 限流"专题（v4 §4.1 #2）
+### 为什么需要"oneway 限流"专题（§4.1 #2）
 
 **背景与动机**：
 
@@ -34,7 +34,7 @@
   - **需求 3**：AOSP 17 + 6.18 提供了**新武器**（`BR_ONEWAY_SPAM_SUSPECT` + `BINDER_ENABLE_ONEWAY_SPAM_DETECTION` ioctl），但**默认不开启**——需要 OEM 主动配置。
 - **本篇目标**：把 4 道防线（App 端 / Native 端 / Kernel 端 / 监控端）做成可落地的防护方案。
 
-**关键术语**（v4 §4.1 #19 术语）：
+**关键术语**（§4.1 #19 术语）：
 - **BBinder**（Server 端）：处理 oneway 事务的实体，**线程池耗尽**是它最常见的故障
 - **BpBinder**（Client 端）：发起 oneway 的代理，**它的 `transact(..., TF_ONE_WAY)` 调用触发一次 oneway**
 - **BinderProxy**（Java 层）：BpBinder 的 JNI 包装，`transact(code, data, reply, FLAG_ONEWAY)` = Java 层 oneway
@@ -446,7 +446,7 @@ public void binderDied() {
 
 ---
 
-## 8. 5 条架构师视角 Takeaway（v4 规范 #12 硬要求）
+## 8. 5 条架构师视角 Takeaway（本规范 #12 硬要求）
 
 1. **oneway 不阻塞 Client 但占 Server 线程**——反直觉设计，必须限流。**指向 04 + 05**。
 
@@ -510,7 +510,7 @@ public void binderDied() {
 
 ---
 
-## 10. 3 轮校准决策日志（v4 规范 §7）
+## 10. 3 轮校准决策日志（本规范 §7）
 
 ### 第 1 轮 · 结构
 - 7 章节：4 道防线 / 反直觉 / 6.18 / 系统级限流 / 4 类场景 / 实战

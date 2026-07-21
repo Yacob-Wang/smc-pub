@@ -22,7 +22,7 @@
   - 不重复 08 的工具地图
   - 本篇只讲**字段含义 + 解读方法 + 6 类误区**
 
-### 为什么需要本篇（v4 §4.1 #2）
+### 为什么需要本篇（§4.1 #2）
 
 **动机**：
 
@@ -60,7 +60,7 @@
 - 多进程并发读同一节点**互不影响**
 - 节点存在的前提：进程**打开过 `/dev/binder`**（或 binderfs 实例）
 
-### 1.1 背后数据结构：`struct binder_proc`（v4 §4.1 #9 深度）
+### 1.1 背后数据结构：`struct binder_proc`（§4.1 #9 深度）
 
 debugfs 节点的"读者"是 seq_file，而被遍历的源数据是 `struct binder_proc`（定义于 `drivers/android/binder_internal.h`）。**理解字段含义 = 理解 proc 结构体的字段**：
 
@@ -77,13 +77,13 @@ debugfs 节点的"读者"是 seq_file，而被遍历的源数据是 `struct bind
 
 **所以呢**：当 debugfs 输出大量数据卡顿时，**真正的瓶颈是红黑树遍历**——N 个节点 = O(N log N) 的 seq_print 耗时。这点影响 §7.1 案例 A 的"差分采样频率"选择。
 
-**术语索引**（v4 §4.1 #19 一致性）：
+**术语索引**（§4.1 #19 一致性）：
 - **BBinder**：Server 端基类，**对应 `nodes` 节点的 `u` 字段**（用户态 ptr 指向 BBinder 实例）
 - **BpBinder**：Client 端代理，**对应 `refs` 节点的 `desc` 字段**（handle 指向远端 BBinder）
 - **BinderProxy**（Java 层）：BpBinder 的 JNI 包装
 - **ServiceManager**：**`desc 0` 是特殊 handle**（详见 4.3）
 
-### 1.2 关键源码示例（v4 §4.1 #5 源码上下文）
+### 1.2 关键源码示例（§4.1 #5 源码上下文）
 
 ```c
 // drivers/android/binder_debugfs.c (android17-6.18)
@@ -106,7 +106,7 @@ static int binder_threads_show(struct seq_file *m, void *unused) {
 - `hlist_for_each_entry_rcu` = RCU 读端遍历（**6.18 起强制 RCU**，与 6.12 的 list_for_each 对比减少 30% 锁竞争）
 - `print_one_thread` = 打印 §2.1 格式的 4 个核心字段
 
-### 1.3 proc 节点结构与 binder_proc 字段对应（v4 §4.1 #3 补图）
+### 1.3 proc 节点结构与 binder_proc 字段对应（§4.1 #3 补图）
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -140,7 +140,7 @@ thread 1234: l 12 need_return 0 tr 2
 thread 1235: l 12 need_return 0 tr 1
 ```
 
-**这段代码做了什么**（v4 §4.1 #5 源码前上下文）：`binder_threads_show()`（`drivers/android/binder_debugfs.c`）对 `proc->threads` 红黑树做**中序遍历**，对每个 `struct binder_thread` 调用 `print_one_thread()` 打印 4 个核心字段：`thread ID`、`looper`、`need_return`、`transaction_stack 深度`。incoming transaction 是**嵌套打印**——如果 `tr > 0` 会再调 `print_one_transaction()` 列出当前在栈上的所有事务。
+**这段代码做了什么**（§4.1 #5 源码前上下文）：`binder_threads_show()`（`drivers/android/binder_debugfs.c`）对 `proc->threads` 红黑树做**中序遍历**，对每个 `struct binder_thread` 调用 `print_one_thread()` 打印 4 个核心字段：`thread ID`、`looper`、`need_return`、`transaction_stack 深度`。incoming transaction 是**嵌套打印**——如果 `tr > 0` 会再调 `print_one_transaction()` 列出当前在栈上的所有事务。
 
 ### 2.2 字段含义
 
@@ -209,7 +209,7 @@ node 1: u0000000012345678 c0000000012345678 hs 0 hw 0 ls 0 lw 0 is 0 iw 0 tr 0
 node 2: ...
 ```
 
-**这段代码做了什么**（v4 §4.1 #5 源码前上下文）：`binder_nodes_show()` 对 `proc->nodes` 红黑树做中序遍历，对每个 `struct binder_node` 调用 `print_node()`。`u`（user ptr）= BBinder 自身指针；`c`（cookie）= BBinder 创建时传入的 `attachObject` 数据；`ls`/`is`/`lw`/`iw` = **3 类引用计数**，对应 6.18 引用计数的 RB-tree 设计。
+**这段代码做了什么**（§4.1 #5 源码前上下文）：`binder_nodes_show()` 对 `proc->nodes` 红黑树做中序遍历，对每个 `struct binder_node` 调用 `print_node()`。`u`（user ptr）= BBinder 自身指针；`c`（cookie）= BBinder 创建时传入的 `attachObject` 数据；`ls`/`is`/`lw`/`iw` = **3 类引用计数**，对应 6.18 引用计数的 RB-tree 设计。
 
 ### 3.2 字段含义
 
@@ -363,7 +363,7 @@ proc 1234
 $ adb shell cat /proc/1234/smaps_rollup | grep -i "binder\|Rss"
 ```
 
-**跨系列引用**（v4 §4.1 #18）：sparse memory 机制详见 DM 系列的 [mm 系列相关文章](../../Memory_Management/)，Binder 6.18 mmap 区域从 4MB 缩到 1MB 是为了适配 sparse memory 设计。
+**跨系列引用**（§4.1 #18）：sparse memory 机制详见 DM 系列的 [mm 系列相关文章](../../Memory_Management/)，Binder 6.18 mmap 区域从 4MB 缩到 1MB 是为了适配 sparse memory 设计。
 
 ### 6.5 误区 5：failed_transaction_log 是必有的
 
@@ -385,7 +385,7 @@ $ adb shell cat /proc/1234/smaps_rollup | grep -i "binder\|Rss"
 
 ### 7.1 案例 A：proc->nodes 增长定位引用泄漏
 
-> **典型模式 · 引用泄漏**（v4 §4.1 #25 案例标注）：system_server `proc->nodes` 持续增长 = 必有进程持有了 BBinder 强引用但未释放。
+> **典型模式 · 引用泄漏**（§4.1 #25 案例标注）：system_server `proc->nodes` 持续增长 = 必有进程持有了 BBinder 强引用但未释放。
 
 **环境**：AOSP 17 + 6.18，Pixel 8 Pro。
 
@@ -440,7 +440,7 @@ Process 5678 (com.example.app)
 
 ### 7.2 案例 B：failed_transaction_log 定位 TransactionTooLarge
 
-> **真实案例（来源：AOSP 17 Bug 报告，编号 #ANR-2026-08-XX）**（v4 §4.1 #25 案例标注）：某 IM App 在 Android 17 + 6.18 设备上偶发 Crash，根因是大图 Intent 触发 TransactionTooLarge。
+> **真实案例（来源：AOSP 17 Bug 报告，编号 #ANR-2026-08-XX）**（§4.1 #25 案例标注）：某 IM App 在 Android 17 + 6.18 设备上偶发 Crash，根因是大图 Intent 触发 TransactionTooLarge。
 
 **环境**：AOSP 17 + 6.18，Pixel Tablet。
 
@@ -497,7 +497,7 @@ $ adb shell dumpsys meminfo 5678 | grep "Intent"
 
 ---
 
-## 9. 5 条架构师视角 Takeaway（v4 规范 #12 硬要求）
+## 9. 5 条架构师视角 Takeaway（本规范 #12 硬要求）
 
 1. **threads 节点的 `l` 字段是状态机**——`l 0` 异常、`l 0x10` 空闲。**指向 12 §3.6**。
 
@@ -561,7 +561,7 @@ $ adb shell dumpsys meminfo 5678 | grep "Intent"
 
 ---
 
-## 11. 3 轮校准决策日志（v4 规范 §7）
+## 11. 3 轮校准决策日志（本规范 §7）
 
 ### 第 1 轮 · 结构
 - 7 章节：proc 节点结构 / threads / nodes / refs / failed_log / 6 类误区 / 实战

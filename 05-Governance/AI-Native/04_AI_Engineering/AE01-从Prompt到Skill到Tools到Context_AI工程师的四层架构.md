@@ -676,7 +676,7 @@ e7f1a3c feat(context): 引入 Static-Dynamic 缓存分界 + 每 10 轮 compactio
 
 你自己用 LLM Coding 协作写 StabilityMatrixCourse 系列文章时也遇到过：
 
-- 同一类问题（"写一篇 v3 指南风格的 800 行文章"），有时模型 1 次到位，有时要重试 5-6 次
+- 同一类问题（"写一篇 本指南风格的 800 行文章"），有时模型 1 次到位，有时要重试 5-6 次
 - 改 Prompt 词面 vs 改 Skill 描述，效果差异巨大但说不清为什么
 - 换模型（GPT-4 → Claude → Gemini）后，原本"调好的 Prompt"失效
 

@@ -377,11 +377,11 @@ $ bpf-pkg build --sign-by /path/to/vendor-key ...
 
 ### 7.1 场景
 
-> **典型模式 · OEM 监控体系建设**（v4 §4.1 #25 案例标注）：完整监控体系 = 业务 L1 + Framework L2 + Kernel L3 + 链路 L4 四层联动。
+> **典型模式 · OEM 监控体系建设**（§4.1 #25 案例标注）：完整监控体系 = 业务 L1 + Framework L2 + Kernel L3 + 链路 L4 四层联动。
 
 某 OEM 厂商需要为 Android 17 + 6.18 GKI 升级构建 Binder 稳定性监控体系。
 
-### 7.0 工具背后的数据结构（v4 §4.1 #9 深度）
+### 7.0 工具背后的数据结构（§4.1 #9 深度）
 
 `dumpsys binder`、`debugfs/binder/proc/<pid>/`、Binder trojan 等工具的"读者"都是以下 3 个核心结构：
 
@@ -463,7 +463,7 @@ def check_binder_health():
 
 ---
 
-## 9. 5 条架构师视角 Takeaway（v4 规范 #12 硬要求）
+## 9. 5 条架构师视角 Takeaway（本规范 #12 硬要求）
 
 1. **4 大诊断工具各有适用场景**——debugfs 看驱动、dumpsys 看 Framework、Systrace 看性能、ANR trace 看现场。**指向 09-12 各篇**。
 
@@ -531,7 +531,7 @@ def check_binder_health():
 
 ---
 
-## 11. 3 轮校准决策日志（v4 规范 §7）
+## 11. 3 轮校准决策日志（本规范 §7）
 
 ### 第 1 轮 · 结构
 - 8 章节：4 大工具 / 速查 / 监控体系 / 治理 / AOSP 17 / eBPF / 实战

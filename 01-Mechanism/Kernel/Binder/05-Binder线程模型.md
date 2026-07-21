@@ -397,7 +397,7 @@ $ adb shell dumpsys binder | grep -A5 "BR_ONEWAY"
 
 ## 7. 实战案例：system_server 线程池耗尽 ANR
 
-> **真实案例（来源：AOSP 17 Bug 报告 #ANR-2026-XX，Pixel 8 Pro 实测）**（v4 §4.1 #25 案例标注）：6.18 增强 `BR_ONEWAY_SPAM_SUSPECT` 检测到 oneway 滥用后，自动 `BINDER_SET_MAX_THREADS` 抬升 system_server 线程池，但**触发时机过早**导致 system_server 反而被 App 拖垮。
+> **真实案例（来源：AOSP 17 Bug 报告 #ANR-2026-XX，Pixel 8 Pro 实测）**（§4.1 #25 案例标注）：6.18 增强 `BR_ONEWAY_SPAM_SUSPECT` 检测到 oneway 滥用后，自动 `BINDER_SET_MAX_THREADS` 抬升 system_server 线程池，但**触发时机过早**导致 system_server 反而被 App 拖垮。
 
 **环境**：
 - AOSP 17 + 6.18
@@ -467,7 +467,7 @@ thread 1002: l 12 need_return 0 tr 1
 
 ---
 
-## 9. 5 条架构师视角 Takeaway（v4 规范 #12 硬要求）
+## 9. 5 条架构师视角 Takeaway（本规范 #12 硬要求）
 
 1. **system_server 默认 31 个 Binder 线程**——31 个都 busy = 线程池耗尽 ANR。**指向 07 §2.2**。
 
@@ -538,7 +538,7 @@ thread 1002: l 12 need_return 0 tr 1
 
 ---
 
-## 11. 3 轮校准决策日志（v4 规范 §7）
+## 11. 3 轮校准决策日志（本规范 §7）
 
 ### 第 1 轮 · 结构
 - 7 章节：线程池 / 动态扩展 / 状态机 / 选择策略 / 优先级继承 / 线程耗尽 / 实战

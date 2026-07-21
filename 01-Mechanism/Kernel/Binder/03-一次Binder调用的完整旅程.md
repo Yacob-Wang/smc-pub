@@ -27,7 +27,7 @@
   - AOSP 17 WindowManager 通路详见 [Android_Framework/Window](../01-Mechanism/Framework/Window/)
   - Parcel 序列化详见 libbinder Parcel.cpp
 
-### 为什么需要"完整调用链"（v4 §4.1 #2）
+### 为什么需要"完整调用链"（§4.1 #2）
 
 **背景**：
 
@@ -632,7 +632,7 @@ thread 5678: l 12 need_return 0 tr 5
 
 ---
 
-## 10. 5 条架构师视角 Takeaway（v4 规范 #12 硬要求）
+## 10. 5 条架构师视角 Takeaway（本规范 #12 硬要求）
 
 1. **一次 Binder 调用 = 4+ 次 ioctl + 1 次数据拷贝**——这是性能分析的基础。**指向 04 内存模型**。
 
@@ -701,7 +701,7 @@ thread 5678: l 12 need_return 0 tr 5
 
 ---
 
-## 12. 3 轮校准决策日志（v4 规范 §7）
+## 12. 3 轮校准决策日志（本规范 §7）
 
 ### 第 1 轮 · 结构
 - 8 章节：调用链全景 / Java / JNI / Native / Kernel / Server / AOSP 17 / 实战

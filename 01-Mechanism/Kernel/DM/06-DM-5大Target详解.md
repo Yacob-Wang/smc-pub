@@ -8,7 +8,7 @@
 
 ---
 
-## 本篇定位（v4 规范"必含开头段"）
+## 本篇定位（本规范"必含开头段"）
 
 - **本篇系列角色**：**核心机制**（6/10）· Target 详解
 - **强依赖**：第 05 篇 [《交互 — 与 Block 层"双向奔赴"》](05-DM交互-与Block层双向奔赴.md) §5（target_type->map 介绍）
@@ -18,7 +18,7 @@
 
 ---
 
-## 校准决策日志（v4 §7 强制）
+## 校准决策日志（§6 强制）
 
 | 轮次 | 类别 | 决策 | 理由 | 影响范围 |
 |------|------|------|------|----------|
@@ -150,7 +150,7 @@ static int linear_map(struct dm_target *ti, struct bio *bio) {
 }
 ```
 
-**这段代码在做什么**（v4 规范硬要求）：
+**这段代码在做什么**（本规范硬要求）：
 
 - **`linear_ctr`**：解析 2 个参数（物理设备 + 起始扇区），分配私有数据 `linear_c`
 - **`linear_map`**：**最简单高效的 map 函数**——只改 `bi_sector` 和 `bi_bdev`
@@ -247,7 +247,7 @@ static int crypt_endio(struct dm_target *ti, struct bio *bio, int error) {
 }
 ```
 
-**这段代码在做什么**（v4 规范硬要求）：
+**这段代码在做什么**（本规范硬要求）：
 
 - **`crypt_ctr`** 极其复杂——参数解析、密钥验证、加密引擎初始化、IO 池分配
 - **`crypt_map`** 是**异步**——bio 提交到 `kcryptd_queue_crypt` workqueue，**调用线程立即返回**
@@ -256,8 +256,8 @@ static int crypt_endio(struct dm_target *ti, struct bio *bio, int error) {
 **稳定性架构师视角**：
 
 1. **crypt 是异步的**——**加密在 workqueue 中完成**——**blk-mq 6.18 起 crypt 也走同步路径（具体见 6.18 release notes）**
-2. **crypt_ctr 失败原因最多**——参数错（cipher 名错 / key 错 / iv_offset 错）——v4 §10 排障会深入
-3. **crypt 性能损失主要在 crypto API 调用**——**OEM 启用 AES-NI 硬件加速能提升 5-10x**（v4 §9 调优篇会深入）
+2. **crypt_ctr 失败原因最多**——参数错（cipher 名错 / key 错 / iv_offset 错）——§9 排障会深入
+3. **crypt 性能损失主要在 crypto API 调用**——**OEM 启用 AES-NI 硬件加速能提升 5-10x**（§8 调优篇会深入）
 
 ## 4.4 crypt 性能特征
 
@@ -343,7 +343,7 @@ static int verity_endio(struct dm_target *ti, struct bio *bio, int error) {
 }
 ```
 
-**这段代码在做什么**（v4 规范硬要求）：
+**这段代码在做什么**（本规范硬要求）：
 
 - **`verity_ctr`** 解析 11+ 个参数——**最复杂的 Target 之一**
 - **`verity_map`** 异步提交——bio 提交到 workqueue，**校验失败会重新提交到 emergency buffer**
@@ -351,7 +351,7 @@ static int verity_endio(struct dm_target *ti, struct bio *bio, int error) {
 
 **稳定性架构师视角**：
 
-1. **verity_ctr 失败原因最多**——参数错（hash 算法 / 数据块大小 / salt 格式）——v4 §10 排障会深入
+1. **verity_ctr 失败原因最多**——参数错（hash 算法 / 数据块大小 / salt 格式）——§9 排障会深入
 2. **verity 性能损失取决于 hash 算法**——sha256 中等，sha512 慢但更安全
 3. **校验失败默认行为** = 整个 bio 失败（**OEM 改 verity 的"verified mode" / "restart mode"会有不同行为**）
 
@@ -366,7 +366,7 @@ static int verity_endio(struct dm_target *ti, struct bio *bio, int error) {
 **对读者有什么用**：
 
 - **verity 性能 = hash 算法 + block size**——**OEM 想优化可考虑 block size 8192**
-- **"dm-verity verification failed"日志** = 几乎都是 OTA 包构建问题——v4 §4 启动篇实战案例已讲
+- **"dm-verity verification failed"日志** = 几乎都是 OTA 包构建问题——§4 启动篇实战案例已讲
 
 ---
 
@@ -437,7 +437,7 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio) {
 }
 ```
 
-**这段代码在做什么**（v4 规范硬要求）：
+**这段代码在做什么**（本规范硬要求）：
 
 - **`snapshot_ctr`** 打开 origin 和 cow 设备——**origin 是源，cow 是快照存储**
 - **`snapshot_map`** 区分读 / 写——**读走 fast path（查 exception 表），写走 slow path（COW）**
@@ -524,7 +524,7 @@ static int thin_bio_map(struct dm_thin_device *td, struct bio *bio) {
 }
 ```
 
-**这段代码在做什么**（v4 规范硬要求）：
+**这段代码在做什么**（本规范硬要求）：
 
 - **`thin_ctr`** 通过 `thin_dev_id` 找到 thin pool——**一个 thin pool 可管理多个 thin device**
 - **`thin_map`** 转发到 thin pool 处理——**thin pool 负责 mapping + 块分配**
@@ -532,7 +532,7 @@ static int thin_bio_map(struct dm_thin_device *td, struct bio *bio) {
 
 **稳定性架构师视角**：
 
-1. **thin pool 满** = 切换到 error 模式——**v4 §4 启动篇提到 thin pool metadata 满风险**
+1. **thin pool 满** = 切换到 error 模式——**§4 启动篇提到 thin pool metadata 满风险**
 2. **thin map 性能** ≈ linear（没有加密/校验开销）
 3. **end-of-life 风险**：thin pool 切换到 error 模式**整个 thin 设备 IO 失败**
 
@@ -561,7 +561,7 @@ static int thin_bio_map(struct dm_thin_device *td, struct bio *bio) {
 
 > **pcache Target 是 DM 的 6.18 新 Target——把**持久内存（PMEM）**作为传统块设备的**写回缓存**。**
 
-**典型应用**（v4 §1.5 已讲）：
+**典型应用**（§1.5 已讲）：
 
 - 折叠屏"应用预加载"
 - 端侧 LLM 模型加载
@@ -575,7 +575,7 @@ dmsetup table 输出示例：
 0 1024 pcache <cache_dev> <origin_dev> <cache_policy> <cache_metadata_size>
 ```
 
-**Stable 6.18 实际映射表格式**（以 v4 §5.2 规范的方式呈现）：
+**Stable 6.18 实际映射表格式**（以 §5.2 规范的方式呈现）：
 
 ```
 # 实际格式（具体看 6.18 文档）
@@ -593,7 +593,7 @@ dmsetup table 输出示例：
 **对读者有什么用**：
 
 - **6.18 升级后**要关注 pcache 的缓存命中率
-- **v4 §9 调优篇会深入 pcache 调优参数**
+- **§8 调优篇会深入 pcache 调优参数**
 
 ---
 
@@ -603,7 +603,7 @@ dmsetup table 输出示例：
 
 ## 9.1 6.18 bcachefs 移除
 
-**Linux 6.18 移除 bcachefs**（v4 §1 已讲）：
+**Linux 6.18 移除 bcachefs**（§1 已讲）：
 
 - **bcachefs 曾经是 DM 的"邻居"**——同样做块设备虚拟化
 - **6.18 起 bcachefs 退出内核**——**用户必须从外部 DKMS 模块安装**

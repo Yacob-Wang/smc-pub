@@ -8,7 +8,7 @@
 
 ---
 
-## 本篇定位（v4 规范"必含开头段"）
+## 本篇定位（本规范"必含开头段"）
 
 - **本篇系列角色**：**核心机制**（5/10）· bio 全流程
 - **强依赖**：第 03 篇 [《原理 — 设备诞生 + IO 旅程》](03-DM原理-设备诞生与IO旅程.md) §4（IO 旅程 6 阶段）+ §5（bio 拆分）
@@ -20,7 +20,7 @@
 
 ---
 
-## 校准决策日志（v4 §7 强制）
+## 校准决策日志（§6 强制）
 
 | 轮次 | 类别 | 决策 | 理由 | 影响范围 |
 |------|------|------|------|----------|
@@ -98,7 +98,7 @@ blk_qc_t submit_bio_noacct(struct bio *bio) {
 
 **对读者有什么用**：
 
-- **DM 性能分析**用 `dm_bio_remap` trace 点**直接看 bio 重映射成本**（v4 §9 调优篇会深入）
+- **DM 性能分析**用 `dm_bio_remap` trace 点**直接看 bio 重映射成本**（§8 调优篇会深入）
 - **DM 错误分析**用 `dm_bio_enter` / `dm_bio_exit` trace 点**看 bio 在 DM 内部哪段出错**
 
 ---
@@ -107,7 +107,7 @@ blk_qc_t submit_bio_noacct(struct bio *bio) {
 
 ## 3.1 两条路径的本质差异
 
-> **本节是 6.18 新基线独家覆盖（v4 规范硬变化）**
+> **本节是 6.18 新基线独家覆盖（本规范硬变化）**
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -165,11 +165,11 @@ static blk_status_t dm_submit_bio(struct bio *bio) {
 }
 ```
 
-**这段代码在做什么**（v4 规范硬要求）：
+**这段代码在做什么**（本规范硬要求）：
 
 - **2 个状态检查**：`DMF_BLOCK_IO_FOR_SUSPEND`（设备暂停中） + `DMF_DELETING`（设备销毁中）
 - **同步处理**——不走 workqueue，**性能更高但阻塞当前线程**
-- **`__split_and_process_bio` 是核心**——v4 §3.5 详解
+- **`__split_and_process_bio` 是核心**——§3.5 详解
 
 **稳定性架构师视角**：
 
@@ -247,7 +247,7 @@ static int dm_split_bio(struct mapped_device *md, struct bio *bio,
 
 **所以呢**：
 
-> **DM 性能优化的第一刀 = 减少 bio 拆分**。**dmsetup table 看 target 段数**——**10+ 段就开始有拆分风险**。**v4 §9 调优篇会深入**。
+> **DM 性能优化的第一刀 = 减少 bio 拆分**。**dmsetup table 看 target 段数**——**10+ 段就开始有拆分风险**。**§8 调优篇会深入**。
 
 ---
 
@@ -281,8 +281,8 @@ struct dm_target *dm_table_find_target(struct dm_table *t, sector_t sector) {
 **这段代码在做什么**：
 
 - **二分查找**——`O(log N)` 时间复杂度
-- **`highs` 数组必须严格递增**——v4 §2.3 已讲
-- **找不到返回 NULL**——**调用方处理"can't find target"错误**（v4 §8 实战案例）
+- **`highs` 数组必须严格递增**——§2.3 已讲
+- **找不到返回 NULL**——**调用方处理"can't find target"错误**（§7 实战案例）
 
 **稳定性架构师视角**：
 
@@ -301,7 +301,7 @@ struct dm_target *dm_table_find_target(struct dm_table *t, sector_t sector) {
 | snapshot | `snapshot_map` | COW 处理 + 修改 bi_sector |
 | thin | `thin_map` | thin pool 映射 + 修改 bi_sector |
 
-**v4 §6 Target 篇会深入每个 map 函数**——本篇不展开。
+**§6 Target 篇会深入每个 map 函数**——本篇不展开。
 
 **对读者有什么用**：
 
@@ -323,7 +323,7 @@ struct dm_target *dm_table_find_target(struct dm_table *t, sector_t sector) {
 
 **对读者有什么用**：
 
-- **DM 性能优化 = blk-mq 合并优化**——**v4 §9 调优篇会深入**
+- **DM 性能优化 = blk-mq 合并优化**——**§8 调优篇会深入**
 - **OEM 想优化 DM 性能应该调 blk-mq 参数**（队列深度 / IO 调度器）
 
 ## 6.2 blk-mq 合并机制
@@ -406,7 +406,7 @@ blk_qc_t generic_make_request(struct bio *bio) {
 **这段代码在做什么**：
 
 - **`current->bio_list` 是递归保护**——**DM-on-DM 不会死循环**
-- **每个 bio 最多嵌套 8 层**（v4 §附录 C）——超过会栈溢出
+- **每个 bio 最多嵌套 8 层**（§3 附录 C）——超过会栈溢出
 
 **稳定性架构师视角**：
 
@@ -516,7 +516,7 @@ Step 3: 比对应用 IO 模式
 
 - **每次拆分 = 一次额外 read**——吞吐量降低
 - **dmsetup table 看 target 段数**——**目标 ≤ 5 段**
-- **v4 §9 调优篇会深入**
+- **§8 调优篇会深入**
 
 ## Takeaway 3：DM 性能 = Target map 函数性能
 

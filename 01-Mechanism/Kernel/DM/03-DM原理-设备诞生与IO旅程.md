@@ -8,7 +8,7 @@
 
 ---
 
-## 本篇定位（v4 规范"必含开头段"）
+## 本篇定位（本规范"必含开头段"）
 
 - **本篇系列角色**：**核心机制**（3/10）· 数据结构 + 设备诞生 + IO 旅程
 - **强依赖**：第 02 篇 [《架构 — 用户态/内核态"双态协同"》](02-DM架构-双态协同.md) §2.1（5 层架构图）+ §8（dm-mod 三大子模块）
@@ -21,7 +21,7 @@
 
 ---
 
-## 校准决策日志（v4 §7 强制）
+## 校准决策日志（§6 强制）
 
 | 轮次 | 类别 | 决策 | 理由 | 影响范围 |
 |------|------|------|------|----------|
@@ -98,13 +98,13 @@ struct mapped_device {
 };
 ```
 
-**这段代码在做什么**（v4 规范硬要求）：
+**这段代码在做什么**（本规范硬要求）：
 
 - **`queue` 和 `disk`**：DM 设备对 VFS 表现为"块设备"——`queue` 是 bio 入口，`disk` 是通用磁盘抽象
 - **`map` 和 `old_map`**：当前映射表 + 旧映射表（**`suspend` 时旧表保留，`resume` 时新表生效**）
 - **`holders` 和 `open_count`**：引用计数——**泄漏 = 设备无法销毁**
 
-**稳定性架构师视角**（v4 规范硬要求）：
+**稳定性架构师视角**（本规范硬要求）：
 
 1. **`map` 和 `old_map` 是 swap 关系**——`dm_suspend()` 时把 `map` 移到 `old_map`，加载新表到 `map`；`dm_resume()` 时释放 `old_map`
 2. **`holders` 引用计数泄漏** = 设备无法销毁——**OEM 改 Target 经常踩这个坑**（忘了 decrement）
@@ -153,7 +153,7 @@ struct dm_target {
 
 **这段代码在做什么**：
 
-- **`type` 指向 `target_type` 注册结构**——`target_type->map` 是 bio 映射函数（v4 §2 详解）
+- **`type` 指向 `target_type` 注册结构**——`target_type->map` 是 bio 映射函数（§2 详解）
 - **`begin` / `len` 是逻辑 LBA 范围**——bio 落在 `[begin, begin+len)` 才由本 target 处理
 - **`private` 是 target 私有数据**——**dm-linear 存物理设备指针，dm-crypt 存加密参数，dm-verity 存 hashtree 信息**
 
@@ -161,11 +161,11 @@ struct dm_target {
 
 1. **`private` 内存分配是稳定性热点**——`target_type->ctr` 分配，`target_type->dtr` 释放。**OEM 改 Target 经常忘记释放 `private`**
 2. **`begin` / `len` 错误** = bio 越界——`dm_table_find_target()` 找不到对应 target 时会拒绝 bio
-3. **6.18 变化**：`private` 的 slab 分配可能从 `kmem_cache_alloc()` 转向 **`sheaf_alloc()`**（6.18 新增内存分配器）——v4 §3.2 详解
+3. **6.18 变化**：`private` 的 slab 分配可能从 `kmem_cache_alloc()` 转向 **`sheaf_alloc()`**（6.18 新增内存分配器）——§3.2 详解
 
 ## 2.5 6.18 变化：dm_target 内存分配从 slab 转向 sheaves
 
-> **本节是本系列对 6.18 新基线的独家覆盖（v4 规范硬变化）**
+> **本节是本系列对 6.18 新基线的独家覆盖（本规范硬变化）**
 
 **6.18 新增 sheaves 内存分配器**：
 
@@ -193,7 +193,7 @@ struct sheaf {
 |------|------|
 | **性能** | sheaves 的"sheaf-by-cache"设计对小对象分配更快，**dm_target 分配性能预计提升 10-30%** |
 | **调试** | `/proc/slabinfo` 改名 `/sys/kernel/slab/...`（部分 debugfs 节点路径可能变）|
-| **可观测性** | sheaves 提供新的 tracepoint `sheaf_alloc` / `sheaf_free`（**v4 §9 调优篇会用到**）|
+| **可观测性** | sheaves 提供新的 tracepoint `sheaf_alloc` / `sheaf_free`（**§8 调优篇会用到**）|
 
 **对读者有什么用**：
 
@@ -205,7 +205,7 @@ struct sheaf {
 
 # 三、设备诞生全流程（5 阶段时序）
 
-> **本节用 ASCII Art 时序图**（v4 §8.5 硬要求）
+> **本节用 ASCII Art 时序图**（§7.5 硬要求）
 
 ## 3.1 设备诞生时序图
 
@@ -426,7 +426,7 @@ static blk_status_t dm_submit_bio(struct bio *bio) {
 
 1. **`DMF_BLOCK_IO_FOR_SUSPEND` 标志**：设备在 suspend 时阻塞新 bio——**OEM 改 init 进程时如果忘了 resume，会卡死**
 2. **`bio->bi_bdev->bd_disk->private_data` 是关键指针**——**OEM 改 block_device 抽象时如果动到 private_data 会导致 DM 设备全挂**
-3. **`__split_and_process_bio` 是性能/正确性核心**——**v4 §5 交互篇会深入**
+3. **`__split_and_process_bio` 是性能/正确性核心**——**§5 交互篇会深入**
 
 ---
 
@@ -481,7 +481,7 @@ static int __split_and_process_bio(struct mapped_device *md, struct bio *bio) {
 
 **对读者有什么用**：
 
-- **DM 设备的"高 IOPS 优化"不在 DM 层，而在 Block 层 blk-mq**——**v4 §9 调优篇会深入**
+- **DM 设备的"高 IOPS 优化"不在 DM 层，而在 Block 层 blk-mq**——**§8 调优篇会深入**
 - **OEM 想优化 DM 性能应该调 blk-mq 参数（队列深度 / CPU 绑定）**——而不是改 DM 代码
 
 ---
@@ -514,7 +514,7 @@ static int dm_bio_end_io(struct bio *bio) {
 
 1. **`end_io` 泄漏 = 设备 hang**——如果 `target_type->end_io` 忘记 `bio_endio(bio)`，**bio 永远不返回**
 2. **OEM 改 Target 时如果忘了 `bio_endio(bio)` 调用**——是 30% 的"DM 设备 hang"根因
-3. **`free_tio` 必须正确释放**——**v4 §6 Target 篇会深入**
+3. **`free_tio` 必须正确释放**——**§6 Target 篇会深入**
 
 ---
 
@@ -667,7 +667,7 @@ Step 5: 如果未超过 → 检查 dm_table 内部状态（可能 swap 中状态
 
 ---
 
-# 附录 A：核心源码路径索引（v4 规范强制）
+# 附录 A：核心源码路径索引（本规范强制）
 
 | 文件名 | 完整路径 | 内核版本基线 | 说明 |
 |--------|---------|------------|------|
@@ -681,7 +681,7 @@ Step 5: 如果未超过 → 检查 dm_table 内部状态（可能 swap 中状态
 
 ---
 
-# 附录 B：源码路径对账表（v4 规范强制）
+# 附录 B：源码路径对账表（本规范强制）
 
 | 序号 | 路径 | 状态 | 校对来源 |
 |------|------|------|---------|
@@ -695,7 +695,7 @@ Step 5: 如果未超过 → 检查 dm_table 内部状态（可能 swap 中状态
 
 ---
 
-# 附录 C：量化数据自检表（v4 规范强制）
+# 附录 C：量化数据自检表（本规范强制）
 
 | 序号 | 量化描述 | 数量级 | 依据 |
 |------|---------|--------|------|
@@ -711,7 +711,7 @@ Step 5: 如果未超过 → 检查 dm_table 内部状态（可能 swap 中状态
 
 ---
 
-# 附录 D：工程基线表（v4 规范按需）
+# 附录 D：工程基线表（本规范按需）
 
 | 参数 | 典型默认 | 选用准则 | 踩坑提醒 |
 |------|---------|---------|---------|
