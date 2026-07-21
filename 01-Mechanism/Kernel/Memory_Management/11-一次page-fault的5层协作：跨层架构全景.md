@@ -4,7 +4,7 @@
 >
 > **本文定位**：一次 page fault 跨 5 层（Hardware / Kernel mm/ / 物理页子系统 / 进程虚拟地址子系统 / ART + Framework）怎么协作？每层在那一刻扮演什么角色、传什么信息？page fault 路径上的 4 个关键决策点（anonymous vs file / cold vs warm / reclaim 触发 / OOM 触发）分别在第 5 层的哪一段决定？page fault 之后 5 层账本（mm_struct / PTE / ART GC / FWK ProcessRecord / cgroup memory.current）怎么同步？
 >
-> **预计篇幅**：1.2-1.5 万字（实测 50,000+ 字符 / 700+ 行）
+> **预计篇幅**：1.2-1.5 万字（实测 75,000+ 字符 / 1872 行剥离后 / 13821 中文字符 ≈ 1.4 万字）
 >
 > **读者画像**：能读懂 C/Java 代码、能消化数据结构级别的文章；目标是 Android 稳定性架构师，需要把 page fault 作为排查冷启动慢 / 卡顿 / OOM / MemoryLimiter 越界的最底层抓手
 >
