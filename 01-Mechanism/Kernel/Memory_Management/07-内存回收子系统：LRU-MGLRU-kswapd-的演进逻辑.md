@@ -15,17 +15,17 @@
 <!-- AUTHOR_ONLY:START -->
 # 本篇定位
 - **本篇系列角色**:核心机制(阶段 3 第 1 篇 · 回收子系统的设计哲学)
-- **强依赖**:必须先读 [第 01 篇:Android 内存分类学——5 大管理职责与全景](01-Android内存分类学:5大管理职责与全景.md) §2.2(5 大子系统一览表)、§3.2(mm_struct 枢纽);[第 06 篇:物理内存组织与伙伴系统——Node / Zone / Page 的设计](06-物理内存组织与伙伴系统:Node-Zone-Page的设计.md) §1.3(物理内存子系统的"分配器"角色)、§4.4(水位线 WMARK_MIN/LOW/HIGH);[第 05 篇:进程虚拟地址子系统——mmap / VMA / 缺页的设计哲学](05-进程虚拟地址子系统:mmap-VMA-缺页的设计哲学.md) §5(缺页 5 层协作剧本)
+- **强依赖**:必须先读 [第 01 篇:Android 内存分类学——5 大管理职责与全景](01-Android内存分类学：5大管理职责与全景.md) §2.2(5 大子系统一览表)、§3.2(mm_struct 枢纽);[第 06 篇:物理内存组织与伙伴系统——Node / Zone / Page 的设计](06-物理内存组织与伙伴系统：Node-Zone-Page的设计.md) §1.3(物理内存子系统的"分配器"角色)、§4.4(水位线 WMARK_MIN/LOW/HIGH);[第 05 篇:进程虚拟地址子系统——mmap / VMA / 缺页的设计哲学](05-进程虚拟地址子系统：mmap-VMA-缺页的设计哲学.md) §5(缺页 5 层协作剧本)
 - **承接自**:第 06 篇已覆盖"物理内存子系统的分配侧"——伙伴系统怎么按 2^k buddy 算法分配物理页、水位线怎么决定什么时候紧张、alloc_pages 怎么走 5 步分配流程;本篇**不重复**分配侧,本篇进入"释放侧"——水位线穿透了怎么办?LRU 怎么挑页回收?kswapd 怎么异步回收?MGLRU 怎么替代 LRU?swap / zRAM 怎么把 anon 页换出?
-- **衔接去**:下一篇 [第 08 篇:cgroup v2 memcg 节点级控制——从 v1 到 v2 的设计动机](08-cgroup-v2-memcg节点级控制:从v1到v2的设计动机.md) 会从"回收"下沉到"限额"——讲 memcg 怎么把"全局回收"切成"按 cgroup 配额回收",为什么 v2 取代 v1,Android 14 全面切 v2 的设计动机
+- **衔接去**:下一篇 [第 08 篇:cgroup v2 memcg 节点级控制——从 v1 到 v2 的设计动机](08-cgroup-v2-memcg节点级控制：从v1到v2的设计动机.md) 会从"回收"下沉到"限额"——讲 memcg 怎么把"全局回收"切成"按 cgroup 配额回收",为什么 v2 取代 v1,Android 14 全面切 v2 的设计动机
 - **不重复内容**:
-  - 5 大子系统全景 + mm_struct 枢纽 → 详见 [第 01 篇](01-Android内存分类学:5大管理职责与全景.md) §2/§3
-  - 物理内存子系统(Node / Zone / Page / 伙伴系统)→ 详见 [第 06 篇](06-物理内存组织与伙伴系统:Node-Zone-Page的设计.md)
-  - 进程虚拟地址子系统(VMA / mmap / 缺页)→ 详见 [第 05 篇](05-进程虚拟地址子系统:mmap-VMA-缺页的设计哲学.md)
-  - 双重视角(加载 + 运行 5 层协作)→ 详见 [第 02 篇](02-一个byte的双重视角:加载与运行的融会贯通.md) §4
-  - cgroup memcg 限额与 PSI → 详见 [第 08 篇](08-cgroup-v2-memcg节点级控制:从v1到v2的设计动机.md)
-  - LMKD / OOM Killer 杀进程决策 → 详见 [第 09 篇](09-杀进程决策子系统:LMKD-MemoryLimiter-的协同.md)
-  - 一次回收跨 5 层完整时序 → 详见 [第 11 篇](11-一次page-fault的5层协作:跨层架构全景.md)(第 11 篇是 page fault,本篇是 reclaim,两次会做对照)
+  - 5 大子系统全景 + mm_struct 枢纽 → 详见 [第 01 篇](01-Android内存分类学：5大管理职责与全景.md) §2/§3
+  - 物理内存子系统(Node / Zone / Page / 伙伴系统)→ 详见 [第 06 篇](06-物理内存组织与伙伴系统：Node-Zone-Page的设计.md)
+  - 进程虚拟地址子系统(VMA / mmap / 缺页)→ 详见 [第 05 篇](05-进程虚拟地址子系统：mmap-VMA-缺页的设计哲学.md)
+  - 双重视角(加载 + 运行 5 层协作)→ 详见 [第 02 篇](02-一个byte的双重视角：加载与运行的融会贯通.md) §4
+  - cgroup memcg 限额与 PSI → 详见 [第 08 篇](08-cgroup-v2-memcg节点级控制：从v1到v2的设计动机.md)
+  - LMKD / OOM Killer 杀进程决策 → 详见 [第 09 篇](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md)
+  - 一次回收跨 5 层完整时序 → 详见 [第 11 篇](11-一次page-fault的5层协作：跨层架构全景.md)(第 11 篇是 page fault,本篇是 reclaim,两次会做对照)
 - **本篇的核心价值**:06 篇讲"分配侧",本篇讲"释放侧"——**分配和释放是同一段内存的"两侧",任一侧失败都会 OOM**。本篇的核心问题是"**为什么 5.10 之前 LRU 4 链表不够用?MGLRU 怎么解决?**"——这是 6.18 时代最值得理解的设计演进之一。读完本篇,你会:
   - 画出 LRU 4 链表(active anon / inactive anon / active file / inactive file)+ MGLRU 多代(default 4 代)+ kswapd + Direct Reclaim 的"回收子系统全景图"
   - 讲清楚 LRU 4 大问题(扫描开销大 / 命中率低 / 抖动 / NUMA 不友好)和 MGLRU 4 大改进(分代隔离 / 代大小自适应 / 代间引用跟踪 / NUMA 友好)
@@ -53,8 +53,8 @@
 我是一名 Android 稳定性架构师,正在系统学习 Android 内存管理。本篇是 Memory_Management 系列的第 7 篇,主题是"内存回收子系统——LRU / MGLRU / kswapd 的演进逻辑"——**不讲"工程师怎么排查 OOM",讲"5.10 之前 LRU 4 链表为什么不够用、MGLRU 怎么解决、kswapd 怎么协同"**。
 
 # 上下文
-- **上一篇**:[第 06 篇:物理内存组织与伙伴系统——Node / Zone / Page 的设计](06-物理内存组织与伙伴系统:Node-Zone-Page的设计.md) 已覆盖"分配侧"——Node / Zone / Page 三层结构、伙伴系统 2^k buddy 算法、水位线 WMARK_MIN/LOW/HIGH、alloc_pages 5 步流程
-- **下一篇**:[第 08 篇:cgroup v2 memcg 节点级控制——从 v1 到 v2 的设计动机](08-cgroup-v2-memcg节点级控制:从v1到v2的设计动机.md) 将从"回收"下沉到"限额"——讲 memcg 怎么按 cgroup 配额回收、为什么 v2 取代 v1、Android 14 全面切 v2 的设计动机
+- **上一篇**:[第 06 篇:物理内存组织与伙伴系统——Node / Zone / Page 的设计](06-物理内存组织与伙伴系统：Node-Zone-Page的设计.md) 已覆盖"分配侧"——Node / Zone / Page 三层结构、伙伴系统 2^k buddy 算法、水位线 WMARK_MIN/LOW/HIGH、alloc_pages 5 步流程
+- **下一篇**:[第 08 篇:cgroup v2 memcg 节点级控制——从 v1 到 v2 的设计动机](08-cgroup-v2-memcg节点级控制：从v1到v2的设计动机.md) 将从"回收"下沉到"限额"——讲 memcg 怎么按 cgroup 配额回收、为什么 v2 取代 v1、Android 14 全面切 v2 的设计动机
 - **本系列的 README**:[README.md](README.md)
 - **本系列设计思路**:6 阶段 × 15 篇(全景 → 分配 → 跟踪+限额 → 跨层协作 → 分配+保护协同 → 演进+未来),本篇属于阶段 3 跟踪+限额的"释放"支柱
 
@@ -107,7 +107,7 @@
 
 ### 1.1 5 大职责矩阵中回收子系统的角色
 
-回顾 [第 01 篇 §2.2](01-Android内存分类学:5大管理职责与全景.md) 建立的"5 大管理职责 × 5 层物理架构"矩阵,内存回收子系统对应的是"**释放**"支柱:
+回顾 [第 01 篇 §2.2](01-Android内存分类学：5大管理职责与全景.md) 建立的"5 大管理职责 × 5 层物理架构"矩阵,内存回收子系统对应的是"**释放**"支柱:
 
 ```
                   App        ART       FWK      Kernel mm/    Hardware
@@ -1384,7 +1384,7 @@ $ adb shell cat /sys/block/zram0/mm_stat
 **架构师视角**:
 - **MGLRU 是 6.18 时代所有 Android 设备的"基线"**——不再需要"如何优化 LRU"的资料
 - **5 大回收子系统的调优手段在 5.10 前后是不同的**——必须按版本选对调优手段
-- **未来方向**:MGLRU 持续优化(扫描 batch / NUMA 感知 / workingset 集成)+ zRAM 算法升级(ZSTD)+ 跨设备 swap(详见 [第 15 篇:未来方向](15-未来方向:基于真实信息的6大演进路径.md))
+- **未来方向**:MGLRU 持续优化(扫描 batch / NUMA 感知 / workingset 集成)+ zRAM 算法升级(ZSTD)+ 跨设备 swap(详见 [第 15 篇:未来方向](15-未来方向：基于真实信息的6大演进路径.md))
 
 ---
 
@@ -1510,7 +1510,7 @@ $ adb shell cat /sys/block/zram0/mm_stat
 
 ## 篇尾衔接
 
-下一篇是 **[第 08 篇:cgroup v2 memcg 节点级控制——从 v1 到 v2 的设计动机](08-cgroup-v2-memcg节点级控制:从v1到v2的设计动机.md)**。
+下一篇是 **[第 08 篇:cgroup v2 memcg 节点级控制——从 v1 到 v2 的设计动机](08-cgroup-v2-memcg节点级控制：从v1到v2的设计动机.md)**。
 
 本篇讲的是"内存回收子系统"——5.10 之前 LRU 4 链表为什么不够用、MGLRU 怎么解决、kswapd 怎么异步回收、Direct Reclaim 怎么同步回收、swap / zRAM 在移动设备的不可替代。
 
@@ -1524,7 +1524,7 @@ $ adb shell cat /sys/block/zram0/mm_stat
 - cgroup v2 + MGLRU + LMKD 3 大子系统的协同
 - AOSP 17 + 6.18 在 cgroup v2 上的新优化
 
-→ [下一篇:第 08 篇 · cgroup v2 memcg 节点级控制](08-cgroup-v2-memcg节点级控制:从v1到v2的设计动机.md)
+→ [下一篇:第 08 篇 · cgroup v2 memcg 节点级控制](08-cgroup-v2-memcg节点级控制：从v1到v2的设计动机.md)
 
 ---
 
@@ -1555,7 +1555,7 @@ $ adb shell cat /sys/block/zram0/mm_stat
 
 **4.3 系列一致性(5 项)**:
 - ✅ #17 跨篇引用——[第 01 篇](...) [第 02 篇](...) [第 05 篇](...) [第 06 篇](...) [第 08 篇](...) Markdown 链接
-- ✅ #18 跨系列引用——[第 15 篇:未来方向](15-未来方向:基于真实信息的6大演进路径.md) 引用
+- ✅ #18 跨系列引用——[第 15 篇:未来方向](15-未来方向：基于真实信息的6大演进路径.md) 引用
 - ✅ #19 术语一致——"LRU 4 链表"/"MGLRU"/"kswapd"/"Direct Reclaim"/"zRAM" 在 §1-§11 全文统一
 - ✅ #20 AOSP 版本统一——AOSP 14/17 双基线 + android14-5.10/5.15/android15-6.1/6.6/android17-6.18 多版本
 - ✅ #21 内核版本统一——多版本矩阵明确标注
