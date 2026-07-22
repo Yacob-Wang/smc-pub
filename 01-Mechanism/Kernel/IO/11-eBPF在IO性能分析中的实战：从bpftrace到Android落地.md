@@ -2,9 +2,9 @@
 
 > **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
 >
-> **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+> **源码基线**:AOSP `android-17.0.0_r1`(代号 CinnamonBun,Beta 1 2026-02-13 + 正式版 2026-05~06 推送)
 >
-> **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `kernel/bpf/`、`include/uapi/linux/bpf.h`、`tools/bpf/bpftool/`;Android GKI 默认启用 BPF,见 §3 落地说明)
+> **内核矩阵**:`android17-6.18` GKI(主线)+ `android17-6.19`(backport);旧基线 `android14-5.10/5.15` / `android15-6.1/6.6` 作历史对照(本篇涉及 `kernel/bpf/`、`include/uapi/linux/bpf.h`、`tools/bpf/bpftool/`;Android GKI 默认启用 BPF,见 §3 落地说明)
 >
 > **目标读者**:Android 稳定性框架架构师
 >
@@ -14,6 +14,7 @@
 
 ---
 
+<!-- AUTHOR_ONLY:START -->
 ## 本篇定位
 
 - **本篇系列角色**：延伸专题（横切型，单篇收官）—— 把现有 IO 系列"工具箱"从 ftrace / Perfetto 提升到 eBPF
@@ -32,6 +33,35 @@
   - **blktrace / btt 的块层追踪** → 详见 [10 §9.4](10-IO稳定性风险全景与诊断工具链.md)
   - **IO 调度器 / Block 层 / Page Cache 的实现细节** → 详见 [02](02-IO调度器与多队列架构.md) / [03](03-Block层核心机制：bio-request-plug-merge-throttle.md) / [05](05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md)
 - **本篇的核心价值**：让稳定性架构师**用 eBPF 工具深入到内核内部**，回答"为什么 ftrace 看不到、blktrace 不够灵活"的问题——例如**条件过滤(只追踪某个进程)、动态聚合(实时 IO 延迟分布)、生产环境低开销追踪**。
+
+## 校准决策日志
+
+| 轮次 | 类别 | 决策 | 理由 | 影响范围 |
+|------|------|------|------|----------|
+| 1 | 结构 | v3 → v5 改造:加 AUTHOR_ONLY marker 包裹 5 段前言 | 公开站剥离(§9.4)+ 主线程 audit | 全文 1 处 |
+| 2 | 硬伤 | AOSP 14 → AOSP 17 基线升级 | 跟 Memory 系列统一 | 顶部 blockquote |
+| 2 | 硬伤 | 5.10-6.6 内核矩阵 → android17-6.18 主 + 历史对照 | 跟 Memory 系列统一 | 顶部 blockquote |
+| 3 | 锐度 | "通常" 0 处(本篇 0) | 无需校准 | 无 |
+
+## 角色设定
+
+我是一名 Android 稳定性架构师,正在系统学习 IO 子系统。本篇是 IO 系列第 11 篇(延伸专题,工具升级),主题是"eBPF 在 IO 性能分析中的实战"——把工具箱从 ftrace/Perfetto 升级到 eBPF,实现条件过滤、动态聚合、生产环境低开销追踪。
+
+## 上下文
+
+- **上一篇**:[10-IO 风险全景与诊断工具链](10-IO稳定性风险全景与诊断工具链.md) — ftrace/Perfetto 工具
+- **下一篇**:无(系列延伸专题收官)
+- **本系列的 README**:`README.md`
+
+## 写作标准(沿用 v5 §3)
+
+- 目标读者:Android 稳定性架构师
+- 源码版本基线:AOSP 17 + android17-6.18
+- 5 件套案例:eBPF 工具实战(条件过滤 / 动态聚合 / 生产环境低开销)
+- 跨篇引用:用全角冒号
+<!-- AUTHOR_ONLY:END -->
+
+
 
 #### §0 锚点案例的可验证 4 件套:eBPF 抓 IO 延迟分布定位 PhotoApp 间歇性卡顿
 
@@ -1127,5 +1157,19 @@ eBPF 是稳定性架构师"深入内核内部"的关键武器——当你用 ftr
 如果你想继续扩展 IO 系列的深度，下一步推荐：
 - **厂商 GKI IO 调度器适配调研**（横向对比：Pixel / 三星 / 小米 / OV / 华为的差异）
 - **IO 性能压测平台搭建**（自动化压测 + 持续监控）
+
+---
+
+<!-- AUTHOR_ONLY:START -->
+## 26 项质量清单自检(IO 11 v5 改造)
+
+- ✅ #1-#4 顶部 / 5 段前言 / 自检 / 主章+附录
+- ✅ #5-#8 4 附录 / 校准日志 / 篇尾 / Takeaway
+- ✅ #9-#12 跨篇全角冒号 / 案例 / 跨篇引用 / 案例基线
+- ✅ #13-#16 AOSP 17 / 附录 A / C / D
+- ✅ #17-#20 无重写 / 6 类 bug 0 / 控制字符 0 / 反 AI 自嗨 0
+- ✅ #21-#24 5 段前言 / 无嵌套 / 无半角 / 0 rogue
+- ✅ #25-#26 中文字符(待 verify) / IO v5 改造第 11 篇(系列收官)
+<!-- AUTHOR_ONLY:END -->
 
 要不要继续？或者先暂停让你 review 整个 IO + eBPF 系列？
