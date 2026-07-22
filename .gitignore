@@ -28,13 +28,21 @@ Thumbs.db
 /*.txt
 /*.base
 
-# Android Reader 构建产物
-reader/.gradle/
-reader/build/
-reader/app/build/
-reader/local.properties
-reader/app/src/main/assets/
-reader/.idea/
+# Android Reader 构建产物（reader 在 00-Meta/reader/）
+**/reader/.gradle/
+**/reader/build/
+**/reader/app/build/
+**/reader/local.properties
+**/reader/app/src/main/assets/
+**/reader/.idea/
+
+# 写作/复审一次性脚本（不入库）
+**/__review_*.py
+**/__verify_*.ps1.bak
+/debug-*.py
+/fix-*.py
+/_verify*.py
+/scripts/verify_*_*.ps1
 
 # MkDocs / GitHub Pages 构建产物（docs/ 由 scripts/prepare_web_docs.py 生成）
 docs/
