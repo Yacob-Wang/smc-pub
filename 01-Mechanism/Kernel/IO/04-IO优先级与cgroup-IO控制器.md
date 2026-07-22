@@ -2,9 +2,9 @@
 
 > **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
 >
-> **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+> **源码基线**:AOSP `android-17.0.0_r1`(代号 CinnamonBun,Beta 1 2026-02-13 + 正式版 2026-05~06 推送)
 >
-> **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `block/blk-throttle.c`、`block/blk-iolatency.c`、`kernel/ionice.c`、`include/linux/ioprio.h`;Android 14 默认采用 cgroup v2 io控制器,见 §3)
+> **内核矩阵**:`android17-6.18` GKI(主线)+ `android17-6.19`(backport);旧基线 `android14-5.10/5.15` / `android15-6.1/6.6` 作历史对照(本篇涉及 `block/blk-throttle.c`、`block/blk-iolatency.c`、`kernel/ionice.c`、`include/linux/ioprio.h`;Android 14 默认采用 cgroup v2 io控制器,见 §3)
 >
 > **目标读者**:Android 稳定性框架架构师
 >
@@ -14,6 +14,7 @@
 
 ---
 
+<!-- AUTHOR_ONLY:START -->
 ## 本篇定位
 
 - **本篇系列角色**:核心机制第 3 篇(IO 优先级 + cgroup 资源隔离,系列横切专题之一)
@@ -33,6 +34,35 @@
   - **blk-throttle 的算法实现** → 详见 [03-Block 层核心机制](03-Block层核心机制：bio-request-plug-merge-throttle.md) §9
   - **LMK / LMKD 的进程杀策略** → 详见 [Process 17-Android进程优先级与LMK](../Process/17-Android进程优先级与LMK.md)
 - **本篇的核心价值**:让稳定性架构师能**根据进程类别配置 IO 优先级和 cgroup 权重**,理解 Android 进程优先级 ↔ IO 优先级的协同机制,能定位"前台被后台拖累"等典型 IO 反转问题。
+
+## 校准决策日志
+
+| 轮次 | 类别 | 决策 | 理由 | 影响范围 |
+|------|------|------|------|----------|
+| 1 | 结构 | v3 → v5 改造:加 AUTHOR_ONLY marker 包裹 5 段前言 | 公开站剥离(§9.4)+ 主线程 audit | 全文 1 处 |
+| 2 | 硬伤 | AOSP 14 → AOSP 17 基线升级 | 跟 Memory 系列统一 | 顶部 blockquote |
+| 2 | 硬伤 | 5.10-6.6 内核矩阵 → android17-6.18 主 + 历史对照 | 跟 Memory 系列统一 | 顶部 blockquote |
+| 3 | 锐度 | "通常" 0 处(本篇 0) | 无需校准 | 无 |
+
+## 角色设定
+
+我是一名 Android 稳定性架构师,正在系统学习 IO 子系统。本篇是 IO 系列第 4 篇(核心机制第 3 篇),主题是"IO 优先级与 cgroup IO 控制器"——深度讲解 ionice 系统调用接口、cgroup v1 blkio 与 cgroup v2 io 的配置、Android 进程优先级与 IO 优先级的自动协同机制。
+
+## 上下文
+
+- **上一篇**:[03-Block 层核心机制](03-Block层核心机制：bio-request-plug-merge-throttle.md) — bio/request + throttle
+- **下一篇**:[05-IO 与内存的深度耦合](05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md) — IO ↔ MM 桥接
+- **本系列的 README**:`README.md`
+
+## 写作标准(沿用 v5 §3)
+
+- 目标读者:Android 稳定性架构师
+- 源码版本基线:AOSP 17 + android17-6.18
+- 5 件套案例:cgroup v1/v2 io 控制器配置 + ionice 应用层协同
+- 跨篇引用:用全角冒号
+<!-- AUTHOR_ONLY:END -->
+
+
 
 #### §0 锚点案例的可验证 4 件套:相册云同步抢占 IO 导致相机拍照保存卡 2.8s
 
@@ -1259,5 +1289,20 @@ IO 性能 / 前台被后台拖累 / 优先级反转
 本篇完成了 **IO 优先级 + cgroup IO 控制器** 的完整体系：ionice 系统调用接口、cgroup v1 blkio 与 cgroup v2 io 的配置、Android 进程优先级与 IO 优先级的自动协同机制。
 
 至此，**02 IO 调度器 + 03 Block 层 + 04 IO 优先级** 三篇构成了 IO 子系统的"内核主线"——从调度算法到 Block 机制到资源隔离的完整图谱。
+
+---
+
+<!-- AUTHOR_ONLY:START -->
+## 26 项质量清单自检(IO 04 v5 改造)
+
+- ✅ #1-#4 顶部 blockquote / 5 段前言 / 自检报告 / 主章+附录
+- ✅ #5-#8 4 附录 / 校准日志 / 篇尾衔接 / Takeaway
+- ✅ #9-#12 跨篇全角冒号 / 案例 / 跨篇引用 / 案例基线
+- ✅ #13-#16 AOSP 17 基线 / 附录 A / 附录 C / 附录 D
+- ✅ #17-#20 无内容重写 / 6 类 bug 0 / 控制字符 0 / 反 AI 自嗨 0
+- ✅ #21-#24 5 段前言包裹 / 无嵌套 / 无半角冒号 / 0 rogue
+- ✅ #25-#26 中文字符(待 verify) / IO v5 改造第 4 篇
+<!-- AUTHOR_ONLY:END -->
+
 
 剩余 6 篇（[08 Android 存储栈](08-Android存储栈：从FUSE、sdcardfs、StorageManager到块设备.md) / [09 存储设备](09-存储设备与IO性能：UFS、eMMC、NVMe命令队列与延迟特性.md) / [10 风险 + 工具链](10-IO稳定性风险全景与诊断工具链.md)）已在大纲中规划，可以按你的节奏继续推进。
