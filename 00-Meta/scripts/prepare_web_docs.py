@@ -416,6 +416,85 @@ def build_module_index(module: str, mod_dir: Path) -> str:
     return "\n".join(lines)
 
 
+def build_subcategory_index(module: str, sub_dir: Path) -> str:
+    """生成子分类落地页（如 01-Mechanism/Kernel/、Framework/）。
+
+    模块卡片链到 ``Kernel/`` 等中间层；若该层只有嵌套系列、无 README/直挂 md，
+    必须生成 index.md，否则 GitHub Pages 上 ``/Kernel/`` 会 404。
+    """
+    short = _short_title(module, sub_dir.name, sub_dir)
+    subdirs = _list_nav_subdirs(sub_dir)
+    series_count, article_count = _module_stats(sub_dir, subdirs)
+    module_title = MODULE_TITLES.get(module, module)
+
+    lines: list[str] = [
+        f"# {short}",
+        "",
+    ]
+    if series_count:
+        lines.append(
+            f'<p class="jk-module-lead" markdown="1">'
+            f"本层共 **{series_count}** 个系列、约 **{article_count}** 篇文章。"
+            f"</p>"
+        )
+        lines.append("")
+    lines.extend([
+        "选择下方卡片进入系列总览；单篇请在系列总览的目录表中打开。",
+        "",
+        '<div class="grid cards" markdown>',
+        "",
+    ])
+
+    for i, series in enumerate(subdirs):
+        series_short = _short_title(module, series.name, series)
+        blurb_s = _series_blurb(series)
+        count = _count_articles_in_series(series)
+        if module == "02-Symptom" and series.name in _SYMPTOM_ICONS:
+            icon = _SYMPTOM_ICONS[series.name]
+        else:
+            icon = _SERIES_ICON_POOL[i % len(_SERIES_ICON_POOL)]
+        lines.extend([
+            f"-   :{icon}:{{ .lg .middle }} **{series_short}**",
+            "",
+            "    ---",
+            "",
+            f"    {blurb_s}",
+            "",
+            f"    :material-file-document-multiple-outline: 约 **{count}** 篇",
+            "",
+            f"    [进入总览 →]({series.name}/)",
+            "",
+        ])
+
+    lines.extend([
+        "</div>",
+        "",
+        "---",
+        "",
+        f"返回 [{module_title} 模块总览](../index.md)。",
+        "",
+    ])
+    return "\n".join(lines)
+
+
+def ensure_subcategory_landing_pages(mod_dir: Path, module: str) -> None:
+    """为含嵌套系列的子分类生成 index.md + .pages（Kernel / Framework 等）。"""
+    for sub in _list_nav_subdirs(mod_dir):
+        nested = _list_nav_subdirs(sub)
+        if not nested:
+            continue
+        index_path = sub / "index.md"
+        if not index_path.is_file():
+            index_path.write_text(
+                build_subcategory_index(module, sub),
+                encoding="utf-8",
+            )
+        nav: list[tuple[str, str]] = [("本层总览", "index.md")]
+        for series in nested:
+            nav.append((_short_title(module, series.name, series), series.name))
+        write_pages_file(sub, nav, collapse=True)
+
+
 def _article_files(dir_path: Path) -> list[str]:
     """目录内可作为篇章的 md（排除 README / index）。"""
     files = [
@@ -509,8 +588,8 @@ def generate_pages_tree(docs_root: Path) -> None:
             build_module_index(mod, mod_dir),
             encoding="utf-8",
         )
-        # series 层不写 .pages（让 awesome-pages 自动递归）
         generate_module_pages(mod_dir, mod)
+        ensure_subcategory_landing_pages(mod_dir, mod)
     write_pages_file(docs_root, top_nav)
 
 
