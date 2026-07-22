@@ -164,6 +164,10 @@ smc-pub/
 
 ## 📖 阅读路径（按角色）
 
+> **总路线图**：[`00-Meta/学习路线-稳定性架构师.md`](00-Meta/学习路线-稳定性架构师.md) —— **强烈建议先读这份**，含 7 阶段路线 + 缺项识别 + 角色定制
+>
+> **稳定性 + 性能专项**：[`02-Symptom/README-学习路线.md`](02-Symptom/README-学习路线.md) (L00) —— Stability + Performance 视角
+
 ### 通用 Android 开发者
 1. `00-Meta/README.md`（项目首页）
 2. `00-Meta/引用矩阵.md`（跨系列引用）
@@ -177,10 +181,11 @@ smc-pub/
 4. `02-Symptom/S09-PerfVsStab/`（性能 vs 稳定性）
 
 ### 稳定性架构师
-1. `02-Symptom/S00-Overview/`（7 大症状总览）
-2. `02-Symptom/S01-ANR/ ~ S07-KE/`（7 大症状）
-3. `03-Forensics/F01-F07/`（7 大症状取证）
-4. `02-Symptom/S10-Measure/`（度量门禁）
+1. **`00-Meta/学习路线-稳定性架构师.md`**（总路线图，必读）
+2. `02-Symptom/S00-Overview/`（7 大症状总览）
+3. `02-Symptom/S01-ANR/ ~ S07-KE/`（7 大症状）
+4. `03-Forensics/F01-F07/`（7 大症状取证）
+5. `02-Symptom/S10-Measure/`（度量门禁 + SLI/SLO）
 
 ### oncall 工程师
 1. `02-Symptom/`（症状识别）
