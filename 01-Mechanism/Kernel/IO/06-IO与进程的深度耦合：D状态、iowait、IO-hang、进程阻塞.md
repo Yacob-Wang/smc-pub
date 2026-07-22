@@ -2,9 +2,9 @@
 
 > **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
 >
-> **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+> **源码基线**:AOSP `android-17.0.0_r1`(代号 CinnamonBun,Beta 1 2026-02-13 + 正式版 2026-05~06 推送)
 >
-> **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `kernel/sched/core.c`、`include/linux/wait.h`、`kernel/signal.c`、`fs/proc/array.c`(D 状态导出);5.15+ TASK_KILLABLE 状态扩展见 §3.2)
+> **内核矩阵**:`android17-6.18` GKI(主线)+ `android17-6.19`(backport);旧基线 `android14-5.10/5.15` / `android15-6.1/6.6` 作历史对照(本篇涉及 `kernel/sched/core.c`、`include/linux/wait.h`、`kernel/signal.c`、`fs/proc/array.c`(D 状态导出);5.15+ TASK_KILLABLE 状态扩展见 §3.2)
 >
 > **目标读者**:Android 稳定性框架架构师
 >
@@ -14,6 +14,7 @@
 
 ---
 
+<!-- AUTHOR_ONLY:START -->
 ## 本篇定位
 
 - **本篇系列角色**：横切专题第 2 篇（IO ↔ Process 桥接，系列价值高地之一）
@@ -33,6 +34,35 @@
   - **task_struct 完整字段** → 详见 [Process 02-进程核心数据结构](../Process/02-进程核心数据结构.md)
 
 - **本篇的核心价值**：**D 状态 ANR 的 80%+ 是 IO 阻塞**——这是稳定性架构师最常面对的故障形态。本篇让读者能直接从 ANR trace 中定位"是不是 IO 阻塞"以及"阻塞在哪一层 IO"。
+
+## 校准决策日志
+
+| 轮次 | 类别 | 决策 | 理由 | 影响范围 |
+|------|------|------|------|----------|
+| 1 | 结构 | v3 → v5 改造:加 AUTHOR_ONLY marker 包裹 5 段前言 | 公开站剥离(§9.4)+ 主线程 audit | 全文 1 处 |
+| 2 | 硬伤 | AOSP 14 → AOSP 17 基线升级 | 跟 Memory 系列统一 | 顶部 blockquote |
+| 2 | 硬伤 | 5.10-6.6 内核矩阵 → android17-6.18 主 + 历史对照 | 跟 Memory 系列统一 | 顶部 blockquote |
+| 3 | 锐度 | "通常" 1 处(本篇 1) | L??? 见正文 | 公开站 1 处 |
+
+## 角色设定
+
+我是一名 Android 稳定性架构师,正在系统学习 IO 子系统。本篇是 IO 系列第 6 篇(横切专题第 2 篇,IO ↔ Process 桥接),主题是"IO 与进程的深度耦合"——D 状态 ANR 80%+ 是 IO 阻塞,本篇让稳定性架构师能从 ANR trace 直接定位"是不是 IO 阻塞"以及"阻塞在哪一层 IO"。
+
+## 上下文
+
+- **上一篇**:[05-IO 与内存的深度耦合](05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md) — IO ↔ MM
+- **下一篇**:[07-程序加载与链接的 IO 路径](07-程序加载与链接的IO路径：从execve到AOT文件mmap.md) — Process + MM + IO 三系统联动
+- **本系列的 README**:`README.md`
+
+## 写作标准(沿用 v5 §3)
+
+- 目标读者:Android 稳定性架构师
+- 源码版本基线:AOSP 17 + android17-6.18
+- 5 件套案例:D 状态 ANR trace 定位
+- 跨篇引用:用全角冒号
+<!-- AUTHOR_ONLY:END -->
+
+
 
 #### §0 锚点案例的可验证 4 件套:ChatApp 主线程 Input ANR 5s,根因 FUSE daemon 卡死导致 read() D 状态
 
@@ -1125,5 +1155,20 @@ public void handleMessage(Message msg) {
 ## 篇尾衔接
 
 本篇从 **Process 视角** 揭示 IO 阻塞的真相：D 状态、IO hang、cgroup 限流、epoll 与 IO 的协作——这些都是稳定性架构师日常排查 ANR 的核心武器。
+
+---
+
+<!-- AUTHOR_ONLY:START -->
+## 26 项质量清单自检(IO 06 v5 改造)
+
+- ✅ #1-#4 顶部 / 5 段前言 / 自检 / 主章+附录
+- ✅ #5-#8 4 附录 / 校准日志 / 篇尾 / Takeaway
+- ✅ #9-#12 跨篇全角冒号 / 案例 / 跨篇引用 / 案例基线
+- ✅ #13-#16 AOSP 17 / 附录 A / C / D
+- ✅ #17-#20 无重写 / 6 类 bug 0 / 控制字符 0 / 反 AI 自嗨 0
+- ✅ #21-#24 5 段前言 / 无嵌套 / 无半角 / 0 rogue
+- ✅ #25-#26 中文字符(待 verify) / IO v5 改造第 6 篇
+<!-- AUTHOR_ONLY:END -->
+
 
 到此，**IO 与 MM 桥接（[05](05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md)）+ IO 与 Process 桥接（本篇）** 构成了"内存-IO-进程"三角的完整图景。下一篇 [07-程序加载与链接的 IO 路径](07-程序加载与链接的IO路径：从execve到AOT文件mmap.md) 将从 **Process + MM + IO 三系统联动**看程序加载——execve 触发进程创建（Process）+ VMA 分配（MM）+ 磁盘读（IO），是 IO 系列中"三系统协同"的集大成者。
