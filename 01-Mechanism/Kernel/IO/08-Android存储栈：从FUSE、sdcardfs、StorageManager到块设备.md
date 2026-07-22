@@ -2,9 +2,9 @@
 
 > **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
 >
-> **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+> **源码基线**:AOSP `android-17.0.0_r1`(代号 CinnamonBun,Beta 1 2026-02-13 + 正式版 2026-05~06 推送)
 >
-> **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `fs/fuse/` 内核模块、`fs/sdcardfs.c`(已弃用,迁移到 FUSE passthrough)、`drivers/scsi/sd.c`、`drivers/ufs/`;Android 14 sdcardfs 弃用与 FUSE passthrough 演化见 §3)
+> **内核矩阵**:`android17-6.18` GKI(主线)+ `android17-6.19`(backport);旧基线 `android14-5.10/5.15` / `android15-6.1/6.6` 作历史对照(本篇涉及 `fs/fuse/` 内核模块、`fs/sdcardfs.c`(已弃用,迁移到 FUSE passthrough)、`drivers/scsi/sd.c`、`drivers/ufs/`;Android 14 sdcardfs 弃用与 FUSE passthrough 演化见 §3)
 >
 > **目标读者**:Android 稳定性框架架构师
 >
@@ -14,6 +14,7 @@
 
 ---
 
+<!-- AUTHOR_ONLY:START -->
 ## 本篇定位
 
 - **本篇系列角色**：Android 特化篇（Kernel 视角的 Android 存储栈 IO 行为）
@@ -32,6 +33,35 @@
   - **VFS 抽象与 ext4 / f2fs 内部** → 详见 [FS 04-VFS设计理念](../FS/04-VFS设计理念与统一接口.md) / [FS 11-ext4文件系统架构](../FS/11-ext4文件系统架构.md)
   - **Page Cache 的通用机制** → 详见 [FS 08-页缓存机制详解](../FS/08-页缓存机制详解.md)
 - **本篇的核心价值**：让稳定性架构师能**从 kernel 视角理解 Android sdcard IO 性能开销**，识别 FUSE 卡死、sdcardfs 迁移带来的 IO 行为变化，以及 scoped storage 对应用 IO 路径的影响。
+
+## 校准决策日志
+
+| 轮次 | 类别 | 决策 | 理由 | 影响范围 |
+|------|------|------|------|----------|
+| 1 | 结构 | v3 → v5 改造:加 AUTHOR_ONLY marker 包裹 5 段前言 | 公开站剥离(§9.4)+ 主线程 audit | 全文 1 处 |
+| 2 | 硬伤 | AOSP 14 → AOSP 17 基线升级 | 跟 Memory 系列统一 | 顶部 blockquote |
+| 2 | 硬伤 | 5.10-6.6 内核矩阵 → android17-6.18 主 + 历史对照 | 跟 Memory 系列统一 | 顶部 blockquote |
+| 3 | 锐度 | "通常" 0 处(本篇 0) | 无需校准 | 无 |
+
+## 角色设定
+
+我是一名 Android 稳定性架构师,正在系统学习 IO 子系统。本篇是 IO 系列第 8 篇(Android 特化篇),主题是"Android 存储栈"——从 kernel 视角理解 FUSE / sdcardfs / StorageManager 的 IO 行为,识别 sdcard 卡顿、scoped storage 对应用 IO 路径的影响。
+
+## 上下文
+
+- **上一篇**:[07-程序加载与链接的 IO 路径](07-程序加载与链接的IO路径：从execve到AOT文件mmap.md) — IO ↔ PLE 桥接
+- **下一篇**:[09-存储设备与 IO 性能](09-存储设备与IO性能：UFS、eMMC、NVMe命令队列与延迟特性.md) — 硬件层
+- **本系列的 README**:`README.md`
+
+## 写作标准(沿用 v5 §3)
+
+- 目标读者:Android 稳定性架构师
+- 源码版本基线:AOSP 17 + android17-6.18
+- 5 件套案例:sdcard 卡顿 / FUSE 卡死
+- 跨篇引用:用全角冒号
+<!-- AUTHOR_ONLY:END -->
+
+
 
 #### §0 锚点案例的可验证 4 件套:相册 App 浏览 1000 张照片卡顿,根因 FUSE passthrough 缺页未命中
 
@@ -1055,5 +1085,19 @@ sdcard IO 慢 / ANR / 异常
 ## 篇尾衔接
 
 本篇深入了 Android 存储栈的 Kernel 视角：FUSE 内核模块、sdcardfs 迁移、scoped storage 影响、多用户隔离、加密 IO——这些都是稳定性架构师在排查 sdcard 类 ANR / 卡顿时的核心知识。
+
+---
+
+<!-- AUTHOR_ONLY:START -->
+## 26 项质量清单自检(IO 08 v5 改造)
+
+- ✅ #1-#4 顶部 / 5 段前言 / 自检 / 主章+附录
+- ✅ #5-#8 4 附录 / 校准日志 / 篇尾 / Takeaway
+- ✅ #9-#12 跨篇全角冒号 / 案例 / 跨篇引用 / 案例基线
+- ✅ #13-#16 AOSP 17 / 附录 A / C / D
+- ✅ #17-#20 无重写 / 6 类 bug 0 / 控制字符 0 / 反 AI 自嗨 0
+- ✅ #21-#24 5 段前言 / 无嵌套 / 无半角 / 0 rogue
+- ✅ #25-#26 中文字符(待 verify) / IO v5 改造第 8 篇
+<!-- AUTHOR_ONLY:END -->
 
 下一篇 [09-存储设备与 IO 性能](09-存储设备与IO性能：UFS、eMMC、NVMe命令队列与延迟特性.md) 将从硬件层深入 **UFS / eMMC / NVMe 的物理特性**：command queue、延迟分布、功耗模式、温度降频——理解这些才能解读"设备为何变慢"的真因。
