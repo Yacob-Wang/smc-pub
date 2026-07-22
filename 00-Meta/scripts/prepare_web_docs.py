@@ -35,6 +35,14 @@ from preamble_transform import (  # noqa: E402
     should_strip_module,
     strip_author_preamble,
 )
+from feed_cards import (  # noqa: E402
+    FeedCard,
+    card_from_markdown,
+    landing_frontmatter,
+    render_feed_grid,
+    render_page_hero,
+    to_site_href,
+)
 from public_readme import build_public_readme  # noqa: E402
 
 REPO_ROOT = _SCRIPTS.parent.parent  # 适配阶段 3 移到 00-Meta/scripts/（原 _SCRIPTS.parent 是仓库根）
@@ -80,18 +88,6 @@ def get_title_from_markdown(content: str, fallback: str) -> str:
     return m.group(1) if m else name
 
 
-def parse_series_readme_table(content: str) -> list[str]:
-    files: list[str] = []
-    for line in content.splitlines():
-        m = re.match(r"^\|\s*\[(\d+)\]\(\./([^)]+)\)\s*\|", line)
-        if not m:
-            m = re.match(r"^\|\s*\[(\d+)\]\(([^)]+\.md)\)\s*\|", line)
-        if m:
-            file_name = m.group(2).lstrip("./")
-            if file_name not in files:
-                files.append(file_name)
-    return files
-
 
 def natural_key(name: str) -> tuple:
     stem = Path(name).stem
@@ -104,6 +100,17 @@ def natural_key(name: str) -> tuple:
     if m:
         return (0, int(m.group(1)), stem.lower())
     return (1, 0, stem.lower())
+
+
+def _count_articles_in_series(series_dir: Path) -> int:
+    """统计 series 下的文章数（含子目录的 md，不含 README/index）。"""
+    total = 0
+    for p in series_dir.rglob("*.md"):
+        name = p.name.lower()
+        if name.startswith("readme") or name == "index.md":
+            continue
+        total += 1
+    return total
 
 
 def yaml_quote(text: str) -> str:
@@ -249,68 +256,6 @@ def _series_blurb(series_dir: Path) -> str:
     return s
 
 
-# Material icon for each module's series landing page
-# 注意：Material for MkDocs 的 emoji 短码用 **连字符**「-」而非斜杠「/」
-# 详见 https://squidfunk.github.io/mkdocs-material/reference/icons-emojis/
-_MODULE_ICONS = {
-    "00-Meta": "material-map-outline",
-    "01-Mechanism": "material-layers-triple",
-    "02-Symptom": "material-alert-octagon-outline",
-    "03-Forensics": "material-magnify-scan",
-    "04-Tool": "material-tools",
-    "05-Governance": "material-shield-check-outline",
-    "06-Case": "material-book-open-page-variant-outline",
-    "06-Foundation": "material-cube-outline",
-}
-
-# 每个 series 根的图标（按 module + 索引）— 语义化映射
-# 02-Symptom 单独覆盖：11 大症状 → 直觉图标（架构师视角的视觉锚点）
-_SYMPTOM_ICONS = {
-    "S01-ANR": "material-timer-alert-outline",       # 计时器 + 警报（ANR 卡死超时）
-    "S02-JE": "material-bug-outline",                # Java Exception = bug
-    "S03-NE": "material-memory",                     # Native = 内存/芯片层
-    "S04-SWT": "material-shield-alert-outline",      # Watchdog 守门 + 警报
-    "S05-HANG": "material-pause-octagon-outline",    # HANG = 暂停/卡死
-    "S06-REBOOT": "material-restart",                # 重启
-    "S07-KE": "material-skull-outline",              # Kernel 死亡
-    "S08-AOSP17-K618": "material-source-pull",       # 演进/拉取新代码
-    "S09-PerfVsStab": "material-scale-balance",      # 性能 vs 稳定性 = 天平
-    "S10-Measure": "material-gauge",                 # 度量 = 仪表
-    "S11-Startup": "material-rocket-launch-outline", # 启动 = 火箭
-}
-
-# 默认 series icon 池（未在 _SYMPTOM_ICONS 里的 series 循环用）
-_SERIES_ICON_POOL = [
-    "material-cube-outline",
-    "material-layers-outline",
-    "material-puzzle-outline",
-    "material-sitemap-outline",
-    "material-vector-triangle",
-    "material-chart-line-variant",
-    "material-server-network",
-    "material-cog-outline",
-    "material-hammer-wrench",
-    "material-bookshelf",
-    "material-rocket-launch-outline",
-    "material-memory",
-    "material-cpu-64-bit",
-    "material-speedometer",
-    "material-connection",
-    "material-radar",
-]
-
-
-def _count_articles_in_series(series_dir: Path) -> int:
-    """统计 series 下的文章数（含子目录的 md，不含 README/index）。"""
-    total = 0
-    for p in series_dir.rglob("*.md"):
-        name = p.name.lower()
-        if name.startswith("readme") or name == "index.md":
-            continue
-        total += 1
-    return total
-
-
 def _module_stats(mod_dir: Path, subdirs: list[Path]) -> tuple[int, int]:
     """(series 数, 总文章数)。"""
     series_count = len(subdirs)
@@ -318,181 +263,157 @@ def _module_stats(mod_dir: Path, subdirs: list[Path]) -> tuple[int, int]:
     return series_count, article_count
 
 
-def build_module_index(module: str, mod_dir: Path) -> str:
-    """生成 module 落地页（Material grid cards 卡片式）。
+def _series_feed_cards(
+    module: str,
+    target_dir: Path,
+    *,
+    label: str,
+    link_prefix: str = "",
+) -> list[FeedCard]:
+    cards: list[FeedCard] = []
+    for sub in _list_nav_subdirs(target_dir):
+        short = _short_title(module, sub.name, sub)
+        blurb_s = _series_blurb(sub)
+        count = _count_articles_in_series(sub)
+        cards.append(
+            FeedCard(
+                href=to_site_href(f"{link_prefix}{sub.name}/"),
+                title=short,
+                summary=blurb_s,
+                label=label,
+                date=f"约 {count} 篇",
+                media_module=module,
+                media_text=short[:1],
+            )
+        )
+    return cards
 
-    卡片语法见 https://squidfunk.github.io/mkdocs-material/reference/grids/#cards-grid
-    """
+
+def _article_feed_cards(
+    module: str | None,
+    dir_path: Path,
+    *,
+    label: str,
+) -> list[FeedCard]:
+    cards: list[FeedCard] = []
+    mod = module or _module_name_for(dir_path) or "01-Mechanism"
+    for fname in _article_files(dir_path):
+        path = dir_path / fname
+        cards.append(
+            card_from_markdown(
+                path,
+                href=to_site_href(fname),
+                label=label,
+                repo_root=REPO_ROOT,
+                module=mod,
+            )
+        )
+    return cards
+
+
+def build_module_index(module: str, mod_dir: Path) -> str:
+    """生成 module 落地页（News Feed 卡片式）。"""
     title = MODULE_TITLES.get(module, module)
     blurb = MODULE_BLURBS.get(module, "")
     subdirs = _list_nav_subdirs(mod_dir)
     series_count, article_count = _module_stats(mod_dir, subdirs)
-    module_icon = _MODULE_ICONS.get(module, "material/folder-outline")
 
-    # 图标属性必须紧贴短码：`:icon:{ .lg }`（中间不能有空格，否则 {.lg} 会当正文漏出）
-    lines: list[str] = [
-        f"# :{module_icon}:{{ .lg }} {title}",
-        "",
-    ]
-    # 模块导语不用 blockquote——详情页的 first-of-type banner CSS 会误伤
     lead_parts: list[str] = []
     if blurb:
         lead_parts.append(blurb)
     if series_count:
-        lead_parts.append(
-            f"本模块共 **{series_count}** 个系列、约 **{article_count}** 篇文章。"
-        )
-    if lead_parts:
-        lines.append(
-            f'<p class="jk-module-lead" markdown="1">{" · ".join(lead_parts)}</p>'
-        )
-        lines.append("")
-    lines.extend([
-        "选择下方卡片进入系列总览；单篇请在系列总览的目录表中打开。",
-        "",
-        '<div class="grid cards" markdown>',
-        "",
-    ])
+        lead_parts.append(f"本模块共 {series_count} 个系列、约 {article_count} 篇文章。")
+    lead = " · ".join(lead_parts)
+
+    hero = render_page_hero(title, lead)
+    cards: list[FeedCard] = []
 
     if not subdirs:
-        # 模块本身就是一个系列（如 Hook）—— 用单卡片占位
         readme = _pick_readme(mod_dir)
         if readme:
-            link = f"{readme.name}"
             count = _count_articles_in_series(mod_dir)
-            lines.extend([
-                f"-   :material-folder-open-outline:{{ .lg .middle }} **本系列**",
-                "",
-                "    ---",
-                "",
-                f"    {_series_blurb(mod_dir)}（约 {count} 篇）",
-                "",
-                f"    [进入总览 →]({link})",
-                "",
-            ])
-        else:
-            lines.extend([
-                "-   :material-folder-open-outline:{ .lg .middle } **（暂无系列）**",
-                "",
-                "    ---",
-                "",
-                "    暂无内容",
-                "",
-            ])
+            cards.append(
+                FeedCard(
+                    href=to_site_href(readme.name),
+                    title="本系列",
+                    summary=_series_blurb(mod_dir),
+                    label=title,
+                    date=f"约 {count} 篇",
+                    media_module=module,
+                    media_text="S",
+                )
+            )
     else:
-        for i, sub in enumerate(subdirs):
-            short = _short_title(module, sub.name, sub)
-            blurb_s = _series_blurb(sub)
-            count = _count_articles_in_series(sub)
-            # 优先用语义化 icon（02-Symptom 等有显式映射的 module），
-            # 否则回退到循环池
-            if module == "02-Symptom" and sub.name in _SYMPTOM_ICONS:
-                icon = _SYMPTOM_ICONS[sub.name]
-            else:
-                icon = _SERIES_ICON_POOL[i % len(_SERIES_ICON_POOL)]
-            link = f"{sub.name}/"
-            card_block = [
-                f"-   :{icon}:{{ .lg .middle }} **{short}**",
-                "",
-                "    ---",
-                "",
-                f"    {blurb_s}",
-                "",
-                f"    :material-file-document-multiple-outline: 约 **{count}** 篇",
-                "",
-                f"    [进入总览 →]({link})",
-                "",
-            ]
-            lines.extend(card_block)
+        cards = _series_feed_cards(module, mod_dir, label=title)
 
-    lines.extend([
-        "</div>",
-        "",
-        "---",
-        "",
-        "返回 [站点首页](../index.md)。",
-        "",
-    ])
-    return "\n".join(lines)
+    footer = '\n<p class="jk-foot">返回 <a href="../">站点首页</a>。</p>\n'
+    return landing_frontmatter(title) + hero + render_feed_grid(cards) + footer
 
 
 def build_subcategory_index(module: str, sub_dir: Path) -> str:
-    """生成子分类落地页（如 01-Mechanism/Kernel/、Framework/）。
-
-    模块卡片链到 ``Kernel/`` 等中间层；若该层只有嵌套系列、无 README/直挂 md，
-    必须生成 index.md，否则 GitHub Pages 上 ``/Kernel/`` 会 404。
-    """
+    """生成子分类落地页（News Feed 卡片式）。"""
     short = _short_title(module, sub_dir.name, sub_dir)
     subdirs = _list_nav_subdirs(sub_dir)
     series_count, article_count = _module_stats(sub_dir, subdirs)
     module_title = MODULE_TITLES.get(module, module)
 
-    lines: list[str] = [
-        f"# {short}",
-        "",
-    ]
+    lead = ""
     if series_count:
-        lines.append(
-            f'<p class="jk-module-lead" markdown="1">'
-            f"本层共 **{series_count}** 个系列、约 **{article_count}** 篇文章。"
-            f"</p>"
-        )
-        lines.append("")
-    lines.extend([
-        "选择下方卡片进入系列总览；单篇请在系列总览的目录表中打开。",
-        "",
-        '<div class="grid cards" markdown>',
-        "",
-    ])
+        lead = f"本层共 {series_count} 个系列、约 {article_count} 篇文章。"
 
-    for i, series in enumerate(subdirs):
-        series_short = _short_title(module, series.name, series)
-        blurb_s = _series_blurb(series)
-        count = _count_articles_in_series(series)
-        if module == "02-Symptom" and series.name in _SYMPTOM_ICONS:
-            icon = _SYMPTOM_ICONS[series.name]
+    hero = render_page_hero(short, lead)
+    cards = _series_feed_cards(module, sub_dir, label=short)
+    try:
+        rel = sub_dir.relative_to(DOCS_DIR)
+        if len(rel.parts) > 2:
+            parent = sub_dir.parent
+            back_label = _short_title(module, parent.name, parent)
         else:
-            icon = _SERIES_ICON_POOL[i % len(_SERIES_ICON_POOL)]
-        lines.extend([
-            f"-   :{icon}:{{ .lg .middle }} **{series_short}**",
-            "",
-            "    ---",
-            "",
-            f"    {blurb_s}",
-            "",
-            f"    :material-file-document-multiple-outline: 约 **{count}** 篇",
-            "",
-            f"    [进入总览 →]({series.name}/)",
-            "",
-        ])
+            back_label = f"{module_title} 模块总览"
+    except ValueError:
+        back_label = f"{module_title} 模块总览"
+    footer = f'\n<p class="jk-foot">返回 <a href="../">{back_label}</a>。</p>\n'
+    return landing_frontmatter(short) + hero + render_feed_grid(cards) + footer
 
-    lines.extend([
-        "</div>",
-        "",
-        "---",
-        "",
-        f"返回 [{module_title} 模块总览](../index.md)。",
-        "",
-    ])
-    return "\n".join(lines)
+
+def build_series_landing_index(module: str | None, dir_path: Path) -> str:
+    """系列总览 landing 页：Hero + 篇章 Feed。"""
+    short = _short_title(module, dir_path.name, dir_path)
+    blurb = _series_blurb(dir_path)
+    label = short
+    if module:
+        label = MODULE_TITLES.get(module, module)
+    hero = render_page_hero(short, blurb or "本系列篇章如下。点开单篇阅读。")
+    cards = _article_feed_cards(module, dir_path, label=label)
+    if not cards:
+        cards = [
+            FeedCard(
+                href="#",
+                title="（暂无篇章）",
+                summary="该系列尚未收录文章。",
+                label=label,
+                media_module=module or "01-Mechanism",
+            )
+        ]
+    return landing_frontmatter(short) + hero + render_feed_grid(cards)
 
 
 def ensure_subcategory_landing_pages(mod_dir: Path, module: str) -> None:
-    """为含嵌套系列的子分类生成 index.md + .pages（Kernel / Framework 等）。"""
+    """为含嵌套系列的子分类生成 index.md + .pages（任意深度，如 Runtime/ART）。"""
     for sub in _list_nav_subdirs(mod_dir):
         nested = _list_nav_subdirs(sub)
         if not nested:
             continue
         index_path = sub / "index.md"
-        if not index_path.is_file():
-            index_path.write_text(
-                build_subcategory_index(module, sub),
-                encoding="utf-8",
-            )
+        index_path.write_text(
+            build_subcategory_index(module, sub),
+            encoding="utf-8",
+        )
         nav: list[tuple[str, str]] = [("本层总览", "index.md")]
         for series in nested:
             nav.append((_short_title(module, series.name, series), series.name))
         write_pages_file(sub, nav, collapse=True)
+        ensure_subcategory_landing_pages(sub, module)
 
 
 def _article_files(dir_path: Path) -> list[str]:
@@ -509,37 +430,12 @@ def _article_files(dir_path: Path) -> list[str]:
 
 
 def _ensure_series_overview(dir_path: Path, module: str | None) -> str:
-    """保证系列有总览页；无 README 时生成 index.md，侧栏只挂这一页。"""
-    readme = _pick_readme(dir_path)
-    if readme:
-        return readme.name
-
+    """保证系列有总览页；生成 Feed 式 index.md，侧栏只挂这一页。"""
     index_path = dir_path / "index.md"
-    if index_path.is_file():
-        return "index.md"
-
-    short = _short_title(module, dir_path.name, dir_path)
-    articles = _article_files(dir_path)
-    lines = [
-        f"# {short}",
-        "",
-        "本系列篇章如下。点开单篇阅读。",
-        "",
-        "| # | 篇章 |",
-        "|---|------|",
-    ]
-    for i, fname in enumerate(articles, 1):
-        title = get_title_from_markdown(
-            (dir_path / fname).read_text(encoding="utf-8", errors="replace"),
-            fname,
-        )
-        if len(title) > 56:
-            title = title[:54] + "…"
-        lines.append(f"| {i} | [{title}]({fname}) |")
-    if not articles:
-        lines.append("| — | （暂无篇章） |")
-    lines.append("")
-    index_path.write_text("\n".join(lines), encoding="utf-8")
+    index_path.write_text(
+        build_series_landing_index(module, dir_path),
+        encoding="utf-8",
+    )
     return "index.md"
 
 
@@ -594,7 +490,7 @@ def generate_pages_tree(docs_root: Path) -> None:
 
 
 def build_public_index() -> str:
-    return build_public_readme(REPO_ROOT)
+    return build_public_readme(REPO_ROOT, docs_dir=DOCS_DIR)
 
 
 def sanitize_filename(name: str) -> str:
@@ -665,49 +561,27 @@ def _write_stripped_md(src: Path, dst: Path) -> bool:
 
 
 def _ensure_series_index_md(src_sub: Path, dst_sub: Path) -> None:
-    """递归确保 series 目录有 index.md：
-    - 有 README.md → 复制为 index.md（同步剥离作者前言）
-    - 没有 README.md 但有 .md → 自动生成 index.md（文件列表）
-    递归处理子目录。
+    """递归确保 leaf series 目录有 Feed 式 index.md。
+
+    含嵌套子系列的目录（Kernel / Framework 等）由 ensure_subcategory_landing_pages
+    生成子分类落地页，此处跳过以免覆盖为空的「暂无篇章」页。
     """
     if not dst_sub.exists():
         return
+    if _list_nav_subdirs(dst_sub):
+        for sub in src_sub.iterdir():
+            if sub.is_dir() and not sub.name.startswith("."):
+                _ensure_series_index_md(sub, dst_sub / sub.name)
+        return
+    module = _module_name_for(dst_sub)
     index_md = dst_sub / "index.md"
-    if not index_md.is_file():
-        readme = src_sub / "README.md"
-        if readme.is_file():
-            try:
-                _write_stripped_md(readme, index_md)
-            except FileNotFoundError:
-                pass
-        else:
-            # 没 README.md：自动生成 index.md
-            md_files = sorted(
-                [p for p in src_sub.iterdir() if p.is_file() and p.suffix.lower() == ".md"],
-                key=lambda p: natural_key(p.name),
-            )
-            if md_files:
-                lines = [
-                    f"# {src_sub.name} 系列总览",
-                    "",
-                    "本系列所有篇章：",
-                    "",
-                    "| # | 篇章 |",
-                    "|---|------|",
-                ]
-                for i, p in enumerate(md_files, 1):
-                    title = get_title_from_markdown(
-                        p.read_text(encoding="utf-8", errors="replace"), p.name
-                    )
-                    if len(title) > 56:
-                        title = title[:54] + "…"
-                    lines.append(f"| {i} | [{title}]({p.name}) |")
-                lines.append("")
-                try:
-                    index_md.write_text("\n".join(lines), encoding="utf-8")
-                except OSError:
-                    pass
-    # 递归到子目录
+    try:
+        index_md.write_text(
+            build_series_landing_index(module, dst_sub),
+            encoding="utf-8",
+        )
+    except OSError:
+        pass
     for sub in src_sub.iterdir():
         if sub.is_dir() and not sub.name.startswith("."):
             _ensure_series_index_md(sub, dst_sub / sub.name)

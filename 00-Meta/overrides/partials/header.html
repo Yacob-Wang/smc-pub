@@ -55,8 +55,8 @@
           type="text"
           class="jk-search__input"
           name="jk-query"
-          placeholder="Search docs…"
-          aria-label="Search docs"
+          placeholder="搜索文档…"
+          aria-label="搜索文档"
           autocomplete="off"
           spellcheck="false"
           data-jk-search-input
@@ -99,4 +99,7 @@
       {% endif %}
     </div>
   </div>
+  {% if "navigation.tabs" in features %}
+    {% include "partials/module-strip.html" %}
+  {% endif %}
 </header>

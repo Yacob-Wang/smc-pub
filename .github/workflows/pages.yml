@@ -46,6 +46,15 @@ jobs:
       - name: Build site
         run: mkdocs build --verbose
 
+      - name: Validate feed links
+        run: python 00-Meta/scripts/validate_feed_links.py
+
+      - name: Validate tab navigation links
+        run: python 00-Meta/scripts/validate_tabs_links.py
+
+      - name: Validate markdown links
+        run: python 00-Meta/scripts/validate_markdown_links.py --fail
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

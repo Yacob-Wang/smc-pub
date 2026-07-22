@@ -32,7 +32,7 @@ MODULE_TITLES = {
 
 MODULE_BLURBS = {
     "00-Meta": "项目地图 · Reference · 版本基线 · 迁移日志",
-    "01-Mechanism": "Hardware · Kernel · Native · Runtime · Framework · App",
+    "01-Mechanism": "Hardware · Kernel · Runtime · Framework · App",
     "02-Symptom": "11 大症状机制（ANR · JE · NE · SWT · HANG · REBOOT · KE 等）",
     "03-Forensics": "8 大取证链（与症状编号一一对应）",
     "04-Tool": "Dumpsys · Watchdog · Perfetto · Hprof · AmCommand · ANR-Detection",
@@ -49,7 +49,6 @@ SERIES_NAV_TITLES: dict[str, dict[str, str]] = {
     "01-Mechanism": {
         "Hardware": "硬件层",
         "Kernel": "内核层",
-        "Native": "Native 层",
         "Runtime": "运行时",
         "Framework": "Framework",
         "App": "应用层",
@@ -112,7 +111,6 @@ MODULE_SERIES_ORDER: dict[str, list[str]] = {
     "01-Mechanism": [
         "Hardware",
         "Kernel",
-        "Native",
         "Runtime",
         "Framework",
         "App",
@@ -166,6 +164,66 @@ MODULE_SERIES_ORDER: dict[str, list[str]] = {
         "Tools",
     ],
 }
+
+# 首页「按问题进入」表格 — 集中维护，供 public_readme 与链接校验共用
+PROBLEM_INDEX: list[tuple[str, list[tuple[str, str]]]] = [
+    ("Native Crash", [("Native Crash", "01-Mechanism/Runtime/Native_Crash/")]),
+    (
+        "Java 异常 / ANR",
+        [
+            ("ANR 症状", "02-Symptom/S01-ANR/"),
+            ("ANR 取证", "03-Forensics/F01-ANR/"),
+            ("ANR-Detection", "04-Tool/ANR-Detection/"),
+        ],
+    ),
+    ("Binder / IPC", [("Binder", "01-Mechanism/Kernel/Binder/")]),
+    (
+        "OOM / 内存",
+        [
+            ("内存管理", "01-Mechanism/Kernel/Memory_Management/"),
+            ("ART", "01-Mechanism/Runtime/ART/"),
+            ("Hprof", "04-Tool/Hprof/"),
+        ],
+    ),
+    (
+        "Watchdog / SWT",
+        [("Watchdog", "04-Tool/Watchdog/"), ("SWT 取证", "03-Forensics/F02-SWT/")],
+    ),
+    (
+        "Socket / epoll",
+        [
+            ("Socket", "01-Mechanism/Kernel/socket/"),
+            ("epoll", "01-Mechanism/Kernel/epoll/"),
+        ],
+    ),
+    (
+        "启动专项",
+        [
+            ("S11 启动专项", "02-Symptom/S11-Startup/"),
+            ("启动案例", "06-Case/Startup/"),
+            ("Perfetto Boot Trace", "04-Tool/Perfetto/"),
+        ],
+    ),
+    ("AOSP 17 + K 6.18 演进", [("S08 演进全景", "02-Symptom/S08-AOSP17-K618/")]),
+    ("性能 vs 稳定性", [("S09 横切专题", "02-Symptom/S09-PerfVsStab/")]),
+    (
+        "度量 + 门禁",
+        [("S10 度量门禁", "02-Symptom/S10-Measure/"), ("APM", "05-Governance/APM/")],
+    ),
+    ("OEM 厂商适配", [("OEM-BSP", "05-Governance/OEM-BSP/")]),
+    ("跨平台 / HarmonyOS", [("CrossPlatform", "05-Governance/CrossPlatform/")]),
+    ("低端机治理", [("LowEnd", "05-Governance/LowEnd/")]),
+    (
+        "端侧 AI / AI OS",
+        [
+            ("AI Native", "05-Governance/AI-Native/"),
+            ("AI for Stability", "05-Governance/AI-Native/03_AI_for_Stability/"),
+        ],
+    ),
+    ("AI 辅助调试", [("AI-Debug", "05-Governance/AI-Debug/")]),
+    ("性能 vs 内存", [("PerfMem", "05-Governance/PerfMem/")]),
+    ("安全 + 稳定性", [("Security", "05-Governance/Security/")]),
+]
 
 PUBLIC_ROOT_FILES: list[str] = []
 

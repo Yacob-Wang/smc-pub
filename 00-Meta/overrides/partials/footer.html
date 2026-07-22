@@ -1,0 +1,93 @@
+{#-
+  News 风格多栏 Footer — 模块链接与顶栏 Tab 同步（nav.items）
+-#}
+{% import "partials/nav-macros.html" as navutil with context %}
+<footer class="md-footer jk-footer" data-md-component="footer">
+  <div class="jk-footer__inner">
+    <div class="jk-footer-grid">
+      <div>
+        <h3>模块</h3>
+        <ul>
+          <li><a href="{{ nav.homepage.url | url }}">Home</a></li>
+          {% set mod_idx = namespace(n=0) %}
+          {% for item in nav.items %}
+            {% if item.title != 'Home' and item.children %}
+              {% if mod_idx.n < 4 %}
+                <li><a href="{{ navutil.resolve_href(item) }}">{{ item.title }}</a></li>
+              {% endif %}
+              {% set mod_idx.n = mod_idx.n + 1 %}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      <div>
+        <h3>更多模块</h3>
+        <ul>
+          {% set mod_idx2 = namespace(n=0) %}
+          {% for item in nav.items %}
+            {% if item.title != 'Home' and item.children %}
+              {% if mod_idx2.n >= 4 %}
+                <li><a href="{{ navutil.resolve_href(item) }}">{{ item.title }}</a></li>
+              {% endif %}
+              {% set mod_idx2.n = mod_idx2.n + 1 %}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      <div>
+        <h3>常见问题</h3>
+        <ul>
+          <li><a href="{{ '02-Symptom/S01-ANR/' | url }}">ANR</a></li>
+          <li><a href="{{ '01-Mechanism/Kernel/Memory_Management/' | url }}">OOM / 内存</a></li>
+          <li><a href="{{ '01-Mechanism/Kernel/Binder/' | url }}">Binder</a></li>
+          <li><a href="{{ '04-Tool/Watchdog/' | url }}">Watchdog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>工具</h3>
+        <ul>
+          <li><a href="{{ '04-Tool/Perfetto/' | url }}">Perfetto</a></li>
+          <li><a href="{{ '04-Tool/Hprof/' | url }}">Hprof</a></li>
+          <li><a href="{{ '04-Tool/ANR-Detection/' | url }}">ANR Detection</a></li>
+          <li><a href="{{ '04-Tool/Dumpsys/' | url }}">Dumpsys</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>治理</h3>
+        <ul>
+          <li><a href="{{ '05-Governance/APM/' | url }}">APM</a></li>
+          <li><a href="{{ '05-Governance/OEM-BSP/' | url }}">OEM-BSP</a></li>
+          <li><a href="{{ '05-Governance/AI-Native/' | url }}">AI Native</a></li>
+          <li><a href="{{ '05-Governance/Security/' | url }}">Security</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>关于</h3>
+        <ul>
+          {% for item in nav.items %}
+            {% if item.title == 'Map' and item.children %}
+              <li><a href="{{ navutil.resolve_href(item) }}">Map</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if config.repo_url %}
+          <li><a href="{{ config.repo_url }}" target="_blank" rel="noopener">GitHub</a></li>
+          {% endif %}
+          <li><a href="{{ nav.homepage.url | url }}">稳知库首页</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="jk-footer-promo">
+      <p class="jk-footer-promo__text">获取稳知库更新与 AOSP 17 稳定性系列新篇通知</p>
+      <a class="jk-promo__button" href="https://github.com/yacob-wang/smc-pub" target="_blank" rel="noopener">Subscribe on GitHub</a>
+    </div>
+
+    <div class="jk-footer-meta">
+      {% if config.copyright %}
+      <span>{{ config.copyright }}</span>
+      {% endif %}
+      <a href="{{ nav.homepage.url | url }}">Privacy</a>
+      <span>中文</span>
+    </div>
+  </div>
+</footer>

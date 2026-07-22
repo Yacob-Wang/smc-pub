@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+  {{ super() }}
+  {% if page.meta and page.meta.get("layout") == "landing" %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.classList.add("jk-landing");
+    });
+  </script>
+  {% endif %}
+{% endblock %}

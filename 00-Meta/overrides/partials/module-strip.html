@@ -1,0 +1,15 @@
+{#- 移动端导航条 + 底部菜单 Sheet（内容由 nav-dropdown.js 填充） -#}
+<nav class="jk-module-strip" data-jk-module-strip aria-label="当前模块导航" hidden></nav>
+<nav class="jk-series-strip" data-jk-series-strip aria-label="当前分层导航" hidden></nav>
+<nav class="jk-article-strip" data-jk-article-strip aria-label="当前系列篇章" hidden></nav>
+
+<div class="jk-nav-sheet" data-jk-nav-sheet hidden>
+  <div class="jk-nav-sheet__backdrop" data-jk-nav-sheet-close tabindex="-1" aria-hidden="true"></div>
+  <div class="jk-nav-sheet__panel" role="dialog" aria-modal="true" aria-label="模块导航">
+    <div class="jk-nav-sheet__header">
+      <span class="jk-nav-sheet__title" data-jk-nav-sheet-title>模块导航</span>
+      <button type="button" class="jk-nav-sheet__close" data-jk-nav-sheet-close aria-label="关闭">×</button>
+    </div>
+    <div class="jk-nav-sheet__body" data-jk-nav-sheet-body></div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+{#- 顶栏 / 模块条共用的导航链接解析宏 -#}
+
+{% macro resolve_href(item) -%}
+  {%- if item.is_page or item.is_link -%}
+    {{- item.url | url -}}
+  {%- elif item.children -%}
+    {%- set ns = namespace(target=none) -%}
+    {%- if "navigation.indexes" in features -%}
+      {%- for sub in item.children -%}
+        {%- if sub.is_index and ns.target is none -%}
+          {%- set ns.target = sub -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+    {%- if ns.target is none -%}
+      {%- set first = item.children | first -%}
+      {%- if first.children -%}
+        {{- resolve_href(first) -}}
+      {%- else -%}
+        {{- first.url | url -}}
+      {%- endif -%}
+    {%- else -%}
+      {{- ns.target.url | url -}}
+    {%- endif -%}
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro series_menu_count(item) -%}
+  {%- set ns = namespace(count=0) -%}
+  {%- if item.children -%}
+    {%- for sub in item.children -%}
+      {%- if not ("navigation.indexes" in features and sub.is_index) -%}
+        {%- if sub.is_section and sub.children -%}
+          {%- set ns.count = ns.count + 1 -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {{- ns.count -}}
+{%- endmacro %}
+
+{% macro module_flyout_count(nav_item) -%}
+  {%- set ns = namespace(count=0) -%}
+  {%- if nav_item.children -%}
+    {%- for child in nav_item.children -%}
+      {%- if series_menu_count(child) | int >= 2 -%}
+        {%- set ns.count = ns.count + 1 -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {{- ns.count -}}
+{%- endmacro %}
