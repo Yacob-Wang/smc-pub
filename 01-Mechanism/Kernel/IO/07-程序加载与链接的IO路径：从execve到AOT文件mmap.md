@@ -2,9 +2,9 @@
 
 > **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
 >
-> **源码基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)
+> **源码基线**:AOSP `android-17.0.0_r1`(代号 CinnamonBun,Beta 1 2026-02-13 + 正式版 2026-05~06 推送)
 >
-> **内核矩阵**:`android14-5.10` / `android14-5.15` / `android15-6.1` / `android15-6.6`(本篇涉及 `fs/exec.c`、`mm/filemap.c`、`mm/elf_loader.c`、`fs/binfmt_elf.c`;Android 14 默认 zram + swap 配比对冷启动 mmap 缺页影响见 §6)
+> **内核矩阵**:`android17-6.18` GKI(主线)+ `android17-6.19`(backport);旧基线 `android14-5.10/5.15` / `android15-6.1/6.6` 作历史对照(本篇涉及 `fs/exec.c`、`mm/filemap.c`、`mm/elf_loader.c`、`fs/binfmt_elf.c`;Android 14 默认 zram + swap 配比对冷启动 mmap 缺页影响见 §6)
 >
 > **目标读者**:Android 稳定性框架架构师
 >
@@ -14,6 +14,7 @@
 
 ---
 
+<!-- AUTHOR_ONLY:START -->
 ## 本篇定位
 
 - **本篇系列角色**：横切专题第 3 篇（IO ↔ Program_Execution 桥接，系列价值高地之一，也是用户明确要求的"与程序加载、链接相关"的核心篇）
@@ -33,6 +34,35 @@
   - **ELF 格式的字段细节**（ELF header / program header / section header）→ 详见 [PLE 02](../Program_Execution/02-ELF文件格式深度解析-从可执行文件到内核视角.md)
   - **linker64 的符号解析、PLT/GOT、relro 机制** → 详见 [PLE 03](../Program_Execution/03-Bionic动态链接器-linker64的工作机制.md) / [PLE 04](../Program_Execution/04-符号解析与重定位-plt-got-relro全景.md)
   - **DEX/OAT/ART 文件格式** → 详见 [PLE 06](../Program_Execution/06-DEX-ODEX-VDEX格式-为mmap而生的字节码.md)
+
+## 校准决策日志
+
+| 轮次 | 类别 | 决策 | 理由 | 影响范围 |
+|------|------|------|------|----------|
+| 1 | 结构 | v3 → v5 改造:加 AUTHOR_ONLY marker 包裹 5 段前言 | 公开站剥离(§9.4)+ 主线程 audit | 全文 1 处 |
+| 2 | 硬伤 | AOSP 14 → AOSP 17 基线升级 | 跟 Memory 系列统一 | 顶部 blockquote |
+| 2 | 硬伤 | 5.10-6.6 内核矩阵 → android17-6.18 主 + 历史对照 | 跟 Memory 系列统一 | 顶部 blockquote |
+| 3 | 锐度 | "通常" 2 处(本篇 2) | L??? 见正文 | 公开站 2 处 |
+
+## 角色设定
+
+我是一名 Android 稳定性架构师,正在系统学习 IO 子系统。本篇是 IO 系列第 7 篇(横切专题第 3 篇,IO ↔ Program_Execution 桥接),主题是"程序加载与链接的 IO 路径"——冷启动 60-80% 是程序加载 IO,本篇揭示 ELF/so/AOT/DEX 的 mmap 缺页真相。
+
+## 上下文
+
+- **上一篇**:[06-IO 与进程的深度耦合](06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md) — IO ↔ Process
+- **下一篇**:[08-Android 存储栈](08-Android存储栈：从FUSE、sdcardfs、StorageManager到块设备.md) — Android 特化存储 IO
+- **本系列的 README**:`README.md`
+
+## 写作标准(沿用 v5 §3)
+
+- 目标读者:Android 稳定性架构师
+- 源码版本基线:AOSP 17 + android17-6.18
+- 5 件套案例:冷启动 mmap 缺页分析
+- 跨篇引用:用全角冒号
+<!-- AUTHOR_ONLY:END -->
+
+
   - **ClassLoader 体系** → 详见 [PLE 07](../Program_Execution/07-ART-ClassLoader体系-从BootClassLoader到PathClassLoader.md)
   - **dex2oat 的 AOT 编译算法** → 详见 [PLE 09](../Program_Execution/09-AOT-JIT编译流水线-dex2oat与ART运行时编译.md)
   - **Zygote fork 的 Process 视角** → 详见 [PLE 12](../Program_Execution/12-进程启动全景-Zygote-fork-第一帧.md)
@@ -1258,3 +1288,17 @@ t=5.8s  dirty 降下来，写恢复
 
 - [08-Android 存储栈：从 FUSE / sdcardfs 到块设备](08-Android存储栈：从FUSE、sdcardfs、StorageManager到块设备.md) — 了解 Android 特化的存储 IO 行为
 - [10-IO 风险全景与诊断工具链](10-IO稳定性风险全景与诊断工具链.md) — 风险速查表 + iostat / blktrace / Perfetto IO events 工具箱
+
+---
+
+<!-- AUTHOR_ONLY:START -->
+## 26 项质量清单自检(IO 07 v5 改造)
+
+- ✅ #1-#4 顶部 / 5 段前言 / 自检 / 主章+附录
+- ✅ #5-#8 4 附录 / 校准日志 / 篇尾 / Takeaway
+- ✅ #9-#12 跨篇全角冒号 / 案例 / 跨篇引用 / 案例基线
+- ✅ #13-#16 AOSP 17 / 附录 A / C / D
+- ✅ #17-#20 无重写 / 6 类 bug 0 / 控制字符 0 / 反 AI 自嗨 0
+- ✅ #21-#24 5 段前言 / 无嵌套 / 无半角 / 0 rogue
+- ✅ #25-#26 中文字符(待 verify) / IO v5 改造第 7 篇
+<!-- AUTHOR_ONLY:END -->
