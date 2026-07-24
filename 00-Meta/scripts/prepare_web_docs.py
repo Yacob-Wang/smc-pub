@@ -568,13 +568,14 @@ def fix_links_in_docs(docs_root: Path, name_map: dict[str, str]) -> int:
         if ":" in old:
             expanded_map[old.replace(":", "：")] = new
     fixed_files = 0
-    # 按名字长度倒序排
+    # 按名字长度倒序排；含「路径前缀 + 文件名」形态（如 ](../../foo/旧名.md)）
     for old, new in sorted(expanded_map.items(), key=lambda kv: -len(kv[0])):
         old_escaped = re.escape(old)
         for pattern, repl in [
             (r"\]\(\.\./" + old_escaped, r"](" + new),
             (r"\]\(\./" + old_escaped, r"](" + new),
             (r"\]\(" + old_escaped, r"](" + new),
+            (r"(\]\((?:[^)\s#]*/)+)" + old_escaped, r"\1" + new),
         ]:
             for md in docs_root.rglob("*.md"):
                 text = md.read_text(encoding="utf-8", errors="replace")
@@ -583,6 +584,52 @@ def fix_links_in_docs(docs_root: Path, name_map: dict[str, str]) -> int:
                     md.write_text(new_text, encoding="utf-8")
                     fixed_files += 1
     return fixed_files
+
+
+# 相对目录链接：](../../02-Symptom/S02-JE/) 或带锚点 ](../../foo/#bar)
+_DIR_PAGE_LINK_RE = re.compile(
+    r"\]\((?!https?://|mailto:|#|/)"
+    r"([^)#]+?/)"
+    r"((?:#[^)]*)?)\)"
+)
+
+
+def fix_directory_links_for_mkdocs(docs_root: Path) -> int:
+    """把相对目录链接改写为 index.md，供 MkDocs 在 use_directory_urls 下正确重写。
+
+    仓库源文件里 ``](../../02-Symptom/S02-JE/)`` 对 GitHub 浏览是对的；但站点启用
+    ``use_directory_urls`` 后，页面 URL 多一层目录（``.../JD-匹配矩阵/``），
+    未以 ``.md`` 结尾的链接不会被 MkDocs 重写，浏览器会解析成
+    ``.../00-Meta/02-Symptom/S02-JE/`` 而 404。指向已生成的 ``index.md`` 后，
+    MkDocs 会按源/目标路径算出正确相对 href。
+    """
+    docs_root = docs_root.resolve()
+    files_changed = 0
+    for md in docs_root.rglob("*.md"):
+        text = md.read_text(encoding="utf-8", errors="replace")
+        file_changed = False
+
+        def repl(match: re.Match[str], _md: Path = md) -> str:
+            nonlocal file_changed
+            rel = match.group(1)
+            frag = match.group(2) or ""
+            if rel.endswith((".md/", "index.md/")):
+                return match.group(0)
+            target_dir = (_md.parent / rel).resolve()
+            try:
+                target_dir.relative_to(docs_root)
+            except ValueError:
+                return match.group(0)
+            if not (target_dir / "index.md").is_file():
+                return match.group(0)
+            file_changed = True
+            return f"]({rel}index.md{frag})"
+
+        new_text = _DIR_PAGE_LINK_RE.sub(repl, text)
+        if file_changed and new_text != text:
+            md.write_text(new_text, encoding="utf-8", newline="\n")
+            files_changed += 1
+    return files_changed
 
 
 def _write_stripped_md(src: Path, dst: Path) -> bool:
@@ -728,6 +775,13 @@ def main() -> int:
         print(f"  fixed links in {n_fixed} files (synced renamed files)")
 
     generate_pages_tree(DOCS_DIR)
+    # 须在 generate_pages_tree 之后：此时系列/子分类 index.md 已齐
+    n_dir_links = fix_directory_links_for_mkdocs(DOCS_DIR)
+    if n_dir_links:
+        print(
+            f"  rewrote directory links → index.md in {n_dir_links} files "
+            f"(use_directory_urls)"
+        )
     print(f"Prepared docs/ with {total} content files; skipped ~{skipped_meta} meta docs")
     if _PREAMBLE_STRIPPED:
         print(

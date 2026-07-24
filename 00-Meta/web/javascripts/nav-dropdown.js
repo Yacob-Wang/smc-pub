@@ -226,21 +226,6 @@
     return articleLinksFromSeriesPath();
   }
 
-  function initModuleStrip() {
-    var strip = document.querySelector("[data-jk-module-strip]");
-    if (!strip) return;
-    if (!isMobile()) {
-      strip.hidden = true;
-      return;
-    }
-    var menu = getActiveTabMenu();
-    if (!menu) {
-      strip.hidden = true;
-      return;
-    }
-    buildStrip(strip, moduleLinks(menu), "jk-module-strip__scroll", "jk-module-strip__link", true);
-  }
-
   function initSeriesStrip() {
     var strip = document.querySelector("[data-jk-series-strip]");
     if (!strip) return;
@@ -483,7 +468,50 @@
     });
   }
 
+  function syncLandingLayout() {
+    var landing = !!document.querySelector(".md-content__inner .jk-page-hero");
+    document.body.classList.toggle("jk-landing", landing);
+  }
+
+  function sidebarModuleLinks() {
+    var active = document.querySelector(".md-sidebar--primary .md-nav__link--active");
+    if (!active) return [];
+    var item = active.closest(".md-nav__item");
+    if (!item) return [];
+    var list = item.parentElement;
+    if (!list) return [];
+    var section = list.closest(".md-nav__item");
+    if (section) {
+      var nested = section.querySelector(":scope > nav > .md-nav__list");
+      if (nested) list = nested;
+    }
+    var items = list.querySelectorAll(":scope > .md-nav__item");
+    if (items.length < 2) return [];
+    var links = [];
+    items.forEach(function (navItem) {
+      var link = navItem.querySelector(":scope > .md-nav__link[href]");
+      if (link) links.push(link);
+    });
+    return links;
+  }
+
+  function initModuleStrip() {
+    var strip = document.querySelector("[data-jk-module-strip]");
+    if (!strip) return;
+    if (!isMobile()) {
+      strip.hidden = true;
+      return;
+    }
+    var menu = getActiveTabMenu();
+    var links = menu ? moduleLinks(menu) : [];
+    if (links.length < 2) {
+      links = sidebarModuleLinks();
+    }
+    buildStrip(strip, links, "jk-module-strip__scroll", "jk-module-strip__link", true);
+  }
+
   function initNavigationChrome() {
+    syncLandingLayout();
     initTabMenus();
     initDesktopNavActive();
     initModuleStrip();
@@ -500,6 +528,7 @@
   document$.subscribe(initNavigationChrome);
 
   window.addEventListener("resize", function () {
+    syncLandingLayout();
     initModuleStrip();
     initSeriesStrip();
     initArticleStrip();

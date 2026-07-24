@@ -2,11 +2,10 @@
 
 {% block scripts %}
   {{ super() }}
-  {% if page.meta and page.meta.get("layout") == "landing" %}
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    /* 首屏 FOUC 防护：与 nav-dropdown.js 的 syncLandingLayout 规则一致 */
+    if (document.querySelector(".md-content__inner .jk-page-hero")) {
       document.body.classList.add("jk-landing");
-    });
+    }
   </script>
-  {% endif %}
 {% endblock %}

@@ -281,8 +281,9 @@ PRIVATE_ROOT_PATTERNS = [
 # 00-Meta 模块落地页卡片与侧栏顺序（读者向）
 META_HUB_PAGES: list[tuple[str, str]] = [
     ("学习路线", "学习路线-稳定性架构师.md"),
-    ("阅读指南", "Reference/阅读指南-稳定性架构师.md"),
-    ("JD 匹配矩阵", "Reference/JD-匹配矩阵.md"),
+    # 顶栏 / 移动端 chip 用顶层 stub，避免 Material 把 Reference/… 解析成 ../Reference/…（404）
+    ("阅读指南", "阅读指南.md"),
+    ("JD 匹配矩阵", "JD匹配矩阵.md"),
     ("缺口一览", "缺口一览.md"),
     ("术语表", "术语表.md"),
     ("案例索引", "案例索引.md"),
