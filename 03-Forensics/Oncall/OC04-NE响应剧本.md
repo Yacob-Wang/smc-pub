@@ -12,54 +12,17 @@
 
 ## 本篇定位
 
-- **本篇系列角色**：**oncall 7 大症状剧本第 3 篇** —— Native 崩溃（最复杂）
-- **强依赖**：
-  - 必先读 [OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md)
-  - 必先读 [02-Symptom/S03-NE/01-症状机制.md](../../02-Symptom/S03-NE/01-症状机制.md) NE 机制
-  - 必先读 [03-Forensics/F04-NE/01-取证机制.md](../F04-NE/01-取证机制.md) NE 取证
-  - 必先读 [01-Mechanism/Runtime/Native_Crash 系列](../../01-Mechanism/Runtime/Native_Crash/) 8 篇
-- **承接自**：OC02 ANR + OC03 JE
-- **衔接去**：[OC05-SWT 响应剧本](OC05-SWT响应剧本.md)（待补）
-- **不重复内容**：OC01 + S03 + Native_Crash
-- **本篇贡献**：
-  1. **NE 黄金 5/15/30 标准动作**
-  2. **6 类信号分类**（SIGSEGV / SIGABRT / SIGBUS / SIGFPE / SIGILL / SIGTRAP）
-  3. **Tombstone 完整解读**（backtrace / memory map / registers / stack）
-  4. **5 类真实场景剧本**（NPE / OOM / Stack Overflow / NDK 库 bug / 内存踩踏）
-  5. **NE 12 反例清单**
+- oncall 7 大症状剧本第 3 篇（NE 6 类信号 + Tombstone 解读）
+- 强依赖：[OC01](OC01-oncall工程总论：值班机制与工具栈.md) / [S03-NE](../../02-Symptom/S03-NE/01-症状机制.md) / [F04-NE](../F04-NE/01-取证机制.md) / [Native_Crash](../../01-Mechanism/Runtime/Native_Crash/) 8 篇
+- 衔接去：[OC05-SWT](OC05-SWT响应剧本.md)
 
 ## 校准决策日志
 
-| 轮次 | 类别 | 决策 | 理由 | 影响范围 |
-|:-----|:-----|:-----|:-----|:---------|
-| 1 | 结构 | 单篇 600+ 行 | §8 破例 | 全文 |
-| 1 | 结构 | 6 类信号 + 5 场景剧本 | NE 复杂度高 | §2-§9 |
-| 2 | 硬伤 | 黄金 5/15/30 每分钟动作 | 反例 #4 | §3 |
-| 2 | 硬伤 | Tombstone 解读必须有完整示例 | 反例 #11 | §5 |
-| 3 | 锐度 | 删"可能" | 反例 #5 | 全文 |
-
-## 角色设定
-
-我是一名 **oncall 工程师**，刚收到 P0 告警：
-
-> **告警**：`Native Crash-free Session` < 99.8%
-> **触发时间**：14:30:00
-> **影响范围**：约 20 万 DAU 出现 NE 崩溃
-> **崩溃位置**：libmyjni.so 0x12345
-
-## 上下文
-
-- **上一篇**：[OC03-JE 响应剧本](OC03-JE响应剧本.md)
-- **下一篇**：[OC05-SWT 响应剧本](OC05-SWT响应剧本.md)
-- **跨系列引用**：
-  - [02-Symptom/S03-NE](../../02-Symptom/S03-NE/01-症状机制.md)
-  - [01-Mechanism/Runtime/Native_Crash](../../01-Mechanism/Runtime/Native_Crash/) 8 篇
-  - [04-Tool/Dumpsys](../../04-Tool/Dumpsys/)
-- **本篇专题类型**：**实战剧本**
-
-## 写作标准
-
-> v5 规范 + 5 段前言 marker ✅
+| 轮次 | 决策 | 理由 |
+|:-----|:-----|:-----|
+| 1 | 单篇 600+ 行（§8 破例）| NE 复杂度高 |
+| 2 | Tombstone 解读完整示例 | 反例 #11 |
+| 3 | 删"可能"，改"必查" | 反例 #5 |
 
 <!-- AUTHOR_ONLY:END -->
 
