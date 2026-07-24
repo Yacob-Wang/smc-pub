@@ -43,6 +43,7 @@ from feed_cards import (  # noqa: E402
     render_article_list,
     render_feed_grid,
     render_page_hero,
+    series_media_slug,
     to_site_href,
 )
 from public_readme import build_public_readme  # noqa: E402
@@ -269,23 +270,19 @@ def _series_feed_cards(
     module: str,
     target_dir: Path,
     *,
-    label: str,
     link_prefix: str = "",
 ) -> list[FeedCard]:
     cards: list[FeedCard] = []
     for sub in _list_nav_subdirs(target_dir):
         short = _short_title(module, sub.name, sub)
-        blurb_s = _series_blurb(sub)
-        count = _count_articles_in_series(sub)
         cards.append(
             FeedCard(
                 href=to_site_href(f"{link_prefix}{sub.name}/"),
                 title=short,
-                summary=blurb_s,
-                label=label,
-                date=f"约 {count} 篇",
                 media_module=module,
-                media_text=short[:1],
+                media_color=series_media_slug(sub.name),
+                media_text=short,
+                variant="series",
             )
         )
     return cards
@@ -325,20 +322,18 @@ def build_module_index(module: str, mod_dir: Path) -> str:
     if not subdirs:
         readme = _pick_readme(mod_dir)
         if readme:
-            count = _count_articles_in_series(mod_dir)
             cards.append(
                 FeedCard(
                     href=to_site_href(readme.name),
                     title="本系列",
-                    summary=_series_blurb(mod_dir),
-                    label=title,
-                    date=f"约 {count} 篇",
                     media_module=module,
-                    media_text="S",
+                    media_color=series_media_slug(mod_dir.name),
+                    media_text="本系列",
+                    variant="series",
                 )
             )
     else:
-        cards = _series_feed_cards(module, mod_dir, label=title)
+        cards = _series_feed_cards(module, mod_dir)
 
     footer = '\n<p class="jk-foot">返回 <a href="../">站点首页</a>。</p>\n'
     return landing_frontmatter(title) + hero + render_feed_grid(cards) + footer
@@ -356,7 +351,7 @@ def build_subcategory_index(module: str, sub_dir: Path) -> str:
         lead = f"本层共 {series_count} 个系列、约 {article_count} 篇文章。"
 
     hero = render_page_hero(short, lead)
-    cards = _series_feed_cards(module, sub_dir, label=short)
+    cards = _series_feed_cards(module, sub_dir)
     try:
         rel = sub_dir.relative_to(DOCS_DIR)
         if len(rel.parts) > 2:

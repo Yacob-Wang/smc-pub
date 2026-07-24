@@ -3,13 +3,14 @@
 
 from __future__ import annotations
 
+import hashlib
 import html
 import re
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
-from content_policy import MODULE_BLURBS, MODULE_TITLES, PUBLIC_MODULES, is_excluded_path, is_meta_file
+from content_policy import MODULE_TITLES, PUBLIC_MODULES, is_excluded_path, is_meta_file
 from preamble_transform import strip_author_preamble
 
 MODULE_MEDIA: dict[str, str] = {
@@ -22,6 +23,18 @@ MODULE_MEDIA: dict[str, str] = {
     "06-Case": "case",
     "06-Foundation": "foundation",
 }
+
+# 系列卡片调色板：复用首页模块色，保证对比度与视觉语言一致
+SERIES_PALETTE: tuple[str, ...] = (
+    "mechanism",
+    "symptom",
+    "forensics",
+    "tool",
+    "governance",
+    "case",
+    "foundation",
+    "meta",
+)
 
 _MONTHS = (
     "Jan",
@@ -47,7 +60,9 @@ class FeedCard:
     label: str = ""
     date: str = ""
     media_module: str = "01-Mechanism"
+    media_color: str = ""  # 可选 CSS slug 覆盖（系列卡片多色）
     media_text: str = ""
+    variant: str = "default"  # default | series | module
 
 
 @dataclass
@@ -57,6 +72,7 @@ class ArticleListItem:
     index: str = ""
     summary: str = ""
     date: str = ""
+    label: str = ""  # 模块 / 分类短标签（用于最新更新等导航列表）
 
 
 def to_site_href(path: str) -> str:
@@ -156,6 +172,13 @@ def module_media_slug(module: str) -> str:
     return MODULE_MEDIA.get(module, "mechanism")
 
 
+def series_media_slug(key: str) -> str:
+    """按系列目录名稳定映射到调色板色块（同系列跨页颜色一致）。"""
+    digest = hashlib.md5(key.encode("utf-8")).hexdigest()
+    idx = int(digest[:8], 16) % len(SERIES_PALETTE)
+    return SERIES_PALETTE[idx]
+
+
 def card_from_markdown(
     path: Path,
     *,
@@ -206,34 +229,47 @@ def render_section_title(text: str) -> str:
 
 
 def render_feed_card(card: FeedCard) -> str:
-    media_slug = module_media_slug(card.media_module)
-    media_text = html.escape(card.media_text or card.label[:1] or "·")
+    media_slug = card.media_color or module_media_slug(card.media_module)
+    is_nav_card = card.variant in ("series", "module")
+    if is_nav_card:
+        media_text = html.escape(card.media_text or card.title)
+    else:
+        media_text = html.escape(card.media_text or card.label[:1] or "·")
     title = html.escape(card.title)
     href = attr_href(to_site_href(card.href))
-    label = html.escape(card.label)
+    card_mod = f" jk-feed-card--{card.variant}" if is_nav_card else ""
+    card_class = f"jk-feed-card{card_mod}"
+    label_html = ""
+    if card.label and not is_nav_card:
+        label_html = f'    <p class="jk-feed-label">{html.escape(card.label)}</p>\n'
+    if is_nav_card:
+        title_html = f'    <h3 class="jk-feed-card__title jk-sr-only">{title}</h3>\n'
+    else:
+        title_html = f'    <h3 class="jk-feed-card__title">{title}</h3>\n'
     summary_html = ""
-    if card.summary:
+    if card.summary and not is_nav_card:
         summary_html = f'    <p class="jk-feed-card__summary">{html.escape(card.summary)}</p>\n'
     date_html = ""
-    if card.date:
+    if card.date and not is_nav_card:
         date_html = f'    <p class="jk-feed-card__date">{html.escape(card.date)}</p>\n'
     return (
-        f'  <a class="jk-feed-card" href="{href}">\n'
+        f'  <a class="{card_class}" href="{href}" title="{title}">\n'
         f'    <div class="jk-feed-card__media jk-feed-card__media--{media_slug}">'
         f'<span class="jk-feed-card__media-text">{media_text}</span></div>\n'
-        f'    <p class="jk-feed-label">{label}</p>\n'
-        f'    <h3 class="jk-feed-card__title">{title}</h3>\n'
+        f"{label_html}"
+        f"{title_html}"
         f"{date_html}"
         f"{summary_html}"
         f"  </a>"
     )
 
 
-def render_feed_grid(cards: list[FeedCard]) -> str:
+def render_feed_grid(cards: list[FeedCard], *, grid_class: str = "") -> str:
     if not cards:
         return ""
     body = "\n".join(render_feed_card(c) for c in cards)
-    return f'<div class="jk-feed-grid" markdown="0">\n{body}\n</div>\n\n'
+    extra_class = f" {grid_class}" if grid_class else ""
+    return f'<div class="jk-feed-grid{extra_class}" markdown="0">\n{body}\n</div>\n\n'
 
 
 def extract_index_from_filename(filename: str) -> str:
@@ -269,10 +305,14 @@ def render_article_list_item(item: ArticleListItem) -> str:
         index_html = (
             f'      <span class="jk-article-list__index">{html.escape(item.index)}</span>\n'
         )
+    elif item.label:
+        index_html = (
+            f'      <span class="jk-article-list__label">{html.escape(item.label)}</span>\n'
+        )
     meta_parts: list[str] = []
     if item.date:
         meta_parts.append(html.escape(item.date))
-    if item.summary:
+    if item.summary and not item.label:
         meta_parts.append(html.escape(item.summary))
     meta_html = ""
     if meta_parts:
@@ -293,12 +333,18 @@ def render_article_list_item(item: ArticleListItem) -> str:
     )
 
 
-def render_article_list(items: list[ArticleListItem]) -> str:
+def render_article_list(
+    items: list[ArticleListItem],
+    *,
+    aria_label: str = "系列篇章",
+    list_class: str = "",
+) -> str:
     if not items:
         return ""
     body = "\n".join(render_article_list_item(item) for item in items)
+    extra_class = f" {list_class}" if list_class else ""
     return (
-        f'<nav class="jk-article-list" aria-label="系列篇章" markdown="0">\n'
+        f'<nav class="jk-article-list{extra_class}" aria-label="{html.escape(aria_label)}" markdown="0">\n'
         f'  <ol class="jk-article-list__items">\n'
         f"{body}\n"
         f"  </ol>\n"
@@ -339,7 +385,7 @@ def _is_article_file(path: Path) -> bool:
     return True
 
 
-def collect_latest_articles(content_root: Path, *, limit: int = 12) -> list[FeedCard]:
+def _collect_latest_article_paths(content_root: Path) -> list[Path]:
     paths: list[Path] = []
     for mod in PUBLIC_MODULES:
         mod_dir = content_root / mod
@@ -355,10 +401,13 @@ def collect_latest_articles(content_root: Path, *, limit: int = 12) -> list[Feed
             if is_excluded_path(rel):
                 continue
             paths.append(path)
-
     paths.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+    return paths
+
+
+def collect_latest_articles(content_root: Path, *, limit: int = 12) -> list[FeedCard]:
     cards: list[FeedCard] = []
-    for path in paths[:limit]:
+    for path in _collect_latest_article_paths(content_root)[:limit]:
         try:
             rel = path.relative_to(content_root)
         except ValueError:
@@ -376,20 +425,39 @@ def collect_latest_articles(content_root: Path, *, limit: int = 12) -> list[Feed
     return cards
 
 
+def collect_latest_article_items(content_root: Path, *, limit: int = 12) -> list[ArticleListItem]:
+    items: list[ArticleListItem] = []
+    for path in _collect_latest_article_paths(content_root)[:limit]:
+        try:
+            rel = path.relative_to(content_root)
+        except ValueError:
+            continue
+        module = rel.parts[0] if rel.parts else "01-Mechanism"
+        content = path.read_text(encoding="utf-8", errors="replace")
+        items.append(
+            ArticleListItem(
+                href=to_site_href(str(rel).replace("\\", "/")),
+                title=get_title_from_markdown(content, path.name),
+                date=format_updated(path),
+                label=MODULE_TITLES.get(module, module),
+            )
+        )
+    return items
+
+
 def build_module_feed_cards() -> list[FeedCard]:
     cards: list[FeedCard] = []
     for mod in PUBLIC_MODULES:
         title = MODULE_TITLES.get(mod, mod)
-        blurb = MODULE_BLURBS.get(mod, "")
         cards.append(
             FeedCard(
                 href=to_site_href(f"{mod}/"),
                 title=title,
-                summary=blurb,
-                label="Module",
+                label="",
                 date="",
                 media_module=mod,
-                media_text=title[:1],
+                media_text=title,
+                variant="module",
             )
         )
     return cards
