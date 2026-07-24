@@ -19,6 +19,7 @@ Thumbs.db
 *.prof
 *.hprof
 *.dump
+tmp/
 
 # 根目录临时源码/草稿
 /*.java
