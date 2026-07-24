@@ -36,9 +36,11 @@ from preamble_transform import (  # noqa: E402
     strip_author_preamble,
 )
 from feed_cards import (  # noqa: E402
+    ArticleListItem,
     FeedCard,
-    card_from_markdown,
+    article_item_from_markdown,
     landing_frontmatter,
+    render_article_list,
     render_feed_grid,
     render_page_hero,
     to_site_href,
@@ -289,26 +291,18 @@ def _series_feed_cards(
     return cards
 
 
-def _article_feed_cards(
-    module: str | None,
-    dir_path: Path,
-    *,
-    label: str,
-) -> list[FeedCard]:
-    cards: list[FeedCard] = []
-    mod = module or _module_name_for(dir_path) or "01-Mechanism"
+def _article_list_items(dir_path: Path) -> list[ArticleListItem]:
+    items: list[ArticleListItem] = []
     for fname in _article_files(dir_path):
         path = dir_path / fname
-        cards.append(
-            card_from_markdown(
+        items.append(
+            article_item_from_markdown(
                 path,
                 href=to_site_href(fname),
-                label=label,
                 repo_root=REPO_ROOT,
-                module=mod,
             )
         )
-    return cards
+    return items
 
 
 def build_module_index(module: str, mod_dir: Path) -> str:
@@ -377,25 +371,16 @@ def build_subcategory_index(module: str, sub_dir: Path) -> str:
 
 
 def build_series_landing_index(module: str | None, dir_path: Path) -> str:
-    """系列总览 landing 页：Hero + 篇章 Feed。"""
+    """系列总览 landing 页：Hero + 有序篇章列表（leaf series）。"""
     short = _short_title(module, dir_path.name, dir_path)
     blurb = _series_blurb(dir_path)
-    label = short
-    if module:
-        label = MODULE_TITLES.get(module, module)
-    hero = render_page_hero(short, blurb or "本系列篇章如下。点开单篇阅读。")
-    cards = _article_feed_cards(module, dir_path, label=label)
-    if not cards:
-        cards = [
-            FeedCard(
-                href="#",
-                title="（暂无篇章）",
-                summary="该系列尚未收录文章。",
-                label=label,
-                media_module=module or "01-Mechanism",
-            )
-        ]
-    return landing_frontmatter(short) + hero + render_feed_grid(cards)
+    hero = render_page_hero(short, blurb or "本系列篇章如下。按顺序阅读。")
+    items = _article_list_items(dir_path)
+    if items:
+        body = render_article_list(items)
+    else:
+        body = '<p class="jk-article-list__empty">该系列尚未收录文章。</p>\n\n'
+    return landing_frontmatter(short) + hero + body
 
 
 def ensure_subcategory_landing_pages(mod_dir: Path, module: str) -> None:

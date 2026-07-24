@@ -1624,6 +1624,93 @@ article > h1:first-child,
   line-height: 1.55;
 }
 
+.jk-article-list {
+  margin: 0 0 1.5rem;
+  max-width: var(--jk-feed-max-width);
+}
+
+.jk-article-list__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: jk-article;
+}
+
+.jk-article-list__item {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--jk-line);
+}
+
+.jk-article-list__item:first-child {
+  border-top: 1px solid var(--jk-line);
+}
+
+.jk-article-list__link {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.85rem 0.35rem;
+  text-decoration: none !important;
+  color: inherit;
+  transition: background 0.12s ease;
+}
+
+.jk-article-list__link:hover {
+  background: var(--jk-bg-soft);
+}
+
+.jk-article-list__link:hover .jk-article-list__title {
+  color: var(--jk-text-link);
+}
+
+.jk-article-list__index {
+  flex: 0 0 auto;
+  min-width: 2rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: var(--jk-bg-soft);
+  border: 1px solid var(--jk-line);
+  color: var(--jk-text-mute);
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.jk-article-list__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.jk-article-list__title {
+  color: var(--jk-text-main);
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.4;
+  transition: color 0.12s ease;
+}
+
+.jk-article-list__meta {
+  color: var(--jk-text-faint);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jk-article-list__empty {
+  margin: 0 0 1.5rem;
+  color: var(--jk-text-mute);
+  font-size: 0.9rem;
+}
+
 .jk-promo {
   display: flex;
   flex-wrap: wrap;
@@ -1806,6 +1893,7 @@ body:not(.jk-landing) .md-content__inner.md-typeset {
 }
 
 body:not(.jk-landing) .md-content__inner.md-typeset > .jk-feed-grid,
+body:not(.jk-landing) .md-content__inner.md-typeset > .jk-article-list,
 body:not(.jk-landing) .md-content__inner.md-typeset > .jk-page-hero,
 body:not(.jk-landing) .md-content__inner.md-typeset > .jk-promo {
   max-width: none;

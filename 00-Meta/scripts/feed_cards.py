@@ -50,6 +50,15 @@ class FeedCard:
     media_text: str = ""
 
 
+@dataclass
+class ArticleListItem:
+    href: str
+    title: str
+    index: str = ""
+    summary: str = ""
+    date: str = ""
+
+
 def to_site_href(path: str) -> str:
     """将 docs 相对路径转为 MkDocs directory URL（use_directory_urls=true）。"""
     href = path.replace("\\", "/").strip()
@@ -225,6 +234,76 @@ def render_feed_grid(cards: list[FeedCard]) -> str:
         return ""
     body = "\n".join(render_feed_card(c) for c in cards)
     return f'<div class="jk-feed-grid" markdown="0">\n{body}\n</div>\n\n'
+
+
+def extract_index_from_filename(filename: str) -> str:
+    """从文件名提取序号前缀（如 01-xxx.md → 01）。"""
+    stem = Path(filename).stem
+    m = re.match(r"^(\d+)", stem)
+    return m.group(1) if m else ""
+
+
+def article_item_from_markdown(
+    path: Path,
+    *,
+    href: str,
+    repo_root: Path | None = None,
+) -> ArticleListItem:
+    content = path.read_text(encoding="utf-8", errors="replace")
+    title = get_title_from_markdown(content, path.name)
+    summary = extract_summary(content, max_len=88)
+    return ArticleListItem(
+        href=href,
+        title=title,
+        index=extract_index_from_filename(path.name),
+        summary=summary,
+        date=format_updated(path),
+    )
+
+
+def render_article_list_item(item: ArticleListItem) -> str:
+    href = attr_href(to_site_href(item.href))
+    title = html.escape(item.title)
+    index_html = ""
+    if item.index:
+        index_html = (
+            f'      <span class="jk-article-list__index">{html.escape(item.index)}</span>\n'
+        )
+    meta_parts: list[str] = []
+    if item.date:
+        meta_parts.append(html.escape(item.date))
+    if item.summary:
+        meta_parts.append(html.escape(item.summary))
+    meta_html = ""
+    if meta_parts:
+        meta_html = (
+            f'        <span class="jk-article-list__meta">'
+            f'{" · ".join(meta_parts)}</span>\n'
+        )
+    return (
+        f'    <li class="jk-article-list__item">\n'
+        f'      <a class="jk-article-list__link" href="{href}">\n'
+        f"{index_html}"
+        f'        <span class="jk-article-list__body">\n'
+        f'          <span class="jk-article-list__title">{title}</span>\n'
+        f"{meta_html}"
+        f"        </span>\n"
+        f"      </a>\n"
+        f"    </li>"
+    )
+
+
+def render_article_list(items: list[ArticleListItem]) -> str:
+    if not items:
+        return ""
+    body = "\n".join(render_article_list_item(item) for item in items)
+    return (
+        f'<nav class="jk-article-list" aria-label="系列篇章" markdown="0">\n'
+        f'  <ol class="jk-article-list__items">\n'
+        f"{body}\n"
+        f"  </ol>\n"
+        f"</nav>\n\n"
+    )
 
 
 def render_promo(
