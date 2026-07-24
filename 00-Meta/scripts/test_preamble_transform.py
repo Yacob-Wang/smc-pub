@@ -146,6 +146,72 @@ def test_activity_exception_decision_at_lead() -> None:
     _assert("## 一、背景与定义" in out, "Activity A01 body kept")
 
 
+def test_art_gc_blockquote_meta() -> None:
+    raw = (
+        REPO
+        / "01-Mechanism/Runtime/ART/03-GC系统/07-GC调度与触发/01-9种GcCause.md"
+    ).read_text(encoding="utf-8")
+    out, changed = strip_author_preamble(raw)
+    _assert(changed, "ART GcCause should strip")
+    _assert("> **本篇定位**" not in out, "ART GcCause blockquote 本篇定位 gone")
+    _assert("> **v2 升级日期**" not in out, "ART GcCause blockquote v2 gone")
+    _assert("## 一、9 种 GcCause 总览" in out, "ART GcCause body kept")
+    _assert("> **基线版本**" in out, "ART GcCause keep baseline")
+
+
+def test_mm_blockquote_meta() -> None:
+    raw = (
+        REPO
+        / "01-Mechanism/Kernel/Memory_Management/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md"
+    ).read_text(encoding="utf-8")
+    out, changed = strip_author_preamble(raw)
+    _assert(changed, "MM 07 should strip blockquote meta")
+    _assert("> **本文定位**" not in out, "MM 07 本文定位 gone")
+    _assert("> **预计篇幅**" not in out, "MM 07 预计篇幅 gone")
+    _assert("> **读者画像**" not in out, "MM 07 读者画像 gone")
+    _assert("> **源码基线**" in out, "MM 07 keep 源码基线")
+    _assert("## 学习目标" in out, "MM 07 keep 学习目标")
+
+
+def test_epoll_pre_title_preamble() -> None:
+    raw = (
+        REPO / "01-Mechanism/Kernel/epoll/01-epoll总览与核心机制.md"
+    ).read_text(encoding="utf-8")
+    out, changed = strip_author_preamble(raw)
+    _assert(changed, "epoll should strip pre-title preamble")
+    _assert(out.lstrip().startswith("# epoll 深度解析"), "epoll starts with real title")
+    _assert("# 本篇定位" not in out.split("## 一、")[0], "epoll pre-title gone")
+    _assert("## 一、背景与定义" in out, "epoll body kept")
+
+
+def test_binder_readme_author_table() -> None:
+    raw = (
+        REPO / "01-Mechanism/Kernel/Binder/README-Binder系列.md"
+    ).read_text(encoding="utf-8")
+    out, changed = strip_author_preamble(raw)
+    _assert(changed, "Binder README should strip")
+    _assert("| 轮次 | 类别 | 决策 |" not in out, "Binder README decision table gone")
+    _assert("## 1. 为什么要写这个系列" in out, "Binder README body kept")
+
+
+def test_binder_article_calibration_appendix() -> None:
+    raw = (
+        REPO / "01-Mechanism/Kernel/Binder/01-Binder总览.md"
+    ).read_text(encoding="utf-8")
+    out, changed = strip_author_preamble(raw)
+    _assert(changed, "Binder 01 should strip")
+    _assert("3 轮校准决策日志" not in out, "Binder 01 calibration appendix gone")
+    _assert("## 1. Binder 是什么" in out, "Binder 01 body kept")
+
+
+def test_symptom_readme_calibration_tail() -> None:
+    raw = (REPO / "02-Symptom/README.md").read_text(encoding="utf-8")
+    out, changed = strip_author_preamble(raw)
+    _assert(changed, "Symptom README should strip calibration tail")
+    _assert("校准决策日志" not in out, "Symptom README calibration gone")
+    _assert("## 0. 系列总定位" in out, "Symptom README keep series nav")
+
+
 def main() -> int:
     test_s01_heavy()
     test_f01_heavy()
@@ -158,6 +224,12 @@ def main() -> int:
     test_process_exit_author_only_before_title()
     test_art_appendix_d()
     test_activity_exception_decision_at_lead()
+    test_art_gc_blockquote_meta()
+    test_mm_blockquote_meta()
+    test_epoll_pre_title_preamble()
+    test_binder_readme_author_table()
+    test_binder_article_calibration_appendix()
+    test_symptom_readme_calibration_tail()
     test_noop_plain()
     print("test_preamble_transform: OK")
     return 0

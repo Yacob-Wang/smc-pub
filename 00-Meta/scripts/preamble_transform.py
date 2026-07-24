@@ -53,6 +53,42 @@ _EXCEPTION_DECISION_HEADING = re.compile(
     r"^#{1,6}\s+(?:[一二三四五六七八九十]+、|\d+(?:\.\d+)*\s*)?破例决策记录(?:[（(].*)?\s*$"
 )
 
+# 篇中/篇尾作者模板节标题关键词（不含「系列总定位」类读者导航）
+_AUTHOR_SECTION_KEYWORDS = (
+    "破例决策记录",
+    "校准决策日志",
+    "作者决策日志",
+    "角色设定",
+    "写作标准",
+    "自检报告",
+)
+
+_AUTHOR_SECTION_TITLE = re.compile(
+    r"^(?:0\.\s*)?(?:本篇|本附录|附录)定位(?:声明)?(?:[（(].*)?$"
+)
+
+_AUTHOR_SECTION_NUM_PREFIX = re.compile(
+    r"^#{1,6}\s+(?:[一二三四五六七八九十]+、|\d+(?:[\.、]\d+)*[\.、]?\s*)?(.*)$"
+)
+
+# blockquote 中应剥离的作者元信息行（保留 系列/基线/本子模块/导航类字段）
+_BLOCKQUOTE_AUTHOR_LINE = re.compile(
+    r"^>\s*(?:"
+    r"\*\*(?:本篇定位|本文定位|v2 升级日期|预计篇幅|读者画像|"
+    r"评估时间|评估基线|评估范围|目录位置|作者决策日志|"
+    r"本版（v2）的核心变化|质量门升级)\*\*"
+    r"|-\s*\*\*(?:质量门升级|本版（v2）的核心变化)\*\*"
+    r")"
+)
+
+_BLOCKQUOTE_PROMPT_REF = re.compile(
+    r"^>.*(?:PROMPT-|写作指南\.md|本规范的\s*6\s*个硬约束)"
+)
+
+_AUTHOR_DECISION_TABLE = re.compile(
+    r"^\|\s*轮次\s*\|\s*类别\s*\|\s*决策\s*\|"
+)
+
 # 校准日志下的轮次小标题（仍属前言）
 _CALIBRATION_SUB = re.compile(
     r"^#{1,6}\s+(?:第\s*[一二三四五六七八九十\d]+\s*轮|结构校准|硬伤校准|锐度校准)\b"
@@ -81,6 +117,14 @@ _LEAD_TEMPLATE = re.compile(
     r")\b"
 )
 
+_AUDIT_BLOCKQUOTE_AUTHOR = re.compile(
+    r"(?m)^>\s*\*\*(?:本篇定位|本文定位|v2 升级日期|预计篇幅|读者画像|作者决策日志)\*\*"
+)
+
+_AUDIT_AUTHOR_SECTION = re.compile(
+    r"(?m)^#{1,6}\s+.*(?:校准决策日志|作者决策日志|角色设定|写作标准|自检报告|破例决策记录)\b"
+)
+
 # 默认对全部公开模块开启（无前言的文章为 no-op）
 DEFAULT_STRIP_MODULES: frozenset[str] | None = None  # None = 全部
 
@@ -92,6 +136,17 @@ def heading_level(line: str) -> int:
 
 def is_exception_decision_heading(line: str) -> bool:
     return bool(_EXCEPTION_DECISION_HEADING.match(line.rstrip()))
+
+
+def is_author_template_section_heading(line: str) -> bool:
+    s = line.rstrip()
+    m = _AUTHOR_SECTION_NUM_PREFIX.match(s)
+    if not m:
+        return False
+    title = m.group(1).strip()
+    if any(k in title for k in _AUTHOR_SECTION_KEYWORDS):
+        return True
+    return bool(_AUTHOR_SECTION_TITLE.match(title))
 
 
 def is_preamble_heading(line: str) -> bool:
@@ -123,11 +178,10 @@ def _skip_meta_after_title(lines: list[str], title_idx: int) -> int:
 
 
 def _find_title_idx(lines: list[str]) -> int | None:
+    """首个非作者前言标题；允许文首存在 # 本篇定位 等 pre-title 块。"""
     for i, line in enumerate(lines):
         if _ANY_HEADING.match(line) and not is_preamble_heading(line):
             return i
-        if is_preamble_heading(line):
-            return None
     return None
 
 
@@ -211,15 +265,17 @@ def _normalize_after_strip(text: str, newline: str) -> str:
     return result
 
 
-def _strip_exception_decision_sections(text: str) -> tuple[str, bool]:
-    """剥离文中任意位置的「破例决策记录」节（至下一同级或更高级标题）。"""
+def _strip_section_blocks(
+    text: str, is_section_heading
+) -> tuple[str, bool]:
+    """剥离文中任意位置的作者模板节（至下一同级或更高级标题）。"""
     newline = "\r\n" if "\r\n" in text else "\n"
     ends_with_nl = text.endswith(("\n", "\r\n"))
     lines = text.splitlines()
     remove: set[int] = set()
     i = 0
     while i < len(lines):
-        if is_exception_decision_heading(lines[i]):
+        if is_section_heading(lines[i]):
             level = heading_level(lines[i])
             j = i + 1
             while j < len(lines):
@@ -231,6 +287,124 @@ def _strip_exception_decision_sections(text: str) -> tuple[str, bool]:
             i = j
         else:
             i += 1
+    if not remove:
+        return text, False
+    new_lines = [ln for idx, ln in enumerate(lines) if idx not in remove]
+    new_text = newline.join(new_lines)
+    if ends_with_nl and new_text and not new_text.endswith(("\n", "\r\n")):
+        new_text += newline
+    return new_text, True
+
+
+def _strip_author_template_sections(text: str) -> tuple[str, bool]:
+    """剥离篇中/篇尾作者模板节（校准日志、本篇定位、角色设定等）。"""
+    return _strip_section_blocks(text, is_author_template_section_heading)
+
+
+def _strip_exception_decision_sections(text: str) -> tuple[str, bool]:
+    """剥离「破例决策记录」节（兼容旧调用）。"""
+    return _strip_section_blocks(text, is_exception_decision_heading)
+
+
+def _strip_pre_title_preamble(text: str) -> tuple[str, bool]:
+    """剥离真实标题之前的 # 本篇定位 等前言块（epoll / socket bridge）。"""
+    bom = text.startswith("\ufeff")
+    body = text[1:] if bom else text
+    newline = "\r\n" if "\r\n" in body else "\n"
+    ends_with_nl = body.endswith(("\n", "\r\n"))
+    lines = body.splitlines()
+    title_idx = _find_title_idx(lines)
+    if title_idx is None or title_idx == 0:
+        return text, False
+    if not any(
+        _ANY_HEADING.match(lines[j]) and is_preamble_heading(lines[j])
+        for j in range(title_idx)
+    ):
+        return text, False
+    new_lines = lines[title_idx:]
+    new_text = newline.join(new_lines)
+    if ends_with_nl and new_text and not new_text.endswith(("\n", "\r\n")):
+        new_text += newline
+    if bom:
+        new_text = "\ufeff" + new_text
+    new_text = _normalize_after_strip(new_text, newline)
+    return new_text, True
+
+
+def _strip_blockquote_author_meta(text: str) -> tuple[str, bool]:
+    """从 blockquote 元信息区剔除作者模板字段行。"""
+    newline = "\r\n" if "\r\n" in text else "\n"
+    ends_with_nl = text.endswith(("\n", "\r\n"))
+    lines = text.splitlines()
+    out: list[str] = []
+    changed = False
+    i = 0
+    while i < len(lines):
+        ln = lines[i]
+        s = ln.rstrip()
+        if _BLOCKQUOTE_AUTHOR_LINE.match(s) or _BLOCKQUOTE_PROMPT_REF.match(s):
+            changed = True
+            if re.search(r"本版（v2）的核心变化|质量门升级", s):
+                i += 1
+                while i < len(lines) and re.match(r"^>\s*-\s", lines[i].rstrip()):
+                    i += 1
+                continue
+            i += 1
+            continue
+        out.append(ln)
+        i += 1
+    if not changed:
+        return text, False
+    new_text = newline.join(out)
+    if ends_with_nl and new_text and not new_text.endswith(("\n", "\r\n")):
+        new_text += newline
+    return new_text, True
+
+
+def _strip_author_decision_tables(text: str) -> tuple[str, bool]:
+    """剥离作者决策/校准 Markdown 表格（含 orphan 表头 | 轮次 | 类别 | 决策 |）。"""
+    newline = "\r\n" if "\r\n" in text else "\n"
+    ends_with_nl = text.endswith(("\n", "\r\n"))
+    lines = text.splitlines()
+    remove: set[int] = set()
+    i = 0
+    while i < len(lines):
+        start_table = False
+        if "作者决策日志" in lines[i] and not lines[i].lstrip().startswith("#"):
+            start_table = True
+        elif _AUTHOR_DECISION_TABLE.match(lines[i].lstrip()):
+            start_table = True
+        if start_table:
+            j = i + 1
+            while j < len(lines) and lines[j].strip() == "":
+                j += 1
+            if _AUTHOR_DECISION_TABLE.match(lines[i].lstrip()):
+                k = i + 1
+                while k < len(lines):
+                    if lines[k].strip() == "":
+                        k += 1
+                        continue
+                    if lines[k].lstrip().startswith("|"):
+                        k += 1
+                        continue
+                    break
+                remove.update(range(i, k))
+                i = k
+                continue
+            if j < len(lines) and lines[j].lstrip().startswith("|"):
+                k = j
+                while k < len(lines):
+                    if lines[k].strip() == "":
+                        k += 1
+                        continue
+                    if lines[k].lstrip().startswith("|"):
+                        k += 1
+                        continue
+                    break
+                remove.update(range(i, k))
+                i = k
+                continue
+        i += 1
     if not remove:
         return text, False
     new_lines = [ln for idx, ln in enumerate(lines) if idx not in remove]
@@ -321,12 +495,24 @@ def _strip_heading_preamble(text: str) -> tuple[str, bool]:
 
 
 def strip_author_preamble(text: str) -> tuple[str, bool]:
-    """切除作者元信息：AUTHOR_ONLY 块 + 文首前言 + 破例决策记录节。返回 (新正文, 是否改过)。"""
+    """切除作者元信息：AUTHOR_ONLY + pre-title/heading 前言 + blockquote 模板 + 篇中作者节。"""
+    original = text
     text, changed_ao = strip_author_only_blocks(text)
+    text, changed_pre = _strip_pre_title_preamble(text)
     text, changed_head = _strip_heading_preamble(text)
-    text, changed_exc = _strip_exception_decision_sections(text)
-    if changed_ao or changed_head or changed_exc:
-        newline = "\r\n" if "\r\n" in text else "\n"
+    text, changed_bq = _strip_blockquote_author_meta(text)
+    text, changed_tbl = _strip_author_decision_tables(text)
+    text, changed_sec = _strip_author_template_sections(text)
+    changed = (
+        changed_ao
+        or changed_pre
+        or changed_head
+        or changed_bq
+        or changed_tbl
+        or changed_sec
+    )
+    if changed:
+        newline = "\r\n" if "\r\n" in original else "\n"
         text = _normalize_after_strip(text, newline)
         return text, True
     return text, False
@@ -365,7 +551,16 @@ def audit_docs_for_preamble(docs_root: Path) -> list[str]:
         if _LEAD_TEMPLATE.search(lead):
             offenders.append(rel)
             continue
-        if any(is_exception_decision_heading(ln) for ln in lines):
+        if _AUDIT_BLOCKQUOTE_AUTHOR.search(text):
+            offenders.append(rel)
+            continue
+        if _AUDIT_AUTHOR_SECTION.search(text):
+            offenders.append(rel)
+            continue
+        if _AUTHOR_DECISION_TABLE.search(text):
+            offenders.append(rel)
+            continue
+        if any(is_author_template_section_heading(ln) for ln in lines):
             offenders.append(rel)
     return offenders
 

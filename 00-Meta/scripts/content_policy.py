@@ -287,6 +287,8 @@ META_NAME_PATTERNS = [
     re.compile(r"^Perfetto_Series_Plan\.md$", re.I),
     re.compile(r".*写作指南.*\.md$", re.I),
     re.compile(r".*大纲.*\.md$", re.I),
+    re.compile(r".*质量评估.*\.md$", re.I),
+    re.compile(r".*校准报告.*\.md$", re.I),
 ]
 
 ASSET_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp", ".ico"}
