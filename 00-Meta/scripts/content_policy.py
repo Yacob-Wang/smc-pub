@@ -31,7 +31,7 @@ MODULE_TITLES = {
 }
 
 MODULE_BLURBS = {
-    "00-Meta": "项目地图 · Reference · 版本基线 · 迁移日志",
+    "00-Meta": "学习路线 · 阅读指南 · JD 匹配 · 缺口一览 · Reference",
     "01-Mechanism": "Hardware · Kernel · Runtime · Framework · App",
     "02-Symptom": "11 大症状机制（ANR · JE · NE · SWT · HANG · REBOOT · KE 等）",
     "03-Forensics": "8 大取证链（与症状编号一一对应）",
@@ -75,6 +75,7 @@ SERIES_NAV_TITLES: dict[str, dict[str, str]] = {
         "F05-KE": "F05 KE 取证",
         "F06-HANG-OOM": "F06 HANG / OOM",
         "F07-Governance": "F07 治理",
+        "Oncall": "Oncall 剧本",
     },
     "04-Tool": {
         "Dumpsys": "Dumpsys",
@@ -137,6 +138,7 @@ MODULE_SERIES_ORDER: dict[str, list[str]] = {
         "F05-KE",
         "F06-HANG-OOM",
         "F07-Governance",
+        "Oncall",
     ],
     "04-Tool": [
         "Dumpsys",
@@ -276,7 +278,19 @@ PRIVATE_ROOT_PATTERNS = [
     re.compile(r"^Stability_Architect_Roadmap", re.I),
 ]
 
+# 00-Meta 模块落地页卡片与侧栏顺序（读者向）
+META_HUB_PAGES: list[tuple[str, str]] = [
+    ("学习路线", "学习路线-稳定性架构师.md"),
+    ("阅读指南", "Reference/阅读指南-稳定性架构师.md"),
+    ("JD 匹配矩阵", "Reference/JD-匹配矩阵.md"),
+    ("缺口一览", "缺口一览.md"),
+    ("术语表", "术语表.md"),
+    ("案例索引", "案例索引.md"),
+    ("版本基线", "版本基线.md"),
+]
+
 META_NAME_PATTERNS = [
+    re.compile(r"^缺项规划", re.I),
     re.compile(r"^OUTLINE", re.I),
     re.compile(r"^PROMPT-", re.I),
     re.compile(r"^AGENTS\.md$", re.I),

@@ -210,6 +210,20 @@ def test_homepage_uses_list_for_latest() -> None:
     _assert("jk-article-list--latest" in latest_slice, "latest section uses list")
 
 
+def test_meta_module_index_has_hub_cards() -> None:
+    mod_dir = REPO / "00-Meta"
+    if not mod_dir.is_dir():
+        return
+    html = build_module_index("00-Meta", mod_dir)
+    _assert("稳定性架构师知识库导航" in html, "meta hero title")
+    _assert("jk-feed-grid" in html, "meta hub uses feed grid")
+    _assert('href="学习路线-稳定性架构师/"' in html, "learning path card")
+    _assert('href="阅读指南/"' in html, "reading guide card")
+    _assert('href="JD匹配矩阵/"' in html, "jd matrix card")
+    _assert('href="缺口一览/"' in html, "gap overview card")
+    _assert('href="Reference/"' in html, "reference card")
+
+
 def main() -> int:
     tests = [
         test_extract_index_from_filename,
@@ -223,6 +237,7 @@ def main() -> int:
         test_series_landing_uses_list_not_cards,
         test_module_index_series_cards_use_varied_colors,
         test_subcategory_index_still_uses_cards,
+        test_meta_module_index_has_hub_cards,
     ]
     for fn in tests:
         fn()

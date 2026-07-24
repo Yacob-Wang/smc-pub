@@ -21,6 +21,7 @@ if str(_SCRIPTS) not in sys.path:
 
 from content_policy import (  # noqa: E402
     ASSET_SUFFIXES,
+    META_HUB_PAGES,
     MODULE_BLURBS,
     MODULE_SERIES_ORDER,
     MODULE_TITLES,
@@ -302,8 +303,49 @@ def _article_list_items(dir_path: Path) -> list[ArticleListItem]:
     return items
 
 
+def build_meta_module_index(module: str, mod_dir: Path) -> str:
+    """00-Meta 读者导航 hub：学习路线 / 阅读指南 / JD / 缺口 / Reference。"""
+    title = "稳定性架构师知识库导航"
+    blurb = MODULE_BLURBS.get(module, "")
+    hero = render_page_hero(
+        title,
+        blurb or "学习路线 · 阅读指南 · JD 对位 · 缺口一览 · Reference 索引",
+        chips=["AOSP 17 + K 6.18", "Phase 0→6", "13 维 JD 对位"],
+    )
+    cards: list[FeedCard] = []
+    for label, filename in META_HUB_PAGES:
+        if not (mod_dir / filename).is_file():
+            continue
+        cards.append(
+            FeedCard(
+                href=to_site_href(filename),
+                title=label,
+                media_module=module,
+                media_color=series_media_slug(filename),
+                media_text=label,
+                variant="series",
+            )
+        )
+    ref_dir = mod_dir / "Reference"
+    if ref_dir.is_dir():
+        cards.append(
+            FeedCard(
+                href=to_site_href("Reference/"),
+                title="Reference 索引",
+                media_module=module,
+                media_color=series_media_slug("Reference"),
+                media_text="Reference",
+                variant="series",
+            )
+        )
+    footer = '\n<p class="jk-foot">返回 <a href="../">站点首页</a>。</p>\n'
+    return landing_frontmatter(title) + hero + render_feed_grid(cards) + footer
+
+
 def build_module_index(module: str, mod_dir: Path) -> str:
     """生成 module 落地页（News Feed 卡片式）。"""
+    if module == "00-Meta":
+        return build_meta_module_index(module, mod_dir)
     title = MODULE_TITLES.get(module, module)
     blurb = MODULE_BLURBS.get(module, "")
     subdirs = _list_nav_subdirs(mod_dir)
@@ -419,6 +461,18 @@ def _ensure_series_overview(dir_path: Path, module: str | None) -> str:
     return "index.md"
 
 
+def generate_meta_module_pages(mod_dir: Path) -> None:
+    """00-Meta：侧栏挂读者导航页 + Reference 子目录。"""
+    nav: list[tuple[str, str]] = [("导航总览", "index.md")]
+    for label, filename in META_HUB_PAGES:
+        if (mod_dir / filename).is_file():
+            nav.append((label, filename))
+    ref_dir = mod_dir / "Reference"
+    if ref_dir.is_dir():
+        nav.append(("Reference 索引", "Reference"))
+    write_pages_file(mod_dir, nav, collapse=True)
+
+
 def generate_module_pages(mod_dir: Path, module: str) -> None:
     """module 层 .pages：本模块总览（卡片式 index.md） + 子分类列表。
 
@@ -428,6 +482,10 @@ def generate_module_pages(mod_dir: Path, module: str) -> None:
     `collapse: true` —— 侧栏默认折叠所有 AOSP 分层下的子分类，
     用户点顶部 tab 回 module 落地页时侧栏不会铺满 500+ 篇。
     """
+    if module == "00-Meta":
+        generate_meta_module_pages(mod_dir)
+        return
+
     nav: list[tuple[str, str]] = []
 
     # 1) 模块总览：强制 index.md（卡片式落地页）
