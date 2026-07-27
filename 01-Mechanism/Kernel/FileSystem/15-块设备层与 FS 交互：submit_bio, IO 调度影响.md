@@ -446,7 +446,7 @@ static void ext4_end_bio(struct bio *bio)
 
 **对应 FS↔Block 机制**:IO 调度器 + WRITE_FLUSH 路径
 
-**对读者有什么用**:**fsync 慢往往不是 FS 问题,而是 IO 调度器问题**——架构师排查 fsync 卡顿,先看调度器。
+**对读者有什么用**:**fsync 慢常是 IO 调度器问题,而非 FS 本身**——架构师排查 fsync 卡顿,先看调度器。
 
 ---
 
