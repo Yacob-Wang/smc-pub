@@ -82,7 +82,7 @@
 │  │  ├─ 块组描述符表(block group descriptor)               │    │
 │  │  ├─ 数据块位图(data block bitmap)                       │    │
 │  │  ├─ inode 位图(inode bitmap)                           │    │
-│  │  ├─ inode 表(inode table,通常是 8KB+)                 │    │
+│  │  ├─ inode 表(inode table,8KB+,可调)                    │    │
 │  │  ├─ 数据块(data blocks)                                │    │
 │  │  └─ (可选)扩展超级块 / 扩展描述符                      │    │
 │  └────────────────────────────────────────────────────────┘    │
@@ -197,7 +197,7 @@ inode.i_block[0..3]  (4 个 extent index)
 
 **最大支持**:48-bit block 寻址 × 4KB 块 = 16TB 单文件,4 级 extent 树 = 4^4 = 256 个间接(够用)。
 
-**对读者有什么用**:**4 级 extent 树"几乎用不到"**——单文件 < 16TB,通常 1-2 级 extent 就够。
+**对读者有什么用**:**4 级 extent 树"几乎用不到"**——单文件 < 16TB,实际多为 1-2 级 extent。
 
 ---
 
@@ -308,7 +308,7 @@ jbd2_journal_stop(handle);
 - **减少碎片**——文件数据尽量放在同一块组
 - **局部性**——inode 跟数据在附近,seek 时间短
 
-**对读者有什么用**:**block group 数量 = 磁盘大小 / 块组大小**——1TB 磁盘通常 1000+ 块组。
+**对读者有什么用**:**block group 数量 = 磁盘大小 / 块组大小**——1TB 磁盘常以千计块组。
 
 ### 5.2 块组描述符
 
@@ -373,7 +373,7 @@ struct ext4_group_desc {
 | `discard` | off | on(配合 fstrim) |
 | `barrier` | on | on(崩溃一致) |
 
-**对读者有什么用**:**Android 设备 ext4 mount 选项通常 `noatime,nodiratime,discard,barrier`**——架构师 review 启动参数,看这 4 个。
+**对读者有什么用**:**Android 设备 ext4 mount 选项一般用 `noatime,nodiratime,discard,barrier`**——架构师 review 启动参数,看这 4 个。
 
 ---
 
