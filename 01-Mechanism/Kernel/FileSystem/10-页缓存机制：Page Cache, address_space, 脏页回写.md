@@ -316,7 +316,7 @@ unsigned long page_cache_readahead_unbounded(struct address_space *mapping,
 
 **关键参数**:
 - `/sys/block/<dev>/queue/read_ahead_kb`:块设备预读(默认 128KB)
-- 应用层预读窗口:通常范围 128KB-2MB(具体看应用)
+- 应用层预读窗口:经验值 128KB-2MB(具体看应用)
 
 **对读者有什么用**:**顺序读是"Page Cache 命中的最大场景"**——架构师优化"大文件顺序读",调大预读窗口。
 
