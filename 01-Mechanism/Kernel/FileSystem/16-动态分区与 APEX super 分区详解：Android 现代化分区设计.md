@@ -251,7 +251,7 @@ cat /sys/fs/erofs/.../boot_count  # 启动次数
   └──────────────────────┘
 ```
 
-**关键洞察**:**APEX 内部是 FS 镜像**——可以是 ext4 / f2fs / erofs,通常是 erofs(只读压缩)。
+**关键洞察**:**APEX 内部是 FS 镜像**——可以是 ext4 / f2fs / erofs,实际中以 erofs 为主(只读压缩)。
 
 ### 4.4 APEX 挂载流程
 
