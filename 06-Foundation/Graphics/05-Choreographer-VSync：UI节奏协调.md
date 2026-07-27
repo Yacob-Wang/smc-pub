@@ -4,7 +4,7 @@
 >
 > **角色**：稳定性架构师 · oncall 工程师 · UI 跳帧 / 卡顿问题
 >
-> **强依赖**：[01 图形栈总览](01-图形栈总览：app-WindowManager-SurfaceFlinger-HWC-Display.md) · [02 SurfaceFlinger 内部](02-SurfaceFlinger内部：合成-VSync-Layer树.md) · [04 HWUI / RenderThread](04-HWUI-RenderThread：硬件加速渲染.md)
+> **强依赖**：[01 图形栈总览](01-图形栈总览：app-WindowManager-SurfaceFlinger-HWC-Display.md) · 04 HWUI/RenderThread · 05 Choreographer
 
 <!-- AUTHOR_ONLY:START -->
 ## 本篇定位
