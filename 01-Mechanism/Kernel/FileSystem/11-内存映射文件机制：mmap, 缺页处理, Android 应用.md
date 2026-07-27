@@ -264,7 +264,7 @@ std::unique_ptr<OatFile> OatFileManager::OpenOatFile(...) {
 // frameworks/native/libs/binder/ProcessState.cpp
 status_t Parcel::writeBlob(size_t len, const void *data) {
     // 1. 如果数据 > 1MB,用 mmap 共享
-    if (len > BINDER_MMAP_THRESHOLD) {  // 通常 1MB
+    if (len > BINDER_MMAP_THRESHOLD) {  // 默认 1MB(可调)
         void *ptr = mmap(NULL, len, PROT_READ | PROT_WRITE,
                           MAP_SHARED, binder_fd, offset);
         // 2. 直接拷贝到共享内存
