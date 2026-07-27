@@ -161,7 +161,7 @@ struct file {
 - 挂载 `/system` (erofs) → 创建另一个 super_block
 - 挂载 `/proc` (procfs) → 创建第三个 super_block
 
-**关键洞察**:**Android 设备启动后,通常有 10-20 个 super_block**(每个挂载点一个)。
+**关键洞察**:**Android 设备启动后,一般会有 10-20 个 super_block**(每个挂载点一个)。
 
 ### 3.2 super_block 的生命周期
 
