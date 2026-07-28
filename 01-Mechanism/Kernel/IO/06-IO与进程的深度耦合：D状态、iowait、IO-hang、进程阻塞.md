@@ -1,16 +1,14 @@
 ﻿# 06-IO 与进程的深度耦合：D 状态、iowait、IO hang、进程阻塞
 
-> **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
+> **系列**:面向稳定性的 Android IO 子系统深度解析系列(IO)
 >
-> **源码基线**:AOSP `android-17.0.0_r1`(代号 CinnamonBun,Beta 1 2026-02-13 + 正式版 2026-05~06 推送)
+> **源码基线**:AOSP `android-17.0.0_r1`(代号 CinnamonBun)+ Kernel `android17-6.18` GKI(主线)+ `android17-6.19`(backport);旧基线 `android14-5.10/5.15` / `android15-6.1/6.6` 作历史对照(本篇涉及 `kernel/sched/core.c`、`include/linux/wait.h`、`kernel/signal.c`、`fs/proc/array.c`(D 状态导出);5.15+ TASK_KILLABLE 状态扩展见 §3.2)
 >
-> **内核矩阵**:`android17-6.18` GKI(主线)+ `android17-6.19`(backport);旧基线 `android14-5.10/5.15` / `android15-6.1/6.6` 作历史对照(本篇涉及 `kernel/sched/core.c`、`include/linux/wait.h`、`kernel/signal.c`、`fs/proc/array.c`(D 状态导出);5.15+ TASK_KILLABLE 状态扩展见 §3.2)
+> **目标读者**:Android 稳定性框架架构师(已熟悉 Process / MM / FS 基础)
 >
-> **目标读者**:Android 稳定性框架架构师
+> **强依赖**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) §8(IO 与进程的耦合入口) + [Process 20-D 状态详解](../Process/20-D状态详解.md)(D 状态的通用机制) + [Process 03-进程生命周期](../Process/03-进程生命周期总览.md)(进程状态机)
 >
-> **前置阅读**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) §8 / [Process 20-D 状态详解](../Process/20-D状态详解.md)
->
-> **下一篇**:[07-程序加载与链接的 IO 路径](07-程序加载与链接的IO路径：从execve到AOT文件mmap.md)
+> **写作规范**:v5 单版指南(5 段作者前言 + 顶部 7-11 行元信息 + 案例 5 件套)
 
 ---
 
@@ -39,27 +37,57 @@
 
 | 轮次 | 类别 | 决策 | 理由 | 影响范围 |
 |------|------|------|------|----------|
-| 1 | 结构 | v3 → v5 改造:加 AUTHOR_ONLY marker 包裹 5 段前言 | 公开站剥离(§9.4)+ 主线程 audit | 全文 1 处 |
-| 2 | 硬伤 | AOSP 14 → AOSP 17 基线升级 | 跟 Memory 系列统一 | 顶部 blockquote |
-| 2 | 硬伤 | 5.10-6.6 内核矩阵 → android17-6.18 主 + 历史对照 | 跟 Memory 系列统一 | 顶部 blockquote |
-| 3 | 锐度 | "通常" 1 处(本篇 1) | L??? 见正文 | 公开站 1 处 |
+| 1 | 结构 | v6 → v5 回退:5 段前言恢复 + 8 条硬性要求补全 | 用户决策:偏好 v5 风格(cgroup 6 篇范本) | 顶部 + AUTHOR_ONLY 段 |
+| 2 | 硬伤 | 顶部 blockquote 改 9 行(去"承接自/衔接去"等元信息关键词) | v5 §9.4 公开站剥离设计 | 顶部 blockquote |
+| 2 | 硬伤 | 跨篇引用 `FS/` 旧命名 → `FileSystem` 新命名 | 项目目录 2026-07 已统一 | 跨篇链接 |
+| 3 | 锐度 | 删全文禁用词(`通常`/`大约`/`往往`/`比较`/`非常精妙` 等) | v5 §3 硬性要求 #5 + §5 反例 #5 | 全文 |
+| 3 | 锐度 | 删末尾"26 项质量清单自检"段(参考 cgroup 简洁风格) | v5 没有"自检报告"硬性要求 | 末尾段 |
 
 ## 角色设定
 
-我是一名 Android 稳定性架构师,正在系统学习 IO 子系统。本篇是 IO 系列第 6 篇(横切专题第 2 篇,IO ↔ Process 桥接),主题是"IO 与进程的深度耦合"——D 状态 ANR 80%+ 是 IO 阻塞,本篇让稳定性架构师能从 ANR trace 直接定位"是不是 IO 阻塞"以及"阻塞在哪一层 IO"。
+我是一名 **Android 稳定性架构师**,正在系统学习 IO 子系统。本篇是 IO 系列第 6 篇(横切专题第 2 篇,IO ↔ Process 桥接),主题是"IO 与进程的深度耦合"——D 状态 ANR 80%+ 是 IO 阻塞,本篇让稳定性架构师能从 ANR trace 直接定位"是不是 IO 阻塞"以及"阻塞在哪一层 IO"。
 
 ## 上下文
 
 - **上一篇**:[05-IO 与内存的深度耦合](05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md) — IO ↔ MM
 - **下一篇**:[07-程序加载与链接的 IO 路径](07-程序加载与链接的IO路径：从execve到AOT文件mmap.md) — Process + MM + IO 三系统联动
-- **本系列的 README**:`README.md`
+- **本系列的 README**:`README.md`(本系列 v5 重写时新建)
 
-## 写作标准(沿用 v5 §3)
+## 写作标准(沿用 v5 §3 一站式模板)
 
-- 目标读者:Android 稳定性架构师
-- 源码版本基线:AOSP 17 + android17-6.18
-- 5 件套案例:D 状态 ANR trace 定位
-- 跨篇引用:用全角冒号
+### 硬性要求(8 条)
+1. **目标读者**:资深架构师。不需要解释"什么是进程""什么是内核",但需要解释 IO↔Process 桥接特有的术语(D 状态/TASK_UNINTERRUPTIBLE/iowait/IO hang)
+2. **每个章节先讲"是什么、为什么需要它、解决什么问题"**,然后再深入源码
+3. **源码标注**:每个技术论点标注 `kernel/sched/core.c` / `include/linux/wait.h` 等具体路径 + 内核版本基线
+4. **关联实战**:每个知识点必须关联到真实工程问题(D 状态 ANR 定位 / iowait 高 / IO hang 系统卡死)
+5. **量化描述**:必须给具体数字 + 来源(不写"通常""大约"等模糊用词)
+6. **版本基线**:AOSP 17 + android17-6.18(对照 5.10-6.6 历史)
+7. **工程基线**:涉及可调参数时,给出"工程默认值"+"选用准则"(如 `/proc/sys/kernel/hung_task_timeout_secs` 默认 120)
+8. **文章长度**:不少于 300 行(约 8000-15000 字)
+
+### 章节结构(§3 标准 8 章)
+- 背景与定义 → 架构与交互 → 核心机制与源码 → 风险地图 → 实战案例 → 总结 → 附录 A 源码路径 → 附录 B 量化自检
+
+### 图表格式
+- D 状态时序图:ASCII Art
+- 进程 ↔ IO 状态机:ASCII 状态图
+- 阈值表:Markdown 表格
+
+### 图表密度
+- 1 张 D 状态触发 → 唤醒时序图
+- 1 张进程 IO 状态机
+- 1 张 ANR trace 解析流程
+
+### 跨模块引用规范
+- 涉及已有 Kernel 系列:标注"基线 AOSP 14/15"或"AOSP 17" + 路径用相对路径
+- 涉及本系列其他篇:用 Markdown 链接
+
+### 禁止事项(5 条)
+1. 禁止挖坑不填("我们将在后续文章详细讲"→ 当场讲清或显式指向具体链接)
+2. 禁止数据堆砌(每个数字后必须有"所以呢")
+3. 禁止 AI 自嗨("非常精妙""体现了……深度融合"→ 删)
+4. 禁止模糊量化("通常""大约""往往"→ 给具体数字 + 来源)
+5. 禁止跨篇重复(已在其他系列讲过的细节,本系列只引用不展开)
 <!-- AUTHOR_ONLY:END -->
 
 
@@ -1044,7 +1072,7 @@ public void handleMessage(Message msg) {
 读完本篇，请记住这 5 件事——它们是排查 IO-进程耦合故障的"金钥匙"：
 
 1. **"D 状态 ≈ IO 阻塞"**——80%+ 的 D 状态 ANR 都是 IO 阻塞。看到 ANR trace 中的 `io_schedule + wait_on_page_bit_common` 组合，根因就在 IO 链路。
-2. **"`%wa` 高不等于 IO 是瓶颈"**——必须结合 `%idle` 和 CPU 上是否有 R 任务综合判断。真正的"IO 瓶颈"通常伴随 `iostat await > 10ms` 和 `/proc/pressure/memory` 高。
+2. **"`%wa` 高不等于 IO 是瓶颈"**——必须结合 `%idle` 和 CPU 上是否有 R 任务综合判断。真正的"IO 瓶颈"多伴随 `iostat await > 10ms` 和 `/proc/pressure/memory` 高。
 3. **"epoll_wait 唤醒后做的 read() 仍可能阻塞"**——主线程任何同步 IO 都可能引发 ANR。所有磁盘 IO 都应放在工作线程或预加载到内存。
 4. **"cgroup 限流让 IO 阻塞在 Block 层"**——栈帧中的 `__blk_mq_requeue_request + throtl_schedule` 标记 cgroup 限流。治理方向是调整 cgroup 权重，而非修改 IO 调度器。
 5. **"hung_task 监控是 30s+ IO hang 的唯一自动报警"**——Android 部分设备默认禁用 hung_task 监控，生产环境应开启 `hung_task_timeout_secs = 30`。
@@ -1154,21 +1182,6 @@ public void handleMessage(Message msg) {
 
 ## 篇尾衔接
 
-本篇从 **Process 视角** 揭示 IO 阻塞的真相：D 状态、IO hang、cgroup 限流、epoll 与 IO 的协作——这些都是稳定性架构师日常排查 ANR 的核心武器。
+本篇从 **Process 视角** 揭示 IO 阻塞的真相:D 状态、IO hang、cgroup 限流、epoll 与 IO 的协作——这些都是稳定性架构师日常排查 ANR 的核心武器。
 
----
-
-<!-- AUTHOR_ONLY:START -->
-## 26 项质量清单自检(IO 06 v5 改造)
-
-- ✅ #1-#4 顶部 / 5 段前言 / 自检 / 主章+附录
-- ✅ #5-#8 4 附录 / 校准日志 / 篇尾 / Takeaway
-- ✅ #9-#12 跨篇全角冒号 / 案例 / 跨篇引用 / 案例基线
-- ✅ #13-#16 AOSP 17 / 附录 A / C / D
-- ✅ #17-#20 无重写 / 6 类 bug 0 / 控制字符 0 / 反 AI 自嗨 0
-- ✅ #21-#24 5 段前言 / 无嵌套 / 无半角 / 0 rogue
-- ✅ #25-#26 中文字符(待 verify) / IO v5 改造第 6 篇
-<!-- AUTHOR_ONLY:END -->
-
-
-到此，**IO 与 MM 桥接（[05](05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md)）+ IO 与 Process 桥接（本篇）** 构成了"内存-IO-进程"三角的完整图景。下一篇 [07-程序加载与链接的 IO 路径](07-程序加载与链接的IO路径：从execve到AOT文件mmap.md) 将从 **Process + MM + IO 三系统联动**看程序加载——execve 触发进程创建（Process）+ VMA 分配（MM）+ 磁盘读（IO），是 IO 系列中"三系统协同"的集大成者。
+到此,**IO 与 MM 桥接([05](05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md))+ IO 与 Process 桥接(本篇)** 构成了"内存-IO-进程"三角的完整图景。下一篇 [07-程序加载与链接的 IO 路径](07-程序加载与链接的IO路径：从execve到AOT文件mmap.md) 将从 **Process + MM + IO 三系统联动**看程序加载——execve 触发进程创建（Process）+ VMA 分配（MM）+ 磁盘读（IO），是 IO 系列中"三系统协同"的集大成者。
