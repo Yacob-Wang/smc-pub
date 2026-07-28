@@ -1,20 +1,19 @@
 ﻿# 03-Block 层核心机制：bio / request / plug / merge / throttle
 
-> **系列**：面向稳定性的 Android IO 子系统深度解析系列(IO)
+> **系列**:面向稳定性的 Android IO 子系统深度解析系列(IO)
 >
-> **源码基线**:AOSP `android-17.0.0_r1`(代号 CinnamonBun,Beta 1 2026-02-13 + 正式版 2026-05~06 推送)
+> **源码基线**:AOSP `android-17.0.0_r1`(代号 CinnamonBun)+ Kernel `android17-6.18` GKI(主线)+ `android17-6.19`(backport);旧基线 `android14-5.10/5.15` / `android15-6.1/6.6` 作历史对照(本篇涉及 `block/blk-core.c`、`block/blk-mq.c`、`block/blk-merge.c`、`block/blk-throttle.c`;各内核版本差异见 §2 blk-mq tag set 重构、§4 plug 机制在 5.15+ 的去除)
 >
-> **内核矩阵**:`android17-6.18` GKI(主线)+ `android17-6.19`(backport);旧基线 `android14-5.10/5.15` / `android15-6.1/6.6` 作历史对照(本篇涉及 `block/blk-core.c`、`block/blk-mq.c`、`block/blk-merge.c`、`block/blk-throttle.c`;各内核版本差异见 §2 blk-mq tag set 重构、§4 plug 机制在 5.15+ 的去除)
+> **目标读者**:Android 稳定性框架架构师(已熟悉 Process / MM / FS 基础)
 >
-> **目标读者**:Android 稳定性框架架构师
+> **强依赖**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) §4(关键数据结构速查) + [02-IO 调度器与多队列架构](02-IO调度器与多队列架构.md) §4-§7(blk-mq + 调度器算法)
 >
-> **前置阅读**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) / [02-IO 调度器](02-IO调度器与多队列架构.md)
->
-> **下一篇**:[04-IO 优先级与 cgroup IO 控制器](04-IO优先级与cgroup-IO控制器.md)
+> **写作规范**:v5 单版指南(5 段作者前言 + 顶部 7-11 行元信息 + 案例 5 件套)
 
 ---
 
 <!-- AUTHOR_ONLY:START -->
+
 ## 本篇定位
 
 - **本篇系列角色**:核心机制第 2 篇(Block 子系统,IO 调度的"上游 + 下游")
@@ -27,36 +26,67 @@
 - **衔接去**:下一篇 [04-IO 优先级与 cgroup IO 控制器](04-IO优先级与cgroup-IO控制器.md) 将深入 cgroup IO 限流与 ionice 的细节
 - **不重复内容**:
   - **IO 调度器算法(mq-deadline/bfq/kyber)** → 详见 [02-IO 调度器](02-IO调度器与多队列架构.md) §5-§7
-  - **Page Cache 路径(VFS → Page Cache)** → 详见 [FS 08-页缓存机制详解](../FS/08-页缓存机制详解.md) / [FS 09-文件读写流程详解](../FS/09-文件读写流程详解.md)
-  - **VFS 多态分发(file_operations)** → 详见 [FS 06-file_operations多态机制](../FS/06-file_operations多态机制.md)
-  - **文件 mmap 机制** → 详见 [FS 10-内存映射文件机制](../FS/10-内存映射文件机制.md)
+  - **Page Cache 路径(VFS → Page Cache)** → 详见 [FS 10-页缓存机制](../FileSystem/10-页缓存机制：Page%20Cache,%20address_space,%20脏页回写.md) / [FS 09-路径解析与挂载机制](../FileSystem/09-路径解析与挂载机制：path_lookup,%20mount%20namespace,%20overlay.md)
+  - **VFS 多态分发(file_operations)** → 详见 [FS 08-file_operations 多态分发机制](../FileSystem/08-file_operations%20多态分发机制（不是%20hook）.md)
+  - **文件 mmap 机制** → 详见 [FS 11-内存映射文件机制](../FileSystem/11-内存映射文件机制：mmap,%20缺页处理,%20Android%20应用.md)
 - **本篇的核心价值**:让稳定性架构师能**从 bio / request 视角定位 IO 性能瓶颈**——plug 卡死、merge 失败、bio 泄漏、throttle 配错等问题都直接体现在这些结构体上。
 
 ## 校准决策日志
 
 | 轮次 | 类别 | 决策 | 理由 | 影响范围 |
 |------|------|------|------|----------|
-| 1 | 结构 | v3 → v5 改造:加 AUTHOR_ONLY marker 包裹 5 段前言 | 公开站剥离(§9.4)+ 主线程 audit | 全文 1 处 |
-| 2 | 硬伤 | AOSP 14 → AOSP 17 基线升级 | 跟 Memory 系列统一 | 顶部 blockquote |
-| 2 | 硬伤 | 5.10-6.6 内核矩阵 → android17-6.18 主 + 历史对照 | 跟 Memory 系列统一 | 顶部 blockquote |
-| 3 | 锐度 | "通常" 0 处(本篇 0) | 无需校准 | 无 |
+| 1 | 结构 | v6 → v5 回退:5 段前言恢复 + 8 条硬性要求补全 | 用户决策:偏好 v5 风格(cgroup 6 篇范本) | 顶部 + AUTHOR_ONLY 段 |
+| 2 | 硬伤 | 顶部 blockquote 改 9 行(去"承接自/衔接去"等元信息关键词) | v5 §9.4 公开站剥离设计 | 顶部 blockquote |
+| 2 | 硬伤 | 跨篇引用 `FS/` 旧命名 → `FileSystem` 新命名 | 项目目录 2026-07 已统一 | 跨篇链接 |
+| 3 | 锐度 | 删全文禁用词(`通常`/`大约`/`往往`/`比较`/`非常精妙` 等) | v5 §3 硬性要求 #5 + §5 反例 #5 | 全文 |
+| 3 | 锐度 | 删末尾"26 项质量清单自检"段(参考 cgroup 简洁风格) | v5 没有"自检报告"硬性要求 | 末尾段 |
 
 ## 角色设定
 
-我是一名 Android 稳定性架构师,正在系统学习 IO 子系统。本篇是 IO 系列第 3 篇(核心机制第 2 篇),主题是"Block 层核心机制"——深度讲解 bio/request 生命周期、plug-merge 机制、throttle 限流。让稳定性架构师能**从 bio/request 视角定位 IO 性能瓶颈**(plug 卡死、merge 失败、bio 泄漏、throttle 配错)。
+我是一名 **Android 稳定性架构师**,正在系统学习 IO 子系统。本篇是 IO 系列第 3 篇(核心机制第 2 篇),主题是"Block 层核心机制"——深度讲解 bio/request 生命周期、plug-merge 机制、throttle 限流。让稳定性架构师能**从 bio/request 视角定位 IO 性能瓶颈**(plug 卡死、merge 失败、bio 泄漏、throttle 配错)。
 
 ## 上下文
 
 - **上一篇**:[02-IO 调度器与多队列架构](02-IO调度器与多队列架构.md) — mq-deadline/bfq/kyber 算法
 - **下一篇**:[04-IO 优先级与 cgroup IO 控制器](04-IO优先级与cgroup-IO控制器.md) — cgroup IO 限流
-- **本系列的 README**:`README.md`
+- **本系列的 README**:`README.md`(本系列 v5 重写时新建)
 
-## 写作标准(沿用 v5 §3)
+## 写作标准(沿用 v5 §3 一站式模板)
 
-- 目标读者:Android 稳定性架构师(已熟悉 Process / MM / FS 基础)
-- 源码版本基线:AOSP 17 + android17-6.18(对照 5.10-6.6 历史)
-- 5 件套案例:CamHAL bio 泄漏导致录像 30s 后 IO hang(见 §0 锚点)
-- 跨篇引用:用全角冒号(已沿用 v3 命名规范)
+### 硬性要求(8 条)
+1. **目标读者**:资深架构师。不需要解释"什么是进程""什么是内核",但需要解释 Block 层特有的术语(bio/request/plug/merge/throttle/tag set)
+2. **每个章节先讲"是什么、为什么需要它、解决什么问题"**,然后再深入源码
+3. **源码标注**:每个技术论点标注 `block/blk-core.c` / `block/blk-mq.c` 等具体路径 + 内核版本基线
+4. **关联实战**:每个知识点必须关联到真实工程问题(bio 泄漏导致录像卡死 / plug 死锁导致 ANR / throttle 配错导致低优先级任务饥饿)
+5. **量化描述**:必须给具体数字 + 来源(不写"通常""大约"等模糊用词)
+6. **版本基线**:AOSP 17 + android17-6.18(对照 5.10-6.6 历史)
+7. **工程基线**:涉及可调参数时,给出"工程默认值"+"选用准则"(如 `/sys/block/*/queue/nr_requests` 默认 64)
+8. **文章长度**:不少于 300 行(约 8000-15000 字)
+
+### 章节结构(§3 标准 8 章)
+- 背景与定义 → 架构与交互 → 核心机制与源码 → 风险地图 → 实战案例 → 总结 → 附录 A 源码路径 → 附录 B 量化自检
+
+### 图表格式
+- bio/request 生命周期图:ASCII Art(横向)
+- 关键路径:ASCII 时序图
+- 配对信息:Markdown 表格
+
+### 图表密度
+- 1 张 bio/request 全生命周期图
+- 1 张 plug/merge 机制时序图
+- 1 张 throttle 限流决策表
+- 1 张 blk-mq 标签集对比表
+
+### 跨模块引用规范
+- 涉及已有 Kernel 系列:标注"基线 AOSP 14/15"或"AOSP 17" + 路径用相对路径
+- 涉及本系列其他篇:用 Markdown 链接
+
+### 禁止事项(5 条)
+1. 禁止挖坑不填("我们将在后续文章详细讲"→ 当场讲清或显式指向具体链接)
+2. 禁止数据堆砌(每个数字后必须有"所以呢")
+3. 禁止 AI 自嗨("非常精妙""体现了……深度融合"→ 删)
+4. 禁止模糊量化("通常""大约""往往"→ 给具体数字 + 来源)
+5. 禁止跨篇重复(已在其他系列讲过的细节,本系列只引用不展开)
 <!-- AUTHOR_ONLY:END -->
 
 #### §0 锚点案例的可验证 4 件套:CamHAL bio 泄漏导致录像 30s 后 IO hang
@@ -1531,40 +1561,6 @@ IO 性能 / 阻塞 / 卡顿
 
 ## 篇尾衔接
 
-本篇深入了 Block 层的 6 大子系统：bio 管理 / request 管理 / plug-merge / dispatch / cgroup 限流 / endio。这是 IO 子系统的"中枢"——上层 Page Cache 把 bio 交给它，下层调度器和驱动依赖它。
+本篇深入了 Block 层的 6 大子系统:bio 管理 / request 管理 / plug-merge / dispatch / cgroup 限流 / endio。这是 IO 子系统的"中枢"——上层 Page Cache 把 bio 交给它,下层调度器和驱动依赖它。
 
----
-
-<!-- AUTHOR_ONLY:START -->
-## 26 项质量清单自检(IO 03 v5 改造)
-
-- ✅ #1 顶部 4 行 blockquote (系列 / 源码基线 / 内核矩阵 / 目标读者)
-- ✅ #2 5 段作者前言 AUTHOR_ONLY 包裹
-- ✅ #3 自检报告 AUTHOR_ONLY 独立段
-- ✅ #4 主章 + 4 附录 + 篇尾衔接
-- ✅ #5 4 附录 (A/B/C/D)
-- ✅ #6 校准决策日志 (4 项)
-- ✅ #7 篇尾衔接 (03-Block → 04-IO 优先级)
-- ✅ #8 Takeaway 段
-- ✅ #9 跨篇引用全角冒号
-- ✅ #10 案例可验证(CamHAL bio 泄漏,5 件套)
-- ✅ #11 跨篇引用:`FS 06/08/09/10` / `IO 01/02/04`
-- ✅ #12 案例基线 A14 实测 + A17 说明
-- ✅ #13 AOSP 17 CinnamonBun 主基线
-- ✅ #14 附录 A 源码路径
-- ✅ #15 附录 C 量化数据
-- ✅ #16 附录 D 工程基线表
-- ✅ #17 v3 → v5 改造:无内容重写
-- ✅ #18 子线程 bug 6 类残留:0
-- ✅ #19 控制字符:0
-- ✅ #20 反 AI 自嗨词:本篇 0 处
-- ✅ #21 5 段前言 AUTHOR_ONLY 包裹
-- ✅ #22 无嵌套 START/END
-- ✅ #23 跨篇链接无半角冒号
-- ✅ #24 0 rogue marker
-- ✅ #25 中文字符 ≥ 8000(待 verify)
-- ✅ #26 IO v5 改造第 3 篇
-<!-- AUTHOR_ONLY:END -->
-
-
-下一篇 [04-IO 优先级与 cgroup IO 控制器](04-IO优先级与cgroup-IO控制器.md) 将深入 **IO 优先级体系**：ionice 系统调用、ioprio class（RT/BE/Idle）、cgroup v1 blkio / cgroup v2 io 子系统的细节、Android 进程优先级 ↔ IO 优先级的映射——这是"哪个进程 / 哪个 cgroup 能抢到 IO 资源"的完整图谱。
+下一篇 [04-IO 优先级与 cgroup IO 控制器](04-IO优先级与cgroup-IO控制器.md) 将深入 **IO 优先级体系**:ionice 系统调用、ioprio class(RT/BE/Idle)、cgroup v1 blkio / cgroup v2 io 子系统的细节、Android 进程优先级 ↔ IO 优先级的映射——这是"哪个进程 / 哪个 cgroup 能抢到 IO 资源"的完整图谱。
