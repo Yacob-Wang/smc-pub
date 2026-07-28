@@ -569,13 +569,18 @@ def fix_links_in_docs(docs_root: Path, name_map: dict[str, str]) -> int:
             expanded_map[old.replace(":", "：")] = new
     fixed_files = 0
     # 按名字长度倒序排；含「路径前缀 + 文件名」形态（如 ](../../foo/旧名.md)）
+    # 替换串必须用 callable / \g<1>：若用 \1 + new，且 new 以数字开头（如 10-xxx.md），
+    # 会拼成 \10 被 re 解析为无效组引用。
     for old, new in sorted(expanded_map.items(), key=lambda kv: -len(kv[0])):
         old_escaped = re.escape(old)
         for pattern, repl in [
-            (r"\]\(\.\./" + old_escaped, r"](" + new),
-            (r"\]\(\./" + old_escaped, r"](" + new),
-            (r"\]\(" + old_escaped, r"](" + new),
-            (r"(\]\((?:[^)\s#]*/)+)" + old_escaped, r"\1" + new),
+            (r"\]\(\.\./" + old_escaped, lambda _m, n=new: "](" + n),
+            (r"\]\(\./" + old_escaped, lambda _m, n=new: "](" + n),
+            (r"\]\(" + old_escaped, lambda _m, n=new: "](" + n),
+            (
+                r"(\]\((?:[^)\s#]*/)+)" + old_escaped,
+                lambda m, n=new: m.group(1) + n,
+            ),
         ]:
             for md in docs_root.rglob("*.md"):
                 text = md.read_text(encoding="utf-8", errors="replace")

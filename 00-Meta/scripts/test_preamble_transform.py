@@ -124,16 +124,18 @@ def test_process_exit_author_only_before_title() -> None:
     _assert("# 本篇定位" not in out, "Process_Exit 03 定位 gone")
 
 
-def test_art_appendix_d() -> None:
+def test_art_gc_merged_author_only() -> None:
+    """GC 已收官为 11 篇合并单版；旧 appendix/D-工程基线 路径不再存在。"""
     raw = (
-        REPO
-        / "01-Mechanism/Runtime/ART/03-GC系统/01-基础理论/appendix/D-工程基线.md"
+        REPO / "01-Mechanism/Runtime/ART/03-GC系统/01-基础理论专题.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
-    _assert(changed, "ART appendix D should strip")
-    _assert("校准决策日志" not in out, "ART appendix D 校准 gone")
-    _assert("0. 本附录定位" not in out, "ART appendix D 定位 gone")
-    _assert("## 一、关键可调参数" in out, "ART appendix D body kept")
+    _assert(changed, "ART GC 01 should strip")
+    _assert("校准决策日志" not in out, "ART GC 01 校准 gone")
+    _assert("本篇定位声明" not in out, "ART GC 01 定位声明 gone")
+    _assert("# 本篇定位" not in out, "ART GC 01 本篇定位 gone")
+    _assert("## 一、为什么不用引用计数" in out, "ART GC 01 body kept")
+    _assert("## 附录 D:工程基线表" in out, "ART GC 01 附录 D kept")
 
 
 def test_activity_exception_decision_at_lead() -> None:
@@ -147,16 +149,16 @@ def test_activity_exception_decision_at_lead() -> None:
 
 
 def test_art_gc_blockquote_meta() -> None:
+    """原 07-GC调度与触发/01-9种GcCause.md 已并入 07-GC调度与触发专题.md。"""
     raw = (
-        REPO
-        / "01-Mechanism/Runtime/ART/03-GC系统/07-GC调度与触发/01-9种GcCause.md"
+        REPO / "01-Mechanism/Runtime/ART/03-GC系统/07-GC调度与触发专题.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "ART GcCause should strip")
-    _assert("> **本篇定位**" not in out, "ART GcCause blockquote 本篇定位 gone")
-    _assert("> **v2 升级日期**" not in out, "ART GcCause blockquote v2 gone")
-    _assert("## 一、9 种 GcCause 总览" in out, "ART GcCause body kept")
-    _assert("> **基线版本**" in out, "ART GcCause keep baseline")
+    _assert("本篇定位声明" not in out, "ART GcCause 定位声明 gone")
+    _assert("# 本篇定位" not in out, "ART GcCause 本篇定位 gone")
+    _assert("## 一、13 种 GcCause 完整枚举" in out, "ART GcCause body kept")
+    _assert("> 基线:" in out, "ART GcCause keep baseline")
 
 
 def test_mm_blockquote_meta() -> None:
@@ -222,7 +224,7 @@ def main() -> int:
     test_mm_author_only_blocks()
     test_cgroup_author_only_lead()
     test_process_exit_author_only_before_title()
-    test_art_appendix_d()
+    test_art_gc_merged_author_only()
     test_activity_exception_decision_at_lead()
     test_art_gc_blockquote_meta()
     test_mm_blockquote_meta()
