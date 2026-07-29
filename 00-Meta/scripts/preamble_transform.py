@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""公开站文首变换：剥离 v4 作者元信息，保留标题 + 版本元信息 blockquote。
+"""公开站文首变换：剥离作者元信息，保留标题 + 短读者元信息 blockquote。
 
-目标形态对齐 Activity：
+目标形态（读者视图）：
   # 标题
-  > 系列 / 版本基线 / …
+  > 系列 / 基线 / 本篇角色 / 强依赖（2–4 行）
   # 1. 背景与定义
+
+文首过长作者前言（主线索 / 上一篇下一篇 / 目录位置 / 关联系列 / 目标读者 / 写作状态等）
+在 prepare_web_docs 时从 lead blockquote 剥离，避免公开站文章页呈「旧版长前言」观感。
 
 四种作者元信息形态：
 - AUTHOR_ONLY：<!-- AUTHOR_ONLY:START -->…<!-- AUTHOR_ONLY:END --> 整段剥离（Memory/IO/cgroup…）
@@ -71,12 +74,28 @@ _AUTHOR_SECTION_NUM_PREFIX = re.compile(
     r"^#{1,6}\s+(?:[一二三四五六七八九十]+、|\d+(?:[\.、]\d+)*[\.、]?\s*)?(.*)$"
 )
 
-# blockquote 中应剥离的作者元信息行（保留 系列/基线/本子模块/导航类字段）
+# 文首 lead blockquote 中保留的读者元信息（v6：基线/角色/强依赖 + 系列变体）
+_READER_META_LABELED = re.compile(
+    r"^>\s*\*\*(?:"
+    r"系列|本篇角色|强依赖|本子模块|工程基线|"
+    r"基线|版本基线|源码基线|"
+    r"[^*]*当前基线[^*]*"
+    r")\*\*"
+)
+_READER_META_PLAIN = re.compile(
+    r"^>\s*(?:基线\s*[:：]|系列第\s*\d+)"
+)
+_BLOCKQUOTE_FIELD_LABEL = re.compile(r"^>\s*\*\*[^*]+\*\*")
+
+# 全文安全剥离的作者模板字段（不含正文导航「上一篇/下一篇」、也不含「日志时区」等正文标签）
 _BLOCKQUOTE_AUTHOR_LINE = re.compile(
     r"^>\s*(?:"
-    r"\*\*(?:本篇定位|本文定位|v2 升级日期|预计篇幅|读者画像|"
-    r"评估时间|评估基线|评估范围|目录位置|作者决策日志|"
-    r"本版（v2）的核心变化|质量门升级)\*\*"
+    r"\*\*(?:本篇定位|本文定位|主线索|目录位置|"
+    r"关联已有系列|关联系列|本系列关系|本系列定位|本系列结构|"
+    r"承接自|衔接去|承接上[^:：*]*|"
+    r"目标读者|读者画像|写作状态|完成时间|"
+    r"v2 升级日期|预计篇幅|评估时间|评估基线|评估范围|作者决策日志|"
+    r"本版（v2）的核心变化|质量门升级|源码标注说明|设备详)\*\*"
     r"|-\s*\*\*(?:质量门升级|本版（v2）的核心变化)\*\*"
     r")"
 )
@@ -118,7 +137,9 @@ _LEAD_TEMPLATE = re.compile(
 )
 
 _AUDIT_BLOCKQUOTE_AUTHOR = re.compile(
-    r"(?m)^>\s*\*\*(?:本篇定位|本文定位|v2 升级日期|预计篇幅|读者画像|作者决策日志)\*\*"
+    r"(?m)^>\s*\*\*(?:本篇定位|本文定位|主线索|目录位置|上一篇|下一篇|"
+    r"关联已有系列|目标读者|读者画像|承接自|衔接去|作者决策日志|"
+    r"v2 升级日期|预计篇幅|写作状态|本系列关系)\*\*"
 )
 
 _AUDIT_AUTHOR_SECTION = re.compile(
@@ -331,8 +352,105 @@ def _strip_pre_title_preamble(text: str) -> tuple[str, bool]:
     return new_text, True
 
 
+def _is_blockquote_line(line: str) -> bool:
+    return line.lstrip().startswith(">")
+
+
+def _is_reader_meta_bq_line(line: str) -> bool:
+    s = line.rstrip()
+    return bool(_READER_META_LABELED.match(s) or _READER_META_PLAIN.match(s))
+
+
+def _lead_zone_end(lines: list[str], title_idx: int) -> int:
+    """标题后元信息区终点：首个非空/非分隔线/非 blockquote 内容（含正文标题）。"""
+    i = title_idx + 1
+    while i < len(lines):
+        s = lines[i].strip()
+        if s == "" or s in ("---", "***") or _is_blockquote_line(lines[i]):
+            i += 1
+            continue
+        return i
+    return len(lines)
+
+
+def _strip_lead_blockquote_to_reader_meta(text: str) -> tuple[str, bool]:
+    """文首 blockquote 只保留读者元信息行，剥离主线索/导航/读者画像等作者前言。"""
+    bom = text.startswith("\ufeff")
+    body = text[1:] if bom else text
+    newline = "\r\n" if "\r\n" in body else "\n"
+    ends_with_nl = body.endswith(("\n", "\r\n"))
+    lines = body.splitlines()
+    title_idx = _find_title_idx(lines)
+    if title_idx is None:
+        return text, False
+
+    lead_end = _lead_zone_end(lines, title_idx)
+    meta = lines[title_idx + 1 : lead_end]
+    if not any(_is_blockquote_line(ln) for ln in meta):
+        return text, False
+
+    kept_bq: list[str] = []
+    mode: str | None = None  # keep_cont | skip_cont
+    changed = False
+    for ln in meta:
+        if not _is_blockquote_line(ln):
+            mode = None
+            continue
+        s = ln.rstrip()
+        if s.strip() in (">", ""):
+            # 空引用行：不输出，并中断「读者续行」以免吞掉后续作者段之间的孤儿行
+            if mode == "keep_cont":
+                mode = None
+            continue
+        if _is_reader_meta_bq_line(ln):
+            kept_bq.append(ln)
+            mode = "keep_cont"
+            continue
+        if _BLOCKQUOTE_FIELD_LABEL.match(s) or _BLOCKQUOTE_PROMPT_REF.match(s):
+            changed = True
+            mode = "skip_cont"
+            continue
+        # 无标签续行：紧跟读者元信息则保留（如基线下一行的源码验证说明）
+        if mode == "keep_cont":
+            kept_bq.append(ln)
+            continue
+        changed = True
+        mode = "skip_cont"
+
+    # 只要 lead 里存在非读者 blockquote，或读者行集合发生变化，即视为变更
+    original_bq = [ln for ln in meta if _is_blockquote_line(ln) and ln.rstrip().strip() not in (">", "")]
+    if kept_bq == original_bq and not changed:
+        return text, False
+
+    had_hr = any(ln.strip() in ("---", "***") for ln in meta)
+    spaced_bq: list[str] = []
+    for idx, ln in enumerate(kept_bq):
+        if idx:
+            spaced_bq.append(">")
+        spaced_bq.append(ln)
+
+    new_lines = list(lines[: title_idx + 1])
+    if spaced_bq:
+        new_lines.append("")
+        new_lines.extend(spaced_bq)
+        new_lines.append("")
+    elif title_idx + 1 < lead_end:
+        new_lines.append("")
+    if had_hr:
+        new_lines.append("---")
+        new_lines.append("")
+    new_lines.extend(lines[lead_end:])
+
+    new_text = newline.join(new_lines)
+    if ends_with_nl and new_text and not new_text.endswith(("\n", "\r\n")):
+        new_text += newline
+    if bom:
+        new_text = "\ufeff" + new_text
+    return new_text, True
+
+
 def _strip_blockquote_author_meta(text: str) -> tuple[str, bool]:
-    """从 blockquote 元信息区剔除作者模板字段行。"""
+    """全文安全剥离已知作者模板字段行（含其 bullet 续行）。"""
     newline = "\r\n" if "\r\n" in text else "\n"
     ends_with_nl = text.endswith(("\n", "\r\n"))
     lines = text.splitlines()
@@ -344,12 +462,18 @@ def _strip_blockquote_author_meta(text: str) -> tuple[str, bool]:
         s = ln.rstrip()
         if _BLOCKQUOTE_AUTHOR_LINE.match(s) or _BLOCKQUOTE_PROMPT_REF.match(s):
             changed = True
-            if re.search(r"本版（v2）的核心变化|质量门升级", s):
-                i += 1
-                while i < len(lines) and re.match(r"^>\s*-\s", lines[i].rstrip()):
-                    i += 1
-                continue
             i += 1
+            while i < len(lines):
+                nxt = lines[i].rstrip()
+                if not _is_blockquote_line(lines[i]):
+                    break
+                if nxt.strip() in (">", ""):
+                    i += 1
+                    continue
+                if _BLOCKQUOTE_FIELD_LABEL.match(nxt):
+                    break
+                # 作者字段下的 bullet / 无标签续行
+                i += 1
             continue
         out.append(ln)
         i += 1
@@ -495,11 +619,12 @@ def _strip_heading_preamble(text: str) -> tuple[str, bool]:
 
 
 def strip_author_preamble(text: str) -> tuple[str, bool]:
-    """切除作者元信息：AUTHOR_ONLY + pre-title/heading 前言 + blockquote 模板 + 篇中作者节。"""
+    """切除作者元信息：AUTHOR_ONLY + pre-title/heading 前言 + lead/全文 blockquote + 篇中作者节。"""
     original = text
     text, changed_ao = strip_author_only_blocks(text)
     text, changed_pre = _strip_pre_title_preamble(text)
     text, changed_head = _strip_heading_preamble(text)
+    text, changed_lead = _strip_lead_blockquote_to_reader_meta(text)
     text, changed_bq = _strip_blockquote_author_meta(text)
     text, changed_tbl = _strip_author_decision_tables(text)
     text, changed_sec = _strip_author_template_sections(text)
@@ -507,6 +632,7 @@ def strip_author_preamble(text: str) -> tuple[str, bool]:
         changed_ao
         or changed_pre
         or changed_head
+        or changed_lead
         or changed_bq
         or changed_tbl
         or changed_sec
@@ -547,11 +673,13 @@ def audit_docs_for_preamble(docs_root: Path) -> list[str]:
         if scan < len(lines) and is_preamble_heading(lines[scan]):
             offenders.append(rel)
             continue
-        lead = "\n".join(lines[tidx : min(len(lines), tidx + 200)])
+        lead_end = _lead_zone_end(lines, tidx)
+        lead = "\n".join(lines[tidx:lead_end])
         if _LEAD_TEMPLATE.search(lead):
             offenders.append(rel)
             continue
-        if _AUDIT_BLOCKQUOTE_AUTHOR.search(text):
+        # 上一篇/下一篇等只审计文首；正文篇尾导航允许保留
+        if _AUDIT_BLOCKQUOTE_AUTHOR.search(lead):
             offenders.append(rel)
             continue
         if _AUDIT_AUTHOR_SECTION.search(text):

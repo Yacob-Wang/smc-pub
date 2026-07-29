@@ -82,6 +82,55 @@ def test_noop_plain() -> None:
     _assert(out == sample, "plain identity")
 
 
+def test_process_08_lead_blockquote_compact() -> None:
+    """Process 长文首作者前言 → 读者视图只留基线，从 H1/正文切入。"""
+    raw = (
+        REPO
+        / "01-Mechanism/Framework/Process/08-进程稳定性风险全景与跨层治理.md"
+    ).read_text(encoding="utf-8")
+    out, changed = strip_author_preamble(raw)
+    _assert(changed, "Process 08 should strip lead author blockquote")
+    lead = out.split("## 目录")[0] if "## 目录" in out else out.split("## 1.")[0]
+    _assert("> **基线**" in lead or "> **基线**:" in lead or "> **基线**：" in lead, "Process 08 keep 基线")
+    for needle in (
+        "主线索",
+        "本篇定位",
+        "目录位置",
+        "上一篇",
+        "下一篇",
+        "关联已有系列",
+    ):
+        _assert(needle not in lead, f"Process 08 lead should drop {needle}")
+    _assert("## 1. 背景" in out or "## 目录" in out, "Process 08 body kept")
+    # 正文内引用块不应被误伤
+    _assert("架构师视角的" in out, "Process 08 body callout kept")
+
+
+def test_activity_lead_keeps_reader_meta_only() -> None:
+    raw = (REPO / "01-Mechanism/Framework/Activity/01_Activity_Overview.md").read_text(
+        encoding="utf-8"
+    )
+    out, changed = strip_author_preamble(raw)
+    _assert(changed, "Activity A01 should strip 承接/衔接 from lead")
+    lead = out.split("## 一、")[0]
+    _assert("> **基线**" in lead, "Activity keep 基线")
+    _assert("> **本篇角色**" in lead, "Activity keep 本篇角色")
+    _assert("> **强依赖**" in lead, "Activity keep 强依赖")
+    _assert("承接自" not in lead, "Activity drop 承接自")
+    _assert("衔接去" not in lead, "Activity drop 衔接去")
+
+
+def test_s01_drops_author_status_fields() -> None:
+    raw = (REPO / "02-Symptom/S01-ANR/01-症状机制.md").read_text(encoding="utf-8")
+    out, changed = strip_author_preamble(raw)
+    _assert(changed, "S01 should strip 目标读者/状态等")
+    lead = out.split("# 1. 背景与定义")[0]
+    _assert("**系列**" in lead or "**版本基线**" in lead, "S01 keep series/baseline")
+    _assert("目标读者" not in lead, "S01 drop 目标读者")
+    _assert("完成时间" not in lead, "S01 drop 完成时间")
+    _assert("**状态**" not in lead, "S01 drop 状态")
+
+
 def test_mm_author_only_blocks() -> None:
     raw = (
         REPO
@@ -233,6 +282,9 @@ def main() -> int:
     test_binder_article_calibration_appendix()
     test_symptom_readme_calibration_tail()
     test_noop_plain()
+    test_process_08_lead_blockquote_compact()
+    test_activity_lead_keeps_reader_meta_only()
+    test_s01_drops_author_status_fields()
     print("test_preamble_transform: OK")
     return 0
 
