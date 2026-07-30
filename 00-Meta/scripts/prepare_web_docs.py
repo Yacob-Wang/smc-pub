@@ -136,7 +136,11 @@ def write_pages_file(
         lines.append("nav:")
         for title, target in nav_entries:
             lines.append(f"  - {yaml_quote(title)}: {target}")
-    (dir_path / ".pages").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (dir_path / ".pages").write_text(
+        "\n".join(lines) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
 
 
 def _pick_readme(dir_path: Path) -> Path | None:
@@ -420,6 +424,14 @@ def build_series_landing_index(module: str | None, dir_path: Path) -> str:
     return landing_frontmatter(short) + hero + body
 
 
+def _nav_entry_for_child(module: str, child: Path) -> tuple[str, str]:
+    """子目录导航项：叶子系列直链 index.md，避免侧栏出现一排「系列总览」。"""
+    label = _short_title(module, child.name, child)
+    if (child / "index.md").is_file() and not _list_nav_subdirs(child):
+        return label, f"{child.name}/index.md"
+    return label, child.name
+
+
 def ensure_subcategory_landing_pages(mod_dir: Path, module: str) -> None:
     """为含嵌套系列的子分类生成 index.md + .pages（任意深度，如 Runtime/ART）。"""
     for sub in _list_nav_subdirs(mod_dir):
@@ -433,7 +445,7 @@ def ensure_subcategory_landing_pages(mod_dir: Path, module: str) -> None:
         )
         nav: list[tuple[str, str]] = [("本层总览", "index.md")]
         for series in nested:
-            nav.append((_short_title(module, series.name, series), series.name))
+            nav.append(_nav_entry_for_child(module, series))
         write_pages_file(sub, nav, collapse=True)
         ensure_subcategory_landing_pages(sub, module)
 
@@ -451,6 +463,47 @@ def _article_files(dir_path: Path) -> list[str]:
     return sorted(files, key=natural_key)
 
 
+def ensure_not_in_nav(path: Path) -> None:
+    """标记单篇不进侧栏（仍构建，从系列总览 Feed 进入）。"""
+    text = path.read_text(encoding="utf-8", errors="replace").replace("\ufeff", "")
+    if text.lstrip().startswith("---"):
+        parts = text.split("---", 2)
+        if len(parts) >= 3:
+            fm = parts[1]
+            if re.search(r"(?m)^\s*not_in_nav\s*:", fm):
+                # 仍清理正文残留 BOM
+                cleaned = f"---{fm}---{parts[2]}"
+                if cleaned != text:
+                    path.write_text(cleaned, encoding="utf-8", newline="\n")
+                return
+            new_fm = fm.rstrip("\n") + "\nnot_in_nav: true\n"
+            path.write_text(
+                f"---{new_fm}---{parts[2]}",
+                encoding="utf-8",
+                newline="\n",
+            )
+            return
+    path.write_text(
+        "---\nnot_in_nav: true\n---\n\n" + text,
+        encoding="utf-8",
+        newline="\n",
+    )
+
+
+def mark_series_articles_not_in_nav(series_dir: Path) -> int:
+    """叶子系列内除 index/README 外的 md 全部 not_in_nav。"""
+    n = 0
+    for p in series_dir.iterdir():
+        if not p.is_file() or p.suffix.lower() != ".md":
+            continue
+        name = p.name.lower()
+        if name == "index.md" or name.startswith("readme"):
+            continue
+        ensure_not_in_nav(p)
+        n += 1
+    return n
+
+
 def _ensure_series_overview(dir_path: Path, module: str | None) -> str:
     """保证系列有总览页；生成 Feed 式 index.md，侧栏只挂这一页。"""
     index_path = dir_path / "index.md"
@@ -458,26 +511,27 @@ def _ensure_series_overview(dir_path: Path, module: str | None) -> str:
         build_series_landing_index(module, dir_path),
         encoding="utf-8",
     )
+    write_pages_file(dir_path, [("系列总览", "index.md")], collapse=True)
+    mark_series_articles_not_in_nav(dir_path)
     return "index.md"
 
 
 def generate_meta_module_pages(mod_dir: Path) -> None:
-    """00-Meta：侧栏挂读者导航页 + Reference 子目录。"""
+    """00-Meta：侧栏挂读者导航页 + 子系列（叶子系列直链 index）。"""
     nav: list[tuple[str, str]] = [("导航总览", "index.md")]
     for label, filename in META_HUB_PAGES:
         if (mod_dir / filename).is_file():
             nav.append((label, filename))
-    ref_dir = mod_dir / "Reference"
-    if ref_dir.is_dir():
-        nav.append(("Reference 索引", "Reference"))
+    for sub in _list_nav_subdirs(mod_dir):
+        nav.append(_nav_entry_for_child("00-Meta", sub))
     write_pages_file(mod_dir, nav, collapse=True)
 
 
 def generate_module_pages(mod_dir: Path, module: str) -> None:
     """module 层 .pages：本模块总览（卡片式 index.md） + 子分类列表。
 
-    系列层不写 .pages —— 让 awesome-pages plugin 自动递归列出该系列单篇
-    （用户进入某系列时，侧栏只显示本系列的内容 + 子分类）。
+    叶子系列的 .pages 由 `_ensure_series_index_md` 写入，仅挂「系列总览」，
+    单篇从 Feed 篇章表进入，不再铺进侧栏。
 
     `collapse: true` —— 侧栏默认折叠所有 AOSP 分层下的子分类，
     用户点顶部 tab 回 module 落地页时侧栏不会铺满 500+ 篇。
@@ -492,10 +546,10 @@ def generate_module_pages(mod_dir: Path, module: str) -> None:
     if (mod_dir / "index.md").is_file():
         nav.append(("本模块总览", "index.md"))
 
-    # 2) 子分类（按 MODULE_SERIES_ORDER 排序）
+    # 2) 子分类（按 MODULE_SERIES_ORDER 排序；叶子系列直链 index）
     subdirs = _list_nav_subdirs(mod_dir)
     for sub in subdirs:
-        nav.append((_short_title(module, sub.name, sub), sub.name))
+        nav.append(_nav_entry_for_child(module, sub))
 
     write_pages_file(mod_dir, nav, collapse=True)
 
@@ -505,12 +559,13 @@ def generate_pages_tree(docs_root: Path) -> None:
 
     1. 顶层 .pages：8 大分类 tab（按 MODULE_TITLES 排序）
     2. module 层强制生成 index.md（Material grid cards 卡片式落地页）
-       —— 无论仓库里有没有 README.md；README.md 仍会复制到 docs/ 作为扩展
-       —— 从 index.md 链过去，但不进侧栏
     3. module 层 .pages：「本模块总览」指向 index.md + 子分类列表
-    4. series 层不写 .pages：让 awesome-pages 自动递归列出所有单篇
+    4. 叶子系列 .pages：仅「系列总览」；单篇 not_in_nav，从 Feed 表进入
     """
-    top_nav: list[tuple[str, str]] = [("Home", "index.md")]
+    top_nav: list[tuple[str, str]] = [
+        ("Home", "index.md"),
+        ("文章总目录", "文章总目录.md"),
+    ]
     for mod in MODULE_DIRS:
         mod_dir = docs_root / mod
         if not mod_dir.is_dir():
@@ -640,7 +695,7 @@ def fix_directory_links_for_mkdocs(docs_root: Path) -> int:
 def _write_stripped_md(src: Path, dst: Path) -> bool:
     """写入 md；若命中作者前言则剥离。返回是否发生剥离。"""
     global _PREAMBLE_STRIPPED
-    raw = src.read_text(encoding="utf-8", errors="replace")
+    raw = src.read_text(encoding="utf-8", errors="replace").replace("\ufeff", "")
     new_text, changed = strip_author_preamble(raw)
     if changed:
         dst.write_text(new_text, encoding="utf-8", newline="\n")
@@ -651,7 +706,7 @@ def _write_stripped_md(src: Path, dst: Path) -> bool:
 
 
 def _ensure_series_index_md(src_sub: Path, dst_sub: Path) -> None:
-    """递归确保 leaf series 目录有 Feed 式 index.md。
+    """递归确保 leaf series：Feed 式 index.md + 侧栏只挂系列总览。
 
     含嵌套子系列的目录（Kernel / Framework 等）由 ensure_subcategory_landing_pages
     生成子分类落地页，此处跳过以免覆盖为空的「暂无篇章」页。
@@ -664,12 +719,8 @@ def _ensure_series_index_md(src_sub: Path, dst_sub: Path) -> None:
                 _ensure_series_index_md(sub, dst_sub / sub.name)
         return
     module = _module_name_for(dst_sub)
-    index_md = dst_sub / "index.md"
     try:
-        index_md.write_text(
-            build_series_landing_index(module, dst_sub),
-            encoding="utf-8",
-        )
+        _ensure_series_overview(dst_sub, module)
     except OSError:
         pass
     for sub in src_sub.iterdir():

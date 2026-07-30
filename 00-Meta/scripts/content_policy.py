@@ -45,6 +45,7 @@ MODULE_BLURBS = {
 SERIES_NAV_TITLES: dict[str, dict[str, str]] = {
     "00-Meta": {
         "Reference": "Reference 索引",
+        "Industry-Benchmark": "Industry Benchmark",
     },
     "01-Mechanism": {
         "Hardware": "硬件层",
@@ -227,7 +228,9 @@ PROBLEM_INDEX: list[tuple[str, list[tuple[str, str]]]] = [
     ("安全 + 稳定性", [("Security", "05-Governance/Security/")]),
 ]
 
-PUBLIC_ROOT_FILES: list[str] = []
+PUBLIC_ROOT_FILES: list[str] = [
+    "文章总目录.md",
+]
 
 PUBLIC_TOOLING_FILES = [
     "mkdocs.yml",

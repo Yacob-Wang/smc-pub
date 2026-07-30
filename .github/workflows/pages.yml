@@ -40,6 +40,9 @@ jobs:
       - name: Prepare docs/
         run: python 00-Meta/scripts/prepare_web_docs.py
 
+      - name: Validate series nav (overview-only, no article dump)
+        run: python 00-Meta/scripts/validate_series_nav.py
+
       - name: Audit docs/ for leftover author preamble
         run: python 00-Meta/scripts/preamble_transform.py audit docs
 

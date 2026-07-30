@@ -179,6 +179,7 @@ def test_render_problem_index_html() -> None:
     _assert('href="02-Symptom/S01-ANR/"' in html, "ANR link href")
     _assert("ANR 症状" in html, "ANR link label")
     _assert("按问题进入" in html, "summary text")
+    _assert('<details class="jk-collapsible" open' in html, "problem index open by default")
 
 
 def test_homepage_uses_list_for_latest() -> None:

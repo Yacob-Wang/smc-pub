@@ -1997,7 +1997,9 @@ article > h1:first-child,
 }
 
 /* ==========================================================================
-   Doc 模式阅读优化（非 landing）
+   Doc 模式（非 landing）
+   正文宽度与上方「全屏布局」一致：撑满左右侧栏之间的中间区，不再限 72ch。
+   Landing（.jk-landing）仍走 Feed 壳 + --jk-feed-max-width。
    ========================================================================== */
 
 body:not(.jk-landing) .md-content__inner > h1:first-child {
@@ -2006,14 +2008,8 @@ body:not(.jk-landing) .md-content__inner > h1:first-child {
 }
 
 body:not(.jk-landing) .md-content__inner.md-typeset {
-  max-width: min(100%, 72ch);
-}
-
-body:not(.jk-landing) .md-content__inner.md-typeset > .jk-feed-grid,
-body:not(.jk-landing) .md-content__inner.md-typeset > .jk-article-list,
-body:not(.jk-landing) .md-content__inner.md-typeset > .jk-page-hero,
-body:not(.jk-landing) .md-content__inner.md-typeset > .jk-promo {
   max-width: none;
+  width: 100%;
 }
 
 .md-path {
