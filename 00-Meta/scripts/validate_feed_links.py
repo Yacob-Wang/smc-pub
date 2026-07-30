@@ -20,9 +20,20 @@ MD_LINK_RE = re.compile(r'(?<!!)\[([^\]]*)\]\(([^)]+)\)')
 
 
 def resolve_href(source: Path, href: str) -> Path:
+    """解析相对链接目标。
+
+    与 mkdocs.yml ``use_directory_urls: true`` 一致：``page.md`` 对外是
+    ``page/``，相对路径从该虚拟目录起算（浏览器行为），而不是从 ``.md``
+    文件所在目录起算。否则 ``about/works.md`` 里的 ``../assets/x.mp4``
+    会被误判成 ``docs/assets/`` 而非 ``docs/about/assets/``。
+    """
     if href.startswith("/"):
         return DOCS_DIR / href.lstrip("/")
-    return (source.parent / href).resolve()
+    if source.suffix.lower() == ".md" and source.name.lower() != "index.md":
+        base = source.parent / source.stem
+    else:
+        base = source.parent
+    return (base / href).resolve()
 
 
 def target_exists(target: Path, href: str) -> bool:
