@@ -66,6 +66,8 @@ NAV_SKIP_DIR_NAMES = {
     "images",
     "img",
     "scripts",
+    "web",
+    "overrides",
     "_archive",
     "_studio",
 }
@@ -425,10 +427,12 @@ def build_series_landing_index(module: str | None, dir_path: Path) -> str:
 
 
 def _nav_entry_for_child(module: str, child: Path) -> tuple[str, str]:
-    """子目录导航项：叶子系列直链 index.md，避免侧栏出现一排「系列总览」。"""
+    """子目录导航项：始终挂目录名，由子级 .pages（仅系列总览）承接。
+
+    不要写成 ``Child/index.md``：awesome-pages 会把它当成未解析的裸链接，
+    顶栏下拉 href 变成 ``S01-ANR/index.md`` 这类相对路径，校验与点击都会挂。
+    """
     label = _short_title(module, child.name, child)
-    if (child / "index.md").is_file() and not _list_nav_subdirs(child):
-        return label, f"{child.name}/index.md"
     return label, child.name
 
 
@@ -579,6 +583,9 @@ def generate_pages_tree(docs_root: Path) -> None:
         )
         generate_module_pages(mod_dir, mod)
         ensure_subcategory_landing_pages(mod_dir, mod)
+    # 作者页由 00-Meta/web/about/ 拷贝而来；挂到顶栏末尾，头像「关于作者」同入口
+    if (docs_root / "about").is_dir():
+        top_nav.append(("关于作者", "about"))
     write_pages_file(docs_root, top_nav)
 
 

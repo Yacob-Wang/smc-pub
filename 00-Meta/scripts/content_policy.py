@@ -266,6 +266,8 @@ EXCLUDE_PATH_PREFIXES = [
     "00-Meta/reader/",
     "00-Meta/scripts/",
     "00-Meta/overrides/",
+    # web/ 由 prepare 单独拷到 docs/ 根（stylesheets/javascripts/about），勿进 00-Meta 导航
+    "00-Meta/web/",
 ]
 
 PRIVATE_ROOT_NAMES = frozenset(
