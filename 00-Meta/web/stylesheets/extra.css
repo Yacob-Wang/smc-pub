@@ -817,7 +817,37 @@ body.jk-nav-sheet-open {
   .md-header__actions .md-header__button[for="__search"] { display: inline-flex; }
 }
 
-/* —— 头像（j 字母圆形） ——————————————————————————— */
+/* —— 关于作者（文案 + j 字母圆形头像） ——————————————— */
+.jk-author {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-left: 0.35rem;
+  padding: 0.15rem 0.2rem 0.15rem 0.45rem;
+  border-radius: var(--jk-radius);
+  color: var(--jk-text-mute);
+  text-decoration: none !important;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.jk-author:hover {
+  background: var(--jk-bg-active);
+  color: var(--jk-text-main);
+}
+
+.jk-author:hover .jk-avatar {
+  box-shadow: 0 0 0 3px var(--jk-brand-ring);
+}
+
+.jk-author__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  line-height: 1;
+}
+
 .jk-avatar {
   display: inline-flex;
   align-items: center;
@@ -832,12 +862,63 @@ body.jk-nav-sheet-open {
   font-family: var(--jk-text-font);
   text-decoration: none !important;
   flex-shrink: 0;
-  margin-left: 0.2rem;
   transition: box-shadow 0.15s ease;
 }
 
-.jk-avatar:hover {
-  box-shadow: 0 0 0 3px var(--jk-brand-ring);
+@media screen and (max-width: 50em) {
+  .jk-author {
+    margin-left: 0.15rem;
+    padding: 0.1rem;
+  }
+
+  .jk-author__label {
+    display: none;
+  }
+}
+
+/* —— 关于作者页内导航 / 视频容器 ———————————————— */
+.jk-about-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.85rem;
+  margin: 0 0 1.25rem;
+  padding: 0 0 0.85rem;
+  border-bottom: 1px solid var(--jk-line);
+}
+
+.jk-about-nav__link {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--jk-text-mute) !important;
+  text-decoration: none !important;
+}
+
+.jk-about-nav__link:hover {
+  color: var(--jk-text-link) !important;
+}
+
+.jk-about-nav__link--active {
+  color: var(--jk-text-main) !important;
+}
+
+.jk-video {
+  position: relative;
+  width: 100%;
+  max-width: 48rem;
+  aspect-ratio: 16 / 9;
+  margin: 0.75rem 0 1.25rem;
+  background: var(--jk-bg-soft);
+  border: 1px solid var(--jk-line);
+  border-radius: var(--jk-radius);
+  overflow: hidden;
+}
+
+.jk-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
 }
 
 /* ==========================================================================

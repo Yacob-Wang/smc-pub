@@ -64,6 +64,9 @@
       <div>
         <h3>关于</h3>
         <ul>
+          <li><a href="{{ 'about/' | url }}">关于我</a></li>
+          <li><a href="{{ 'about/works/' | url }}">作品</a></li>
+          <li><a href="{{ 'about/collaborate/' | url }}">合作</a></li>
           {% for item in nav.items %}
             {% if item.title == 'Map' and item.children %}
               <li><a href="{{ navutil.resolve_href(item) }}">Map</a></li>
