@@ -913,12 +913,18 @@ body.jk-nav-sheet-open {
   overflow: hidden;
 }
 
-.jk-video iframe {
+.jk-video iframe,
+.jk-video video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   border: 0;
+  background: #000;
+}
+
+.jk-video video {
+  object-fit: contain;
 }
 
 /* ==========================================================================

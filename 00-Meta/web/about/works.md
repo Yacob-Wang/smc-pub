@@ -4,7 +4,7 @@ title: 作品
 
 # 作品
 
-这里放项目、系列内容与演示。大视频建议外链到 B 站 / YouTube，本页用嵌入或链接展示。
+项目、系列内容与演示。大视频优先外链；短片可放在本页直接播放。
 
 ## 稳知库
 
@@ -13,17 +13,26 @@ title: 作品
 - 在线站点：[稳知库](../index.md)
 - 仓库：[yacob-wang/smc-pub](https://github.com/yacob-wang/smc-pub)
 
-## 作品清单（待补充）
+## 作品清单
 
 | 作品 | 类型 | 说明 |
 |:-----|:-----|:-----|
 | 稳知库 | 知识库 / 站点 | AOSP 17 稳定性系列 |
-| （示例）项目演示 | 视频 | 嵌入 B 站 / YouTube iframe |
-| （示例）工具或案例 | 文档 / Demo | 一句话说明 + 链接 |
+| 演示视频 2026-07-30 | 视频 | 见下方播放器（约 4 分钟） |
 
-### 视频嵌入示例
+## 演示视频
 
-把下面注释打开，并换成你的 BV 号或 YouTube embed 地址：
+<div class="jk-video" markdown="0">
+  <video controls preload="metadata" playsinline>
+    <source src="../assets/demo-20260730.mp4" type="video/mp4">
+    你的浏览器不支持 HTML5 视频，请
+    <a href="../assets/demo-20260730.mp4">下载观看</a>。
+  </video>
+</div>
+
+## 更多视频（外链）
+
+B 站 / YouTube 可嵌入：
 
 ```html
 <!--
@@ -36,7 +45,3 @@ title: 作品
 </div>
 -->
 ```
-
-## 更新说明
-
-按条目追加即可；需要配图时放到 `about/assets/`，再在本文用相对路径引用。
