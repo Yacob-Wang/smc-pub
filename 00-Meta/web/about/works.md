@@ -1,5 +1,12 @@
 ---
 title: 作品
+not_in_nav: true
+search:
+  exclude: true
+hide:
+  - navigation
+  - toc
+  - path
 ---
 
 # 作品
