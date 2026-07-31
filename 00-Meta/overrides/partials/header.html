@@ -7,7 +7,7 @@
   Notes:
   - 顶栏白底，1px 灰边，沿用 Material 8+ 风格
   - logo 用 brand 绿 Android robot，旁标 "source" 灰字
-  - 内联搜索框（jk-search）+「关于作者」+ 圆形头像（跳转 about/）
+  - 内联搜索框（jk-search）+ 圆形头像（点击跳转 about/）
   - 隐藏 Material 原生搜索触发按钮（搜索永远可见在顶栏右侧）
 -#}
 {% set class = "md-header" %}
@@ -89,11 +89,8 @@
         {% endif %}
       {% endif %}
 
-      {#- 关于作者：文案 + 圆形头像，点击进入个人介绍 -#}
-      <a class="jk-author" href="{{ 'about/' | url }}" title="关于作者 · JacobKing" aria-label="关于作者">
-        <span class="jk-author__label">关于作者</span>
-        <span class="jk-avatar" aria-hidden="true">J</span>
-      </a>
+      {#- 圆形头像：点击进入个人介绍 -#}
+      <a class="jk-avatar" href="{{ 'about/' | url }}" title="关于作者 · JacobKing" aria-label="关于作者">J</a>
 
       {% if config.repo_url %}
         <div class="md-header__source">

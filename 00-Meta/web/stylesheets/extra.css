@@ -817,43 +817,14 @@ body.jk-nav-sheet-open {
   .md-header__actions .md-header__button[for="__search"] { display: inline-flex; }
 }
 
-/* —— 关于作者（文案 + j 字母圆形头像） ——————————————— */
-.jk-author {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin-left: 0.35rem;
-  padding: 0.15rem 0.2rem 0.15rem 0.45rem;
-  border-radius: var(--jk-radius);
-  color: var(--jk-text-mute);
-  text-decoration: none !important;
-  flex-shrink: 0;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.jk-author:hover {
-  background: var(--jk-bg-active);
-  color: var(--jk-text-main);
-}
-
-.jk-author:hover .jk-avatar {
-  box-shadow: 0 0 0 3px var(--jk-brand-ring);
-}
-
-.jk-author__label {
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  line-height: 1;
-}
-
+/* —— 圆形头像（点击进入关于作者） ——————————————— */
 .jk-avatar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 1.85rem;
   height: 1.85rem;
+  margin-left: 0.35rem;
   border-radius: 50%;
   background: var(--jk-brand);
   color: #0a2a18;
@@ -865,15 +836,8 @@ body.jk-nav-sheet-open {
   transition: box-shadow 0.15s ease;
 }
 
-@media screen and (max-width: 50em) {
-  .jk-author {
-    margin-left: 0.15rem;
-    padding: 0.1rem;
-  }
-
-  .jk-author__label {
-    display: none;
-  }
+.jk-avatar:hover {
+  box-shadow: 0 0 0 3px var(--jk-brand-ring);
 }
 
 /* —— 关于作者页内导航 / 视频容器 ———————————————— */

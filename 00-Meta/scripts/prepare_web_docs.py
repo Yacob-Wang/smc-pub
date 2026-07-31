@@ -583,9 +583,7 @@ def generate_pages_tree(docs_root: Path) -> None:
         )
         generate_module_pages(mod_dir, mod)
         ensure_subcategory_landing_pages(mod_dir, mod)
-    # 作者页由 00-Meta/web/about/ 拷贝而来；挂到顶栏末尾，头像「关于作者」同入口
-    if (docs_root / "about").is_dir():
-        top_nav.append(("关于作者", "about"))
+    # 作者页由 00-Meta/web/about/ 拷贝；不进顶栏 Tab，仅头像 / 页脚入口
     write_pages_file(docs_root, top_nav)
 
 
