@@ -20,7 +20,6 @@ title: 作品
 | 稳知库 | 知识库 / 站点 | AOSP 17 稳定性系列 |
 | Skill 看板 | 视频 | 见下方播放器（约 57 秒） |
 | Jira 分析报告 | 视频 | 见下方播放器（约 2 分 23 秒） |
-| 演示视频 2026-07-30 | 视频 | 见下方播放器（约 4 分钟） |
 
 ## Skill 看板
 
@@ -39,16 +38,6 @@ title: 作品
     <source src="../assets/jira-report.mp4" type="video/mp4">
     你的浏览器不支持 HTML5 视频，请
     <a href="../assets/jira-report.mp4">下载观看</a>。
-  </video>
-</div>
-
-## 演示视频
-
-<div class="jk-video" markdown="0">
-  <video controls preload="metadata" playsinline>
-    <source src="../assets/demo-20260730.mp4" type="video/mp4">
-    你的浏览器不支持 HTML5 视频，请
-    <a href="../assets/demo-20260730.mp4">下载观看</a>。
   </video>
 </div>
 
