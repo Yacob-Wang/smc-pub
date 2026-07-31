@@ -17,24 +17,19 @@ title: 合作
 
 | 渠道 | 说明 |
 |:-----|:-----|
+| 微信 | `ikunshow`（添加时请备注：**稳知库 / 合作**） |
+| 邮箱 | [jumbola@163.com](mailto:jumbola@163.com) |
 | GitHub | [yacob-wang/smc-pub](https://github.com/yacob-wang/smc-pub) Issues / Discussion |
-| 微信 | 添加时请备注：**稳知库 / 合作**（微信号或二维码见下方） |
 
-### 微信
+> 微信号：`ikunshow`
 
-将二维码图片放到 `about/assets/wechat.png` 后，取消下面注释即可显示：
+如需展示微信二维码，将图片放到 `about/assets/wechat.png` 后加入：
 
 ```markdown
-<!--
 ![微信二维码](assets/wechat.png){ width="220" }
--->
 ```
-
-或直接写微信号（自行替换）：
-
-> 微信号：`（待填写）`
 
 ## 说明
 
 - 技术问题优先提 GitHub Issue，便于沉淀为公开知识
-- 商务 / 商务合作请微信备注来意，方便分类回复
+- 商务 / 商务合作请微信备注来意，或发邮件说明背景

@@ -22,6 +22,16 @@ title: 关于我
 | 性能与内存 | 启动、卡顿、Heap / GC、进程与 LMK |
 | 工具链 | Perfetto、Hprof、Watchdog、Dumpsys、AmCommand |
 
+## 联系方式
+
+| 渠道 | 账号 |
+|:-----|:-----|
+| 微信 | `ikunshow`（添加请备注：稳知库） |
+| 邮箱 | [jumbola@163.com](mailto:jumbola@163.com) |
+| GitHub | [yacob-wang/smc-pub](https://github.com/yacob-wang/smc-pub) |
+
+更多合作说明见 [合作](collaborate.md)。
+
 ## 站内入口
 
 - [作品](works.md) — 项目与内容产出
