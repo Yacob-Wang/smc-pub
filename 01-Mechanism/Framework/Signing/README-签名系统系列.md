@@ -1,22 +1,11 @@
 # 面向稳定性的 Android 签名系列
 
 > **本系列定位**:面向资深 Android 稳定性架构师,把"签名"——这个常被工程师视为"基础就该自动工作"、但实际上**是 Android 安全栈最底层、跨 4 层最深、咬人最广**的子系统——拆成可深读、可复用、可作为线上 P0 故障排查底图的长文。
->
-> **本系列结构**:**5 篇主序列**——
-> - **[01-签名总览:背景、发展史、现状与生态](01-签名总览:背景、发展史、现状与生态.md)** — 锚点文章(全局观 + 4 层抽象 + 5 个发展阶段 + 1 张生态地图)
-> - **[02-APK 签名方案 V1/V2/V3/V4 核心机制与数据结构](02-APK签名方案V1V2V3V4核心机制与数据结构.md)** — 协议篇(V1-V4 字节级 + 算法 + 源码走读)
-> - **[03-签名校验链路:PackageInstaller → PMS](03-签名校验链路:PackageInstaller到PMS.md)** — 链路篇(5 个核心源文件 + 调用栈)
-> - **[04-AndroidKeyStore 与硬件密钥管理](04-AndroidKeyStore与硬件密钥管理.md)** — 硬件篇(TEE / StrongBox / KeyMint / Key Attestation)
-> - **[05-签名风险全景 + 实战案例](05-签名风险全景与实战案例.md)** — 收口篇(6 大风险 + 5 件套案例 + 跨厂商 + 监控治理)
->
-> **基线**:AOSP `android-17.0.0_r1`(API 37,代号 CinnamonBun)+ Linux `android17-6.18` LTS。
-> 所有源码路径经 `https://android.googlesource.com/` / `https://cs.android.com/` 实测 HTTP 200 验证,合计 **50+ 条**。
->
-> **目录位置**:`01-Mechanism/Framework/Signing/`
->
-> **写作规范**:`PROMPT-技术系列文章写作指南` v6(顶部 blockquote ≤ 3 行 + AUTHOR_ONLY 段 ≤ 15 行 + 5 项 verify 自动化)
+> **本系列结构**:**5 篇主序列** — 全局观 → 协议 → 链路 → 硬件 → 实战(详见下面"5 篇章节规划表")。
+> **基线**:AOSP `android-17.0.0_r1`(API 37)+ Kernel `android17-6.18` LTS,所有源码路径 cs.android.com 验证。
 
 ---
+
 
 ## 系列全景:5 篇 × 4 层抽象 × 1 张地图
 
