@@ -1,0 +1,1 @@
+﻿git rm -r 02-Symptom/S08-AOSP17-K618 02-Symptom/S11-Startup 06-Foundation/Build-System 06-Foundation/SELinux 06-Foundation/Dynamic-Updates
