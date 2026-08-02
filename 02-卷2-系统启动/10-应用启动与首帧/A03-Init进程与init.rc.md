@@ -16,7 +16,7 @@
 - **强依赖**：
   - [A01-启动链路总览](A01-启动链路总览.md)（必读前置）
   - [A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md)（必读前置）
-  - [Linux_Kernel/Process · 01-子系统全景](../01-Mechanism/Kernel/Process/01-进程子系统全景与边界契约.md)
+  - [Linux_Kernel/Process · 01-子系统全景](../../03-卷3-核心机制/13-进程与生命周期/01-进程子系统全景与边界契约.md)
   - [Stability S04-SWT 专题](../Stability/S04-SWT卡死与Watchdog专题.md)（init 卡死 → Watchdog 杀进程）
   - [Dumpsys D02-Activity 与 AMS 视角](../Dumpsys/02-Activity与AMS视角.md)
 - **承接自**：[A02 §4.2 T10 rest_init](A02-Bootloader到Kernel.md) → init 进程创建
