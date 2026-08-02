@@ -98,7 +98,7 @@
 | 04_AI_Engineering | 12 + README | Prompt/Skill/Context + Token 预算 + Durable Execution + Evals + Policy as Code + MCP + 信任边界 + 副作用 + HITL + Release Control + Compound Agent + Model Routing |
 
 - **v4 特色**：每篇 300+ 行 + 4 附录 + 3 轮校准
-- **联动**：[02-Symptom/S08-AOSP17-K618](../02-Symptom/S08-AOSP17-K618/) AOSP 17 AppFunctions 集成
+- **联动**：[02-Symptom/S08-AOSP17-K618](../../01-卷1-Android系统基础与平台/01-Android 系统全景与 AOSP 17/) AOSP 17 AppFunctions 集成
 
 ### 1.6 AI-Debug/（🟡 P3 · 占位）
 

@@ -610,7 +610,7 @@ u:r:vendor_service:s0  root  ...  /system/bin/vendor.bin
 | [06 §5 速查表](06-常见稳定性问题：service-crash.neverallow.build-失败.md) | 30 症状映射 |
 | [08 AOSP 17 演进](08-AOSP-17演进：Treble+CIL+userspace加载.md) | 下篇讲 AOSP 17 的新变化 |
 | [05-Governance/Security](../../../05-Governance/Security/) | SELinux 治理 SOP（**待补**）|
-| [01-Mechanism/App/Hook/02-Kernel层Hook-Vendor_Hook与eBPF](../../../01-Mechanism/App/Hook/02-Kernel层Hook-Vendor_Hook与eBPF.md) | vendor hook 与 SELinux 互动 |
+| [01-Mechanism/App/Hook/02-Kernel层Hook-Vendor_Hook与eBPF](../../../../03-卷3-核心机制/14-线程与 Handler 消息机制/02-Kernel层Hook-Vendor_Hook与eBPF.md) | vendor hook 与 SELinux 互动 |
 
 ---
 

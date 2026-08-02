@@ -53,8 +53,8 @@
 - **症状总览**：[02-Symptom/S00-症状总览.md](../02-Symptom/S00-症状总览.md)
 - **取证总览**：[03-Forensics/README.md](../03-Forensics/README.md)
 - **学习路线**：[02-Symptom/README-学习路线.md](../02-Symptom/README-学习路线.md)
-- **启动专项**：[02-Symptom/S11-Startup/README.md](../02-Symptom/S11-Startup/README.md)
-- **启动案例**：[06-Case/Startup/README.md](../06-Case/Startup/README.md)
+- **启动专项**：[02-Symptom/S11-Startup/README.md](../../02-卷2-系统启动/README.md)
+- **启动案例**：[../08-卷8-案例实战/47-冷启动优化案例/README.md](../../08-卷8-案例实战/47-冷启动优化案例/README.md)
 
 ---
 

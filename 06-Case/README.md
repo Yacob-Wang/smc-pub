@@ -83,7 +83,7 @@
 - **被依赖**：
   - 暂无（案例是"消费者"）
 - **依赖**：
-  - [02-Symptom/S11-Startup](../02-Symptom/S11-Startup/) 启动机制 + 性能 + 稳定性 + 工具
+  - [02-Symptom/S11-Startup](../../02-卷2-系统启动/) 启动机制 + 性能 + 稳定性 + 工具
   - [04-Tool/Dumpsys](../04-Tool/Dumpsys/) + [04-Tool/Perfetto](../04-Tool/Perfetto/) 案例配套工具
   - [05-Governance/OEM-BSP](../05-Governance/OEM-BSP/) 后续 OEM 案例
 

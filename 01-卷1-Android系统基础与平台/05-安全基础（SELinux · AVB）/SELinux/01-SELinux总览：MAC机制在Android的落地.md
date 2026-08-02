@@ -4,7 +4,7 @@
 >
 > **角色**：稳定性架构师（必修）· 平台 / BSP / 厂商适配（必读）
 >
-> **强依赖**：[06-Foundation/README §3 抓问题前必看](../../README.md) · [02-Symptom/S07-KE](../../../../02-Symptom/S07-KE/01-症状机制.md)（KE 视角）
+> **强依赖**：[06-Foundation/README §3 抓问题前必看](../../README.md) · [02-Symptom/S07-KE](../../../../../04-卷4-稳定性症状诊断/28-Kernel Exception/01-症状机制.md)（KE 视角）
 
 <!-- AUTHOR_ONLY:START -->
 ## 本篇定位
@@ -349,11 +349,11 @@ allow init default_prop:property_service { set };
 
 | smc-pub 已有文章 | 关系 |
 |:----------------|:-----|
-| [02-Symptom/S07-KE/01-症状机制](../../../02-Symptom/S07-KE/01-症状机制.md) | KE 视角——SELinux 是 KE 的少数根因之一 |
-| [01-Mechanism/Kernel/Process/11-信号机制_从产生到投递](../../../01-Mechanism/Kernel/Process/11-信号机制_从产生到投递.md) | 信号也是 LSM 钩子对象（`process:signal`）|
-| [01-Mechanism/Kernel/Binder/02-Binder驱动](../../../01-Mechanism/Kernel/Binder/02-Binder驱动.md) | Binder 通信是 LSM 钩子对象（`binder:call`）|
+| [02-Symptom/S07-KE/01-症状机制](../../../../04-卷4-稳定性症状诊断/28-Kernel Exception/01-症状机制.md) | KE 视角——SELinux 是 KE 的少数根因之一 |
+| [01-Mechanism/Kernel/Process/11-信号机制_从产生到投递](../../../../03-卷3-核心机制/13-进程与生命周期/11-信号机制_从产生到投递.md) | 信号也是 LSM 钩子对象（`process:signal`）|
+| [01-Mechanism/Kernel/Binder/02-Binder驱动](../../../../03-卷3-核心机制/12-Binder IPC 深度/02-Binder驱动.md) | Binder 通信是 LSM 钩子对象（`binder:call`）|
 | [01-Mechanism/Framework/Service](../../../01-Mechanism/Framework/Service/) | service 启动链路常触发 SELinux 决策 |
-| [04-Tool/AmCommand/05-诊断与监控-hang-monitor](../../../04-Tool/AmCommand/05-诊断与监控-hang-monitor.md) | hang 监控可能由 SELinux denied 引起 |
+| [04-Tool/AmCommand/05-诊断与监控-hang-monitor](../../../../05-卷5-调查方法论与工具链/33-Dumpsys · Bugreport · DropBox/05-诊断与监控-hang-monitor.md) | hang 监控可能由 SELinux denied 引起 |
 | [05-Governance/Security](../../../05-Governance/Security/) | 治理层 SELinux 策略审查 SOP（**待补**）|
 
 ---

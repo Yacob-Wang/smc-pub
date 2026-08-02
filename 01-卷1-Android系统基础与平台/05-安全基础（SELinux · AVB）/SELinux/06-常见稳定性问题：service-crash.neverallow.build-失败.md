@@ -467,8 +467,8 @@ adb shell dmesg | grep "avc: denied" | audit2why 2>&1 | head -20
 | [07 实战 5 例](07-实战：定制SELinux策略排错5例.md) | 下篇用 5 个真实案例展示 |
 | [02-Symptom/S01-ANR](../../../../02-Symptom/S01-ANR/) | ANR 视角的 SELinux 触点 |
 | [02-Symptom/S04-SWT](../../../../02-Symptom/S04-SWT/) | SWT 视角 |
-| [04-Tool/Watchdog/02-多层Watchdog架构](../../../04-Tool/Watchdog/02-多层Watchdog架构.md) | watchdog 杀进程链路 |
-| [03-Forensics/F04-NE](../../../../03-Forensics/F04-NE/01-取证机制.md) | NE 取证视角 |
+| [04-Tool/Watchdog/02-多层Watchdog架构](../../../../04-卷4-稳定性症状诊断/25-系统无响应（SWT · Watchdog）/02-多层Watchdog架构.md) | watchdog 杀进程链路 |
+| [03-Forensics/F04-NE](../../../../../04-卷4-稳定性症状诊断/24-Native 异常/01-取证机制.md) | NE 取证视角 |
 | [05-Governance/Security](../../../05-Governance/Security/) | SELinux 治理 SOP（**待补**）|
 
 ---
