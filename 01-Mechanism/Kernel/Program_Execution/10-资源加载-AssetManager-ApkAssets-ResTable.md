@@ -20,7 +20,7 @@
 - **衔接去**:下一篇 [PLE-11 APK 容器](11-APK容器解析-ZIP-arsc-资源ID体系.md) 讲"资源在 APK 里的物理布局"(ZIP 结构、arsc 字节布局、签名)
 - **不重复内容**:
   - **APK 的 ZIP 结构 / arsc 字节布局 / APK 签名** → 详见 [PLE-11](11-APK容器解析-ZIP-arsc-资源ID体系.md)
-  - **aapt2 编译期优化** → 不在本系列(详见 [Tools/Android_Tools](../../05-卷5-调查方法论与工具链/35-断点与 Native 调试/README.md))
+  - **aapt2 编译期优化** → 不在本系列(详见 [Tools/Android_Tools](../../05-卷5-调查工具链/35-断点与 Native 调试/README.md))
 
 ## 0. 写在前面:为什么资源加载单独成篇
 

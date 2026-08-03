@@ -556,7 +556,7 @@ aosp/
 Soong 这条线在稳定性架构师的能力模型里属于**"改源码" + "机制理解"两层交集**——读得懂 Android.bp 能 5 秒加 module，看得懂 build.ninja 能手工增量构建。
 
 下一步推荐读：
-- [03-Forensics/Bugreport/01-总览与生成/解析](../../../../05-卷5-调查方法论与工具链/33-Dumpsys · Bugreport · DropBox/01-Bugreport-总览与生成解析.md) — 编译产物上线后怎么取证（下一条 M4-B1 系列）
+- [03-Forensics/Bugreport/01-总览与生成/解析](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/01-Bugreport-总览与生成解析.md) — 编译产物上线后怎么取证（下一条 M4-B1 系列）
 - [06-Foundation/SELinux/08](../SELinux/08-AOSP-17演进：Treble+CIL+userspace加载.md) — AOSP 17 跨版本迁移
 - [02-Symptom/S08-AOSP17-K618](../../../../../01-卷1-Android系统基础与平台/01-Android 系统全景与 AOSP 17/01-症状机制.md) — AOSP 17 全局演进
 

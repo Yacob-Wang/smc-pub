@@ -489,7 +489,7 @@ avc: denied { set } for name="ro.build.fingerprint" scontext=u:r:shell:s0
 | [05 init 与 SELinux](05-init进程与SELinux：分阶段加载.md) | init 阶段怎么给关键目录打 label |
 | [01-Mechanism/Framework/Service](../../01-Mechanism/Framework/Service/) | service_manager 服务注册流程 |
 | [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../Tools/Android_Tools/Logcat_Complete_Guide.md) | denied 行怎么从 kernel 走到 logcat |
-| [04-Tool/AmCommand/01-am命令全景与Activity触发](../../../../05-卷5-调查方法论与工具链/33-Dumpsys · Bugreport · DropBox/01-am命令全景与Activity触发.md) | `am` 命令运行需要 service context |
+| [04-Tool/AmCommand/01-am命令全景与Activity触发](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/01-am命令全景与Activity触发.md) | `am` 命令运行需要 service context |
 
 ---
 

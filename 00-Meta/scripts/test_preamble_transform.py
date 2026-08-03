@@ -21,7 +21,7 @@ def _assert(cond: bool, msg: str) -> None:
 
 def test_s01_heavy() -> None:
     raw = (
-        REPO / "04-卷4-稳定性症状诊断/22-ANR 深度/01-症状机制.md"
+        REPO / "04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-症状机制.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "S01 should strip")
@@ -33,7 +33,7 @@ def test_s01_heavy() -> None:
 
 def test_f01_heavy() -> None:
     raw = (
-        REPO / "04-卷4-稳定性症状诊断/22-ANR 深度/01-取证机制.md"
+        REPO / "04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-取证机制.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "F01 should strip")
@@ -44,7 +44,7 @@ def test_f01_heavy() -> None:
 def test_dumpsys_heavy() -> None:
     raw = (
         REPO
-        / "05-卷5-调查方法论与工具链/33-Dumpsys · Bugreport · DropBox/01-dumpsys总览与架构.md"
+        / "05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/01-dumpsys总览与架构.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "Dumpsys should strip")
@@ -54,7 +54,7 @@ def test_dumpsys_heavy() -> None:
 
 def test_case_heavy() -> None:
     raw = (
-        REPO / "08-卷8-案例实战/47-冷启动优化案例/E01-冷启动8s-1s.md"
+        REPO / "08-卷8-案例实战/47-启动性能案例/E01-冷启动8s-1s.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "Case E01 should strip")
@@ -64,7 +64,7 @@ def test_case_heavy() -> None:
 def test_watchdog_light_keeps_anchor() -> None:
     raw = (
         REPO
-        / "04-卷4-稳定性症状诊断/25-系统无响应（SWT · Watchdog）/01-Watchdog概述与体系位置.md"
+        / "04-卷4-诊断方法论与稳定性症状/27-系统无响应（SWT · Watchdog）/01-Watchdog概述与体系位置.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "Watchdog should strip 本篇定位")
@@ -133,7 +133,7 @@ def test_activity_lead_keeps_reader_meta_only() -> None:
 
 def test_s01_drops_author_status_fields() -> None:
     raw = (
-        REPO / "04-卷4-稳定性症状诊断/22-ANR 深度/01-症状机制.md"
+        REPO / "04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-症状机制.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "S01 should strip 目标读者/状态等")

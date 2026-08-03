@@ -483,10 +483,6 @@ pre,
   background: var(--jk-bg-page);
 }
 
-.jk-article-strip {
-  background: color-mix(in srgb, var(--jk-bg-soft) 70%, var(--jk-bg-page));
-}
-
 .jk-module-strip__scroll,
 .jk-series-strip__scroll,
 .jk-article-strip__scroll {

@@ -495,7 +495,7 @@ $ adb shell restorecon -v /init.rc
 | [02 策略文件体系](02-策略文件体系：sepolicy.te.cil.编译产物.md) | .te 语法 + binary policy 编译 |
 | [03 Context 与 Label](03-Context与Label：四大主体的标签从哪来.md) | §7 三个真实场景的展开 |
 | [06 常见稳定性问题](06-常见稳定性问题：service-crash.neverallow.build-失败.md) | 下篇讲 SELinux 引起的 7 大症状 |
-| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查方法论与工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | Perfetto trace 怎么结合 SELinux denied 看 |
+| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | Perfetto trace 怎么结合 SELinux denied 看 |
 | [05-Governance/Security](../../../05-Governance/Security/) | 治理：denied 怎么门禁 / 审批 |
 | [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../Tools/Android_Tools/Logcat_Complete_Guide.md) | logcat 过滤 denied 的 5 条命令 |
 

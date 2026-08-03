@@ -21,13 +21,13 @@ SAMPLE_PAGES = [
     "01-卷1-Android系统基础与平台/index.html",
     "03-卷3-核心机制/index.html",
     "03-卷3-核心机制/15-内存管理全链路/index.html",
-    "04-卷4-稳定性症状诊断/index.html",
-    "04-卷4-稳定性症状诊断/22-ANR 深度/index.html",
-    "05-卷5-调查方法论与工具链/index.html",
+    "04-卷4-诊断方法论与稳定性症状/index.html",
+    "04-卷4-诊断方法论与稳定性症状/23-ANR 深度/index.html",
+    "05-卷5-调查工具链/index.html",
     "06-卷6-性能工程/index.html",
     "07-卷7-APM与工程治理/index.html",
     "08-卷8-案例实战/index.html",
-    "02-卷2-系统启动/11-启动性能专项/index.html",
+    "02-卷2-系统启动/11-系统启动性能专项/index.html",
 ]
 
 
