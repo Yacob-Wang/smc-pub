@@ -22,11 +22,7 @@
   {% endif %}
 
   {% if nav_item.children and nav_item.children | length > 1 %}
-    {% if nav_item.url %}
-      {% set tab_href = nav_item.url | url %}
-    {% else %}
-      {% set tab_href = navutil.resolve_href(nav_item) %}
-    {% endif %}
+    {% set tab_href = navutil.resolve_tab_href(nav_item) %}
     {% set menu_wide = navutil.module_flyout_count(nav_item) | int > 0 %}
     <li class="{{ class }} jk-tabs__item--menu{% if menu_wide %} jk-tabs__item--wide{% endif %}">
       <a

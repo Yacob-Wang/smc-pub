@@ -15,6 +15,11 @@ SITE_DIR = REPO_ROOT / "site"
 # 意图分组顶栏：唯一合法顶层 Tab 文案（顺序固定）
 EXPECTED_TAB_LABELS = ("首页", "总目录", "查问题", "学机制", "性能与治理")
 
+# 意图分组 Tab 点击落点（相对 site/ 的路径前缀）
+EXPECTED_TAB_HREFS = {
+    "学机制": "03-卷3-核心机制/",
+}
+
 # 文件系统回退态特征（出现任一即失败）
 FORBIDDEN_TAB_PATTERNS = (
     re.compile(r"^Home$", re.I),
@@ -77,15 +82,17 @@ class TabMenuHrefParser(HTMLParser):
 
 
 class TopTabLabelParser(HTMLParser):
-    """提取顶栏 md-tabs__list 内一级 Tab 文案（不含下拉菜单链接）。"""
+    """提取顶栏 md-tabs__list 内一级 Tab 文案与 href（不含下拉菜单链接）。"""
 
     def __init__(self) -> None:
         super().__init__()
         self._in_tabs_list = 0
         self._in_menu = 0
         self._capture_link = False
+        self._href = ""
         self._buf: list[str] = []
         self.labels: list[str] = []
+        self.label_hrefs: dict[str, str] = {}
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         attr_map = {k: v for k, v in attrs if v is not None}
@@ -102,6 +109,7 @@ class TopTabLabelParser(HTMLParser):
             return
         if tag == "a" and "md-tabs__link" in classes:
             self._capture_link = True
+            self._href = attr_map.get("href", "") or ""
             self._buf = []
 
     def handle_endtag(self, tag: str) -> None:
@@ -115,7 +123,10 @@ class TopTabLabelParser(HTMLParser):
             label = _WS_RE.sub(" ", "".join(self._buf)).strip()
             if label:
                 self.labels.append(label)
+                if self._href:
+                    self.label_hrefs[label] = unquote(self._href.replace("&amp;", "&"))
             self._capture_link = False
+            self._href = ""
             self._buf = []
 
     def handle_data(self, data: str) -> None:
@@ -133,6 +144,12 @@ def extract_top_tab_labels(html: str) -> list[str]:
     parser = TopTabLabelParser()
     parser.feed(html)
     return parser.labels
+
+
+def extract_top_tab_hrefs(html: str) -> dict[str, str]:
+    parser = TopTabLabelParser()
+    parser.feed(html)
+    return parser.label_hrefs
 
 
 def resolve_href(source: Path, href: str) -> Path:
@@ -163,6 +180,30 @@ def validate_tab_labels(rel: str, labels: list[str]) -> list[str]:
     return problems
 
 
+def validate_tab_landings(
+    rel: str, html_path: Path, label_hrefs: dict[str, str]
+) -> list[str]:
+    """断言意图分组 Tab 点击落点（按解析后的目标路径，兼容相对 ./ ../）。"""
+    problems: list[str] = []
+    for label, needle in EXPECTED_TAB_HREFS.items():
+        href = label_hrefs.get(label, "")
+        if not href:
+            problems.append(f"{rel}: tab {label!r} missing href")
+            continue
+        target = resolve_href(html_path, href)
+        try:
+            rel_target = target.relative_to(SITE_DIR.resolve()).as_posix()
+        except ValueError:
+            rel_target = target.as_posix()
+        needle_dir = needle.strip("/")
+        if needle_dir not in rel_target.replace("\\", "/"):
+            problems.append(
+                f"{rel}: tab {label!r} href {href!r} → {rel_target!r} "
+                f"should land under {needle_dir!r}"
+            )
+    return problems
+
+
 def main() -> int:
     if not SITE_DIR.is_dir():
         print("site/ not found; run mkdocs build first", file=sys.stderr)
@@ -181,7 +222,9 @@ def main() -> int:
         pages_found += 1
         text = html_path.read_text(encoding="utf-8", errors="replace")
         labels = extract_top_tab_labels(text)
+        label_hrefs = extract_top_tab_hrefs(text)
         label_problems.extend(validate_tab_labels(rel, labels))
+        label_problems.extend(validate_tab_landings(rel, html_path, label_hrefs))
         hrefs = extract_menu_hrefs(text)
         checked += len(hrefs)
         for href in hrefs:

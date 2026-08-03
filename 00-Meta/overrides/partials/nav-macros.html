@@ -25,6 +25,27 @@
   {%- endif -%}
 {%- endmacro %}
 
+{% macro resolve_tab_href(nav_item) -%}
+  {#- 意图分组 Tab：可指定落点子项 title（见 mkdocs.yml extra.tab_landings） -#}
+  {%- set landings = config.extra.get("tab_landings", {}) if config.extra is defined else {} -%}
+  {%- set preferred = landings.get(nav_item.title, none) if landings else none -%}
+  {%- set ns = namespace(url="") -%}
+  {%- if preferred and nav_item.children -%}
+    {%- for child in nav_item.children -%}
+      {%- if child.title == preferred and not ns.url -%}
+        {%- set ns.url = resolve_href(child) -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {%- if ns.url -%}
+    {{- ns.url -}}
+  {%- elif nav_item.url -%}
+    {{- nav_item.url | url -}}
+  {%- else -%}
+    {{- resolve_href(nav_item) -}}
+  {%- endif -%}
+{%- endmacro %}
+
 {% macro series_menu_count(item) -%}
   {%- set ns = namespace(count=0) -%}
   {%- if item.children -%}

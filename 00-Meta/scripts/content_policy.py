@@ -47,7 +47,8 @@ MODULE_TITLES = {
     "08-卷8-案例实战": "卷 8 案例",
 }
 
-# 顶栏按读者意图分组（不搬迁仓库目录）；Tab 文案用中文任务名
+# 顶栏按读者意图分组（不搬迁仓库目录）；Tab 文案用中文任务名。
+# Tab 点击落点默认=各组首个子项；「学机制」例外见 mkdocs.yml extra.tab_landings →「机制」。
 TOP_NAV_GROUPS: list[tuple[str, list[tuple[str, str]]]] = [
     (
         "查问题",

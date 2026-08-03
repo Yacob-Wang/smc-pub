@@ -11,7 +11,7 @@
           <li><a href="{{ nav.homepage.url | url }}">首页</a></li>
           {% for item in nav.items %}
             {% if item.title in ['查问题', '学机制', '性能与治理'] and item.children %}
-              <li><a href="{{ navutil.resolve_href(item) }}">{{ item.title }}</a></li>
+              <li><a href="{{ navutil.resolve_tab_href(item) }}">{{ item.title }}</a></li>
             {% endif %}
           {% endfor %}
           <li><a href="{{ '文章总目录.md' | url }}">总目录</a></li>

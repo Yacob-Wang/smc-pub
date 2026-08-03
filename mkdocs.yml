@@ -113,6 +113,10 @@ site_url: https://yacob-wang.github.io/smc-pub/
 
 extra:
   generator: false
+  # 意图分组 Tab 点击落点：子项短名须与 TOP_NAV_GROUPS / .pages 一致
+  # 「学机制」默认会落首项「地图」(00-Meta)；显式落到卷 3 机制
+  tab_landings:
+    学机制: 机制
 
 extra_css:
   - stylesheets/fonts.css
