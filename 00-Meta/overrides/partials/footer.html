@@ -8,28 +8,23 @@
       <div>
         <h3>模块</h3>
         <ul>
-          <li><a href="{{ nav.homepage.url | url }}">Home</a></li>
-          {% set mod_idx = namespace(n=0) %}
+          <li><a href="{{ nav.homepage.url | url }}">首页</a></li>
           {% for item in nav.items %}
-            {% if item.title != 'Home' and item.children %}
-              {% if mod_idx.n < 4 %}
-                <li><a href="{{ navutil.resolve_href(item) }}">{{ item.title }}</a></li>
-              {% endif %}
-              {% set mod_idx.n = mod_idx.n + 1 %}
+            {% if item.title in ['查问题', '学机制', '工具与治理'] and item.children %}
+              <li><a href="{{ navutil.resolve_href(item) }}">{{ item.title }}</a></li>
             {% endif %}
           {% endfor %}
+          <li><a href="{{ '文章总目录.md' | url }}">总目录</a></li>
         </ul>
       </div>
       <div>
-        <h3>更多模块</h3>
+        <h3>模块入口</h3>
         <ul>
-          {% set mod_idx2 = namespace(n=0) %}
           {% for item in nav.items %}
-            {% if item.title != 'Home' and item.children %}
-              {% if mod_idx2.n >= 4 %}
-                <li><a href="{{ navutil.resolve_href(item) }}">{{ item.title }}</a></li>
-              {% endif %}
-              {% set mod_idx2.n = mod_idx2.n + 1 %}
+            {% if item.title in ['查问题', '学机制', '工具与治理'] and item.children %}
+              {% for child in item.children %}
+                <li><a href="{{ navutil.resolve_href(child) }}">{{ child.title }}</a></li>
+              {% endfor %}
             {% endif %}
           {% endfor %}
         </ul>

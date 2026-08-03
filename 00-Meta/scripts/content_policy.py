@@ -30,6 +30,33 @@ MODULE_TITLES = {
     "06-Foundation": "Foundation",
 }
 
+# 顶栏按读者意图分组（不搬迁仓库目录）；Tab 文案用中文任务名
+TOP_NAV_GROUPS: list[tuple[str, list[tuple[str, str]]]] = [
+    (
+        "查问题",
+        [
+            ("症状", "02-Symptom"),
+            ("取证", "03-Forensics"),
+            ("案例", "06-Case"),
+        ],
+    ),
+    (
+        "学机制",
+        [
+            ("地图", "00-Meta"),
+            ("机制", "01-Mechanism"),
+            ("基础", "06-Foundation"),
+        ],
+    ),
+    (
+        "工具与治理",
+        [
+            ("工具", "04-Tool"),
+            ("治理", "05-Governance"),
+        ],
+    ),
+]
+
 MODULE_BLURBS = {
     "00-Meta": "学习路线 · 阅读指南 · JD 匹配 · 缺口一览 · Reference",
     "01-Mechanism": "Hardware · Kernel · Runtime · Framework · App",

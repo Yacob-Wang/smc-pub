@@ -28,6 +28,7 @@ from content_policy import (  # noqa: E402
     PUBLIC_MODULES,
     PUBLIC_ROOT_FILES,
     SERIES_NAV_TITLES,
+    TOP_NAV_GROUPS,
     is_excluded_path,
     is_meta_file,
 )
@@ -139,6 +140,31 @@ def write_pages_file(
         for title, target in nav_entries:
             lines.append(f"  - {yaml_quote(title)}: {target}")
     (dir_path / ".pages").write_text(
+        "\n".join(lines) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+
+
+def write_root_pages(
+    docs_root: Path,
+    *,
+    groups: list[tuple[str, list[tuple[str, str]]]] = TOP_NAV_GROUPS,
+) -> None:
+    """顶栏：首页 / 总目录 / 意图分组（查问题·学机制·工具与治理）。"""
+    lines = [
+        "nav:",
+        f'  - {yaml_quote("首页")}: index.md',
+        f'  - {yaml_quote("总目录")}: 文章总目录.md',
+    ]
+    for group_title, children in groups:
+        existing = [(title, mod) for title, mod in children if (docs_root / mod).is_dir()]
+        if not existing:
+            continue
+        lines.append(f"  - {yaml_quote(group_title)}:")
+        for title, mod in existing:
+            lines.append(f"      - {yaml_quote(title)}: {mod}")
+    (docs_root / ".pages").write_text(
         "\n".join(lines) + "\n",
         encoding="utf-8",
         newline="\n",
@@ -561,21 +587,15 @@ def generate_module_pages(mod_dir: Path, module: str) -> None:
 def generate_pages_tree(docs_root: Path) -> None:
     """导航策略：
 
-    1. 顶层 .pages：8 大分类 tab（按 MODULE_TITLES 排序）
+    1. 顶层 .pages：首页 / 总目录 / 查问题 / 学机制 / 工具与治理（意图分组）
     2. module 层强制生成 index.md（Material grid cards 卡片式落地页）
     3. module 层 .pages：「本模块总览」指向 index.md + 子分类列表
     4. 叶子系列 .pages：仅「系列总览」；单篇 not_in_nav，从 Feed 表进入
     """
-    top_nav: list[tuple[str, str]] = [
-        ("Home", "index.md"),
-        ("文章总目录", "文章总目录.md"),
-    ]
     for mod in MODULE_DIRS:
         mod_dir = docs_root / mod
         if not mod_dir.is_dir():
             continue
-        title = MODULE_TITLES.get(mod, mod)
-        top_nav.append((title, mod))
         # 强制生成 index.md（卡片式）—— 覆盖可能存在的手写 README 索引
         (mod_dir / "index.md").write_text(
             build_module_index(mod, mod_dir),
@@ -584,7 +604,7 @@ def generate_pages_tree(docs_root: Path) -> None:
         generate_module_pages(mod_dir, mod)
         ensure_subcategory_landing_pages(mod_dir, mod)
     # 作者页由 00-Meta/web/about/ 拷贝；不进顶栏 Tab，仅头像 / 页脚入口
-    write_pages_file(docs_root, top_nav)
+    write_root_pages(docs_root)
 
 
 def build_public_index() -> str:
