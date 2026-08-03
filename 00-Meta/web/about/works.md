@@ -26,7 +26,7 @@ hide:
 |:-----|:-----|:-----|
 | 稳知库 | 知识库 / 站点 | AOSP 17 稳定性系列 |
 | Skill 看板 | 视频 | 见下方播放器（约 57 秒） |
-| Jira 分析报告 | 视频 | 见下方播放器（约 2 分 23 秒） |
+| Jira 分析报告 | 视频 | 见下方播放器（完整版，约 2 分 53 秒） |
 | 版本分析 | 视频 | 见下方播放器（约 26 秒） |
 
 ## Skill 看板
@@ -40,6 +40,8 @@ hide:
 </div>
 
 ## Jira 分析报告
+
+完整演示视频：
 
 <div class="jk-video" markdown="0">
   <video controls preload="metadata" playsinline>
