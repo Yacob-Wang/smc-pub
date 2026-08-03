@@ -9,9 +9,9 @@
   - [CG-02 cgroup 核心抽象：subsys / css / cftype / cgroup_file](02-cgroup核心抽象_subsys_css_cftype_cgroup_file.md) —— cgroup 怎么"设计"出来
   - [CG-03 cgroup 三大资源维度的统一抽象](03-cgroup三大资源维度的统一抽象_Process_Memory_IO.md) —— 系列核心篇
 - **不重复内容**：
-  - cgroup 内核抽象（subsys / css / cftype）的具体实现 → [Kernel Process 10 §3-§5](../Process/10-cgroup_v2_内核里的资源控制器.md) 本系列 CG-02
-  - cgroup v1 vs v2 的 API 差异 → [Kernel Process 10 §2](../Process/10-cgroup_v2_内核里的资源控制器.md) 本篇 §5 概述演进路径
-  - cgroup 树具体形态（**AOSP 14 基线**见 [Kernel Process 10 §10](../Process/10-cgroup_v2_内核里的资源控制器.md)；**AOSP 17 基线**见本系列 CG-04）
+  - cgroup 内核抽象（subsys / css / cftype）的具体实现 → [Kernel Process 10 §3-§5](10-cgroup_v2_内核里的资源控制器.md) 本系列 CG-02
+  - cgroup v1 vs v2 的 API 差异 → [Kernel Process 10 §2](10-cgroup_v2_内核里的资源控制器.md) 本篇 §5 概述演进路径
+  - cgroup 树具体形态（**AOSP 14 基线**见 [Kernel Process 10 §10](10-cgroup_v2_内核里的资源控制器.md)；**AOSP 17 基线**见本系列 CG-04）
 
 # 校准决策日志
 
@@ -32,7 +32,7 @@
 
 - 上一篇：无（系列起点）
 - 下一篇：[CG-02 cgroup 核心抽象](02-cgroup核心抽象_subsys_css_cftype_cgroup_file.md) 将讲 cgroup 的 4 个核心数据结构
-- 本系列 README：[README-cgroup系列.md](README-cgroup系列.md)
+- 本系列 README：[README-cgroup系列.md](../README-cgroup系列.md)
 
 # 写作标准
 

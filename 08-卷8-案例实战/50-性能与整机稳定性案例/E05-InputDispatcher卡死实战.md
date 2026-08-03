@@ -11,7 +11,7 @@
 ## 本篇定位
 
 - 实战案例第 5 篇（与 OC02-ANR 响应剧本强呼应，把"Input ANR 怎么查"立成真实剧本）
-- 强依赖：[01-Mechanism/Framework/Input 系列](../../01-Mechanism/Framework/Input/) 8 篇 / [04-Tool/ANR-Detection 系列](../../04-Tool/ANR-Detection/) 3 篇 / [OC02-ANR 响应剧本](../Oncall/OC02-ANR响应剧本.md) / [02-Symptom/S01-ANR/01-症状机制](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-症状机制.md)
+- 强依赖：[01-Mechanism/Framework/Input 系列](../../01-Mechanism/Framework/Input/) 8 篇 / [04-Tool/ANR-Detection 系列](../../04-Tool/ANR-Detection/) 3 篇 / [OC02-ANR 响应剧本](../../05-卷5-调查工具链/36-Oncall%20与应急响应/OC02-ANR响应剧本.md) / [02-Symptom/S01-ANR/01-症状机制](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-症状机制.md)
 
 ## 校准决策日志
 
@@ -374,10 +374,10 @@ public class StabilityApp extends Application {
 
 | 模块 | 路径 | 关键 |
 |:-----|:-----|:-----|
-| Input 机制 | [01-Mechanism/Framework/Input/03-InputDispatcher](../../01-Mechanism/Framework/Input/03-InputDispatcher.md) | InputDispatcher |
-| Input ANR | [01-Mechanism/Framework/Input/06-InputANR](../../01-Mechanism/Framework/Input/06-InputANR.md) | ANR 机制 |
+| Input 机制 | [01-Mechanism/Framework/Input/03-InputDispatcher](../../03-卷3-核心机制/18-输入系统/18.A-Framework%20输入链路/03-InputDispatcher.md) | InputDispatcher |
+| Input ANR | [01-Mechanism/Framework/Input/06-InputANR](../../03-卷3-核心机制/18-输入系统/18.A-Framework%20输入链路/06-InputANR.md) | ANR 机制 |
 | ANR 检测 | [04-Tool/ANR-Detection/Input_Dispatch_Timeout_ANR_Deep_Dive](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/Input_Dispatch_Timeout_ANR_Deep_Dive.md) | 5s 超时 |
-| OC02 ANR | [OC02-ANR 响应剧本](../Oncall/OC02-ANR响应剧本.md) | 黄金 5/15/30 |
+| OC02 ANR | [OC02-ANR 响应剧本](../../05-卷5-调查工具链/36-Oncall%20与应急响应/OC02-ANR响应剧本.md) | 黄金 5/15/30 |
 | S01-ANR | [02-Symptom/S01-ANR/01-症状机制](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-症状机制.md) | ANR |
 
 ## B 路径对账

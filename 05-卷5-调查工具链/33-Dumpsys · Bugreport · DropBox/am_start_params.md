@@ -1,6 +1,6 @@
 ﻿# am_command_configs/am_start_params.md
 
-> **配套文章**:[01-am命令全景与Activity触发 §4.2 五大参数矩阵](../01-am命令全景与Activity触发.md#42-五大参数矩阵)
+> **配套文章**:[01-am命令全景与Activity触发 §4.2 五大参数矩阵](01-am命令全景与Activity触发.md#42-五大参数矩阵)
 >
 > **基线**:AOSP `android-14.0.0_r1`
 
@@ -166,7 +166,7 @@ adb shell am start com.example.app/.ui.MainActivity
 adb shell am start-activity -n com.example.app/.ui.MainActivity
 ```
 
-详见 [01 §6.1 坑位](../01-am命令全景与Activity触发.md#61-权限不足android-11-强制使用--n)。
+详见 [01 §6.1 坑位](01-am命令全景与Activity触发.md#61-权限不足android-11-强制使用--n)。
 
 ---
 

@@ -378,7 +378,7 @@ AOSP 17 优化 ANR 检测性能：
 
 - **pidfds 扩展**：Linux 6.18 让跨命名空间 ANR 检测更可靠
 - **io_uring 优化**：Linux 6.18 让 traces.txt 写盘延迟降低 30%
-- 详见 [Linux_Kernel/DM/10-DM-排障-实战体系](../01-Mechanism/Kernel/DM/10-DM-排障-实战体系.md)
+- 详见 [Linux_Kernel/DM/10-DM-排障-实战体系](../../16-IO%20与存储/16.D-Device%20Mapper/10-DM-排障-实战体系.md)
 
 ---
 
@@ -521,5 +521,5 @@ ioExecutor.submit(() -> {
 
 ---
 
-> **下一篇**：[01-从 app_process 到第一行 Java 代码](../07-启动流程/01-从app_process到第一行Java代码.md) 将深入 **Android 应用启动流程**——从 Zygote fork 到 ActivityThread.main 的完整路径、ART 17 启动期优化、AppFunctions 集成。详见 [02-ART17启动期与AppFunctions集成 v2](../07-启动流程/02-ART17启动期与AppFunctions集成-v2.md)。
+> **下一篇**：[01-从 app_process 到第一行 Java 代码](../20.E-启动/01-从app_process到第一行Java代码.md) 将深入 **Android 应用启动流程**——从 Zygote fork 到 ActivityThread.main 的完整路径、ART 17 启动期优化、AppFunctions 集成。详见 [02-ART17启动期与AppFunctions集成 v2](../07-启动流程/02-ART17启动期与AppFunctions集成-v2.md)。
 

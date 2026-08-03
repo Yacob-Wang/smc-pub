@@ -157,17 +157,17 @@
 | 12 ext4 | 07-09 | |
 | 13 f2fs | 07-09 | |
 | 14 erofs | 07-09 | |
-| 15 FS↔Block | 07-09 + [IO 03 Block 核心机制](../IO/03-Block层核心机制：bio-request-plug-merge-throttle.md) | |
+| 15 FS↔Block | 07-09 + [IO 03 Block 核心机制](03-Block层核心机制：bio-request-plug-merge-throttle.md) | |
 | 16 动态分区 | 02 + 03 | |
 | 17 Vold+StorageManager | 16 | |
 | 18 Scoped Storage | 17 | |
-| 19 FUSE | 09 + [IO 08 FUSE 视角](../IO/08-Android存储栈：从FUSE、sdcardfs、StorageManager到块设备.md) | |
+| 19 FUSE | 09 + [IO 08 FUSE 视角](08-Android存储栈：从FUSE、sdcardfs、StorageManager到块设备.md) | |
 | 20 FUSE 死锁 | 19 | |
 | 21 Vold 故障 | 17 | |
 | 22 F2FS GC | 13 | |
 | 23 ext4 journal | 12 | |
-| 24 FBE + 资源耗尽 | 17 + [IO 06 D 状态](../IO/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md) | |
-| 25 工具链 + 治理 | 全部 + [IO 11 eBPF](../IO/11-eBPF在IO性能分析中的实战：从bpftrace到Android落地.md) | 收官 |
+| 24 FBE + 资源耗尽 | 17 + [IO 06 D 状态](06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md) | |
+| 25 工具链 + 治理 | 全部 + [IO 11 eBPF](11-eBPF在IO性能分析中的实战：从bpftrace到Android落地.md) | 收官 |
 
 ---
 

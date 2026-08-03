@@ -15,7 +15,7 @@
 - **本篇系列角色**：**A 链路 · 阶段 A1+A2 详解**（§8 破例：单篇 700+ 行 / 图表 5-7 张）
 - **强依赖**：
   - [A01-启动链路总览](A01-启动链路总览.md)（必读前置 · 5 大阶段 + 22 个时间锚点）
-  - [Linux_Kernel/Process · 01-子系统全景](../../03-卷3-核心机制/13-进程与生命周期/01-进程子系统全景与边界契约.md)
+  - [Linux_Kernel/Process · 01-子系统全景](../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/01-进程子系统全景与边界契约.md)
   - [Linux_Kernel/Boot · 启动子系统](../01-Mechanism/Kernel/Boot/)（如有）
   - [Stability S07-KE 专题](../Stability/S07-KE内核与硬件异常专题.md)
 - **承接自**：[A01-启动链路总览](A01-启动链路总览.md) §3.1（A1 阶段 0-1s / A2 阶段 1-3s）
@@ -63,7 +63,7 @@
 
 # 写作标准
 
-- 本规范（[PROMPT-技术系列文章写作指南.md](../../../PROMPT-技术系列文章写作指南.md)）
+- 本规范（[PROMPT-技术系列文章写作指南.md](../../PROMPT-技术系列文章写作指南.md)）
 - 章节编号：# 总章 / # 章 / ## 节 / ### 子节
 - 必备：每章配 1 个 ASCII / mermaid 时序图
 - 必备：数据后接"所以呢"段
@@ -696,9 +696,9 @@ void detect_bootloop(void) {
 | Step | 命令 | 目的 | 详见 |
 |:-----|:-----|:-----|:----|
 | 1 | `dmesg \| grep -i "panic\\|hung\\|lockup"` | 看启动期 KE | dmesg 直查 |
-| 2 | `adb shell dumpsys dropbox --print SYSTEM_TOMBSTONE` | 看 Kernel panic 历史 | [D11 §3.2](../Dumpsys/11-稳定性监控集成.md) |
-| 3 | `adb shell dumpsys dropbox --print KERNEL_PANIC_CONSOLE` | 看 Kernel panic 控制台日志 | [D11 §3.2](../Dumpsys/11-稳定性监控集成.md) |
-| 4 | `adb shell dumpsys bootstat` | 看启动耗时 + 重启历史 | [D11 §3.4](../Dumpsys/11-稳定性监控集成.md) |
+| 2 | `adb shell dumpsys dropbox --print SYSTEM_TOMBSTONE` | 看 Kernel panic 历史 | [D11 §3.2](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) |
+| 3 | `adb shell dumpsys dropbox --print KERNEL_PANIC_CONSOLE` | 看 Kernel panic 控制台日志 | [D11 §3.2](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) |
+| 4 | `adb shell dumpsys bootstat` | 看启动耗时 + 重启历史 | [D11 §3.4](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) |
 
 ## 7.2 卡 Logo（卡 Bootloader）取证脚本
 
@@ -1171,7 +1171,7 @@ loglevel=0          # 关闭 printk
 > - **下一篇**：[A03-Init 进程与 init.rc](A03-Init进程与init.rc.md)
 > - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
 > - **机制联动**：[Stability S06-重启专题](../Stability/S06-重启与REBOOT专题.md) · [Stability S07-KE 专题](../Stability/S07-KE内核与硬件异常专题.md) · [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/)
-> - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md)
+> - **工具联动**：[Dumpsys D11-dropbox](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md)
 
 ---
 

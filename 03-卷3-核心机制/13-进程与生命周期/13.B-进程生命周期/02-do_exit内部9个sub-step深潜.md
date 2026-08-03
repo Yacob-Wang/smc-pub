@@ -4,7 +4,7 @@
 - **强依赖**:必须先读 [01 §1 全景图](01-杀进程全链路：从AMS触发到进程完全退出.md) 和 [01 §6 do_exit 概览](01-杀进程全链路：从AMS触发到进程完全退出.md)
 - **承接自**:01 篇已画 5 阶段 × 4 层栈全景,本篇深潜每个 sub-step 的源码
 - **衔接去**:03 篇讲"哪些是真正根因、哪些是诱因、如何证伪"(基于本篇 9 sub-step 的源码细节)
-- **不重复内容**:与 01 §6 9 sub-step 总表——01 是总览,本篇是源码;与 [Process 09 实战 §6.2 exit_mm 拆解](../Process/09-杀进程慢的根因定位实战.md)——09 是 case 数据,本篇是机制
+- **不重复内容**:与 01 §6 9 sub-step 总表——01 是总览,本篇是源码;与 [Process 09 实战 §6.2 exit_mm 拆解](09-杀进程慢的根因定位实战.md)——09 是 case 数据,本篇是机制
 - **破例决策**:本篇 4 实战案例(典型模式 + Process 09 案 + 相机 GPU flush 案 + OOM 案)——属于诊断工具型(§9.1 破例),案例可较多
 
 # 校准决策日志(强制 · 3 轮校准后填写)
@@ -27,8 +27,8 @@
 # 上下文
 - 上一篇:[01-杀进程全链路](01-杀进程全链路：从AMS触发到进程完全退出.md), 已画 5 阶段 × 4 层栈全景
 - 下一篇:[03-杀进程慢的真正根因](03-杀进程慢的真正根因：诱因-根因-证伪.md), 讲根因判定
-- 本系列 README:[README-杀进程系列](README-杀进程系列.md)
-- 跨系列引用:[Process 09 实战](../Process/09-杀进程慢的根因定位实战.md) / [Kernel Process 05 do_exit](../../Kernel/Process/05-进程的退出_do_exit与资源回收.md) / [MM_v2 15 治理](../../Kernel/Memory_Management/MM_v2/15-线上动态内存治理：不杀进程下的诊断与梳理.md)
+- 本系列 README:[README-杀进程系列](../README-杀进程系列.md)
+- 跨系列引用:[Process 09 实战](09-杀进程慢的根因定位实战.md) / [Kernel Process 05 do_exit](05-进程的退出_do_exit与资源回收.md) / [MM_v2 15 治理](../../Kernel/Memory_Management/MM_v2/15-线上动态内存治理：不杀进程下的诊断与梳理.md)
 
 # 写作标准
 - v5 规范(本指南)
@@ -56,7 +56,7 @@
 > - **§12** 总结 + 跨篇索引
 > - **4 附录**（源码索引 / 路径对账 / 量化自检 / 工程基线）
 >
-> **不重复内容**：与 01 §6 9 sub-step 总表（01 是总览，本篇是源码级）、与 [Process 09 §6 exit_mm 拆解](../Process/09-杀进程慢的根因定位实战.md)（09 是 case 数据，本篇是机制）严格区分。
+> **不重复内容**：与 01 §6 9 sub-step 总表（01 是总览，本篇是源码级）、与 [Process 09 §6 exit_mm 拆解](09-杀进程慢的根因定位实战.md)（09 是 case 数据，本篇是机制）严格区分。
 >
 > **目录位置**：`Android_Framework/Process_Exit/`
 
@@ -748,13 +748,13 @@ exit_mm 估算 = 12.234s - 其他 sub-step 估算
 | **9 sub-step 源码深潜** | **本篇 02** | **源码级** |
 | 真正根因判定 + 证伪 | → 03 | 框架 + 反例 |
 | 监控 + 告警 + 治理 | → 04 | 工程落地 |
-| 真实 case（Process 09 案） | → [Process 09 实战 §6 exit_mm 拆解](../Process/09-杀进程慢的根因定位实战.md) | 案例 |
+| 真实 case（Process 09 案） | → [Process 09 实战 §6 exit_mm 拆解](09-杀进程慢的根因定位实战.md) | 案例 |
 
 ### 12.3 跨系列引用
 
-- [Process 01-08 主序列](../Process/README-进程架构演进系列.md) — 进程诞生+调度+治理
-- [Process 09 杀进程慢的根因定位实战](../Process/09-杀进程慢的根因定位实战.md) — Process 09 案真实 case
-- [Kernel Process 05 do_exit 与资源回收](../../Kernel/Process/05-进程的退出_do_exit与资源回收.md) — Kernel 层 do_exit 内部细节
+- [Process 01-08 主序列](../README-进程架构演进系列.md) — 进程诞生+调度+治理
+- [Process 09 杀进程慢的根因定位实战](09-杀进程慢的根因定位实战.md) — Process 09 案真实 case
+- [Kernel Process 05 do_exit 与资源回收](05-进程的退出_do_exit与资源回收.md) — Kernel 层 do_exit 内部细节
 - [MM_v2 15 线上动态内存治理](../../Kernel/Memory_Management/MM_v2/15-线上动态内存治理：不杀进程下的诊断与梳理.md) — 不杀进程治理视角
 
 ---

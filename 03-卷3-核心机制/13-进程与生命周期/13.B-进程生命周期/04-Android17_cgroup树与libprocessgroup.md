@@ -14,8 +14,8 @@
 - **不重复内容**：
   - cgroup 内核抽象（subsys / css / cftype / cgroup_file）的实现细节 → CG-02 已讲
   - cgroup 三大资源维度的统一性 → CG-03 已讲
-  - Android 14 cgroup 树具体形态 → [Kernel Process 10 §10（基线 AOSP 14）](../Process/10-cgroup_v2_内核里的资源控制器.md) 已讲
-  - Framework 视角的 cgroup 接口（procfs / pidfd / cgroup fs）→ [Framework Process 06（基线 AOSP 14）](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) §4 已讲
+  - Android 14 cgroup 树具体形态 → [Kernel Process 10 §10（基线 AOSP 14）](10-cgroup_v2_内核里的资源控制器.md) 已讲
+  - Framework 视角的 cgroup 接口（procfs / pidfd / cgroup fs）→ [Framework Process 06（基线 AOSP 14）](06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) §4 已讲
   - **本篇讲 Android 17 上 cgroup 树的完整形态 + libprocessgroup 桥接视角**——不重复内核抽象和 Framework 接口细节
 
 # 校准决策日志
@@ -37,7 +37,7 @@
 
 - 上一篇：[CG-03 cgroup 三大资源维度的统一抽象](03-cgroup三大资源维度的统一抽象_Process_Memory_IO.md) 已讲 memory/cpu/io 怎么在 cgroup 里实现
 - 下一篇：[CG-05 cgroup 与稳定性的核心关系：OOM/Throttle/杀进程](05-cgroup与稳定性的核心关系_OOM_Throttle_杀进程.md) 将讲抽象在稳定性里的具体表现
-- 本系列 README：[README-cgroup系列.md](README-cgroup系列.md)
+- 本系列 README：[README-cgroup系列.md](../README-cgroup系列.md)
 
 # 写作标准
 
@@ -175,8 +175,8 @@
 
 | 视角 | 已有文章（基线 AOSP 14） | 本篇（基线 AOSP 17） |
 |---|---|---|
-| **Android cgroup 树结构** | [Kernel Process 10 §10](../Process/10-cgroup_v2_内核里的资源控制器.md) 讲了 Android 14 cgroup 树（top-app/background/foreground/system/system-background/dexopt） | 本篇 §2 讲 **Android 17 完整树**（在 Android 14 基础上新增/修改的部分会显式标注） |
-| **Framework cgroup fs 接口** | [Framework Process 06 §4](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) 详讲 cgroup.procs / cpu.uclamp.min / memory.high 的写入路径 | 本篇 §3-§5 讲 **libprocessgroup 桥接视角**——为什么 Framework 不直接写 cgroup fs？ |
+| **Android cgroup 树结构** | [Kernel Process 10 §10](10-cgroup_v2_内核里的资源控制器.md) 讲了 Android 14 cgroup 树（top-app/background/foreground/system/system-background/dexopt） | 本篇 §2 讲 **Android 17 完整树**（在 Android 14 基础上新增/修改的部分会显式标注） |
+| **Framework cgroup fs 接口** | [Framework Process 06 §4](06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) 详讲 cgroup.procs / cpu.uclamp.min / memory.high 的写入路径 | 本篇 §3-§5 讲 **libprocessgroup 桥接视角**——为什么 Framework 不直接写 cgroup fs？ |
 | **libprocessgroup 实现** | (没专门讲) | 本篇 §3 详讲 libprocessgroup API + 实现 |
 | **ProcessList.setProcessGroup** | (没专门讲) | 本篇 §4 详讲全栈调用链 |
 | **task profile** | (没专门讲) | 本篇 §5 详讲 + cpu.uclamp.min 配合 |
@@ -1273,7 +1273,7 @@ vendor init.rc 漏配 cpu.uclamp.min：
 | 15 | `kernel/cgroup/cpuset.c::cpuset_attach_task` | ✅ 已校对 | elixir.bootlin.com/linux/v6.18 |
 | 16 | `system/memory/lmkd/lmkd.cpp` | ✅ 已校对 | cs.android.com/android-17.0.0_r1 |
 
-> **注意**：本系列基线 AOSP 17 + android17-6.18；引用 [Framework 06 §4（基线 AOSP 14）](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) 时，本篇讲"Android 17 落地"，Framework 06 讲"Framework 接口契约"。
+> **注意**：本系列基线 AOSP 17 + android17-6.18；引用 [Framework 06 §4（基线 AOSP 14）](06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) 时，本篇讲"Android 17 落地"，Framework 06 讲"Framework 接口契约"。
 
 ---
 

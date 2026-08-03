@@ -2,8 +2,8 @@
 
 - **本篇系列角色**：socket 系列与 epoll 系列的**桥接篇**（1 篇收官）
 - **强依赖**：
-  - [socket 01-Socket总览](../01-Socket总览.md)（已讲 socket 是什么、syscall 入口、`struct socket`/`struct sock`/`struct file` 三元组）
-  - [epoll 01-epoll总览与核心机制](../../epoll/01-epoll总览与核心机制.md)（已讲 epoll 的三态结构、ET/LT 语义、Android 应用）
+  - [socket 01-Socket总览](01-Socket总览.md)（已讲 socket 是什么、syscall 入口、`struct socket`/`struct sock`/`struct file` 三元组）
+  - [epoll 01-epoll总览与核心机制](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md)（已讲 epoll 的三态结构、ET/LT 语义、Android 应用）
 - **承接自**：socket 01 §2.3 提到"socket 与 VFS 绑定"但没展开 epoll 视角；epoll 01 §3 提到"协议层挂接"但没展开 socket 视角——本篇补齐两者之间的"桥梁"
 - **衔接去**：本篇即桥接篇收官，不再续写
 - **不重复内容**：socket 01 已讲的 syscall/数据结构、epoll 01 已讲的三态/ET-LT——全部不再展开，本篇只讲**协作的关键路径**
@@ -18,8 +18,8 @@
 
 读到这里你可能已经发现：
 
-- [socket 系列](../README-Socket系列.md) 讲的是"通信端点"——socket() / bind() / listen() / accept() / connect() / send() / recv()
-- [epoll 系列](../../epoll/README-epoll系列.md) 讲的是"事件通知"——`epoll_wait` 返回某个 fd 就绪了
+- [socket 系列](README-Socket系列.md) 讲的是"通信端点"——socket() / bind() / listen() / accept() / connect() / send() / recv()
+- [epoll 系列](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/README-epoll系列.md) 讲的是"事件通知"——`epoll_wait` 返回某个 fd 就绪了
 
 **但实际生产中，两者密不可分**：
 
@@ -350,7 +350,7 @@ int core_sys_select(int n, ...) {
 ### 4.1 InputDispatcher：socket + epoll 的代表作
 
 > **源码路径**：`frameworks/native/services/inputflinger/InputDispatcher.cpp` (AOSP 14.0.0_r1)
-> **详细解读**：见 [epoll 01 §5.2](../../epoll/01-epoll总览与核心机制.md)
+> **详细解读**：见 [epoll 01 §5.2](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md)
 
 ```cpp
 // InputDispatcher 的核心结构
@@ -398,7 +398,7 @@ int InputDispatcher::dispatchOnce() {
 ### 4.2 Java NIO Selector：用户态的"epoll 包装"
 
 > **源码路径**：`libcore/ojluni/src/main/java/java/nio/SelectorImpl.java` (AOSP 14.0.0_r1)
-> **详细解读**：见 [epoll 01 §5.5](../../epoll/01-epoll总览与核心机制.md)
+> **详细解读**：见 [epoll 01 §5.5](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md)
 
 Java NIO Selector 底层走 `Pipe` + `epoll`：
 
@@ -759,7 +759,7 @@ socket 系列与 epoll 系列的关系，**本篇收官**：
 **未来扩展方向**（按需）：
 
 - 如需深入 epoll 在某个具体 Android 服务的实现（InputDispatcher/Looper/ZygoteServer/RIL），建议作为子专题另开文章
-- 如需深入 socket 在某个具体场景的坑（FD 耗尽/TIME_WAIT 堆积），参见 [socket 07-Socket稳定性风险全景](../07-Socket稳定性风险全景.md)
+- 如需深入 socket 在某个具体场景的坑（FD 耗尽/TIME_WAIT 堆积），参见 [socket 07-Socket稳定性风险全景](07-Socket稳定性风险全景.md)
 
 ---
 

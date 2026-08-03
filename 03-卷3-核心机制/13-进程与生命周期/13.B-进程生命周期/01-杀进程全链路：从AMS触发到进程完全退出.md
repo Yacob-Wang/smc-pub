@@ -783,8 +783,8 @@ echo 1 > events/mm/mm_page_free_batched/enable        # bulk free
 
 ### 12.2 跨系列引用
 
-- [Process 09-杀进程慢的根因定位实战](../Process/09-杀进程慢的根因定位实战.md) — 用本系列理论分析的真实案例
-- [Kernel Process 05-do_exit与资源回收](../../Kernel/Process/05-进程的退出_do_exit与资源回收.md) — Kernel 层 do_exit 内部细节
+- [Process 09-杀进程慢的根因定位实战](09-杀进程慢的根因定位实战.md) — 用本系列理论分析的真实案例
+- [Kernel Process 05-do_exit与资源回收](05-进程的退出_do_exit与资源回收.md) — Kernel 层 do_exit 内部细节
 - [MM_v2 15-线上动态内存治理](../../Kernel/Memory_Management/MM_v2/15-线上动态内存治理：不杀进程下的诊断与梳理.md) — 不杀进程的治理视角
 
 ### 12.3 总结：架构师视角 5 条 Takeaway

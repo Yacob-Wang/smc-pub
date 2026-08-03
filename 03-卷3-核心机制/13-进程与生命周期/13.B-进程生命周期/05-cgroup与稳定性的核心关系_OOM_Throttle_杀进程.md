@@ -15,7 +15,7 @@
   - cgroup 内核抽象 → CG-02
   - 3 大资源维度统一性 → CG-03
   - Android 17 cgroup 树形态 → CG-04
-  - Framework cgroup fs 接口 → [Framework 06（基线 AOSP 14）](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)
+  - Framework cgroup fs 接口 → [Framework 06（基线 AOSP 14）](06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)
   - **本篇讲 cgroup 在稳定性场景下的具体表现**——不重复抽象和落地
 
 # 校准决策日志
@@ -37,7 +37,7 @@
 
 - 上一篇：[CG-04 Android17 cgroup 树与 libprocessgroup](04-Android17_cgroup树与libprocessgroup.md) 已讲 Android 17 上 cgroup 树怎么落地
 - 下一篇：[CG-06 cgroup 可观测性全景与风险地图](06-cgroup可观测性全景与风险地图_实战收口.md) 将讲可观测性 SOP
-- 本系列 README：[README-cgroup系列.md](README-cgroup系列.md)
+- 本系列 README：[README-cgroup系列.md](../README-cgroup系列.md)
 
 # 写作标准
 
@@ -211,9 +211,9 @@ Kernel：android17-6.18 GKI（vendor 定制）
 | 视角 | 已有文章（基线 AOSP 14） | 本篇（基线 AOSP 17） |
 |---|---|---|
 | **LMKD 详细** | [Kernel MM 07 §4](../Memory_Management/MM_v2/07-PSI、vmpressure、memcg压力传递.md) 详讲 lmkd 主循环 | 本篇 §2 讲 LMKD 在 3 层 OOM 中的优先级，不重复主循环 |
-| **OOM killer 内核** | [Kernel Process 10 §11](../Process/10-cgroup_v2_内核里的资源控制器.md) 详讲 cgroup OOM | 本篇 §2 讲 cgroup OOM 在 3 层 OOM 中的位置 |
-| **throttle 详细** | [Process 10 §6 + IO 04 §6-§7](../Process/10-cgroup_v2_内核里的资源控制器.md) 详讲 CFS / blk-throttle | 本篇 §3 讲 throttle 在稳定性场景下的表现 |
-| **freezer 详细** | [App Hook 09 §4](../App/Hook/09-场景2-后台治理-cgroup_freezer与启动拦截.md) 详讲 freezer OEM 实现 | 本篇 §4 讲 freezer 暂停 vs 杀进程的决策 |
+| **OOM killer 内核** | [Kernel Process 10 §11](10-cgroup_v2_内核里的资源控制器.md) 详讲 cgroup OOM | 本篇 §2 讲 cgroup OOM 在 3 层 OOM 中的位置 |
+| **throttle 详细** | [Process 10 §6 + IO 04 §6-§7](10-cgroup_v2_内核里的资源控制器.md) 详讲 CFS / blk-throttle | 本篇 §3 讲 throttle 在稳定性场景下的表现 |
+| **freezer 详细** | [App Hook 09 §4](../../14-线程与%20Handler%20消息机制/09-场景2-后台治理-cgroup_freezer与启动拦截.md) 详讲 freezer OEM 实现 | 本篇 §4 讲 freezer 暂停 vs 杀进程的决策 |
 
 **判断标准**：
 - 读完后想去看 `lmkd.cpp` 主循环 → 已有 MM 07
@@ -563,7 +563,7 @@ Q3: 内存压力多大？
 **关键观察**：
 - **Android 14/17 上 cgroup freezer 仍由 OEM 控制**——AOSP 框架本身不用
 - OEM 决定用 freezer 还是 kill——基于产品策略
-- 详细 OEM 实现见 [App Hook 09 §4](../App/Hook/09-场景2-后台治理-cgroup_freezer与启动拦截.md)（基线 AOSP 14）
+- 详细 OEM 实现见 [App Hook 09 §4](../../14-线程与%20Handler%20消息机制/09-场景2-后台治理-cgroup_freezer与启动拦截.md)（基线 AOSP 14）
 
 **对读者有什么用**：
 - 当你看到"墓碑机制"——cgroup freezer

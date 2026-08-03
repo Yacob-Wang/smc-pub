@@ -42,7 +42,7 @@
 
 **强依赖**：
 - [O03-AICore](O03-AICore_System_Service_AOSP中的AI调度核心.md)（AICore 4 层架构 + AI Scheduler 调度 + 沙箱机制）
-- [AI_Native_Runtime R08-端侧 LLM 落地](../01_AI_Native_Runtime/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md)（Runtime 层视角：怎么跑得动）
+- [AI_Native_Runtime R08-端侧 LLM 落地](46.A-端侧%20AI%20运行时/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md)（Runtime 层视角：怎么跑得动）
 - [AI_Native_Runtime R07-NPU 驱动三大厂商 SDK](AI_Native_X/01_AI_Native_Runtime/R07-NPU驱动_高通联发科华为三大厂商SDK与NNAPI_Driver实现.md)（NPU 调度基础）
 
 **跨系列引用**：
@@ -58,7 +58,7 @@
 
 ### 1.1 Runtime 视角 vs OS 集成视角的差异
 
-[AI_Native_Runtime R08](../../AI_Native_Runtime/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md) 解决了"端侧 LLM 怎么跑得动"——模型编译、推理引擎、量化、性能优化。**但这只解决了 50% 的问题**。
+[AI_Native_Runtime R08](46.A-端侧%20AI%20运行时/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md) 解决了"端侧 LLM 怎么跑得动"——模型编译、推理引擎、量化、性能优化。**但这只解决了 50% 的问题**。
 
 **剩下的 50% 是 OS 集成层的问题**：
 
@@ -809,7 +809,7 @@ AICore Nano 集成优化：
 
 | 本篇章节 | 引用系列 | 引用文章 | 引用原因 |
 | :--- | :--- | :--- | :--- |
-| §1.1 Runtime vs OS 集成 | AI_Native_Runtime | [R08 端侧 LLM 落地](../../AI_Native_Runtime/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md) | R08 是 Runtime 视角，本篇是 OS 集成视角 |
+| §1.1 Runtime vs OS 集成 | AI_Native_Runtime | [R08 端侧 LLM 落地](46.A-端侧%20AI%20运行时/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md) | R08 是 Runtime 视角，本篇是 OS 集成视角 |
 | §2 Gemini Nano 集成 | AI_Native_OS | [O03 AICore](O03-AICore_System_Service_AOSP中的AI调度核心.md) | Gemini Nano 跑在 AICore 之上 |
 | §3 SDK 对比 | AI_Native_Runtime | [R04 TFLite](../../AI_Native_Runtime/R04-TFLite运行时详解_从Interpreter到Delegate.md) / [R06 GPU Delegate](../../AI_Native_Runtime/R06-GPU_Delegate深入_OpenGL_ES_Vulkan_OpenCL三种后端.md) / [R07 NPU 驱动](../../AI_Native_Runtime/R07-NPU驱动_高通联发科华为三大厂商SDK与NNAPI_Driver实现.md) | 各 SDK 底层运行时 |
 | §4 冷启动优化 | Runtime/ART | [M8 启动流程](../01-Mechanism/Runtime/ART/M8-启动流程.md) | 启动期预加载与 Zygote fork 联动 |

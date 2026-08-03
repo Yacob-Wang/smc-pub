@@ -19,7 +19,7 @@
   - [A03-Init 进程与 init.rc](A03-Init进程与init.rc.md)（必读前置）
   - [Process 系列 · 03-Zygote fork 机制](../Process/03-Zygote-fork机制与进程工厂.md)（如有）
   - [Stability S04-SWT 专题](../Stability/S04-SWT卡死与Watchdog专题.md)
-  - [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md)
+  - [Dumpsys D02-AMS 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md)
 - **承接自**：[A03 §3.1 T16 Zygote ready](A03-Init进程与init.rc.md) → 等待 SystemServer fork
 - **衔接去**：
   - 下一篇 [A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md) 深入 A4 下半段
@@ -66,7 +66,7 @@
 
 # 写作标准
 
-- 本规范（[PROMPT-技术系列文章写作指南.md](../../../PROMPT-技术系列文章写作指南.md)）
+- 本规范（[PROMPT-技术系列文章写作指南.md](../../PROMPT-技术系列文章写作指南.md)）
 - 章节编号：# 总章 / # 章 / ## 节 / ### 子节
 - 必备：每章配 1 个 ASCII / mermaid 时序图
 - 必备：数据后接"所以呢"段
@@ -766,10 +766,10 @@ if (crash_count >= 5) {
 
 | Step | 命令 | 目的 | 详见 |
 |:-----|:-----|:-----|:----|
-| 1 | `adb shell dumpsys activity processes` | 看 AMS 进程状态 | [D02 §3.3](../Dumpsys/02-Activity与AMS视角.md) |
-| 2 | `adb shell dumpsys activity services` | 看 Service 启动状态 | [D02 §3.5](../Dumpsys/02-Activity与AMS视角.md) |
-| 3 | `adb shell dumpsys package` | 看 PMS 状态 | [D06 §3.1](../Dumpsys/06-Package与权限.md) |
-| 4 | `adb shell dumpsys dropbox --print SYSTEM_SERVER_WATCHDOG` | 看 SystemServer crash 历史 | [D11 §3.1](../Dumpsys/11-稳定性监控集成.md) |
+| 1 | `adb shell dumpsys activity processes` | 看 AMS 进程状态 | [D02 §3.3](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) |
+| 2 | `adb shell dumpsys activity services` | 看 Service 启动状态 | [D02 §3.5](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) |
+| 3 | `adb shell dumpsys package` | 看 PMS 状态 | [D06 §3.1](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/06-Package与权限.md) |
+| 4 | `adb shell dumpsys dropbox --print SYSTEM_SERVER_WATCHDOG` | 看 SystemServer crash 历史 | [D11 §3.1](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) |
 
 ## 8.2 SystemServer 卡死取证脚本
 
@@ -1091,7 +1091,7 @@ public PackageManagerService(Context context) {
 > **本篇不重复**：
 > - [Process 系列 · 03-Zygote fork 机制](../Process/) 已深入的 Zygote 通用机制
 > - [A03-Init 进程与 init.rc](A03-Init进程与init.rc.md) 已深入的 init 阶段
-> - [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md) 已深入的 AMS dumpsys
+> - [Dumpsys D02-AMS 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) 已深入的 AMS dumpsys
 >
 > **视角互补**：
 > - **本篇**：**"启动场景"穿透视角**——Zygote + SystemServer 5-10s 拆成 9 个子环节
@@ -1212,8 +1212,8 @@ public PackageManagerService(Context context) {
 > - **上一篇**：[A03-Init 进程与 init.rc](A03-Init进程与init.rc.md)
 > - **下一篇**：[A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md)
 > - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
-> - **机制联动**：[Stability S04-SWT 专题](../Stability/S04-SWT卡死与Watchdog专题.md) · [Process 系列 · 03](../Process/) · [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md)
-> - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [Perfetto 系列](../Perfetto/)
+> - **机制联动**：[Stability S04-SWT 专题](../Stability/S04-SWT卡死与Watchdog专题.md) · [Process 系列 · 03](../Process/) · [Dumpsys D02-AMS 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md)
+> - **工具联动**：[Dumpsys D11-dropbox](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) · [Perfetto 系列](../Perfetto/)
 
 ---
 

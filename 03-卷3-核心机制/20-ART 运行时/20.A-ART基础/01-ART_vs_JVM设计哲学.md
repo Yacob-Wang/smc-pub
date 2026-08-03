@@ -261,7 +261,7 @@ add-int v0, v0, v1   // v0 = v0 + v1
 
 ### 4.3 AOSP 17 编译策略强化
 
-详见 [02-编译与执行 v2](../02-编译与执行/01-编译路径全景.md)：
+详见 [02-编译与执行 v2](../20.B-编译与执行/01-编译路径全景.md)：
 - dex2oat/dexopt 分离
 - Cloud Profile 增量下发
 - static final 字面量内联
@@ -335,7 +335,7 @@ ClassLinker::DefineClass
 - **Class 去重**：跨 ClassLoader 共享 Class
 - **Class Extent**：Class 元数据压缩 20-30%
 
-详见 [01-类加载完整流程 v2](../03-类加载与链接/01-类加载完整流程.md)。
+详见 [01-类加载完整流程 v2](01-类加载完整流程.md)。
 
 ---
 
@@ -455,7 +455,7 @@ AOSP 17 是 Android 转向 AI Agent OS 的标志，**ART 与 JVM 在 AI Agent �
 ## 9. 总结（架构师视角的 5 条 Takeaway）
 
 1. **ART 寄存器式指令集性能领先 JVM 2-3 倍**——这是 ART 设计哲学的核心：移动场景启动快。**AOSP 17 通过 Cloud Profile 增量下发 + 字面量内联进一步强化**。
-2. **ART JIT + AOT 混合模式让"启动快 + 跑起来快 + 长期最优"三者兼得**——JVM 的纯 JIT 模式启动慢，纯 AOT 模式灵活性差。详见 [02-编译与执行 v2](../02-编译与执行/01-编译路径全景.md)。
+2. **ART JIT + AOT 混合模式让"启动快 + 跑起来快 + 长期最优"三者兼得**——JVM 的纯 JIT 模式启动慢，纯 AOT 模式灵活性差。详见 [02-编译与执行 v2](../20.B-编译与执行/01-编译路径全景.md)。
 3. **ART GC 演进对标 JVM GC**——CMS / CC / GenCC 对标 Parallel / CMS / G1 / ZGC。**AOSP 17 GenCC + kSoftThresholdPercent 强化**详见 [10-ART17分代GC强化专章 v2](../03-GC系统/10-ART17分代GC强化专章-v2.md)。
 4. **ART 17 引入 AI Agent OS 能力**——AppFunctions 是 ART 独有的 AI 入口，JVM 无对等能力。**这是 AOSP 17 战略上最关键的变化**。
 5. **跨平台迁移要识别 ART 特定行为**——反射改 final / AppFunctions / ClassLoader 体系都是 Android 特有，迁移到 GraalVM 时需要重写。

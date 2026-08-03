@@ -53,9 +53,9 @@
 
 | # | 文章 | 重点 | 看完能做什么 |
 |:-:|:-----|:-----|:------------|
-| 1 | [System-Integration/01_System_Composition_And_Boot](../06-Foundation/System-Integration/01_System_Composition_And_Boot.md) | 系统组成 + 启动链 | 能从 boot.img 顺到 zygote |
+| 1 | [System-Integration/01_System_Composition_And_Boot](../01-卷1-Android系统基础与平台/01-Android%20系统全景与%20AOSP%2017/01_System_Composition_And_Boot.md) | 系统组成 + 启动链 | 能从 boot.img 顺到 zygote |
 | 2 | [Tools/Android_Tools/Init_RC_Complete_Guide](../../05-卷5-调查工具链/35-断点与 Native 调试/Init_RC_Complete_Guide.md) | init.rc 语法 + section + trigger | 能读懂 service / on / trigger |
-| 3 | [02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc](../../../02-卷2-系统启动/A-启动机制/A03-Init进程与init.rc.md) | Init 进程源码视角 | 能从 init.cpp 顺到 first stage |
+| 3 | [02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc](../02-卷2-系统启动/10-应用启动与首帧/A03-Init进程与init.rc.md) | Init 进程源码视角 | 能从 init.cpp 顺到 first stage |
 | 4 | [System-Integration/02_Partition_Mount_And_Usage](../06-Foundation/System-Integration/02_Partition_Mount_And_Usage.md) | fstab + 挂载时机 | 能解释 vendor / system / product 挂载关系 |
 | 5 | [System-Integration/03_System_Initialization_Flow](../06-Foundation/System-Integration/03_System_Initialization_Flow.md) | rc 文件解析 + 服务启动顺序 | 能解释 service 之间的依赖 |
 

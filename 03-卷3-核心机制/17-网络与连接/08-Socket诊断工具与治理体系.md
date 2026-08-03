@@ -25,8 +25,8 @@
   - [Socket 04-Socket缓冲区与数据收发](04-Socket缓冲区与数据收发.md)(阻塞/EAGAIN 与 buffer 监控指标来源)
   - [Socket 05-listen_backlog与连接队列](05-listen_backlog与连接队列.md)(ListenOverflows / ListenDrops / SynRecv 队列指标来源)
   - [Socket 06-Unix_Domain_Socket与Android使用](06-Unix_Domain_Socket与Android使用.md)(UDS 路径监控来源)
-  - [epoll 01-epoll总览与核心机制](../epoll/01-epoll总览与核心机制.md)(epoll 侧的监控补充)
-  - [IO 06-IO 与进程的深度耦合](../../IO/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md)(D 状态与 wait queue 唤醒——诊断工具的底层原理)
+  - [epoll 01-epoll总览与核心机制](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md)(epoll 侧的监控补充)
+  - [IO 06-IO 与进程的深度耦合](../16-IO%20与存储/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md)(D 状态与 wait queue 唤醒——诊断工具的底层原理)
 - **承接自**:07 末尾预告"5 分钟内定位 + 治理工具集"——本篇全部兑现
 - **衔接去**:本篇完成后 socket 系列 8 篇规划全数完结(01/04/05/06/07/08 + bridge 01 + epoll 01 + README);收口以"治理工程化清单"和"实战案例库"形式沉淀
 - **不重复内容**:风险的具体机制由 07 承担;本篇只做**工具使用 + 监控指标 + 治理落地 + 综合案例**
@@ -1928,7 +1928,7 @@ Socket 系列（8 篇 + 1 桥接 + 1 epoll 协作）
 - **07 风险**：把所有机制的风险汇总成可指导实战的二维矩阵
 - **08 治理**：把 07 风险落成可操作工具集 + 工程实践 + 综合案例
 
-**与 epoll 系列协作**：socket 系列管"端点"（怎么通信），epoll 系列管"事件通知"（怎么知道有数据），两者通过 [bridge/01-socket与epoll的关系](../socket/bridge/01-socket与epoll的关系.md) 桥接。
+**与 epoll 系列协作**：socket 系列管"端点"（怎么通信），epoll 系列管"事件通知"（怎么知道有数据），两者通过 [bridge/01-socket与epoll的关系](01-socket与epoll的关系.md) 桥接。
 
 **工程化沉淀**：
 - 5 类诊断工具速查（附录 B）

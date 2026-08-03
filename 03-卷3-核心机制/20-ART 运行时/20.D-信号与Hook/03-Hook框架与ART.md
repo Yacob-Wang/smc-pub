@@ -398,7 +398,7 @@ loader.setOverrideClassDeduplication(true);  // ART 17 显式 API
 
 ### 7.1 static final 不可变（API 37+）
 
-详见 [01-编译路径全景 v2](../02-编译与执行/01-编译路径全景.md) §7.1。
+详见 [01-编译路径全景 v2](../20.B-编译与执行/01-编译路径全景.md) §7.1。
 
 **Hook 框架影响**：
 - 反射改 final 抛 IllegalAccessException
@@ -406,7 +406,7 @@ loader.setOverrideClassDeduplication(true);  // ART 17 显式 API
 
 ### 7.2 类去重（API 37+）
 
-详见 [01-类加载完整流程 v2](../03-类加载与链接/01-类加载完整流程.md) §7.1。
+详见 [01-类加载完整流程 v2](../20.A-ART基础/01-类加载完整流程.md) §7.1。
 
 **Hook 框架影响**：
 - 跨 ClassLoader 共享 Class
@@ -415,7 +415,7 @@ loader.setOverrideClassDeduplication(true);  // ART 17 显式 API
 
 ### 7.3 JNI 强化（API 37+）
 
-详见 [01-JNI 完整解析 v2](../05-JNI/01-JNI完整解析.md) §7。
+详见 [01-JNI 完整解析 v2](../20.B-编译与执行/01-JNI完整解析.md) §7。
 
 **Hook 框架影响**：
 - FastNative 强化：误抛异常 SIGSEGV

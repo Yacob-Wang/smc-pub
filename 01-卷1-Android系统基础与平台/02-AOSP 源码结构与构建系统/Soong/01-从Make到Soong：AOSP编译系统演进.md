@@ -542,7 +542,7 @@ apex_defaults {
 | [02 Android.bp 语法精要](02-Android.bp语法精要.md) | 下篇讲 .bp 完整语法 |
 | [03 Blueprint](03-Blueprint：Soong的中间表示与解析.md) | 中间表示 |
 | [04 Soong 架构](04-Soong架构：plugin.provider.mutator.generator.md) | 内部架构 |
-| [06-Foundation/SELinux/02](../SELinux/02-策略文件体系：sepolicy.te.cil.编译产物.md) | selinux_policy 也走 Soong |
+| [06-Foundation/SELinux/02](../../05-安全基础（SELinux%20·%20AVB）/SELinux/02-策略文件体系：sepolicy.te.cil.编译产物.md) | selinux_policy 也走 Soong |
 | [02-Symptom/S08-AOSP17-K618](../../../../../01-卷1-Android系统基础与平台/01-Android 系统全景与 AOSP 17/01-症状机制.md) | AOSP 17 全局演进 |
 | [06-Foundation/Build-System/Soong/05-Ninja 生成与解读](05-Ninja生成与ninja文件解读.md) | Ninja 文件怎么读 |
 

@@ -9,10 +9,10 @@
   - [CG-03 cgroup 三大资源维度的统一抽象](03-cgroup三大资源维度的统一抽象_Process_Memory_IO.md) —— 用 CG-02 讲的设计抽象来理解 cgroup 怎么同时管 CPU/Mem/IO
   - [CG-04 Android17 cgroup 树与 libprocessgroup](04-Android17_cgroup树与libprocessgroup.md) —— 看 CG-02 讲的抽象在 Android 上怎么落地
 - **不重复内容**：
-  - cgroup 内核抽象（subsys / css / cftype）的**具体实现** → [Kernel Process 10 §3-§5](../Process/10-cgroup_v2_内核里的资源控制器.md) 是 Kernel 视角的实现细节
+  - cgroup 内核抽象（subsys / css / cftype）的**具体实现** → [Kernel Process 10 §3-§5](10-cgroup_v2_内核里的资源控制器.md) 是 Kernel 视角的实现细节
   - 本篇讲"**为什么这样设计**"（设计意图）——不是"怎么实现"（实现细节）
   - cgroup v1 vs v2 的演进史 → [CG-01 §4-§7](01-cgroup的诞生与历史演进_从2006到Android17.md) 已讲
-  - cgroup attach / fork 的具体流程 → [Kernel Process 10 §3 + §4](../Process/10-cgroup_v2_内核里的资源控制器.md) 已讲
+  - cgroup attach / fork 的具体流程 → [Kernel Process 10 §3 + §4](10-cgroup_v2_内核里的资源控制器.md) 已讲
 
 # 校准决策日志
 
@@ -33,7 +33,7 @@
 
 - 上一篇：[CG-01 cgroup 的诞生与历史演进](01-cgroup的诞生与历史演进_从2006到Android17.md) 已覆盖 cgroup 怎么来的、v1/v2 关键差异、Android 引入时间线
 - 下一篇：[CG-03 cgroup 三大资源维度的统一抽象](03-cgroup三大资源维度的统一抽象_Process_Memory_IO.md) 将用本篇讲的设计抽象，理解 cgroup 怎么同时管 CPU/Memory/IO
-- 本系列 README：[README-cgroup系列.md](README-cgroup系列.md)
+- 本系列 README：[README-cgroup系列.md](../README-cgroup系列.md)
 
 # 写作标准
 

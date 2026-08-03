@@ -46,7 +46,7 @@
 
 **跨系列引用**：
 - ART 主线程：[Runtime/ART/M2-类加载](../01-Mechanism/Runtime/ART/)、[Runtime/ART/M5-JNI](../01-Mechanism/Runtime/ART/)
-- LLM 引擎：[O05 端侧大模型系统集成](../02_AI_Native_OS/O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md)
+- LLM 引擎：[O05 端侧大模型系统集成](O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md)
 
 ---
 

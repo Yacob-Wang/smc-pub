@@ -12,7 +12,7 @@
 - **目的**：把 logcat 5 大过滤维度（tag / level / buffer / 时间 / 内容）+ 3 种持久化方式（tee / logcatd / properties）讲清楚——oncall 5 分钟精确定位 + 长期 log 收集
 - **不是**：不复述 [02 §3 tag 体系](02-Logcat格式与tag体系.md) 和 [02 §4 level 体系](02-Logcat格式与tag体系.md)；不复述 [Logcat_Complete_Guide](./Logcat_Complete_Guide.md) 基础命令
 - **承接自**：[02 §1-7](02-Logcat格式与tag体系.md) → 本文讲"组合过滤 + 持久化"
-- **衔接去**：[04 Logcat 与 SELinux/avc](04-Logcat与SELinux-avc-denied行解读.md) / [06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](../Tracing/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) / [04-Tool/AmCommand/05-诊断与监控-hang-monitor](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/05-诊断与监控-hang-monitor.md)
+- **衔接去**：[04 Logcat 与 SELinux/avc](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/04-Logcat与SELinux-avc-denied行解读.md) / [06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) / [04-Tool/AmCommand/05-诊断与监控-hang-monitor](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/05-诊断与监控-hang-monitor.md)
 
 ## 校准决策日志
 
@@ -612,10 +612,10 @@ $ adb shell start logd
 | smc-pub 已有文章 | 关系 |
 |:----------------|:-----|
 | [02 Logcat 格式](02-Logcat格式与tag体系.md) | 上篇 |
-| [04 Logcat 与 SELinux/avc](04-Logcat与SELinux-avc-denied行解读.md) | 下篇 |
+| [04 Logcat 与 SELinux/avc](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/04-Logcat与SELinux-avc-denied行解读.md) | 下篇 |
 | [Logcat_Complete_Guide](./Logcat_Complete_Guide.md) | 基础命令 |
 | [03-Forensics/Bugreport/02 §4 logcat/ 详解](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/02-Bugreport-目录结构全梳理.md) | bugreport 中 logcat |
-| [06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](../Tracing/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) | trace 配合 logcat |
+| [06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) | trace 配合 logcat |
 | [04-Tool/AmCommand/05-诊断与监控-hang-monitor](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/05-诊断与监控-hang-monitor.md) | hang 监控 |
 
 ---
@@ -624,9 +624,9 @@ $ adb shell start logd
 
 ### 9.1 下一篇
 
-[04 Logcat 与 SELinux/avc：denied 行解读](04-Logcat与SELinux-avc-denied行解读.md) 讲清：
+[04 Logcat 与 SELinux/avc：denied 行解读](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/04-Logcat与SELinux-avc-denied行解读.md) 讲清：
 - 5 大类 logcat 与 SELinux 集成（kernel / main / system / crash / events）
-- denied 行的 8 字段精确读法（精简版，[SELinux/04](../../SELinux/04-AVC与avc_denied：从一次denied反推策略.md) 完整版）
+- denied 行的 8 字段精确读法（精简版，[SELinux/04](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md) 完整版）
 - 5 个真实 case：denied 改 .te 的 5 步法
 - oncall 现场 5 分钟定位
 

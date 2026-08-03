@@ -374,6 +374,6 @@ LLM 日志分析技术栈：
 
 ---
 
-> **子系列导航**：[← 02 AI_Native_OS](../02_AI_Native_OS/README.md) | [AI Native X 总览](../README-AI_Native_X系列.md)
+> **子系列导航**：[← 02 AI_Native_OS](../02_AI_Native_OS/README.md) | [AI Native X 总览](../../../07-卷7-APM与工程治理/46-AI-Native%20调试/README-AI_Native_X系列.md)
 >
 > **最后更新**：2026-06-26（F01-F06 撰写中）

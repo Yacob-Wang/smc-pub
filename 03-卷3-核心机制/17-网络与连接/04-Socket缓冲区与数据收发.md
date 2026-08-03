@@ -19,9 +19,9 @@
 - **本篇系列角色**:Socket 系列第 4 篇「缓冲区与数据收发」(承接 01 总览、02 API/数据结构、03 生命周期;为 05 backlog、07 风险全景做铺垫)
 - **强依赖**:
   - [Socket 01-Socket总览](01-Socket总览.md)(已讲 socket 是什么、syscall 入口、`struct socket`/`struct sock`/`struct file` 三元组、6 大 Android 场景)
-  - [Socket 桥接篇 01-socket 与 epoll 的关系](bridge/01-socket与epoll的关系.md)(已讲 f_op->poll 钩子、sk_data_ready 回调路径,本篇会复用这些机制讲"为什么缓冲区满能唤醒 epoll_wait")
-  - [epoll 01-epoll总览与核心机制](../epoll/01-epoll总览与核心机制.md)(epoll 三态结构、ET/LT 语义;本篇 §4 阻塞/非阻塞 与 epoll 协作时用到)
-  - [IO 06-IO 与进程的深度耦合](../../IO/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md) §1-2(D 状态、wait queue 唤醒;socket 同步 recv 会进入 D 状态)
+  - [Socket 桥接篇 01-socket 与 epoll 的关系](01-socket与epoll的关系.md)(已讲 f_op->poll 钩子、sk_data_ready 回调路径,本篇会复用这些机制讲"为什么缓冲区满能唤醒 epoll_wait")
+  - [epoll 01-epoll总览与核心机制](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md)(epoll 三态结构、ET/LT 语义;本篇 §4 阻塞/非阻塞 与 epoll 协作时用到)
+  - [IO 06-IO 与进程的深度耦合](../16-IO%20与存储/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md) §1-2(D 状态、wait queue 唤醒;socket 同步 recv 会进入 D 状态)
 - **承接自**:socket 01 §2.3 提到"通用 socket 层的胶水"但没讲缓冲区;socket 桥接篇讲了"sk_data_ready 唤醒 epoll"但没讲"什么时候 wake_up"——本篇补齐这一环
 - **衔接去**:本篇末尾会预告下一篇 [05-listen backlog 与连接队列](05-listen_backlog与连接队列.md) 讲 listen/accept 的两个队列(全连接队列 + 半连接队列)
 - **不重复内容**:socket 01 已讲的三元组、桥接篇已讲的 f_op->poll 钩子、epoll 01 已讲的三态结构——全部不再展开
@@ -990,7 +990,7 @@ socket 缓冲相关问题
 | net/ipv4/tcp_output.c | `net/ipv4/tcp_output.c` | Linux 5.10+ | TCP 发包（tcp_write_xmit） |
 | net/unix/af_unix.c | `net/unix/af_unix.c` | Linux 5.10+ | UDS 协议族 |
 | net/core/dev.c | `net/core/dev.c` | Linux 5.10+ | 网络设备层 |
-| fs/eventpoll.c | `fs/eventpoll.c` | Linux 5.10+ | epoll（详见 [epoll 01](../../epoll/01-epoll总览与核心机制.md)） |
+| fs/eventpoll.c | `fs/eventpoll.c` | Linux 5.10+ | epoll（详见 [epoll 01](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md)） |
 | InputDispatcher | `frameworks/native/services/inputflinger/InputDispatcher.cpp` | AOSP 14.0.0_r1 | InputDispatcher 主体 |
 | InputTransport | `frameworks/native/libs/input/InputTransport.cpp` | AOSP 14.0.0_r1 | InputChannel socketpair |
 | BitTube | `frameworks/native/libs/gui/BitTube.cpp` | AOSP 14.0.0_r1 | Choreographer VSync 通道 |

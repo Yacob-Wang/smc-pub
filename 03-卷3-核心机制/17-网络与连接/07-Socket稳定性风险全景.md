@@ -24,8 +24,8 @@
   - [Socket 04-Socket缓冲区与数据收发](04-Socket缓冲区与数据收发.md)(§3.5 阻塞/EAGAIN、§4 风险地图——本篇合并其 P0 风险)
   - [Socket 05-listen_backlog与连接队列](05-listen_backlog与连接队列.md)(§4 风险地图、ListenDrops/ListenOverflows 监控指标)
   - [Socket 06-Unix_Domain_Socket与Android使用](06-Unix_Domain_Socket与Android使用.md)(§5 UDS 风险地图、abstract 命名冲突)
-  - [epoll 01-epoll总览与核心机制](../epoll/01-epoll总览与核心机制.md)(§6 风险地图、ET/LT 误用)
-  - [IO 06-IO 与进程的深度耦合](../../IO/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md)(D 状态、wait queue 唤醒——socket 阻塞时关联)
+  - [epoll 01-epoll总览与核心机制](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md)(§6 风险地图、ET/LT 误用)
+  - [IO 06-IO 与进程的深度耦合](../16-IO%20与存储/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md)(D 状态、wait queue 唤醒——socket 阻塞时关联)
 - **承接自**:socket 04/05/06 各篇"风险速查表"分散在 §4-§5;本篇把它们合并为**统一的风险图**——按"6 大场景"和"5 大类"两个维度交叉
 - **衔接去**:本篇末尾会预告下一篇 [08-Socket诊断工具与治理体系](08-Socket诊断工具与治理体系.md) 给出"5 分钟内定位 + 治理"工具集
 - **不重复内容**:风险的具体机制(如 ET/LT 原理、SO_SNDBUF 细节)——由强依赖文章承担;本篇只做**风险收口 + 排查路径决策树**
@@ -878,7 +878,7 @@ service vendor_post_ota /system/bin/sh /vendor/bin/post_ota.sh
 | **CI 校验** | 内核参数 | somaxconn/syncookies/abort | 升级必跑 |
 ---
 ## 篇尾衔接
-下一篇 [08-Socket诊断工具与治理体系](../socket/08-Socket诊断工具与治理体系.md) 将深入5 分钟内定位 + 治理工具集：
+下一篇 [08-Socket诊断工具与治理体系](08-Socket诊断工具与治理体系.md) 将深入5 分钟内定位 + 治理工具集：
 - **诊断工具**：/proc/net/* 完整解读、ss/lsof 实战用法、strace + tcpdump 抓包模板、ANR trace 关键栈、dumpsys 各命令速查
 - **治理体系**：从被动排查到主动治理——fdsan 落地、连接池规范、backlog 调优清单、CI 校验脚本、监控告警阈值
 - **完整案例**：2 个综合案例（带 5 大类风险联动排查）

@@ -14,7 +14,7 @@
 
 | 文档 | 编号 | 作用 | 何时读 |
 |:-----|:----:|:-----|:-------|
-| [**学习路线（稳定性架构师 L00）**](README-学习路线.md) | L00 | 4 阶段 × 3 角色 × 110 篇文章的阅读路径 | **开始学习前**先看这个 |
+| [**学习路线（稳定性架构师 L00）**](../00-Meta/README-学习路线.md) | L00 | 4 阶段 × 3 角色 × 110 篇文章的阅读路径 | **开始学习前**先看这个 |
 | [**系列质量评估报告（Q00）**](README-系列质量评估报告.md) | Q00 | 全仓 ~110 篇按 🟢🟡🟠🔴 4 档评级 | 决定"先补哪个缺口"时看 |
 >
 > **完成状态**：🚧 撰写中（S00-S07 规划完成，2026-07-18 开干）
@@ -41,7 +41,7 @@
 | **HANG** | **无对应** | **S05 HANG 是本系列独占视角**（主线程软卡死 / IO hang / binder hang / kernel hung_task 全栈串联） |
 | **KE** | [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/) 讲透 Kernel panic | S07 KE 只讲"用户空间能看到的 KE 信号 + 取证" |
 
-> **架构师防混淆口诀**（速记，详见 [Reference/术语表.md §1.1](../../Reference/术语表.md)）：
+> **架构师防混淆口诀**（速记，详见 [Reference/术语表.md §1.1](../00-Meta/Reference/术语表.md)）：
 > - **ANR 主动 / HANG 被动**
 > - **SWT 杀的是 SystemServer / ANR 杀的是 App**
 > - **NE 在用户态 / KE 在内核态**
@@ -168,7 +168,7 @@ Zygote 拉起 SystemServer 失败 → REBOOT 反复
 | §3.5 AOSP 17 变化 | AppFunctions + AI Agent OS 集成对 ANR 影响 | `frameworks/base/apex/` |
 | §4 风险地图 | 5 类触发场景 + logcat 模板 | logcat 关键字 |
 | §5 治理 | dump 取证（anr traces.txt）+ 主线程栈解读 + 修复模式 | `/data/anr/` |
-| §6 实战案例 | CASE-STAB-01-01/02 | 见 [Reference/Stability-案例索引.md](../../Reference/Stability-案例索引.md) |
+| §6 实战案例 | CASE-STAB-01-01/02 | 见 [Reference/Stability-案例索引.md](../00-Meta/Reference/Stability-案例索引.md) |
 | 总结 + 附录 A/B/C/D | — | — |
 
 ### 3.3 S02「JE：未捕获 Throwable 全景 + 监控盲区」
@@ -315,7 +315,7 @@ Phase 7（总览篇 / 治理度量 · §8 破例 · 2026-07-18 新增）
 
 ---
 
-## 5. 跨系列引用矩阵（详见 [Reference/Stability-跨系列引用矩阵.md](../../Reference/Stability-跨系列引用矩阵.md)）
+## 5. 跨系列引用矩阵（详见 [Reference/Stability-跨系列引用矩阵.md](../00-Meta/Reference/Stability-跨系列引用矩阵.md)）
 
 | Stability 文章 | 主引用系列 | 引用文章数 |
 |--------------|----------|----------|
@@ -401,7 +401,7 @@ Phase 7（总览篇 / 治理度量 · §8 破例 · 2026-07-18 新增）
 
 ---
 
-## 8. 16 个锚点案例（详见 [Reference/Stability-案例索引.md](../../Reference/Stability-案例索引.md)）
+## 8. 16 个锚点案例（详见 [Reference/Stability-案例索引.md](../00-Meta/Reference/Stability-案例索引.md)）
 
 | 文章 | 案例 1（典型模式） | 案例 2（公开 bugreport） |
 | :--- | :--- | :--- |
@@ -454,9 +454,9 @@ Phase 7（总览篇 / 治理度量 · §8 破例 · 2026-07-18 新增）
 
 ### 10.2 Reference 基础设施
 
-- [Reference/术语表.md](../../Reference/术语表.md) — 全局术语表（含本系列 7 大症状定义）
-- [Reference/Stability-跨系列引用矩阵.md](../../Reference/Stability-跨系列引用矩阵.md) — 本系列跨系列引用
-- [Reference/Stability-案例索引.md](../../Reference/Stability-案例索引.md) — 16 个案例编号
+- [Reference/术语表.md](../00-Meta/Reference/术语表.md) — 全局术语表（含本系列 7 大症状定义）
+- [Reference/Stability-跨系列引用矩阵.md](../00-Meta/Reference/Stability-跨系列引用矩阵.md) — 本系列跨系列引用
+- [Reference/Stability-案例索引.md](../00-Meta/Reference/Stability-案例索引.md) — 16 个案例编号
 
 ### 10.3 行业资料
 
@@ -502,6 +502,6 @@ Phase 7（总览篇 / 治理度量 · §8 破例 · 2026-07-18 新增）
 
 ---
 
-> **系列导航**：[← 进程架构演进系列](../Process/README-进程架构演进系列.md) | [本系列 README 顶部](#)
+> **系列导航**：[← 进程架构演进系列](../03-卷3-核心机制/13-进程与生命周期/README-进程架构演进系列.md) | [本系列 README 顶部](#)
 >
 > **最后更新**：2026-07-18（v1.0 骨架建立）

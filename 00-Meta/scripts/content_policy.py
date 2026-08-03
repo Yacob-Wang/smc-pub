@@ -271,7 +271,10 @@ PROBLEM_INDEX: list[tuple[str, list[tuple[str, str]]]] = [
         "Socket / epoll",
         [
             ("Socket", "03-卷3-核心机制/17-网络与连接/"),
-            ("epoll", "01-Mechanism/Kernel/epoll/"),
+            (
+                "epoll",
+                "03-卷3-核心机制/14-线程与 Handler 消息机制/14.A-epoll 与事件循环/",
+            ),
         ],
     ),
     (

@@ -691,7 +691,7 @@ build/soong/docs/
 | [07 常见编译错误](07-常见编译错误速查.md) | 第 8 章 5 个错误的展开 |
 | [08 实战](08-实战：写一个自己的Android.bp-module.md) | M4 末篇 |
 | [Build-System/04_Build_Configuration_And_Options](../04_Build_Configuration_And_Options.md) | BoardConfig.mk 跟 Android.bp 配合 |
-| [06-Foundation/SELinux/02](../SELinux/02-策略文件体系：sepolicy.te.cil.编译产物.md) | selinux_policy 也是 Android.bp module |
+| [06-Foundation/SELinux/02](../../05-安全基础（SELinux%20·%20AVB）/SELinux/02-策略文件体系：sepolicy.te.cil.编译产物.md) | selinux_policy 也是 Android.bp module |
 
 ---
 

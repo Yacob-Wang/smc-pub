@@ -4,7 +4,7 @@
 >
 > **本篇定位**：**全局观**（1/6）——把 [AI_Native_Runtime R01-R08](../01_AI_Native_Runtime/) 和 [AI_Native_OS O01-O06](../02_AI_Native_OS/) 积累的 AI 能力，**反哺到稳定性治理场景**，回答"AI 在稳定性领域到底能解决什么问题、解决到什么程度、边界在哪"
 >
-> **基线版本**：AOSP android-14.0.0_r1；LLM 主线 OpenAI GPT-4o / Claude 3.5 Sonnet（云端）+ Gemini Nano（端侧,见 [O05](../02_AI_Native_OS/O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md)）；APM 行业对位 Datadog Watchdog / New Relic AI / 阿里云 ARMS AI / 字节跳动 ANRCanary。
+> **基线版本**：AOSP android-14.0.0_r1；LLM 主线 OpenAI GPT-4o / Claude 3.5 Sonnet（云端）+ Gemini Nano（端侧,见 [O05](O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md)）；APM 行业对位 Datadog Watchdog / New Relic AI / 阿里云 ARMS AI / 字节跳动 ANRCanary。
 >
 > **对线 JD**：
 >
@@ -42,8 +42,8 @@
 **衔接去**：[F02 时序异常检测](../03_AI_for_Stability/) 深入"异常检测"核心机制；[F03 智能归因](../03_AI_for_Stability/) 深入"归因"；[F04 AI 预测 ANR](../03_AI_for_Stability/) 深入"早期预警"；[F06 智能 APM 建设](../03_AI_for_Stability/) 把三大能力整合到 APM 平台（子系列收口）。
 
 **强依赖**：
-- [R08 端侧 LLM 落地](../01_AI_Native_Runtime/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md)（LLM 引擎）
-- [O05 端侧大模型系统集成](../02_AI_Native_OS/O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md)（端侧推理能力基础）
+- [R08 端侧 LLM 落地](46.A-端侧%20AI%20运行时/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md)（LLM 引擎）
+- [O05 端侧大模型系统集成](O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md)（端侧推理能力基础）
 
 **跨系列引用**：
 - v2.1 主干：[ART M6 信号](../01-Mechanism/Runtime/ART/)、[Watchdog](../04-Tool/Watchdog/)、[Tools/Perfetto](../06-Foundation/Tools/)、[Runtime/Java_Crash](../01-Mechanism/Runtime/Java_Crash/)、[Runtime/Native_Crash](../01-Mechanism/Runtime/Native_Crash/)
@@ -519,7 +519,7 @@ T0+24h: 灰度验证 + 全量上线
 | Bugreport 生成 | `frameworks/base/services/core/java/com/android/server/BugreportManagerService.java` | AOSP 14+ | §3.1 / [F02](../03_AI_for_Stability/) |
 | Tombstone 16 段 | `system/core/debuggerd/libdebuggerd/tombstone_proto.cpp` | AOSP 14+ | §3.2 / [F05](../03_AI_for_Stability/) |
 | ANR trace 生成 | `frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java::dumpStackTraces` | AOSP 14+ | §3.2 / [F03](../03_AI_for_Stability/) |
-| 端侧 LLM 引擎 | 见 [O05](../02_AI_Native_OS/O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md) | AOSP 14+ | §3.2 / [F03](../03_AI_for_Stability/) / [F05](../03_AI_for_Stability/) |
+| 端侧 LLM 引擎 | 见 [O05](O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md) | AOSP 14+ | §3.2 / [F03](../03_AI_for_Stability/) / [F05](../03_AI_for_Stability/) |
 | AI HAL | `hardware/interfaces/ai/` | AOSP 14+ | §1.2 / [R02](../01_AI_Native_Runtime/) |
 | AICore | `frameworks/base/services/core/java/com/android/server/aiintegration/` | AOSP 14+ | §1.2 / [O03](../02_AI_Native_OS/) |
 

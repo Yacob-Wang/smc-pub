@@ -137,7 +137,7 @@ def chapter_status(chapter_dir: Path) -> str:
     return "🚧 撰写中" if article_count(chapter_dir) else "📋 待撰写"
 
 
-def render_chapter_index(vol: Volume, ch: Chapter) -> str:
+def render_chapter_index(vol: Volume, ch: Chapter, ch_dir: Path) -> str:
     lines = [
         f"# 第 {ch.number} 章　{ch.title}",
         "",
@@ -150,7 +150,10 @@ def render_chapter_index(vol: Volume, ch: Chapter) -> str:
     lines += ["", "## 核心子节", ""]
     lines += [f"- {s}" for s in ch.subsections]
     lines += ["", "## 本章小结", "", ch.summary, "", "---", ""]
-    lines.append("**状态**：🚧 骨架完成，内容撰写中")
+    n = article_count(ch_dir)
+    lines.append(
+        f"**状态**：🚧 已有 {n} 篇，撰写中" if n else "**状态**：📋 骨架完成，待撰写"
+    )
     lines.append(f"**生成**：{SKELETON_MARK}（源：00-Meta/书籍目录-v1.md）")
     return "\n".join(lines) + "\n"
 
@@ -207,7 +210,9 @@ def main() -> int:
             if not is_skeleton(index):
                 skipped.append(f"{ch.number} {ch.title}")
                 continue
-            index.write_text(render_chapter_index(vol, ch), encoding="utf-8")
+            index.write_text(
+                render_chapter_index(vol, ch, ch_dir), encoding="utf-8"
+            )
             written += 1
 
         (vol_dir / "index.md").write_text(

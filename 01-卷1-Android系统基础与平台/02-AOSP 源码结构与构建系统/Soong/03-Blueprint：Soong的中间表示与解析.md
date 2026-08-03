@@ -511,7 +511,7 @@ error: "src" is not a property of android_app
 | [05 Ninja 文件解读](05-Ninja生成与ninja文件解读.md) | M4 |
 | [07 常见编译错误](07-常见编译错误速查.md) | M4 |
 | [Build-System/04_Build_Configuration_And_Options](../04_Build_Configuration_And_Options.md) | BoardConfig.mk 跟 Android.bp 配合 |
-| [06-Foundation/SELinux/02](../SELinux/02-策略文件体系：sepolicy.te.cil.编译产物.md) | SELinux 编译也走 Soong + Blueprint |
+| [06-Foundation/SELinux/02](../../05-安全基础（SELinux%20·%20AVB）/SELinux/02-策略文件体系：sepolicy.te.cil.编译产物.md) | SELinux 编译也走 Soong + Blueprint |
 
 ---
 

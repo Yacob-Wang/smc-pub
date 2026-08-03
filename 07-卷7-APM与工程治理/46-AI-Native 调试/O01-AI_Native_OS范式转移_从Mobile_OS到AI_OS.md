@@ -36,9 +36,9 @@
 | **实战案例** | 1 个（端侧 LLM 冷启动） | O02-O06 各 1-2 个 |
 
 > **本篇不重复**：
-> - R01 §2 Runtime 维度的 4 次范式转移（NNAPI → TFLite → AI HAL → 端侧 LLM）—— 见 [R01 §2.4](../01_AI_Native_Runtime/R01-端侧AI演进史_从NNAPI到AI_HAL到端侧LLM.md)
+> - R01 §2 Runtime 维度的 4 次范式转移（NNAPI → TFLite → AI HAL → 端侧 LLM）—— 见 [R01 §2.4](46.A-端侧%20AI%20运行时/R01-端侧AI演进史_从NNAPI到AI_HAL到端侧LLM.md)
 > - R02-R07 8 个 Runtime 机制组件的内部细节
-> - R08 端侧 LLM 的 Runtime 优化（量化 / KV Cache / Speculative / 模型分片）—— 见 [R08](../01_AI_Native_Runtime/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md)
+> - R08 端侧 LLM 的 Runtime 优化（量化 / KV Cache / Speculative / 模型分片）—— 见 [R08](46.A-端侧%20AI%20运行时/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md)
 > - O02-O05 各具体组件的内部机制
 
 ---

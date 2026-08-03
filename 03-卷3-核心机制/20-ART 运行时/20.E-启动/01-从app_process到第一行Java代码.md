@@ -25,7 +25,7 @@
 
 **承接自**：[06-信号与ANR-Trace](../06-信号与ANR-Trace/) 详解 ANR 机制；本篇**深入 App 启动**——为什么冷启动是稳定性核心。
 
-**衔接去**：[02-编译与执行](../02-编译与执行/01-编译路径全景.md) 详述 JIT/AOT 编译；[02-ART17启动期与AppFunctions集成 v2](02-ART17启动期与AppFunctions集成-v2.md) 详述 ART 17 启动期与 AppFunctions 硬变化。
+**衔接去**：[02-编译与执行](../20.B-编译与执行/01-编译路径全景.md) 详述 JIT/AOT 编译；[02-ART17启动期与AppFunctions集成 v2](02-ART17启动期与AppFunctions集成-v2.md) 详述 ART 17 启动期与 AppFunctions 硬变化。
 
 ---
 
@@ -424,7 +424,7 @@ AOSP 17 是 Android 转向 AI Agent OS 的标志：
 - **pidfds 扩展**：Linux 6.18 让 Zygote fork 监控更可靠
 - **io_uring 优化**：Linux 6.18 让启动期 IO 加速 30%
 - **sheaves 内存**：Linux 6.18 让启动期内存峰值压缩 20%
-- 详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../01-Mechanism/Kernel/DM/09-DM-调优-性能与pcache.md)
+- 详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../16-IO%20与存储/16.D-Device%20Mapper/09-DM-调优-性能与pcache.md)
 
 ---
 

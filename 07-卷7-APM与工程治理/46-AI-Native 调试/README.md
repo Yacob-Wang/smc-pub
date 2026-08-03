@@ -326,4 +326,4 @@ App 独立运行（Sandbox）                  AI Agent 跨 App 编排
 
 ---
 
-> **子系列导航**：[← 01 AI_Native_Runtime](../01_AI_Native_Runtime/README.md) | [AI Native X 总览](../README-AI_Native_X系列.md) | [03 AI_for_Stability →](../03_AI_for_Stability/README.md)
+> **子系列导航**：[← 01 AI_Native_Runtime](../01_AI_Native_Runtime/README.md) | [AI Native X 总览](README-AI_Native_X系列.md) | [03 AI_for_Stability →](../../05-Governance/AI-Native/03_AI_for_Stability/README.md)

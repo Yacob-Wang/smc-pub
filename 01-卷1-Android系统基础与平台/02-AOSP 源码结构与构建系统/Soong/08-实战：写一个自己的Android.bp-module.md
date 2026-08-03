@@ -12,7 +12,7 @@
 - **目的**：从 0 到 1 写一个完整可上线的 cc_library native daemon——含 Android.bp + C++ 源码 + init.rc 集成 + SELinux 策略 + file_contexts 集成 + 编译验证 + 上线验证
 - **不是**：不复述 [01]-[07] 任一篇语法（实战用）
 - **承接自**：[07 §6 速查表](07-常见编译错误速查.md) → 本文用真实案例走完 5 大类
-- **衔接去**：[06-Foundation/SELinux/07](../SELinux/07-实战：定制SELinux策略排错5例.md)（SELinux 集成实战）
+- **衔接去**：[06-Foundation/SELinux/07](../../05-安全基础（SELinux%20·%20AVB）/SELinux/07-实战：定制SELinux策略排错5例.md)（SELinux 集成实战）
 
 ## 校准决策日志
 
@@ -246,7 +246,7 @@ allow vendor_example_daemon logd:unix_stream_socket connectto;
 allow vendor_example_daemon logdr_socket:sock_file write;
 ```
 
-**注意**：简化版策略，**实际生产要更细的权限**（见 [06-Foundation/SELinux/02](../SELinux/02-策略文件体系：sepolicy.te.cil.编译产物.md)）。
+**注意**：简化版策略，**实际生产要更细的权限**（见 [06-Foundation/SELinux/02](../../05-安全基础（SELinux%20·%20AVB）/SELinux/02-策略文件体系：sepolicy.te.cil.编译产物.md)）。
 
 ---
 
@@ -529,12 +529,12 @@ aosp/
 | smc-pub 已有文章 | 关系 |
 |:----------------|:-----|
 | [01]-[07] 全部前篇 | 实战用到所有语法 |
-| [06-Foundation/SELinux/02](../SELinux/02-策略文件体系：sepolicy.te.cil.编译产物.md) | SELinux 编译 |
-| [06-Foundation/SELinux/04](../SELinux/04-AVC与avc_denied：从一次denied反推策略.md) | 实战排 denied |
-| [06-Foundation/SELinux/07](../SELinux/07-实战：定制SELinux策略排错5例.md) | vendor daemon 案例同本文 |
-| [06-Foundation/Tools/Android_Tools/Init_RC_Complete_Guide](../../Tools/Android_Tools/Init_RC_Complete_Guide.md) | init.rc 完整语法 |
-| [Build-System/04_Build_Configuration_And_Options](../../Build-System/04_Build_Configuration_And_Options.md) | BoardConfig.mk |
-| [02-Symptom/S11-Startup/A03-Init进程与init.rc](../../../../../02-卷2-系统启动/A-启动机制/A03-Init进程与init.rc.md) | init 进程 |
+| [06-Foundation/SELinux/02](../../05-安全基础（SELinux%20·%20AVB）/SELinux/02-策略文件体系：sepolicy.te.cil.编译产物.md) | SELinux 编译 |
+| [06-Foundation/SELinux/04](../../05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md) | 实战排 denied |
+| [06-Foundation/SELinux/07](../../05-安全基础（SELinux%20·%20AVB）/SELinux/07-实战：定制SELinux策略排错5例.md) | vendor daemon 案例同本文 |
+| [06-Foundation/Tools/Android_Tools/Init_RC_Complete_Guide](../../../05-卷5-调查工具链/35-断点与%20Native%20调试/Init_RC_Complete_Guide.md) | init.rc 完整语法 |
+| [Build-System/04_Build_Configuration_And_Options](../04_Build_Configuration_And_Options.md) | BoardConfig.mk |
+| [02-Symptom/S11-Startup/A03-Init进程与init.rc](../../../02-卷2-系统启动/10-应用启动与首帧/A03-Init进程与init.rc.md) | init 进程 |
 
 ---
 
@@ -557,7 +557,7 @@ Soong 这条线在稳定性架构师的能力模型里属于**"改源码" + "机
 
 下一步推荐读：
 - [03-Forensics/Bugreport/01-总览与生成/解析](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/01-Bugreport-总览与生成解析.md) — 编译产物上线后怎么取证（下一条 M4-B1 系列）
-- [06-Foundation/SELinux/08](../SELinux/08-AOSP-17演进：Treble+CIL+userspace加载.md) — AOSP 17 跨版本迁移
+- [06-Foundation/SELinux/08](../../05-安全基础（SELinux%20·%20AVB）/SELinux/08-AOSP-17演进：Treble+CIL+userspace加载.md) — AOSP 17 跨版本迁移
 - [02-Symptom/S08-AOSP17-K618](../../../../../01-卷1-Android系统基础与平台/01-Android 系统全景与 AOSP 17/01-症状机制.md) — AOSP 17 全局演进
 
 ---

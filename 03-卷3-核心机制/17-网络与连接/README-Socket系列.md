@@ -29,7 +29,7 @@ Android 中哪些重要通讯使用 Socket？Zygote、Input、adb、LocalSocket�
 
 ## Socket 与 epoll 是什么关系
 
-**Socket 是"通信端点"，epoll 是"事件通知器"——两者是横向协作关系，不是包含关系。** 本系列单独讲 socket 端（端点、缓冲、连接）；epoll 端（事件通知、ET/LT、Android 应用）放在独立的 [epoll 系列](../epoll/README-epoll系列.md)。两者之间的协作原理（`f_op->poll` 钩子、`sk_data_ready` 回调路径、epitem 挂入就绪链表）见桥接篇 [socket 与 epoll 的关系](bridge/01-socket与epoll的关系.md)。
+**Socket 是"通信端点"，epoll 是"事件通知器"——两者是横向协作关系，不是包含关系。** 本系列单独讲 socket 端（端点、缓冲、连接）；epoll 端（事件通知、ET/LT、Android 应用）放在独立的 [epoll 系列](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/README-epoll系列.md)。两者之间的协作原理（`f_op->poll` 钩子、`sk_data_ready` 回调路径、epitem 挂入就绪链表）见桥接篇 [socket 与 epoll 的关系](01-socket与epoll的关系.md)。
 
 ```
 socket 系列（本目录）                epoll 系列（../epoll/）

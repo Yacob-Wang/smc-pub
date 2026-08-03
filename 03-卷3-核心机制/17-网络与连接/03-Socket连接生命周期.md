@@ -25,8 +25,8 @@
   - [Socket 06-Unix_Domain_Socket与Android使用](06-Unix_Domain_Socket与Android使用.md)(UDS 路径型/abstract 创建、Zygote 等场景细节)
   - [Socket 07-Socket稳定性风险全景](07-Socket稳定性风险全景.md)(5 大类风险——本篇每段标注对应的风险类型)
   - [Socket 08-Socket诊断工具与治理体系](08-Socket诊断工具与治理体系.md)(监控指标——本篇每种状态给出对应监控点)
-  - [epoll 01-epoll总览与核心机制](../epoll/01-epoll总览与核心机制.md)(非阻塞与 epoll 唤醒机制)
-  - [IO 06-IO 与进程的深度耦合](../../IO/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md)(D 状态、wait queue 唤醒——connect/accept/close 阻塞时关联)
+  - [epoll 01-epoll总览与核心机制](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md)(非阻塞与 epoll 唤醒机制)
+  - [IO 06-IO 与进程的深度耦合](../16-IO%20与存储/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md)(D 状态、wait queue 唤醒——connect/accept/close 阻塞时关联)
 - **承接自**:02 §2 系统调用入口与 §3 数据结构——本篇把 syscall 按"生命周期"重组
 - **衔接去**:本篇完成后 socket 系列"机制深潜"篇章(02-06)全部完结;最后一篇 08 已经在 03 之前写完作为收口
 - **不重复内容**:syscall 的通用入口已由 02 §2 详述;本篇只讲**协议层状态机 + 关键路径的差异点**

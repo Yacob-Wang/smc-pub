@@ -8,7 +8,7 @@
 >
 > **承接自**：S03 §3.1 提到 Binder 线程池 15 个；S08 §1.1 提到 MAX_CACHED_PROCESSES 32 个。本篇**专门展开跨进程 Binder 3 大限制 + Service 数量上限 + 工具 + 实战案例**
 >
-> **衔接去**：**[Broadcast 系列预告] [B01 · Broadcast 全景](../Broadcast/B01_Broadcast_Overview.md)** — Service 系列完成后进入 Broadcast 系列
+> **衔接去**：**[Broadcast 系列预告] [B01 · Broadcast 全景](B01_Broadcast_Overview.md)** — Service 系列完成后进入 Broadcast 系列
 >
 > **不重复内容**：与 S03 §3.1 Binder 基础不重复；与 S08 §1.1 进程上限不重复
 
@@ -437,9 +437,9 @@ private void updateCachedProcessStates() {
 - **`mLruProcesses` 是 LRU 队列**——**最近最少使用的进程最先被杀**。
 - **AOSP 17 强化**：`updateCachedProcessStates` 内部增加"批量处理"，**减少单次扫描**。
 
-> 跨系列引用：见 [Activity A09 内存治理](../Activity/09_Activity_Memory_Governance.md) §1（Service 数量上限与 Activity 内存治理是同一组 OomAdjuster 策略下的不同切面，Service 上限受缓存进程预算约束）
-> 跨系列引用：见 [Process 04 应用进程首生](../Process/04-应用进程首生-fork到ActivityThread.md) §1.2（进程上限 `MAX_CACHED_PROCESSES` 与 Service 数量 `MAX_ACTIVE_SERVICES` 由同一组 AMS 常量约束，互为约束条件）
-> 跨系列引用：见 [ContentProvider C04 跨进程通信](../ContentProvider/C04_ContentProvider_CrossProcess.md) §3.1（跨进程 Binder 限制（`MAX_BINDER_TRANSACTION`、`Binder 线程池` 15 条）在 ContentProvider 跨进程中同样命中，Service/ContentProvider 共享同一 Binder 通道）
+> 跨系列引用：见 [Activity A09 内存治理](09_Activity_Memory_Governance.md) §1（Service 数量上限与 Activity 内存治理是同一组 OomAdjuster 策略下的不同切面，Service 上限受缓存进程预算约束）
+> 跨系列引用：见 [Process 04 应用进程首生](../13.B-进程生命周期/04-应用进程首生-fork到ActivityThread.md) §1.2（进程上限 `MAX_CACHED_PROCESSES` 与 Service 数量 `MAX_ACTIVE_SERVICES` 由同一组 AMS 常量约束，互为约束条件）
+> 跨系列引用：见 [ContentProvider C04 跨进程通信](C04_ContentProvider_CrossProcess.md) §3.1（跨进程 Binder 限制（`MAX_BINDER_TRANSACTION`、`Binder 线程池` 15 条）在 ContentProvider 跨进程中同样命中，Service/ContentProvider 共享同一 Binder 通道）
 
 ---
 
@@ -667,5 +667,5 @@ S09 是 Service 系列的**第 9 篇 / 最后一篇**。**Service 系列（M2）
 
 ---
 
-**下一篇**：[B01 · Broadcast 全景：分类、机制与协作组件](../Broadcast/B01_Broadcast_Overview.md) — Service 系列完成后进入 Broadcast 系列（M3）。
+**下一篇**：[B01 · Broadcast 全景：分类、机制与协作组件](B01_Broadcast_Overview.md) — Service 系列完成后进入 Broadcast 系列（M3）。
 

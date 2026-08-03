@@ -4,7 +4,7 @@
 >
 > **本篇角色**：ContentProvider 系列 **第 6 篇 / 风险地图**
 >
-> **强依赖**：[C04 · 跨进程通信](C04_ContentProvider_CrossProcess.md)、[B07 · 后台广播限制](../Broadcast/B07_Broadcast_BackgroundRestriction.md)
+> **强依赖**：[C04 · 跨进程通信](C04_ContentProvider_CrossProcess.md)、[B07 · 后台广播限制](B07_Broadcast_BackgroundRestriction.md)
 >
 > **承接自**：C04 §3.4 提到 URI 权限校验；B07 详述 AOSP 11+ 收紧的"系列化策略"。本篇**专门展开 AOSP 11+ 包可见性 + ContentProvider exported 错配 + SecurityException 5 大根因 + 实战案例**
 >
@@ -28,8 +28,8 @@ AOSP 11 (API 30) 引入包可见性，**ContentProvider 跨 App 访问受到严�
 | **URI 权限收紧** | AOSP 11+ | path-permission 严校验 | `SecurityException: ... denied` |
 | **content provider 进程** | AOSP 14+ | 后台访问受限制 | `BackgroundXxxException` |
 
-> 跨系列引用：见 [Service · FGS 类型限制与收紧](../Service/04_Service_FGS_TypeRestricted.md)（AOSP 14+ 收紧是系列化策略）
-> 跨系列引用：见 [Activity · ConfigChange 收紧](../Activity/06_Activity_ConfigChange.md)（收紧是系列化策略）
+> 跨系列引用：见 [Service · FGS 类型限制与收紧](04_Service_FGS_TypeRestricted.md)（AOSP 14+ 收紧是系列化策略）
+> 跨系列引用：见 [Activity · ConfigChange 收紧](06_Activity_ConfigChange.md)（收紧是系列化策略）
 
 ### 1.2 为什么需要深入 AOSP 11+ 收紧
 

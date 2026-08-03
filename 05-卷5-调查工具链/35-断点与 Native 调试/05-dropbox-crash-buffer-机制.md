@@ -586,7 +586,7 @@ $ adb shell setprop persist.logd.dropbox.tag.<TAG>.enable 0
 | [03-Forensics/Bugreport/05 §2 工具选择](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/05-Bugreport-vs-perfetto-trace.md) | 工具边界 |
 | [01-Mechanism/Framework/Service](../../../../01-Mechanism/Framework/Service/) | service 机制 |
 | [01-Mechanism/Runtime/Native_Crash/04-debuggerd与Tombstone](../../../../../04-卷4-诊断方法论与稳定性症状/25-Native 异常/04-debuggerd与Tombstone.md) | tombstone 机制 |
-| [06-Foundation/SELinux/07 实战 5 例](../../SELinux/07-实战：定制SELinux策略排错5例.md) | NE 排错 |
+| [06-Foundation/SELinux/07 实战 5 例](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/SELinux/07-实战：定制SELinux策略排错5例.md) | NE 排错 |
 | [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md) | dumpsys 完整 |
 
 ---

@@ -107,7 +107,7 @@
 > - **OOM 是新增症状**（Stability 系列没单独成篇）—— 单独成 F06 子节
 > - **dropbox 是统一存储层**——所有症状都有 dropbox 标签
 
-### 2.3 跨系列引用矩阵（详见 [Reference/Forensics-跨系列引用矩阵.md](../../Reference/Forensics-跨系列引用矩阵.md)）
+### 2.3 跨系列引用矩阵（详见 [Reference/Forensics-跨系列引用矩阵.md](../00-Meta/Reference/Forensics-跨系列引用矩阵.md)）
 
 | Forensics 文章 | 主引用系列 | 引用文章数 |
 |--------------|----------|----------|
@@ -314,7 +314,7 @@ Phase 4（特殊 + 治理）
 
 ---
 
-## 8. 16 个锚点案例（详见 [Reference/Forensics-案例索引.md](../../Reference/Forensics-案例索引.md)）
+## 8. 16 个锚点案例（详见 [Reference/Forensics-案例索引.md](../00-Meta/Reference/Forensics-案例索引.md)）
 
 | 文章 | 案例 1（典型模式）| 案例 2（公开 bugreport）|
 | :--- | :--- | :--- |
@@ -379,9 +379,9 @@ Phase 4（特殊 + 治理）
 
 ### 10.4 Reference 基础设施
 
-- [Reference/术语表.md](../../Reference/术语表.md) — 全局术语表（含 Forensics 取证术语）
-- [Reference/Forensics-跨系列引用矩阵.md](../../Reference/Forensics-跨系列引用矩阵.md) — 本系列跨系列引用
-- [Reference/Forensics-案例索引.md](../../Reference/Forensics-案例索引.md) — 16 个案例编号
+- [Reference/术语表.md](../00-Meta/Reference/术语表.md) — 全局术语表（含 Forensics 取证术语）
+- [Reference/Forensics-跨系列引用矩阵.md](../00-Meta/Reference/Forensics-跨系列引用矩阵.md) — 本系列跨系列引用
+- [Reference/Forensics-案例索引.md](../00-Meta/Reference/Forensics-案例索引.md) — 16 个案例编号
 
 ### 10.5 行业资料
 

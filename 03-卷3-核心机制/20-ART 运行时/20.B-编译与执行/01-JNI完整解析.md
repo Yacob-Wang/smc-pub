@@ -24,7 +24,7 @@
 | **ART 17 JNI 异常处理增强** | ✓ ExceptionClear 自动检测 | — |
 | Hook 框架兼容 | — | [03-Hook 框架与 ART v2](03-Hook框架与ART-v2.md)（待升级） |
 
-**承接自**：[03-类加载与链接](../03-类加载与链接/01-类加载完整流程.md) 详述了 ClassLoader；本篇**深入 Java ↔ Native 互调**——JNI 是 Java 调 Native 的唯一桥梁。
+**承接自**：[03-类加载与链接](../20.A-ART基础/01-类加载完整流程.md) 详述了 ClassLoader；本篇**深入 Java ↔ Native 互调**——JNI 是 Java 调 Native 的唯一桥梁。
 
 **衔接去**：[06-信号与ANR-Trace](../06-信号与ANR-Trace/) 详解 JNI 异常如何触发 ANR；[02-ART17-JNI优化与Hook兼容性 v2](02-ART17-JNI优化与Hook兼容性-v2.md) 详述 ART 17 JNI 侧硬变化。
 
@@ -480,7 +480,7 @@ AOSP 17 引入 ExceptionClear 自动检测，**JVM 上"侥幸能跑"的 JNI 异�
 ### 7.4 JNI 与 Linux 6.18 关联
 
 - **ART 17 Native Heap 优化**：Linux 6.18 `sheaves` 内存分配器，**让 JNI Global Reference 内存占用降低 15-20%**
-- **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../01-Mechanism/Kernel/DM/09-DM-调优-性能与pcache.md)
+- **跨系列引用**：详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../16-IO%20与存储/16.D-Device%20Mapper/09-DM-调优-性能与pcache.md)
 
 ---
 
@@ -610,5 +610,5 @@ static const JNINativeMethod methods[] = {
 
 ---
 
-> **下一篇**：[01-SignalCatcher 与信号机制](../06-信号与ANR-Trace/01-SignalCatcher与信号机制.md) 将深入 **ART 信号处理**——SIGQUIT / SIGSEGV / SIGBUS 等信号如何在 Native 层处理、SignalCatcher 守护线程、ANR 触发机制。详见 [03-ART17信号处理与ANR兜底 v2](../06-信号与ANR-Trace/03-ART17信号处理与ANR兜底v2-v2.md)。
+> **下一篇**：[01-SignalCatcher 与信号机制](../20.D-信号与Hook/01-SignalCatcher与信号机制.md) 将深入 **ART 信号处理**——SIGQUIT / SIGSEGV / SIGBUS 等信号如何在 Native 层处理、SignalCatcher 守护线程、ANR 触发机制。详见 [03-ART17信号处理与ANR兜底 v2](../06-信号与ANR-Trace/03-ART17信号处理与ANR兜底v2-v2.md)。
 

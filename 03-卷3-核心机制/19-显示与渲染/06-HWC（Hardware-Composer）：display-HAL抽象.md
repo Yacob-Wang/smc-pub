@@ -12,7 +12,7 @@
 - **目的**：把 HWC（Hardware Composer）HAL 这个 display 抽象层讲清楚——oncall 5 秒定位"显示异常是 HWC 错 / 合成错 / 驱动错"
 - **不是**：不复述 [02 §4 GLES vs HWC 合成](02-SurfaceFlinger内部：合成-VSync-Layer树.md)（本文深入 HWC HAL 细节）；不复述 [07 jank 实战](07-卡顿-jank实战：trace+logcat5分钟定位.md)（综合实战）
 - **承接自**：[02 §4.1 合成决策](02-SurfaceFlinger内部：合成-VSync-Layer树.md) → 本文展开 HWC HAL
-- **衔接去**：[07 jank 实战](07-卡顿-jank实战：trace+logcat5分钟定位.md) / [01-Mechanism/Kernel/Memory_Management](../../../01-Mechanism/Kernel/Memory_Management/) / [06-Foundation/Network/05](../Network/05-netd-NetworkManagementService：网络策略.md)
+- **衔接去**：[07 jank 实战](07-卡顿-jank实战：trace+logcat5分钟定位.md) / [01-Mechanism/Kernel/Memory_Management](../../../01-Mechanism/Kernel/Memory_Management/) / [06-Foundation/Network/05](../17-网络与连接/05-netd-NetworkManagementService：网络策略.md)
 
 ## 校准决策日志
 

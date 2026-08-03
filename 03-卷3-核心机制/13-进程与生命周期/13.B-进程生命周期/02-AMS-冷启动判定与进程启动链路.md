@@ -403,7 +403,7 @@ private int startActivityAsUser(... , int userId, boolean validateIncomingUser) 
 
 3. **`setCallingFeatureId` 是 AOSP 14 的新参数**——AOSP 13 之前没有,这是 Android 14 对「应用内 feature 模块」的支持(`android:featureId`)。如果 OEM 在 AOSP 14 设备上跑了 AOSP 13 的系统 App,**`setCallingFeatureId(null)` 的 null 行为可能不一致**——线上 P0 偶发。
 
-> **跨篇引用**:Binder 系列 [01-Binder 总览](../../Android_Framework/Binder/01-Binder总览.md) §5 详细讲了 `IActivityTaskManager` 跨进程 binder 调用的 stub/proxy 机制。本篇不展开。
+> **跨篇引用**:Binder 系列 [01-Binder 总览](../../12-Binder%20IPC%20深度/01-Binder总览.md) §5 详细讲了 `IActivityTaskManager` 跨进程 binder 调用的 stub/proxy 机制。本篇不展开。
 
 ### 3.2 ActivityStartController.obtainStarter: AOSP 14 的 builder 模式入口
 
@@ -1245,7 +1245,7 @@ final ProcessRecord newProcessRecordLocked(ApplicationInfo info, String processN
 
 3. **`singleInstance` 的「进程名」 实际是 `isolated:ActivityName`**——AOSP 14 源码中,`singleInstance` 进程的 processName 不是 `packageName`,而是 **`"isolated:" + activityName`**。这意味着 `mProcessNames.get(uid, "isolated:ActivityName")` 才是 singleInstance 进程的正确查询方式。**OEM 自定义 launcher 如果错把 processName 当 `packageName` 查询 singleInstance 进程,会查询失败,触发「同 Activity 多次启动」 的 P0 故障**。
 
-> **跨篇引用**:Binder 系列 [08-Binder 诊断工具](../../Android_Framework/Binder/08-Binder诊断工具与治理体系.md) §4.2 详细讲了 `dumpsys binder` 怎么用 `caller uid` + `target uid` 定位「uid 计算错」 的故障。
+> **跨篇引用**:Binder 系列 [08-Binder 诊断工具](../../12-Binder%20IPC%20深度/08-Binder诊断工具与治理体系.md) §4.2 详细讲了 `dumpsys binder` 怎么用 `caller uid` + `target uid` 定位「uid 计算错」 的故障。
 
 ---
 
@@ -1511,7 +1511,7 @@ public class MyApplication extends Application {
 - 修复:升级 OEM Launcher + 升级 AOSP 14 patch,`mUid == mLastReportedUid` 全部一致
 - 监控:`dumpsys activity processes` 中 `mUid != mLastReportedUid` 的进程数,告警 > 0 即为 P0
 
-> **跨篇引用**:Binder 系列 [08-Binder 诊断工具](../../Android_Framework/Binder/08-Binder诊断工具与治理体系.md) §4.2 详细讲了 `dumpsys binder` 怎么用 `caller uid` + `target uid` 定位「uid 计算错」 的故障。
+> **跨篇引用**:Binder 系列 [08-Binder 诊断工具](../../12-Binder%20IPC%20深度/08-Binder诊断工具与治理体系.md) §4.2 详细讲了 `dumpsys binder` 怎么用 `caller uid` + `target uid` 定位「uid 计算错」 的故障。
 
 ---
 

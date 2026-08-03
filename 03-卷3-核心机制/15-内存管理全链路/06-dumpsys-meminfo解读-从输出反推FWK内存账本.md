@@ -15,8 +15,8 @@
 >
 > **关联已有系列**:
 > - [05-ProcessRecord 内存账本深入](05-ProcessRecord内存账本深入-ART-Native拆分与跨层对账.md)——本篇是它的"诊断端" 展开
-> - [Kernel/MM 10-Framework 层内存账本](../Kernel/Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) §3 14 字段定义
-> - [Framework/Process 06 §3 procfs 接口](../Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) §3 ——smaps_rollup / memcg 接口
+> - [Kernel/MM 10-Framework 层内存账本](10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) §3 14 字段定义
+> - [Framework/Process 06 §3 procfs 接口](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) §3 ——smaps_rollup / memcg 接口
 
 ---
 
@@ -26,11 +26,11 @@
 - **本篇系列角色**:诊断工具书(阶段 3 第 2 篇 · 5 大机制中的"机制 3:账本与诊断" 诊断端展开)
 - **强依赖**:
   - [05 §2 ART/Native/mmap 拆分 + §3 跨层对账](05-ProcessRecord内存账本深入-ART-Native拆分与跨层对账.md)——本篇是它的"诊断端" 展开
-  - [Kernel/MM 10 §3 14 字段定义](../Kernel/Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md)
+  - [Kernel/MM 10 §3 14 字段定义](10-Framework层内存账本：ProcessRecord-5维14字段的设计.md)
 - **承接自**:05 已讲账本结构,本篇**只讲诊断**——工程师怎么从 dumpsys 看出账本状态
 - **衔接去**:07 将覆盖"压力检测",11 将覆盖"治理",本篇末尾会预告
 - **不重复内容**:
-  - 14 字段定义 → [Kernel/MM 10 §3](../Kernel/Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md)
+  - 14 字段定义 → [Kernel/MM 10 §3](10-Framework层内存账本：ProcessRecord-5维14字段的设计.md)
   - ART/Native 拆分 → [05 §2](05-ProcessRecord内存账本深入-ART-Native拆分与跨层对账.md)
   - 跨层对账 → [05 §3](05-ProcessRecord内存账本深入-ART-Native拆分与跨层对账.md)
   - 治理 → [11](11-收口+治理-FWK视角的10大内存问题与监控.md)
@@ -74,8 +74,8 @@
   - Kernel/MM 10 §3 14 字段定义
 - **跨系列引用**:
   - [05 §2-§3](05-ProcessRecord内存账本深入-ART-Native拆分与跨层对账.md) ——账本结构 + 跨层对账
-  - [Kernel/MM 10](../Kernel/Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) §3 ——14 字段定义
-  - [Framework/Process 06](../Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) §3 ——procfs 接口
+  - [Kernel/MM 10](10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) §3 ——14 字段定义
+  - [Framework/Process 06](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) §3 ——procfs 接口
 
 # 写作标准
 

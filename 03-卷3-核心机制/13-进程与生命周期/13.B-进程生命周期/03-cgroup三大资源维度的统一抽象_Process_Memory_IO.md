@@ -11,9 +11,9 @@
   - [CG-04 Android17 cgroup 树与 libprocessgroup](04-Android17_cgroup树与libprocessgroup.md) —— 抽象在 Android 17 上怎么落地
   - [CG-05 cgroup 与稳定性的核心关系：OOM/Throttle/杀进程](05-cgroup与稳定性的核心关系_OOM_Throttle_杀进程.md) —— 抽象在稳定性里的具体表现
 - **不重复内容**：
-  - memory subsystem 实现细节 → [Kernel MM 07 §3-§4](../Memory_Management/MM_v2/07-PSI、vmpressure、memcg压力传递.md)（**基线 AOSP 14**） + [Process 10 §5](../Process/10-cgroup_v2_内核里的资源控制器.md)
-  - cpu subsystem 实现细节 → [Process 10 §6 + 09 §7 UClamp/cpuset](../Process/10-cgroup_v2_内核里的资源控制器.md)
-  - io subsystem 实现细节 → [Kernel IO 04 §6-§7](../IO/04-IO优先级与cgroup-IO控制器.md)（**基线 AOSP 14**） + [Process 10 §9]
+  - memory subsystem 实现细节 → [Kernel MM 07 §3-§4](../Memory_Management/MM_v2/07-PSI、vmpressure、memcg压力传递.md)（**基线 AOSP 14**） + [Process 10 §5](10-cgroup_v2_内核里的资源控制器.md)
+  - cpu subsystem 实现细节 → [Process 10 §6 + 09 §7 UClamp/cpuset](10-cgroup_v2_内核里的资源控制器.md)
+  - io subsystem 实现细节 → [Kernel IO 04 §6-§7](../../16-IO%20与存储/04-IO优先级与cgroup-IO控制器.md)（**基线 AOSP 14**） + [Process 10 §9]
   - **本篇讲"3 个抽象的统一性"(设计模式视角)**——不重复子系统的具体实现
 
 # 校准决策日志
@@ -35,7 +35,7 @@
 
 - 上一篇：[CG-02 cgroup 核心抽象](02-cgroup核心抽象_subsys_css_cftype_cgroup_file.md) 已讲 4 个核心抽象（subsys / css / cftype / cgroup_file）的设计意图
 - 下一篇：[CG-04 Android17 cgroup 树与 libprocessgroup](04-Android17_cgroup树与libprocessgroup.md) 将用本篇的"统一性"看 Android 17 上 cgroup 怎么落地
-- 本系列 README：[README-cgroup系列.md](README-cgroup系列.md)
+- 本系列 README：[README-cgroup系列.md](../README-cgroup系列.md)
 
 # 写作标准
 
@@ -220,10 +220,10 @@
 | 维度 | 已有视角（基线 AOSP 14） | 本篇（基线 AOSP 17） |
 |---|---|---|
 | memory 详细实现 | [Kernel MM 07 §3-§4](../Memory_Management/MM_v2/07-PSI、vmpressure、memcg压力传递.md) 详讲 memcg pressure 钩子 | 本篇 §2 讲 mem_cgroup 的"统一抽象"角色，不重复 memcg pressure 细节 |
-| cpu 详细实现 | [Kernel Process 10 §6 + 09 §7 UClamp/cpuset](../Process/10-cgroup_v2_内核里的资源控制器.md) 详讲 cfs_rq / UClamp | 本篇 §3 讲 task_group 的"统一抽象"角色，不重复 cfs_rq 实现 |
-| io 详细实现 | [Kernel IO 04 §6-§7](../IO/04-IO优先级与cgroup-IO控制器.md) 详讲 blk-throttle / blk-iolatency | 本篇 §4 讲 blkcg 的"统一抽象"角色，不重复 blk-throttle 算法 |
-| Framework 接口 | [Framework 06 §4 cgroup fs 写入路径](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) 详讲 cgroup.procs / cpu.uclamp.min 写入 | 本篇 §5-§6 讲 Framework 与 3 个 subsystem 的协作模式，不重复写入路径 |
-| OEM Hook 视角 | [App Hook 09 §4 freezer OEM 实现](../App/Hook/09-场景2-后台治理-cgroup_freezer与启动拦截.md) | 本篇 §5 提 freezer 在"统一抽象"中的位置 |
+| cpu 详细实现 | [Kernel Process 10 §6 + 09 §7 UClamp/cpuset](10-cgroup_v2_内核里的资源控制器.md) 详讲 cfs_rq / UClamp | 本篇 §3 讲 task_group 的"统一抽象"角色，不重复 cfs_rq 实现 |
+| io 详细实现 | [Kernel IO 04 §6-§7](../../16-IO%20与存储/04-IO优先级与cgroup-IO控制器.md) 详讲 blk-throttle / blk-iolatency | 本篇 §4 讲 blkcg 的"统一抽象"角色，不重复 blk-throttle 算法 |
+| Framework 接口 | [Framework 06 §4 cgroup fs 写入路径](06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) 详讲 cgroup.procs / cpu.uclamp.min 写入 | 本篇 §5-§6 讲 Framework 与 3 个 subsystem 的协作模式，不重复写入路径 |
+| OEM Hook 视角 | [App Hook 09 §4 freezer OEM 实现](../../14-线程与%20Handler%20消息机制/09-场景2-后台治理-cgroup_freezer与启动拦截.md) | 本篇 §5 提 freezer 在"统一抽象"中的位置 |
 
 **判断标准**：
 - 读完后想去看 `mem_cgroup_attach` 的代码 → 已有 MM 07
@@ -893,11 +893,11 @@ cgroup 的"共同模式"不是偶然——是**资源控制理论**的 3 个基�
 
 | 视角 | 已有文章（基线 AOSP 14） | cgroup 视角 | 涉及 subsystem |
 |---|---|---|---|
-| **Kernel Process 视角** | [Process 10](../Process/10-cgroup_v2_内核里的资源控制器.md) | cgroup 是"被约束"的代表 | memory / cpu / freezer / cpuset |
-| **Kernel IO 视角** | [IO 04](../IO/04-IO优先级与cgroup-IO控制器.md) | cgroup 是 IO 资源隔离的边界 | io（blkcg） |
+| **Kernel Process 视角** | [Process 10](10-cgroup_v2_内核里的资源控制器.md) | cgroup 是"被约束"的代表 | memory / cpu / freezer / cpuset |
+| **Kernel IO 视角** | [IO 04](../../16-IO%20与存储/04-IO优先级与cgroup-IO控制器.md) | cgroup 是 IO 资源隔离的边界 | io（blkcg） |
 | **Kernel MM 视角** | [MM 07](../Memory_Management/MM_v2/07-PSI、vmpressure、memcg压力传递.md) | cgroup 是 memcg 的载体 | memory（memcg） |
-| **Framework 视角** | [Framework 06](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) | cgroup fs 是 Framework 的"配置通道" | 全部 subsystem |
-| **App Hook 视角** | [App Hook 09](../App/Hook/09-场景2-后台治理-cgroup_freezer与启动拦截.md) | freezer 是"半杀"工具 | freezer |
+| **Framework 视角** | [Framework 06](06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) | cgroup fs 是 Framework 的"配置通道" | 全部 subsystem |
+| **App Hook 视角** | [App Hook 09](../../14-线程与%20Handler%20消息机制/09-场景2-后台治理-cgroup_freezer与启动拦截.md) | freezer 是"半杀"工具 | freezer |
 
 ### 6.2 横切视角总览图（本系列核心交付物）
 

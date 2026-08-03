@@ -37,7 +37,7 @@ AOSP 17 官方对 Activity 生命周期的定义在 `android.app.Activity` 类�
 - 上面 9 个回调，**任何一个抛异常都会让 Activity 处于"半残"状态**——既没销毁、也没法交互。线上最常见的就是 "onResume 抛异常 → 屏幕黑了但没崩"。
 - **回调的执行顺序不是严格线性的**：AOSP 17 在某些场景下会"跳过"onStop 直接 onDestroy（如 `finish()` 后立刻配置变化）。这种 corner case 在旧文章里几乎不写。
 
-> 跨系列引用：`BroadcastReceiver.onReceive` 是单独的回调，**不属于 Activity 生命周期**——生命周期边界与黏性广播演进见 [Broadcast 黏性事件演进](../Broadcast/B05_Broadcast_Sticky_Evolution.md) §1（B05，onReceive 与 Activity 生命周期无关）。
+> 跨系列引用：`BroadcastReceiver.onReceive` 是单独的回调，**不属于 Activity 生命周期**——生命周期边界与黏性广播演进见 [Broadcast 黏性事件演进](B05_Broadcast_Sticky_Evolution.md) §1（B05，onReceive 与 Activity 生命周期无关）。
 
 ### 1.2 为什么需要深入生命周期
 

@@ -16,11 +16,11 @@
 - **强依赖**：
   - [A01-启动链路总览](A01-启动链路总览.md)（必读前置）
   - [A04-Zygote + SystemServer](A04-Zygote+SystemServer.md)（必读前置 · SystemServer 已启动）
-  - [Process 系列 · 02-AMS 冷启动判定](../Process/02-AMS-冷启动判定与进程启动链路.md)（如有）
+  - [Process 系列 · 02-AMS 冷启动判定](../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/02-AMS-冷启动判定与进程启动链路.md)（如有）
   - [Activity 系列 · 01-Activity 启动流程](../Activity/01-Activity启动流程.md)（如有）
   - [Window 系列 · 01-WMS 总览](../Window/01-WMS-总览与架构.md)（如有）
   - [Stability S01-ANR 专题](../Stability/S01-ANR卡死与Input响应专题.md)
-  - [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md) · [D03-WMS 视角](../Dumpsys/03-Window与WMS视角.md) · [D06-Package 视角](../Dumpsys/06-Package与权限.md)
+  - [Dumpsys D02-AMS 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) · [D03-WMS 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/03-Window与WMS视角.md) · [D06-Package 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/06-Package与权限.md)
 - **承接自**：[A04 §4.1 T21 AMS ready](A04-Zygote+SystemServer.md) → ActivityManagerService.systemReady()
 - **衔接去**：
   - 下一篇 [A06-第一帧与 Choreographer](A06-第一帧与Choreographer.md) 深入 A5 阶段
@@ -67,7 +67,7 @@
 
 # 写作标准
 
-- 本规范（[PROMPT-技术系列文章写作指南.md](../../../PROMPT-技术系列文章写作指南.md)）
+- 本规范（[PROMPT-技术系列文章写作指南.md](../../PROMPT-技术系列文章写作指南.md)）
 - 章节编号：# 总章 / # 章 / ## 节 / ### 子节
 - 必备：每章配 1 个 ASCII / mermaid 时序图
 - 必备：数据后接"所以呢"段
@@ -649,10 +649,10 @@ mWindowManager.getFocusedWindow();
 
 | Step | 命令 | 目的 | 详见 |
 |:-----|:-----|:-----|:----|
-| 1 | `adb shell dumpsys activity activities` | 看 Activity 栈 | [D02 §3.1](../Dumpsys/02-Activity与AMS视角.md) |
-| 2 | `adb shell dumpsys activity services` | 看 Service 状态 | [D02 §3.5](../Dumpsys/02-Activity与AMS视角.md) |
-| 3 | `adb shell dumpsys activity broadcasts` | 看 Broadcast 队列 | [D02 §3.4](../Dumpsys/02-Activity与AMS视角.md) |
-| 4 | `adb shell dumpsys activity providers` | 看 Provider 状态 | [D02 §3.6](../Dumpsys/02-Activity与AMS视角.md) |
+| 1 | `adb shell dumpsys activity activities` | 看 Activity 栈 | [D02 §3.1](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) |
+| 2 | `adb shell dumpsys activity services` | 看 Service 状态 | [D02 §3.5](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) |
+| 3 | `adb shell dumpsys activity broadcasts` | 看 Broadcast 队列 | [D02 §3.4](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) |
+| 4 | `adb shell dumpsys activity providers` | 看 Provider 状态 | [D02 §3.6](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) |
 
 ## 9.2 启动慢（冷启动 > 3s）取证脚本
 
@@ -1056,7 +1056,7 @@ public void handleResumeActivity(IBinder token, ...) {
 > - **下一篇**：[A06-第一帧与 Choreographer](A06-第一帧与Choreographer.md)
 > - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
 > - **机制联动**：[Stability S01-ANR 专题](../Stability/S01-ANR卡死与Input响应专题.md) · [Process 系列 · 02](../Process/) · [Activity 系列 · 01](../Activity/) · [Window 系列 · 01](../Window/)
-> - **工具联动**：[Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md) · [D03-WMS 视角](../Dumpsys/03-Window与WMS视角.md) · [D06-Package 视角](../Dumpsys/06-Package与权限.md)
+> - **工具联动**：[Dumpsys D02-AMS 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) · [D03-WMS 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/03-Window与WMS视角.md) · [D06-Package 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/06-Package与权限.md)
 
 ---
 

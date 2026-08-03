@@ -108,7 +108,7 @@ Generic Kernel (boot.img)
 4. **简化开发**：厂商只需维护模块
 
 **关联知识**：
-- 参考 [GKI 架构系列文章](../gki/01-GKI架构概述.md)
+- 参考 [GKI 架构系列文章](../../../01-卷1-Android系统基础与平台/02-AOSP%20源码结构与构建系统/2.A-GKI%20与内核模块化/01-GKI架构概述.md)
 
 ### System-as-root（Android 9+）
 
@@ -615,7 +615,7 @@ mount | grep -E "system|vendor|product"
 
 ### 后续学习
 
-- [GKI 架构系列](../gki/01-GKI架构概述.md) - 深入理解 GKI
+- [GKI 架构系列](../../../01-卷1-Android系统基础与平台/02-AOSP%20源码结构与构建系统/2.A-GKI%20与内核模块化/01-GKI架构概述.md) - 深入理解 GKI
 - [Android分区系统全解析](04-Android分区系统全解析.md) - 理解分区设计
 - [Android启动流程总览](07-Android启动流程总览.md) - 理解启动流程
 

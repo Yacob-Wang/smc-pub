@@ -533,7 +533,7 @@ public void onReceive(Context context, Intent intent) {
 | Service ANR 深潜 | [../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/Service_ANR_Deep_Dive.md](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/Service_ANR_Deep_Dive.md) | Service 20s |
 | NoFocusWindow ANR | [../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/No_Focus_Window_ANR_Deep_Dive.md](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/No_Focus_Window_ANR_Deep_Dive.md) | 焦点窗口 |
 | oncall 流程 | [OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) | 5/15/30 |
-| Input ANR 机制 | [01-Mechanism/Framework/Input/06-InputANR.md](../../01-Mechanism/Framework/Input/06-InputANR.md) | InputDispatcher |
+| Input ANR 机制 | [01-Mechanism/Framework/Input/06-InputANR.md](../../03-卷3-核心机制/18-输入系统/18.A-Framework%20输入链路/06-InputANR.md) | InputDispatcher |
 
 ## 附录 B：路径对账
 

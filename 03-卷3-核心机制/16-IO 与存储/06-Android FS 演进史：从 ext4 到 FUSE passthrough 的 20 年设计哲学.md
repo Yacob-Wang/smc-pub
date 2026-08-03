@@ -178,7 +178,7 @@ cgroup v2(统一层级,Android 14+ 默认)
 
 **关键事件**:
 - 2014:Android 5.0 发布,**FDE 强制**(性能代价大)
-- 2014:ART 运行时切换(影响 DEX 加载,见 [IO 07](../IO/07-程序加载与链接的IO路径：从execve到AOT文件mmap.md))
+- 2014:ART 运行时切换(影响 DEX 加载,见 [IO 07](07-程序加载与链接的IO路径：从execve到AOT文件mmap.md))
 - 2015:Android 5.1,多 SIM 卡支持
 
 **对读者有什么用**:**Android 5.x 是"加密时代"**——FDE 性能倒逼后续 FBE。

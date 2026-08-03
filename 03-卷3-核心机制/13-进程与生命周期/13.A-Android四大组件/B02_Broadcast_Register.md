@@ -314,7 +314,7 @@ public final class LoadedApk {
 - **ReceiverDispatcher 持有 IIntentReceiver 跨进程 Binder**——**业务方调用频繁时分配大量对象**。
 - **AOSP 17 强化**：`mReceivers` 内部增加"过期清理"，**避免长时间不用的 ReceiverDispatcher 堆积**。
 
-> 跨系列引用：见 [ContentProvider · C02 初始化](../ContentProvider/C02_ContentProvider_Init.md) §3.6（LoadedApk 共享模式）—— 同一 `LoadedApk` 同时持有 `mReceivers`（动态注册 Receiver 池）与 `mProviders`（ContentProvider 池），广播与 ContentProvider 在进程内的对象池共享同一生命周期管理路径。
+> 跨系列引用：见 [ContentProvider · C02 初始化](C02_ContentProvider_Init.md) §3.6（LoadedApk 共享模式）—— 同一 `LoadedApk` 同时持有 `mReceivers`（动态注册 Receiver 池）与 `mProviders`（ContentProvider 池），广播与 ContentProvider 在进程内的对象池共享同一生命周期管理路径。
 
 ### 3.4 ReceiverDispatcher 内部结构
 

@@ -77,8 +77,8 @@
   - [01 §7 三大局限](01-hprof原理与文件格式.md#7-hprof-的三大局限)——本篇的"问题清单"
 - **跨系列引用**:
   - [Perfetto 04-定制化实战:ANR 后自动抓取 trace](Perfetto/04-定制化实战：ANR后自动抓取trace.md)——perfetto 整体定制
-  - [Perfetto 01-Perfetto 系统总览与架构设计](Perfetto/01-Perfetto系统总览与架构设计.md)——TraceConfig 基础
-  - [Kernel/MM 03-ART 堆与 GC 的设计动机](../Kernel/Memory_Management/03-ART堆与GC的设计动机：为什么这样设计.md)——Native 堆视角
+  - [Perfetto 01-Perfetto 系统总览与架构设计](../31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md)——TraceConfig 基础
+  - [Kernel/MM 03-ART 堆与 GC 的设计动机](../../03-卷3-核心机制/15-内存管理全链路/03-ART堆与GC的设计动机：为什么这样设计.md)——Native 堆视角
 
 # 写作标准
 
@@ -237,7 +237,7 @@
 
 > **perfetto 是 Android 11+ 默认的"系统级 trace 收集 + 分析平台"**,由 Google 维护,提供 ftrace / atrace / 进程统计 / heapprofd 等 6 大数据源。
 
-**完整架构见** [Perfetto 01-Perfetto 系统总览与架构设计](Perfetto/01-Perfetto系统总览与架构设计.md)。
+**完整架构见** [Perfetto 01-Perfetto 系统总览与架构设计](../31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md)。
 
 ### 2.2 数据源体系:6 大数据源,heapprofd 是其中之一
 

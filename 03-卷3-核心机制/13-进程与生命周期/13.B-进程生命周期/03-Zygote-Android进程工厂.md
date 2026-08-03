@@ -9,7 +9,7 @@
 >
 > **目录位置**:`Android_Framework/Process/`
 >
-> **上一篇**:[02-AMS 决策-从 Launcher 触达到"必须冷启动" 的判定](../02-AMS-冷启动判定与进程启动链路.md)
+> **上一篇**:[02-AMS 决策-从 Launcher 触达到"必须冷启动" 的判定](02-AMS-冷启动判定与进程启动链路.md)
 > **下一篇**:[04-应用进程首生-从 fork 到 ActivityThread.main](../04-应用进程首生-从fork到ActivityThread.main.md)
 >
 > **关联已有系列**(本篇末"附录 C"展开):
@@ -2197,13 +2197,13 @@ private static final String USAP_POOL_SECONDARY_SOCKET_NAME = "usap_pool_seconda
 **与本系列"上承下接" 的内部链接**:
 
 - [01-进程总览-从点图标看 app 进程的诞生消亡与全栈抽象](../01-进程总览-从点图标看app进程的诞生消亡与全栈抽象.md)
-- [02-AMS 决策-冷启动判定与进程启动链路](../02-AMS-冷启动判定与进程启动链路.md)
-- [03-Zygote 孵化-Android 进程工厂](../03-Zygote-Android进程工厂.md) ← **本篇**
+- [02-AMS 决策-冷启动判定与进程启动链路](02-AMS-冷启动判定与进程启动链路.md)
+- [03-Zygote 孵化-Android 进程工厂](03-Zygote-Android进程工厂.md) ← **本篇**
 - [04-应用进程首生-从 fork 到 ActivityThread.main](../04-应用进程首生-从fork到ActivityThread.main.md)
 - [05-ART 进程内世界-JIT/AOT、OAT 加载、信号处理与 GC 线程](../05-ART进程内世界-JIT-AOT与GC.md)
 - [06-Kernel 进程实现-task_struct、cgroup、namespace 与 procfs](../06-Kernel进程实现-task_struct与cgroup.md)
 - [07-调度与资源-CFS、schedtune、cpuset、memcg、blkio 与进程生死](../07-调度与资源-CFS与进程生死.md)
-- [08-进程稳定性风险全景-ANR/OOM/进程泄漏/僵尸与跨层治理](../08-进程稳定性风险全景与跨层治理.md)
+- [08-进程稳定性风险全景-ANR/OOM/进程泄漏/僵尸与跨层治理](08-进程稳定性风险全景与跨层治理.md)
 
 ---
 

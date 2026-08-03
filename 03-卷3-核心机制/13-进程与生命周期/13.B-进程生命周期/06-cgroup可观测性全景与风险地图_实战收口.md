@@ -37,7 +37,7 @@
 
 - 上一篇：[CG-05 cgroup 与稳定性的核心关系](05-cgroup与稳定性的核心关系_OOM_Throttle_杀进程.md) 已讲 5 大稳定性故障
 - 下一篇：无（本系列收口）
-- 本系列 README：[README-cgroup系列.md](README-cgroup系列.md)
+- 本系列 README：[README-cgroup系列.md](../README-cgroup系列.md)
 
 # 写作标准
 

@@ -1469,9 +1469,9 @@ WMS Watchdog          → traces.txt 中 mGlobalLock 的持有者
 
 **跨系列引用：**
 
-- Input 事件从 InputDispatcher 到 App 的投递链路，详见 [Input 系列-01-Input 系统总览](../Input/01-Input系统总览.md)
+- Input 事件从 InputDispatcher 到 App 的投递链路，详见 [Input 系列-01-Input 系统总览](../18-输入系统/18.A-Framework%20输入链路/01-Input系统总览.md)
 - InputChannel 的创建与注册机制，详见 [Input 系列-04-InputChannel](../Input/04-InputChannel与跨进程通信.md)
-- Input ANR 的触发与裁决流程，详见 [Input 系列-06-Input ANR](../Input/06-InputANR.md)
+- Input ANR 的触发与裁决流程，详见 [Input 系列-06-Input ANR](../18-输入系统/18.A-Framework%20输入链路/06-InputANR.md)
 
 ---
 

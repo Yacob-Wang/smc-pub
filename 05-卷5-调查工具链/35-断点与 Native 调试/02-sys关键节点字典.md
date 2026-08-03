@@ -4,15 +4,15 @@
 >
 > **角色**：稳定性架构师 · oncall 工程师 · 设备 / 硬件 / 调优
 >
-> **强依赖**：[01 /proc 关键文件字典](01-/proc关键文件字典.md) · [06-Foundation/Build-System/Soong/05-Ninja文件解读](../../Build-System/Soong/05-Ninja生成与ninja文件解读.md)
+> **强依赖**：[01 /proc 关键文件字典](proc关键文件字典.md) · [06-Foundation/Build-System/Soong/05-Ninja文件解读](../../01-卷1-Android系统基础与平台/02-AOSP%20源码结构与构建系统/Soong/05-Ninja生成与ninja文件解读.md)
 
 <!-- AUTHOR_ONLY:START -->
 ## 本篇定位
 
 - **目的**：把 /sys 30+ 关键节点（按 5 大类：硬件 / 设备 / 内核 / 调度 / 文件系统）+ /dev/block/by-name 设备查找路径讲清楚——oncall 5 秒定位"设备信息 / 调优参数"
-- **不是**：不复述 [01 /proc 字典](01-/proc关键文件字典.md)（本文是它的姐妹篇）；不复述 [06-Foundation/Build-System/08-Vendor_Specific_Differences](../../Build-System/08_Vendor_Specific_Differences.md)
-- **承接自**：[01 §0 /proc 字典](01-/proc关键文件字典.md) → 本文 /sys 是进程外的"硬件 + 内核配置"
-- **衔接去**：[06-Foundation/Build-System/01_AOSP_Build_Environment](../../Build-System/01_AOSP_Build_Environment.md) / [06-Foundation/Build-System/04_Build_Configuration_And_Options](../../Build-System/04_Build_Configuration_And_Options.md)
+- **不是**：不复述 [01 /proc 字典](proc关键文件字典.md)（本文是它的姐妹篇）；不复述 [06-Foundation/Build-System/08-Vendor_Specific_Differences](../../Build-System/08_Vendor_Specific_Differences.md)
+- **承接自**：[01 §0 /proc 字典](proc关键文件字典.md) → 本文 /sys 是进程外的"硬件 + 内核配置"
+- **衔接去**：[06-Foundation/Build-System/01_AOSP_Build_Environment](../../01-卷1-Android系统基础与平台/02-AOSP%20源码结构与构建系统/01_AOSP_Build_Environment.md) / [06-Foundation/Build-System/04_Build_Configuration_And_Options](../../01-卷1-Android系统基础与平台/02-AOSP%20源码结构与构建系统/04_Build_Configuration_And_Options.md)
 
 ## 校准决策日志
 
@@ -653,7 +653,7 @@ $ adb shell cat /sys/fs/f2fs/<device>/gc_urgent
 
 ### 6.3 /sys/fs/selinux/ 详解
 
-**见 [06-Foundation/SELinux/05-init进程与SELinux：分阶段加载](../../SELinux/05-init进程与SELinux：分阶段加载.md) §3.2**
+**见 [06-Foundation/SELinux/05-init进程与SELinux：分阶段加载](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/SELinux/05-init进程与SELinux：分阶段加载.md) §3.2**
 
 ---
 
@@ -856,12 +856,12 @@ $ adb shell ls /sys/fs/selinux/avc/
 
 | smc-pub 已有文章 | 关系 |
 |:----------------|:-----|
-| [01 /proc 字典](01-/proc关键文件字典.md) | 姐妹篇 |
-| [06-Foundation/Build-System/01_AOSP_Build_Environment](../../Build-System/01_AOSP_Build_Environment.md) | 编译环境 |
-| [06-Foundation/Build-System/04_Build_Configuration_And_Options](../../Build-System/04_Build_Configuration_And_Options.md) | BoardConfig |
-| [06-Foundation/SELinux/05-init进程与SELinux：分阶段加载](../../SELinux/05-init进程与SELinux：分阶段加载.md) | SELinux 接口 |
+| [01 /proc 字典](proc关键文件字典.md) | 姐妹篇 |
+| [06-Foundation/Build-System/01_AOSP_Build_Environment](../../01-卷1-Android系统基础与平台/02-AOSP%20源码结构与构建系统/01_AOSP_Build_Environment.md) | 编译环境 |
+| [06-Foundation/Build-System/04_Build_Configuration_And_Options](../../01-卷1-Android系统基础与平台/02-AOSP%20源码结构与构建系统/04_Build_Configuration_And_Options.md) | BoardConfig |
+| [06-Foundation/SELinux/05-init进程与SELinux：分阶段加载](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/SELinux/05-init进程与SELinux：分阶段加载.md) | SELinux 接口 |
 | [01-Mechanism/Kernel/cgroup/](../../../../01-Mechanism/Kernel/cgroup/) | cgroup 机制 |
-| [06-Foundation/Tools/Tracing/ftrace的语法解析](../../Tools/Tracing/ftrace的语法解析.md) | debugfs/tracing |
+| [06-Foundation/Tools/Tracing/ftrace的语法解析](ftrace的语法解析.md) | debugfs/tracing |
 
 ---
 
@@ -880,8 +880,8 @@ $ adb shell ls /sys/fs/selinux/avc/
 ### 12.2 收官话
 
 文件字典 2 篇 = oncall 系统级诊断的"基础设施"。下一步推荐读：
-- [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../Tools/Android_Tools/Logcat_Complete_Guide.md) — logcat 深入
-- [06-Foundation/SELinux/04-AVC与avc_denied](../../SELinux/04-AVC与avc_denied：从一次denied反推策略.md) — SELinux 排错
+- [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](Logcat_Complete_Guide.md) — logcat 深入
+- [06-Foundation/SELinux/04-AVC与avc_denied](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md) — SELinux 排错
 - [01-Mechanism/Kernel/cgroup/](../../../../01-Mechanism/Kernel/cgroup/) — cgroup 机制
 
 ---

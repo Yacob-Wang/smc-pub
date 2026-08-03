@@ -28,7 +28,7 @@
   - **D 状态的通用 wait queue 机制** → 详见 [Process 20-D 状态详解](../Process/20-D状态详解.md)
   - **进程调度算法本身**（CFS / RT / Deadline）→ 详见 [Process 09-CFS调度器详解](../Process/09-CFS调度器详解.md)
   - **信号机制（SIGIO / SIGPOLL）** → 详见 [Process 13-信号机制详解](../Process/13-信号机制详解.md)
-  - **epoll 内部实现** → 详见 [epoll 01-总览与核心机制](../epoll/01-epoll总览与核心机制.md)
+  - **epoll 内部实现** → 详见 [epoll 01-总览与核心机制](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md)
   - **task_struct 完整字段** → 详见 [Process 02-进程核心数据结构](../Process/02-进程核心数据结构.md)
 
 - **本篇的核心价值**：**D 状态 ANR 的 80%+ 是 IO 阻塞**——这是稳定性架构师最常面对的故障形态。本篇让读者能直接从 ANR trace 中定位"是不是 IO 阻塞"以及"阻塞在哪一层 IO"。
@@ -676,7 +676,7 @@ read() 视角：
 └── ③ 阻塞在 wait_on_page_bit_common
 ```
 
-**epoll_wait 唤醒 ≠ read() 立刻成功**。详见 [epoll 01-总览与核心机制](../epoll/01-epoll总览与核心机制.md) §5。
+**epoll_wait 唤醒 ≠ read() 立刻成功**。详见 [epoll 01-总览与核心机制](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md) §5。
 
 ### 7.3 异步 IO 信号（历史接口）
 

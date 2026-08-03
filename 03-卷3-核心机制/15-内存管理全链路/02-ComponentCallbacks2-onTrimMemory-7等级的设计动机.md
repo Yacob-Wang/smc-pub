@@ -15,8 +15,8 @@
 >
 > **关联已有系列**:
 > - [01-全景](01-FWK内存管理全景：从onTrimMemory看5大机制与全栈抽象.md) §3 机制 1 —— 本篇是它的展开
-> - [Kernel/MM 13-保护与释放的协同](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md) §3.1 —— trimMemory 是 4 大释放源之一,本篇讲它的 API 设计
-> - [Framework/Process 02-AMS 冷启动判定](../Process/02-AMS-冷启动判定与进程启动链路.md) —— 进程状态识别(前/后台)的判定逻辑
+> - [Kernel/MM 13-保护与释放的协同](13-保护与释放的协同：adj体系与4大释放源.md) §3.1 —— trimMemory 是 4 大释放源之一,本篇讲它的 API 设计
+> - [Framework/Process 02-AMS 冷启动判定](../13-进程与生命周期/13.B-进程生命周期/02-AMS-冷启动判定与进程启动链路.md) —— 进程状态识别(前/后台)的判定逻辑
 
 ---
 
@@ -26,14 +26,14 @@
 - **本篇系列角色**:核心机制(阶段 1 第 2 篇 · 5 大机制中的"机制 1:触发派发" API 层展开)
 - **强依赖**:
   - [01-全景 §3 机制 1](01-FWK内存管理全景：从onTrimMemory看5大机制与全栈抽象.md) ——本篇是它的展开
-  - [Kernel/MM 13 §3.1 trimMemory 设计](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md) ——本篇是它的 API 层展开
+  - [Kernel/MM 13 §3.1 trimMemory 设计](13-保护与释放的协同：adj体系与4大释放源.md) ——本篇是它的 API 层展开
 - **承接自**:01 已覆盖"trimMemory 是 5 大机制之一",本篇**不重复**全景地图,只讲 7 等级的 API 设计动机
 - **衔接去**:03 将覆盖"AMS 何时调哪个 level",10 将覆盖"trimMemory 80 → lmkd kill 时序",本篇末尾会预告
 - **不重复内容**:
   - 5 大管理职责全景 → [01](01-FWK内存管理全景：从onTrimMemory看5大机制与全栈抽象.md)
-  - adj 体系细节 → [Kernel/MM 13 §1.1](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md)
-  - 杀进程决策 → [Kernel/MM 09](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) / [10](10-杀进程时序-从trimMemory-80到lmkd-kill的FWK视角.md)
-  - 进程状态识别 → [Framework/Process 02](../Process/02-AMS-冷启动判定与进程启动链路.md)
+  - adj 体系细节 → [Kernel/MM 13 §1.1](13-保护与释放的协同：adj体系与4大释放源.md)
+  - 杀进程决策 → [Kernel/MM 09](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) / [10](10-杀进程时序-从trimMemory-80到lmkd-kill的FWK视角.md)
+  - 进程状态识别 → [Framework/Process 02](../13-进程与生命周期/13.B-进程生命周期/02-AMS-冷启动判定与进程启动链路.md)
 - **本篇核心价值**:把 trimMemory 7 等级从"API 字典" 提升到"设计动机层"——读完本篇,架构师应能回答:为什么是 7 等级不是 5/10?为什么用 5/10/15/20/40/60/80 而不是连续数值?7 等级与 adj / memcg 限额怎么对应?
 
 # 校准决策日志
@@ -69,9 +69,9 @@
   - 01 §3 机制 1
   - Kernel/MM 13 §3.1
 - **跨系列引用**:
-  - [Kernel/MM 13-保护与释放的协同](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md) §1.1(adj 体系)+ §3.1(trimMemory 设计)
-  - [Kernel/MM 09-杀进程决策](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) §3(LMKD 6 大决策模块)
-  - [Framework/Process 02-AMS 冷启动判定](../Process/02-AMS-冷启动判定与进程启动链路.md) §3(进程状态识别)
+  - [Kernel/MM 13-保护与释放的协同](13-保护与释放的协同：adj体系与4大释放源.md) §1.1(adj 体系)+ §3.1(trimMemory 设计)
+  - [Kernel/MM 09-杀进程决策](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) §3(LMKD 6 大决策模块)
+  - [Framework/Process 02-AMS 冷启动判定](../13-进程与生命周期/13.B-进程生命周期/02-AMS-冷启动判定与进程启动链路.md) §3(进程状态识别)
 
 # 写作标准
 
@@ -415,7 +415,7 @@ boolean shouldTrimMemory(ProcessRecord app, int newState) {
 
 **架构师视角**:
 - adj **不是** 1 个 level 对 1 个 adj 值,是**1 个范围**——比如 `RUNNING_MODERATE(5)` 对应 adj 0 ~ 200 之间任何状态。
-- adj 数值范围详见 [Kernel/MM 13 §1.1](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md)——6 大常量(NATIVE_ADJ=-1000 / PERSISTENT_PROC_ADJ=-800 / FOREGROUND_APP_ADJ=0 / VISIBLE_APP_ADJ=100 / PERCEPTIBLE_APP_ADJ=200 / CACHED_APP_MIN_ADJ=900+ / UNKNOWN_ADJ=1001)。
+- adj 数值范围详见 [Kernel/MM 13 §1.1](13-保护与释放的协同：adj体系与4大释放源.md)——6 大常量(NATIVE_ADJ=-1000 / PERSISTENT_PROC_ADJ=-800 / FOREGROUND_APP_ADJ=0 / VISIBLE_APP_ADJ=100 / PERCEPTIBLE_APP_ADJ=200 / CACHED_APP_MIN_ADJ=900+ / UNKNOWN_ADJ=1001)。
 
 ### 5.2 PSS 决定 trimMemory 派发时机
 
@@ -464,7 +464,7 @@ boolean shouldTrimMemory(ProcessRecord app, int newState) {
 
 ## 7. trimMemory 与 4 大释放源的协同
 
-trimMemory 在 4 大释放源中的位置(详见 [Kernel/MM 13 §3.1](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md)):
+trimMemory 在 4 大释放源中的位置(详见 [Kernel/MM 13 §3.1](13-保护与释放的协同：adj体系与4大释放源.md)):
 
 | 释放源 | 触发层 | 触发条件 | 行为 | 与 trimMemory 关系 |
 |-------|-------|---------|------|------------------|

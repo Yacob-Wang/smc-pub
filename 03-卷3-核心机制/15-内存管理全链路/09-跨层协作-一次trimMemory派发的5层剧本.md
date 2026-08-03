@@ -15,7 +15,7 @@
 >
 > **关联已有系列**:
 > - [02-7 等级](02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md)+ [03-决策](03-AMS内存决策链：何时调trimMemory何时更新adj何时杀进程.md)+ [04-派发](04-onTrimMemory派发机制-从ProcessList到Application-Activity调用链.md)+ [05-账本](05-ProcessRecord内存账本深入-ART-Native拆分与跨层对账.md)+ [06-诊断](06-dumpsys-meminfo解读-从输出反推FWK内存账本.md)+ [07-压力](07-内存压力检测-Kernel-PSI-memcg到AMS-App全链路.md)+ [08-App 落地](08-App侧资源释放最佳实践-Glide-OkHttp-Bitmap-Handler.md)——本篇把它们串成 1 个剧本
-> - [Kernel/MM 11-一次 page fault 5 层协作](../Kernel/Memory_Management/11-一次page-fault的5层协作：跨层架构全景.md)——本篇对齐它的"5 层剧本" 风格
+> - [Kernel/MM 11-一次 page fault 5 层协作](11-一次page-fault的5层协作：跨层架构全景.md)——本篇对齐它的"5 层剧本" 风格
 
 ---
 
@@ -25,12 +25,12 @@
 - **本篇系列角色**:跨层整合(阶段 5 第 1 篇 · 5 大机制中的"机制 5:跨层协同" 5 层剧本)
 - **强依赖**:
   - [02](02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md)+ [03](03-AMS内存决策链：何时调trimMemory何时更新adj何时杀进程.md)+ [04](04-onTrimMemory派发机制-从ProcessList到Application-Activity调用链.md)+ [05](05-ProcessRecord内存账本深入-ART-Native拆分与跨层对账.md)+ [06](06-dumpsys-meminfo解读-从输出反推FWK内存账本.md)+ [07](07-内存压力检测-Kernel-PSI-memcg到AMS-App全链路.md)+ [08](08-App侧资源释放最佳实践-Glide-OkHttp-Bitmap-Handler.md)——本篇**串成 1 个剧本**
-  - [Kernel/MM 11-一次 page fault 5 层协作](../Kernel/Memory_Management/11-一次page-fault的5层协作：跨层架构全景.md)——本篇对齐它的"5 层剧本" 风格
+  - [Kernel/MM 11-一次 page fault 5 层协作](11-一次page-fault的5层协作：跨层架构全景.md)——本篇对齐它的"5 层剧本" 风格
 - **承接自**:02-08 已讲各层机制,本篇**只讲跨层剧本**——把它们串起来
 - **衔接去**:10 将覆盖"杀进程时序",11 将覆盖"收口 + 治理"
 - **不重复内容**:
   - 任何子机制内部细节 → 见 02-08 各篇
-  - page fault 5 层剧本 → [Kernel/MM 11](../Kernel/Memory_Management/11-一次page-fault的5层协作：跨层架构全景.md)
+  - page fault 5 层剧本 → [Kernel/MM 11](11-一次page-fault的5层协作：跨层架构全景.md)
 - **本篇核心价值**:把"trimMemory" 从"单点机制" 提升到"跨层事件"——读完本篇,架构师应能回答:一次 trimMemory COMPLETE 派发从触发到 App 释放跨 5 层多少次?每次时延多少?哪个时点最关键?如果某一层失败怎么定位?
 
 # 校准决策日志
@@ -68,7 +68,7 @@
   - Kernel/MM 11(一次 page fault 5 层协作)
 - **跨系列引用**:
   - [02-08 各篇](02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md) ——各层子机制
-  - [Kernel/MM 11](../Kernel/Memory_Management/11-一次page-fault的5层协作：跨层架构全景.md) ——5 层剧本风格对齐
+  - [Kernel/MM 11](11-一次page-fault的5层协作：跨层架构全景.md) ——5 层剧本风格对齐
 
 # 写作标准
 

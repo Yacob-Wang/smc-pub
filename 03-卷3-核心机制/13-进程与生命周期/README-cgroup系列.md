@@ -44,27 +44,27 @@
 
 | # | 标题 | 核心内容 |
 |---|---|---|
-| **CG-01** | [cgroup 的诞生与历史演进：从 2006 到 Android 17](01-cgroup的诞生与历史演进_从2006到Android17.md) | 2006 前无 cgroup 的"老问题" → Rohit Seth 入 mainline → v1 时代多 hierarchy → Tejun Heo 主导 v2 重构 → Android 7.0 引入 → Android 11 强制 v2 → v1→v2 关键差异表 |
-| **CG-02** | [cgroup 核心抽象：subsys / css / cftype / cgroup_file](02-cgroup核心抽象_subsys_css_cftype_cgroup_file.md) | 4 个核心数据结构的设计意图 → 用户态写 memory.max 的完整调用链 → "为什么这样设计"而非"怎么实现" |
+| **CG-01** | [cgroup 的诞生与历史演进：从 2006 到 Android 17](13.B-进程生命周期/01-cgroup的诞生与历史演进_从2006到Android17.md) | 2006 前无 cgroup 的"老问题" → Rohit Seth 入 mainline → v1 时代多 hierarchy → Tejun Heo 主导 v2 重构 → Android 7.0 引入 → Android 11 强制 v2 → v1→v2 关键差异表 |
+| **CG-02** | [cgroup 核心抽象：subsys / css / cftype / cgroup_file](13.B-进程生命周期/02-cgroup核心抽象_subsys_css_cftype_cgroup_file.md) | 4 个核心数据结构的设计意图 → 用户态写 memory.max 的完整调用链 → "为什么这样设计"而非"怎么实现" |
 
 ### 阶段 B：横向统一（1 篇，系列核心）
 
 | # | 标题 | 核心内容 |
 |---|---|---|
-| **CG-03** | [cgroup 三大资源维度的统一抽象：Process / Memory / IO](03-cgroup三大资源维度的统一抽象_Process_Memory_IO.md) | **本系列核心篇**——同一个 cgroup 怎么同时管 CPU/Memory/IO → 三个子系统的接口差异（page_counter / task_group / blkcg）→ 共同模式（限额 + 优先级 + 事件统计）→ 把已有 5 视角拉成一张图 |
+| **CG-03** | [cgroup 三大资源维度的统一抽象：Process / Memory / IO](13.B-进程生命周期/03-cgroup三大资源维度的统一抽象_Process_Memory_IO.md) | **本系列核心篇**——同一个 cgroup 怎么同时管 CPU/Memory/IO → 三个子系统的接口差异（page_counter / task_group / blkcg）→ 共同模式（限额 + 优先级 + 事件统计）→ 把已有 5 视角拉成一张图 |
 
 ### 阶段 C：Android 落地（1 篇）
 
 | # | 标题 | 核心内容 |
 |---|---|---|
-| **CG-04** | [Android 17 cgroup 树与 libprocessgroup：Framework 怎么用 cgroup](04-Android17_cgroup树与libprocessgroup.md) | 完整 cgroup 树（top-app / background / foreground / system / dexopt）→ libprocessgroup API → ProcessList.setProcessGroup 全栈路径 → task profile + cgroup.procs 配合 |
+| **CG-04** | [Android 17 cgroup 树与 libprocessgroup：Framework 怎么用 cgroup](13.B-进程生命周期/04-Android17_cgroup树与libprocessgroup.md) | 完整 cgroup 树（top-app / background / foreground / system / dexopt）→ libprocessgroup API → ProcessList.setProcessGroup 全栈路径 → task profile + cgroup.procs 配合 |
 
 ### 阶段 D：稳定性收口（2 篇）
 
 | # | 标题 | 核心内容 |
 |---|---|---|
-| **CG-05** | [cgroup 与稳定性的核心关系：OOM / Throttle / 杀进程的源头](05-cgroup与稳定性的核心关系_OOM_Throttle_杀进程.md) | 三个层 OOM 优先级（LMKD → cgroup OOM → 系统 OOM）→ cgroup throttle vs 调度器 throttle → freezer 暂停 vs 杀进程 → Android 17 典型配置 |
-| **CG-06** | [cgroup 可观测性全景 + 风险地图（实战收口）](06-cgroup可观测性全景与风险地图_实战收口.md) | 5 类可观测性入口速查 → 5 大 cgroup 故障（OOM 误杀 / CPU throttle / IO 抢断 / freezer 卡住 / cpuset 错配）→ 5 分钟排查 SOP → 3 个完整实战案例 |
+| **CG-05** | [cgroup 与稳定性的核心关系：OOM / Throttle / 杀进程的源头](13.B-进程生命周期/05-cgroup与稳定性的核心关系_OOM_Throttle_杀进程.md) | 三个层 OOM 优先级（LMKD → cgroup OOM → 系统 OOM）→ cgroup throttle vs 调度器 throttle → freezer 暂停 vs 杀进程 → Android 17 典型配置 |
+| **CG-06** | [cgroup 可观测性全景 + 风险地图（实战收口）](13.B-进程生命周期/06-cgroup可观测性全景与风险地图_实战收口.md) | 5 类可观测性入口速查 → 5 大 cgroup 故障（OOM 误杀 / CPU throttle / IO 抢断 / freezer 卡住 / cpuset 错配）→ 5 分钟排查 SOP → 3 个完整实战案例 |
 
 ---
 

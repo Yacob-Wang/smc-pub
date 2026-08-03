@@ -193,12 +193,12 @@ Binder 会在什么地方出问题？（风险地图）                         
 
 | 本系列文章 | 引用其他系列 | 引用文章 | 引用原因 |
 |---|---|---|---|
-| 01 总览 | epoll | [01-epoll 总览](../epoll/01-epoll总览与核心机制.md) | Binder 驱动用 epoll 监听 `/dev/binder` |
+| 01 总览 | epoll | [01-epoll 总览](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md) | Binder 驱动用 epoll 监听 `/dev/binder` |
 | 01 总览 | socket | [01-socket 总览](../socket/01-socket总览.md) | Linux 标准 IPC 对比 |
-| 02 驱动 | Process | [02-task_struct 全景拆解](../Process/02-task_struct全景拆解.md) | binder_proc 中的 `task_struct *tsk` |
+| 02 驱动 | Process | [02-task_struct 全景拆解](../13-进程与生命周期/13.B-进程生命周期/02-task_struct全景拆解.md) | binder_proc 中的 `task_struct *tsk` |
 | 02 驱动 | Memory_Management | [06-SLAB 分配器](../../Memory_Management/MM_v2/06-SLAB分配器.md) | binder_buffer 分配依赖 slab（**6.18 后需评估 sheaves**）|
-| 02 驱动 | epoll | [01-epoll 总览](../epoll/01-epoll总览与核心机制.md) | binder_poll 实现 |
-| 03 调用旅程 | Android_Framework/Input | [01-Input 系统总览](../01-Mechanism/Framework/Input/01-Input系统总览.md) | Input 通路依赖 Binder |
+| 02 驱动 | epoll | [01-epoll 总览](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md) | binder_poll 实现 |
+| 03 调用旅程 | Android_Framework/Input | [01-Input 系统总览](../18-输入系统/18.A-Framework%20输入链路/01-Input系统总览.md) | Input 通路依赖 Binder |
 | 03 调用旅程 | Android_Framework/Window | [02-Window Manager 架构](../01-Mechanism/Framework/Window/02-WindowManager架构.md) | WindowManagerBinder 通路 |
 | 04 内存模型 | Memory_Management | [04-进程内存地图](../../Memory_Management/MM_v2/04-进程内存地图.md) | binder_mmap 区域在进程内存地图中的位置 |
 | 05 线程模型 | Process | [05-调度器与 CFS](../Process/05-调度器与CFS.md) | Binder 优先级继承涉及调度 |
@@ -667,7 +667,7 @@ Binder 会在什么地方出问题？（风险地图）                         
 
 - **被本系列引用**：所有跨系列引用在 02-13 篇"本篇定位"段显式声明
 - **本系列被引用**：Memory_Management / Process / IO / Window / Input 等系列若需引用 Binder，本 README 附录 A 是统一入口
-- **术语表**：与 [Reference/术语表.md](../../../Reference/术语表.md) 对齐（待建，列入 2026 H2 治理计划）
+- **术语表**：与 [Reference/术语表.md](../../00-Meta/Reference/术语表.md) 对齐（待建，列入 2026 H2 治理计划）
 
 ### 附录 E：13 篇新写时间表（用户决策 2026-07-18"全部重写" · 仅供参考）
 

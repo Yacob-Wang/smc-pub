@@ -1439,7 +1439,7 @@ memblock 早期分配策略是 `bottom_up = true`（从低地址开始），目�
 - **本系列 07**：[第 07 篇：内存回收子系统：LRU / MGLRU / kswapd](07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md) — kswapd 怎么回收伙伴系统的空闲页
 - **本系列 09**：[第 09 篇：杀进程决策：LMKD / MemoryLimiter](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) — 水位线耗尽时 MemoryLimiter 怎么越界杀进程
 - **ART 03-GC 系统**：[ART 分代假说](../Runtime/ART/03-GC系统/05-Generational-CC/01-分代假说.md) — 对比 ART 堆分代 vs 物理页回收 LRU
-- **Process 06**：[Framework 视角的 Kernel 进程接口](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) — cgroup memory.max 接口
+- **Process 06**：[Framework 视角的 Kernel 进程接口](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) — cgroup memory.max 接口
 
 ---
 

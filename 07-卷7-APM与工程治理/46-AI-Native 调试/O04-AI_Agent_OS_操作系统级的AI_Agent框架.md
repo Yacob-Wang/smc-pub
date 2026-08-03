@@ -28,9 +28,9 @@
 |---|---|---|
 | **AI Agent 是什么** | ✓ 范式 + 4 大组件 | — |
 | **OS 级 vs App 级 Agent** | ✓ 边界 + 能力差异 | — |
-| **系统级 Function Calling** | ✓ Tool Use 抽象 | Runtime 层实现见 [R02 AI HAL](../01_AI_Native_Runtime/R02-Android_AI_HAL.md) |
+| **系统级 Function Calling** | ✓ Tool Use 抽象 | Runtime 层实现见 [R02 AI HAL](46.A-端侧%20AI%20运行时/R02-Android_AI_HAL.md) |
 | **系统级 Memory** | ✓ Context 持久化 + 隐私 | 详细 ART 内存 GC 见 `Runtime/ART M4` |
-| **多模态交互** | ✓ 语音/视觉/触控融合 | 各模态实现见 [R04 TFLite](../01_AI_Native_Runtime/R04-TFLite运行时详解.md) |
+| **多模态交互** | ✓ 语音/视觉/触控融合 | 各模态实现见 [R04 TFLite](46.A-端侧%20AI%20运行时/R04-TFLite运行时详解.md) |
 | **行业对位** | ✓ Apple / Samsung / Xiaomi | — |
 | **风险地图** | ✓ 权限滥用 / 跨 App 失败 / 隐私 | 端侧 LLM 风险见 O05；Framework AI 化风险见 O06 |
 | **实战案例** | 1 个（AI Agent 跨 App 调度失败率 5% → 0.1%） | — |
@@ -1091,9 +1091,9 @@ public class AppProcessWarmer {
 - AI Agent 的 Service 生命周期详见 `Android_Framework/Service`
 - AI Agent 的 ContentProvider 工具调用详见 `Android_Framework/ContentProvider`
 - AI Agent 的 Memory 持久化与 `Runtime/ART M4` 内存 GC 协同
-- AI Agent 的 Function Calling 与 [R02 AI HAL](../01_AI_Native_Runtime/R02-Android_AI_HAL.md) 协同
-- AI Agent 的多模态与 [R04 TFLite](../01_AI_Native_Runtime/R04-TFLite运行时详解.md) 协同
-- AI Agent 的端侧 LLM 推理与 [R08 端侧 LLM](../01_AI_Native_Runtime/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md) 协同
+- AI Agent 的 Function Calling 与 [R02 AI HAL](46.A-端侧%20AI%20运行时/R02-Android_AI_HAL.md) 协同
+- AI Agent 的多模态与 [R04 TFLite](46.A-端侧%20AI%20运行时/R04-TFLite运行时详解.md) 协同
+- AI Agent 的端侧 LLM 推理与 [R08 端侧 LLM](46.A-端侧%20AI%20运行时/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md) 协同
 - AI Agent 的 AICore 调度见 [O03 §3](O03-AICore_System_Service_AOSP中的AI调度核心.md)
 
 ---

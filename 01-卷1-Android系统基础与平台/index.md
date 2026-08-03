@@ -9,7 +9,7 @@
 | 第 1 章 | Android 系统全景与 AOSP 17 | 🚧 撰写中 |
 | 第 2 章 | AOSP 源码结构与构建系统 | 🚧 撰写中 |
 | 第 3 章 | 硬件抽象层（HAL）与 Treble 架构 | 📋 待撰写 |
-| 第 4 章 | Linux Kernel 基础（Android 视角） | 📋 待撰写 |
+| 第 4 章 | Linux Kernel 基础（Android 视角） | 🚧 撰写中 |
 | 第 5 章 | 安全基础（SELinux / AVB） | 🚧 撰写中 |
 
 ---

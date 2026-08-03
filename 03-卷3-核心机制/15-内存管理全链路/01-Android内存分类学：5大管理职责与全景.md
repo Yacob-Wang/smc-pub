@@ -120,11 +120,11 @@
 
 ### 1.3 与 ART / Framework / IO 系列的边界契约
 
-**ART 系列**（[`01-Mechanism/Framework/ART/`](../Runtime/ART/README-ART系列.md)）讲"ART 虚拟机内部怎么管理 Java 堆"——`art/runtime/gc/heap.cc`、Concurrent Copying GC、young / old / zygote 分代。
+**ART 系列**（[`01-Mechanism/Framework/ART/`](../20-ART%20运行时/README-ART系列.md)）讲"ART 虚拟机内部怎么管理 Java 堆"——`art/runtime/gc/heap.cc`、Concurrent Copying GC、young / old / zygote 分代。
 
-**Framework Process 系列**（[01-Mechanism/Framework/Process/](../Framework/Process/01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)）讲"Framework 层怎么用 Kernel 接口治理进程"——`ProcessList.java`、`OomAdjuster.java`、adj 计算。
+**Framework Process 系列**（[01-Mechanism/Framework/Process/](../13-进程与生命周期/13.B-进程生命周期/01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)）讲"Framework 层怎么用 Kernel 接口治理进程"——`ProcessList.java`、`OomAdjuster.java`、adj 计算。
 
-**IO 系列**（[01-Mechanism/Kernel/IO/](../IO/01-IO子系统总览：从进程read、write到磁盘的完整链路.md)）讲"内核 IO 子系统"——VFS、Page Cache、块设备。
+**IO 系列**（[01-Mechanism/Kernel/IO/](../16-IO%20与存储/01-IO子系统总览：从进程read、write到磁盘的完整链路.md)）讲"内核 IO 子系统"——VFS、Page Cache、块设备。
 
 **本系列（Memory）**讲"Linux Kernel 内存子系统（mm/）+ ART GC + Framework 治理 + AOSP 17 MemoryLimiter 的完整协作"——`mm/page_alloc.c`、`mm/vmscan.c`、`kernel/cgroup/memcontrol.c`、`art/runtime/gc/`、`frameworks/base/services/.../am/ProcessList.java`、`system/memory/lmkd/memorylimiter.cpp`（AOSP 17 新增）。
 
@@ -442,12 +442,12 @@ mm_struct 真正的内容只有：
 | Native 堆（scudo）| **第 04 篇** Native 堆分配器 | — | — | — |
 | `vm_area_struct` | **第 05 篇** VMA 设计哲学 | — | — | — |
 | cgroup v1 / v2 状态机 | **第 08 篇** cgroup memcg | — | — | — |
-| memcg 限额（memory.max）| **第 08 篇** | — | [Framework-Process-06 §4 cgroup fs 接口](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) | — |
-| LMKD 杀进程 | **第 09 篇** LMKD + MemoryLimiter | — | [Framework-Process-02-05（adj / 杀进程）](../Framework/Process/02-AMS-冷启动判定与进程启动链路.md) | — |
-| OOM Killer | **第 09 篇** | — | [Framework-Process-06 §6](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) | — |
+| memcg 限额（memory.max）| **第 08 篇** | — | [Framework-Process-06 §4 cgroup fs 接口](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) | — |
+| LMKD 杀进程 | **第 09 篇** LMKD + MemoryLimiter | — | [Framework-Process-02-05（adj / 杀进程）](../13-进程与生命周期/13.B-进程生命周期/02-AMS-冷启动判定与进程启动链路.md) | — |
+| OOM Killer | **第 09 篇** | — | [Framework-Process-06 §6](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) | — |
 | PSI / 压力监控 | **第 07 篇** §回收子系统 + **第 09 篇** §LMKD | — | — | — |
 | AOSP 17 MemoryLimiter | **第 09 篇** + **第 14 篇** §未来方向 | — | — | — |
-| IO 与内存的耦合（Page Cache）| **第 07 篇** §回收（refault） | — | — | [IO 系列 04-05](../IO/04-IO优先级与cgroup-IO控制器.md) + [05](../IO/05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md) |
+| IO 与内存的耦合（Page Cache）| **第 07 篇** §回收（refault） | — | — | [IO 系列 04-05](../16-IO%20与存储/04-IO优先级与cgroup-IO控制器.md) + [05](../16-IO%20与存储/05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md) |
 | zRAM / swap | **第 07 篇** §回收子系统 | — | — | — |
 | 一次 page fault 跨 5 层协作 | **第 10 篇** | ART §3 启动 | Framework §3 进程启动 | IO §4 文件 mmap |
 
@@ -467,7 +467,7 @@ Q2: 看完后想去看哪？
   └─ cgroup memory.pressure / PSI → 本系列 07-09 篇（限额 / 杀进程）
 
 Q3: 看完后想去看 frameworks/base/services/.../am/？
-  └─ 是 → [Framework Process 系列](../Framework/Process/01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)（特别是 [06 篇](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)）
+  └─ 是 → [Framework Process 系列](../13-进程与生命周期/13.B-进程生命周期/01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)（特别是 [06 篇](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)）
 ```
 
 ### 5.3 一个具体例子
@@ -487,13 +487,13 @@ Q2: 看哪？
        → 内存压力在哪个时间段 → 本系列第 07 篇
 
   如果 ApplicationExitInfo 描述是 "LMK":
-     → 本系列第 09 篇 + [Framework Process 02-05](../Framework/Process/02-AMS-冷启动判定与进程启动链路.md)
+     → 本系列第 09 篇 + [Framework Process 02-05](../13-进程与生命周期/13.B-进程生命周期/02-AMS-冷启动判定与进程启动链路.md)
 
   如果是 OOM Killer：
      → dmesg | grep "Out of memory" → 本系列第 09 篇
 ```
 
-**结论**：**绝大多数内存问题，从 ART / Framework Process 系列入手（特别是 [ART 05](../Runtime/ART/03-GC系统/05-Generational-CC/01-分代假说.md) / [Process 06](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)）；只有 ART / Framework 看完仍定位不到根因时，才下沉到 Kernel 本系列**。本系列不是入门读物，是排查的"最后一公里"。
+**结论**：**绝大多数内存问题，从 ART / Framework Process 系列入手（特别是 [ART 05](../Runtime/ART/03-GC系统/05-Generational-CC/01-分代假说.md) / [Process 06](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)）；只有 ART / Framework 看完仍定位不到根因时，才下沉到 Kernel 本系列**。本系列不是入门读物，是排查的"最后一公里"。
 
 ---
 

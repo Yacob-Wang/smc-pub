@@ -4,7 +4,7 @@
 >
 > **本篇角色**：Broadcast 系列 **第 1 篇 / 总览篇**（破例：风险地图简版 / 无实战案例）
 >
-> **强依赖**：[Activity 系列 · A01 全景](../Activity/01_Activity_Overview.md)、[Service 系列 · S01 全景](../Service/01_Service_Overview.md)
+> **强依赖**：[Activity 系列 · A01 全景](01_Activity_Overview.md)、[Service 系列 · S01 全景](01_Service_Overview.md)
 >
 > **承接自**：无（系列根文章）
 >
@@ -96,9 +96,9 @@
 - **静态注册 Receiver 在 PMS 端缓存**——PMS 端慢直接拖慢广播分发。
 - **Broadcast ANR 阈值比 Service 低**（10s vs 20s）——**onReceive 是短回调，设计上要快进快出**。
 
-> 跨系列引用：见 [Activity · A01 全景](../Activity/01_Activity_Overview.md) §2.1（四大组件协作图）
-> 跨系列引用：见 [Service · S01 全景](../Service/01_Service_Overview.md) §2.1（Service 协作图）
-> 跨系列引用：见 [ContentProvider · C01 全景](../ContentProvider/C01_ContentProvider_Overview.md) §2.1（四大组件协作图）
+> 跨系列引用：见 [Activity · A01 全景](01_Activity_Overview.md) §2.1（四大组件协作图）
+> 跨系列引用：见 [Service · S01 全景](01_Service_Overview.md) §2.1（Service 协作图）
+> 跨系列引用：见 [ContentProvider · C01 全景](C01_ContentProvider_Overview.md) §2.1（四大组件协作图）
 
 ### 2.2 Broadcast 的关键类层级
 

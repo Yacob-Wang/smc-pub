@@ -19,5 +19,5 @@ dumpsys + bugreport + DropBox 是稳定性工程师的听诊器——90% 的线�
 
 ---
 
-**状态**：🚧 骨架完成，内容撰写中
+**状态**：🚧 已有 26 篇，撰写中
 **生成**：sync_book_index.py（源：00-Meta/书籍目录-v1.md）

@@ -2,7 +2,7 @@
 
 > 系列第 5 篇 · 阶段 3 账本与诊断
 >
-> **本篇定位**:本系列 5 大机制中的"**机制 3:账本与诊断**" 展开。[Kernel/MM 10](../Kernel/Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) 已讲 ProcessRecord 5 维 14 字段基础,本篇是它的**扩展篇**——讲 **ART 堆 / Native 堆 / mmap 拆分** + **跨层对账**(dumpsys vs memcg vs smaps_rollup)。
+> **本篇定位**:本系列 5 大机制中的"**机制 3:账本与诊断**" 展开。[Kernel/MM 10](10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) 已讲 ProcessRecord 5 维 14 字段基础,本篇是它的**扩展篇**——讲 **ART 堆 / Native 堆 / mmap 拆分** + **跨层对账**(dumpsys vs memcg vs smaps_rollup)。
 >
 > **基线**:AOSP 17(API 37, CinnamonBun)+ Kernel `android17-6.18` GKI。所有源码路径经 `https://android.googlesource.com/platform/frameworks/base/+/refs/heads/android17-release/` 实测 HTTP 200 验证。
 >
@@ -15,7 +15,7 @@
 >
 > **关联已有系列**:
 > - [Kernel/MM 10-Framework 层内存账本](../Kernel/Memory_Management/10-Framework层账本：ProcessRecord-5维14字段的设计.md)——本篇的"基础篇",**不重复**14 字段定义
-> - [Framework/Process 06-Framework 视角的 Kernel 进程接口](../Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)——跨层接口的"账本" 视角
+> - [Framework/Process 06-Framework 视角的 Kernel 进程接口](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)——跨层接口的"账本" 视角
 > - [Kernel/MM 08-cgroup v2 memcg](../Kernel/Memory_Management/08-cgroup-v2-memcg节点级控制：从v1到v2的设计动机.md) §5 memcg 账本——本篇"Kernel 账本"对比
 
 ---
@@ -25,16 +25,16 @@
 
 - **本篇系列角色**:核心机制(阶段 3 第 1 篇 · 5 大机制中的"机制 3:账本与诊断" 扩展篇)
 - **强依赖**:
-  - [Kernel/MM 10 §3 14 字段定义](../Kernel/Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md)——本篇**不重复**14 字段定义,只在它基础上加 ART/Native 拆分 + 跨层对账
+  - [Kernel/MM 10 §3 14 字段定义](10-Framework层内存账本：ProcessRecord-5维14字段的设计.md)——本篇**不重复**14 字段定义,只在它基础上加 ART/Native 拆分 + 跨层对账
   - [Kernel/MM 08 §5 memcg 账本](../Kernel/Memory_Management/08-cgroup-v2-memcg节点级控制：从v1到v2的设计动机.md)——本篇"跨层对账" 之一
-  - [Framework/Process 06 §3 procfs 接口](../Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)——本篇"跨层对账" 之二
+  - [Framework/Process 06 §3 procfs 接口](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)——本篇"跨层对账" 之二
 - **承接自**:Kernel/MM 10 已覆盖 14 字段基础,本篇**只讲扩展**——ART/Native 拆分 + 跨层对账
 - **衔接去**:06 将覆盖"从 dumpsys meminfo 输出反推账本"(本篇是"账本结构",06 是"账本输出")
 - **不重复内容**:
-  - 14 字段定义 → [Kernel/MM 10 §3](../Kernel/Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md)
-  - ART 堆 / scudo 分配器 → [Kernel/MM 03-04](../Kernel/Memory_Management/03-ART堆与GC的设计动机：为什么这样设计.md) / [04](../Kernel/Memory_Management/04-Native堆与分配器的设计动机：bionic-scudo的取舍.md)
+  - 14 字段定义 → [Kernel/MM 10 §3](10-Framework层内存账本：ProcessRecord-5维14字段的设计.md)
+  - ART 堆 / scudo 分配器 → [Kernel/MM 03-04](03-ART堆与GC的设计动机：为什么这样设计.md) / [04](04-Native堆与分配器的设计动机：bionic-scudo的取舍.md)
   - memcg 内部细节 → [Kernel/MM 08 §5](../Kernel/Memory_Management/08-cgroup-v2-memcg节点级控制：从v1到v2的设计动机.md)
-  - procfs 接口 → [Framework/Process 06 §3](../Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)
+  - procfs 接口 → [Framework/Process 06 §3](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)
 - **本篇核心价值**:把账本从"14 字段" 提升到"3 层账本对账"——读完本篇,架构师应能回答:ProcessRecord 记的是 Java 堆 / Native 堆 / mmap 哪部分的?为什么 dumpsys / memcg / smaps_rollup 3 份账本对不上?账本字段怎么支撑 trimMemory / 杀进程决策?
 
 # 校准决策日志
@@ -62,7 +62,7 @@
 
 我是一名 Android 稳定性架构师,正在系统学习 Android 内存管理的 Framework 层视角。
 本篇是 Framework/Memory_Management 系列的第 5 篇,主题是"ProcessRecord 内存账本深入——ART/Native 拆分与跨层对账"。
-**不重复** [Kernel/MM 10](../Kernel/Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) 的 14 字段基础,本篇**只讲扩展**——ART/Native 拆分 + 跨层对账。
+**不重复** [Kernel/MM 10](10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) 的 14 字段基础,本篇**只讲扩展**——ART/Native 拆分 + 跨层对账。
 
 # 上下文
 
@@ -74,9 +74,9 @@
   - Kernel/MM 08 §5 memcg 账本
   - Framework/Process 06 §3 procfs 接口
 - **跨系列引用**:
-  - [Kernel/MM 10](../Kernel/Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) §3 ——14 字段定义(基础篇)
+  - [Kernel/MM 10](10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) §3 ——14 字段定义(基础篇)
   - [Kernel/MM 08](../Kernel/Memory_Management/08-cgroup-v2-memcg节点级控制：从v1到v2的设计动机.md) §5 ——memcg 账本
-  - [Framework/Process 06](../Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) §3 ——procfs 接口
+  - [Framework/Process 06](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) §3 ——procfs 接口
 
 # 写作标准
 
@@ -197,7 +197,7 @@ $ adb shell cat /dev/memcg/$(pidof com.example.demo)/memory.current
 
 ### 2.1 3 大子账本
 
-> **本节是本篇核心新增**——[Kernel/MM 10](../Kernel/Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) 讲了 14 字段定义,但**没讲这 14 字段在 ART/Native/mmap 上的分布**。
+> **本节是本篇核心新增**——[Kernel/MM 10](10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) 讲了 14 字段定义,但**没讲这 14 字段在 ART/Native/mmap 上的分布**。
 
 ProcessRecord 维护的 14 字段,**本质上记的是 3 大子账本**——
 
@@ -211,7 +211,7 @@ ProcessRecord 维护的 14 字段,**本质上记的是 3 大子账本**——
 
 ### 2.2 ProcessProfileRecord 14 字段分组(精简)
 
-[Kernel/MM 10 §3](../Kernel/Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) 已详细讲 14 字段,本篇**精简**到 5 维 14 字段的"3+3+3+3+2" 分组:
+[Kernel/MM 10 §3](10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) 已详细讲 14 字段,本篇**精简**到 5 维 14 字段的"3+3+3+3+2" 分组:
 
 ```
 5 维 14 字段

@@ -18,12 +18,12 @@
   - [A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md)（必读前置 · onResume 之后）
   - [Window 系列 · 01-WMS 总览](../Window/01-WMS-总览与架构.md)（如有）
   - [Stability S05-HANG 专题](../Stability/S05-HANG与黑屏专题.md)（启动期黑屏）
-  - [Dumpsys D05-Graphics 与渲染](../Dumpsys/05-Graphics与渲染.md)
+  - [Dumpsys D05-Graphics 与渲染](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/05-Graphics与渲染.md)
 - **承接自**：[A05 §5.2 Step 7-8 onResume + 第一帧](A05-AMS-PMS-WMS四大组件启动.md) → ViewRootImpl.performTraversals
 - **衔接去**：
   - A 模块收口 → 进入 B 模块（启动性能优化 B01-B04）
   - 风险排查跳转 [C03-启动黑屏](../Stability/C03-启动黑屏与SurfaceFlinger卡.md)（如已写）
-  - 工具跳转 [D04-启动期综合调试](../D-启动工具/D04-启动期dumpsys-systrace-traceview综合.md)
+  - 工具跳转 [D04-启动期综合调试](../11-系统启动性能专项/D-启动工具/D04-启动期dumpsys-systrace-traceview综合.md)
 - **不重复内容**：
   - **不重复** [Window 系列](../Window/) 已深入的 WMS 通用视角
   - **不重复** A01-A05 已有的启动链路
@@ -65,7 +65,7 @@
 
 # 写作标准
 
-- 本规范（[PROMPT-技术系列文章写作指南.md](../../../PROMPT-技术系列文章写作指南.md)）
+- 本规范（[PROMPT-技术系列文章写作指南.md](../../PROMPT-技术系列文章写作指南.md)）
 - 章节编号：# 总章 / # 章 / ## 节 / ### 子节
 - 必备：每章配 1 个 ASCII / mermaid 时序图
 - 必备：数据后接"所以呢"段
@@ -617,10 +617,10 @@ void SurfaceFlinger::composite(...) {
 
 | Step | 命令 | 目的 | 详见 |
 |:-----|:-----|:-----|:----|
-| 1 | `adb shell dumpsys SurfaceFlinger` | 看 SF 状态 + layer | [D05 §3.1](../Dumpsys/05-Graphics与渲染.md) |
-| 2 | `adb shell dumpsys SurfaceFlinger --latency` | 看 VSYNC 时序 | [D05 §3.2](../Dumpsys/05-Graphics与渲染.md) |
-| 3 | `adb shell dumpsys gfxinfo <pkg>` | 看绘制耗时 | [D05 §3.3](../Dumpsys/05-Graphics与渲染.md) |
-| 4 | `adb shell dumpsys window \| grep mCurrentFocus` | 看焦点窗口 | [D03 §3.1](../Dumpsys/03-Window与WMS视角.md) |
+| 1 | `adb shell dumpsys SurfaceFlinger` | 看 SF 状态 + layer | [D05 §3.1](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/05-Graphics与渲染.md) |
+| 2 | `adb shell dumpsys SurfaceFlinger --latency` | 看 VSYNC 时序 | [D05 §3.2](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/05-Graphics与渲染.md) |
+| 3 | `adb shell dumpsys gfxinfo <pkg>` | 看绘制耗时 | [D05 §3.3](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/05-Graphics与渲染.md) |
+| 4 | `adb shell dumpsys window \| grep mCurrentFocus` | 看焦点窗口 | [D03 §3.1](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/03-Window与WMS视角.md) |
 
 ## 9.2 启动黑屏取证脚本
 
@@ -943,7 +943,7 @@ private void scheduleVsyncLocked() {
 > **本篇不重复**：
 > - [Window 系列](../Window/) 已深入的 WMS 通用机制
 > - [A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md) 已深入的 onCreate + onResume
-> - [Dumpsys D05-Graphics](../Dumpsys/05-Graphics与渲染.md) 已深入的 gfxinfo 工具
+> - [Dumpsys D05-Graphics](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/05-Graphics与渲染.md) 已深入的 gfxinfo 工具
 >
 > **视角互补**：
 > - **本篇**：**"第一帧场景"穿透视角**——Choreographer + SurfaceFlinger 4 层栈穿透
@@ -1064,8 +1064,8 @@ private void scheduleVsyncLocked() {
 > - **上一篇**：[A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md)
 > - **A 模块收口**：[README-AOSP_Startup系列.md](../README.md)
 > - **下一步（待写）**：B01-B04 启动性能优化
-> - **机制联动**：[Stability S05-HANG 专题](../Stability/S05-HANG与黑屏专题.md) · [Window 系列](../Window/) · [Dumpsys D05-Graphics](../Dumpsys/05-Graphics与渲染.md)
-> - **工具联动**：[Dumpsys D05-Graphics](../Dumpsys/05-Graphics与渲染.md) · [Perfetto 系列](../Perfetto/) · [D04-启动期综合调试](../D-启动工具/D04-启动期dumpsys-systrace-traceview综合.md)
+> - **机制联动**：[Stability S05-HANG 专题](../Stability/S05-HANG与黑屏专题.md) · [Window 系列](../Window/) · [Dumpsys D05-Graphics](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/05-Graphics与渲染.md)
+> - **工具联动**：[Dumpsys D05-Graphics](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/05-Graphics与渲染.md) · [Perfetto 系列](../Perfetto/) · [D04-启动期综合调试](../11-系统启动性能专项/D-启动工具/D04-启动期dumpsys-systrace-traceview综合.md)
 
 ---
 

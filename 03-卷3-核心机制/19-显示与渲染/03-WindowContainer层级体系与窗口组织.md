@@ -171,7 +171,7 @@ class DisplayContent extends WindowContainer<DisplayArea> {
 }
 ```
 
-> **稳定性架构师视角**：`mCurrentFocus` 和 `mFocusedApp` 是 Input 事件路由的关键状态。当 Activity 切换时，如果 `mFocusedApp` 已更新但 `mCurrentFocus` 尚未更新（新窗口还没 `addWindow`），InputDispatcher 就会进入"有 FocusedApplication 无 FocusedWindow"的等待状态，5 秒后触发 ANR。这在 [01-Input 系统总览](../Input/01-Input系统总览.md) 的 Case 1 中有详细分析。
+> **稳定性架构师视角**：`mCurrentFocus` 和 `mFocusedApp` 是 Input 事件路由的关键状态。当 Activity 切换时，如果 `mFocusedApp` 已更新但 `mCurrentFocus` 尚未更新（新窗口还没 `addWindow`），InputDispatcher 就会进入"有 FocusedApplication 无 FocusedWindow"的等待状态，5 秒后触发 ANR。这在 [01-Input 系统总览](../18-输入系统/18.A-Framework%20输入链路/01-Input系统总览.md) 的 Case 1 中有详细分析。
 
 ### 2.2 DisplayArea 层级体系
 

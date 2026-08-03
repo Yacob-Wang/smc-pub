@@ -15,9 +15,9 @@
 >
 > **关联已有系列**:
 > - [09-5 层剧本](09-跨层协作-一次trimMemory派发的5层剧本.md)——本篇是它的"杀进程端" 展开
-> - [Framework/Process_Exit 4 篇](../Process_Exit/README-杀进程系列.md)——本篇是 FWK 视角的杀进程时序,与它对账
-> - [Kernel/MM 09-LMKD + MemoryLimiter 协同](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) §3 LMKD 6 大决策模块
-> - [Kernel/MM 13-保护与释放的协同](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md) §1.1 adj 体系
+> - [Framework/Process_Exit 4 篇](../13-进程与生命周期/README-杀进程系列.md)——本篇是 FWK 视角的杀进程时序,与它对账
+> - [Kernel/MM 09-LMKD + MemoryLimiter 协同](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) §3 LMKD 6 大决策模块
+> - [Kernel/MM 13-保护与释放的协同](13-保护与释放的协同：adj体系与4大释放源.md) §1.1 adj 体系
 
 ---
 
@@ -27,14 +27,14 @@
 - **本篇系列角色**:跨层整合(阶段 5 第 2 篇 · 5 大机制中的"机制 5:跨层协同" 杀进程时序)
 - **强依赖**:
   - [09-5 层剧本](09-跨层协作-一次trimMemory派发的5层剧本.md)——本篇是它的"杀进程端" 展开
-  - [Framework/Process_Exit 4 篇](../Process_Exit/README-杀进程系列.md)——本篇是 FWK 视角杀进程时序
-  - [Kernel/MM 09 §3](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) ——LMKD 6 大决策模块
+  - [Framework/Process_Exit 4 篇](../13-进程与生命周期/README-杀进程系列.md)——本篇是 FWK 视角杀进程时序
+  - [Kernel/MM 09 §3](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) ——LMKD 6 大决策模块
 - **承接自**:09 已讲 5 层剧本,本篇**只讲杀进程时序**——从 trimMemory 80 到 SIGKILL 的完整路径
 - **衔接去**:11 将覆盖"收口 + 治理",本篇末尾会预告
 - **不重复内容**:
-  - 杀进程执行细节 → [Framework/Process_Exit 4 篇](../Process_Exit/README-杀进程系列.md)
-  - LMKD 6 大决策模块 → [Kernel/MM 09 §3](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md)
-  - adj 体系 → [Kernel/MM 13 §1.1](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md)
+  - 杀进程执行细节 → [Framework/Process_Exit 4 篇](../13-进程与生命周期/README-杀进程系列.md)
+  - LMKD 6 大决策模块 → [Kernel/MM 09 §3](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md)
+  - adj 体系 → [Kernel/MM 13 §1.1](13-保护与释放的协同：adj体系与4大释放源.md)
   - 5 层剧本 → [09](09-跨层协作-一次trimMemory派发的5层剧本.md)
 - **本篇核心价值**:把"杀进程" 从"单点事件" 提升到"5 阶段时序"——读完本篇,架构师应能回答:trimMemory 80 后,进程多久被杀?哪 5 个阶段?每个阶段多少时延?如果某一阶段卡住怎么定位?
 
@@ -76,9 +76,9 @@
   - Kernel/MM 09 §3 LMKD 6 大决策模块
 - **跨系列引用**:
   - [09-5 层剧本](09-跨层协作-一次trimMemory派发的5层剧本.md)
-  - [Framework/Process_Exit 4 篇](../Process_Exit/README-杀进程系列.md) ——杀进程执行
-  - [Kernel/MM 09 §3](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) ——LMKD 决策
-  - [Kernel/MM 13 §1.1](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md) ——adj 体系
+  - [Framework/Process_Exit 4 篇](../13-进程与生命周期/README-杀进程系列.md) ——杀进程执行
+  - [Kernel/MM 09 §3](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) ——LMKD 决策
+  - [Kernel/MM 13 §1.1](13-保护与释放的协同：adj体系与4大释放源.md) ——adj 体系
 
 # 写作标准
 
@@ -203,9 +203,9 @@ $ adb shell lmkd.log
 |------|------|---------|----------|
 | **P1** | **trimMemory COMPLETE 派发** | AMS + 派发链 | [04 §4](04-onTrimMemory派发机制-从ProcessList到Application-Activity调用链.md) |
 | **P2** | **App 收到 + 释放尝试** | Application + 4 组件 | [08 §2-6](08-App侧资源释放最佳实践-Glide-OkHttp-Bitmap-Handler.md) |
-| **P3** | **lmkd 选进程** | lmkd.cpp | [Kernel/MM 09 §3](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) |
-| **P4** | **发 SIGKILL** | Kernel | [Framework/Process_Exit 01](../Process_Exit/01-杀进程全链路：从AMS触发到进程完全退出.md) |
-| **P5** | **ProcessRecord 清理 + cgroup 释放** | AMS + Kernel | [Framework/Process_Exit 02](../Process_Exit/02-do_exit内部9个sub-step深潜.md) |
+| **P3** | **lmkd 选进程** | lmkd.cpp | [Kernel/MM 09 §3](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) |
+| **P4** | **发 SIGKILL** | Kernel | [Framework/Process_Exit 01](../13-进程与生命周期/13.B-进程生命周期/01-杀进程全链路：从AMS触发到进程完全退出.md) |
+| **P5** | **ProcessRecord 清理 + cgroup 释放** | AMS + Kernel | [Framework/Process_Exit 02](../13-进程与生命周期/13.B-进程生命周期/02-do_exit内部9个sub-step深潜.md) |
 
 ### 2.2 5 阶段与 5 层剧本的关系
 
@@ -245,7 +245,7 @@ $ adb shell lmkd.log
 **T3(2-12s)**:lmkd 选进程
 - lmkd 进程每 1-10s poll 一次 PSI + memcg
 - PSI 仍高 + memcg 仍越界 → 选进程
-- **选进程逻辑**详见 [Kernel/MM 09 §3](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) §3
+- **选进程逻辑**详见 [Kernel/MM 09 §3](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) §3
 - **时延**:1-10s(lmkd poll 间隔)
 
 ### 3.4 阶段 4:发 SIGKILL
@@ -253,7 +253,7 @@ $ adb shell lmkd.log
 **T4(1-5s)**:发 SIGKILL
 - lmkd 通过 `pidfd_send_signal(SIGKILL)` 通知 Kernel
 - Kernel 立即终止进程
-- 详见 [Framework/Process_Exit 01](../Process_Exit/01-杀进程全链路：从AMS触发到进程完全退出.md)
+- 详见 [Framework/Process_Exit 01](../13-进程与生命周期/13.B-进程生命周期/01-杀进程全链路：从AMS触发到进程完全退出.md)
 - **时延**:1-5s(选进程后 + cgroup 清理)
 
 ### 3.5 阶段 5:ProcessRecord 清理 + cgroup 释放
@@ -261,13 +261,13 @@ $ adb shell lmkd.log
 **T5(0.1-1s)**:ProcessRecord 清理
 - AMS 收到 `appDied` 回调
 - 清理 ProcessRecord + mLruProcesses 槽位
-- 详见 [Framework/Process_Exit 02](../Process_Exit/02-do_exit内部9个sub-step深潜.md)
+- 详见 [Framework/Process_Exit 02](../13-进程与生命周期/13.B-进程生命周期/02-do_exit内部9个sub-step深潜.md)
 - **时延**:0.1-1s
 
 **T5+(1-5s)**:cgroup 释放
 - Kernel 清理 cgroup memcg 节点
 - 释放进程占用的 RSS
-- 详见 [Framework/Process_Exit 02](../Process_Exit/02-do_exit内部9个sub-step深潜.md) §3
+- 详见 [Framework/Process_Exit 02](../13-进程与生命周期/13.B-进程生命周期/02-do_exit内部9个sub-step深潜.md) §3
 - **时延**:1-5s
 
 ---
@@ -416,7 +416,7 @@ Kill pid=67890 (com.example.im) adj=200 PSS=400MB  ← 后杀 adj=200?
    ```
 3. **关键发现**:`MemoryLimiter override`——AOSP 17 新增的"事前拦截" 机制,绕过了 adj 过滤。
 
-**根因**:**AOSP 17 MemoryLimiter 越界触发**——`memory.current > memory.high` 触发,即使 adj=200 也杀。这是 [Kernel/MM 09 §5](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) 提过的"事前拦截" 设计。
+**根因**:**AOSP 17 MemoryLimiter 越界触发**——`memory.current > memory.high` 触发,即使 adj=200 也杀。这是 [Kernel/MM 09 §5](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) 提过的"事前拦截" 设计。
 
 **修复**:
 - 短期:升级 App 释放逻辑,避免 memcg.high 越界

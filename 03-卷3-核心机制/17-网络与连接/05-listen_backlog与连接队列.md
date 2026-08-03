@@ -21,7 +21,7 @@
   - [Socket 01-Socket总览](01-Socket总览.md)(socket 是什么、`socket()/bind()/listen()/accept()` syscall 入口)
   - [Socket 03-Socket连接生命周期](03-Socket连接生命周期.md)(§3 connect 与 TCP 状态机;本篇会从"对端 connect"视角看 SYN)
   - [Socket 04-Socket缓冲区与数据收发](04-Socket缓冲区与数据收发.md)(§3.5 wait queue 机制;本篇 sk_accept_queue 是 wait queue 的另一种用法)
-  - [epoll 01-epoll总览与核心机制](../epoll/01-epoll总览与核心机制.md)(accept() 的就绪通知走 epoll 路径)
+  - [epoll 01-epoll总览与核心机制](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md)(accept() 的就绪通知走 epoll 路径)
 - **承接自**:socket 01 §2.1 提到 `listen(sock, backlog)` 但没展开 backlog 怎么生效;socket 04 §3.5 提到 wait queue;socket 03 §3 提到 TCP 三次握手状态机——本篇把这三条线在"listen 后的两个队列"上收口
 - **衔接去**:本篇末尾会预告下一篇 [06-Unix Domain Socket 与 Android 中的使用](06-Unix_Domain_Socket与Android使用.md) 讲 UDS(无网络栈、无 backlog 但有 connect 路径排队)
 - **不重复内容**:TCP 三次握手的完整状态机(03 已讲)、wait queue 基础(04 已讲)、socket 是什么(01 已讲)
@@ -1023,7 +1023,7 @@ backlog 相关问题
 
 ## 篇尾衔接
 
-下一篇 [06-Unix Domain Socket 与 Android 中的使用](../socket/06-Unix_Domain_Socket与Android使用.md) 将深入 AF_UNIX 的"无网络栈"特性：UDS 没有半连接队列（SYN），但有 connect 路径排队（accept 队列）；socketpair 如何在 InputChannel / Choreographer BitTube 中实现全双工；UDS 的 path 名 vs abstract namespace；UDS 上的 SCM_RIGHTS 跨进程 fd 传递——以及为什么 Android 中 6 大场景的"半边天"是 UDS。
+下一篇 [06-Unix Domain Socket 与 Android 中的使用](06-Unix_Domain_Socket与Android使用.md) 将深入 AF_UNIX 的"无网络栈"特性：UDS 没有半连接队列（SYN），但有 connect 路径排队（accept 队列）；socketpair 如何在 InputChannel / Choreographer BitTube 中实现全双工；UDS 的 path 名 vs abstract namespace；UDS 上的 SCM_RIGHTS 跨进程 fd 传递——以及为什么 Android 中 6 大场景的"半边天"是 UDS。
 
 本篇 §3.3 讲的半连接队列仅适用于 TCP；UDS 的 connect 路径走 accept 队列（与 TCP 全连接队列共用一套机制），但跳过半连接队列。
 

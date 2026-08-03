@@ -546,7 +546,7 @@ $ m libfoo  # Soong 重生成
 | [07 常见编译错误](07-常见编译错误速查.md) | 错误视角 |
 | [08 实战](08-实战：写一个自己的Android.bp-module.md) | M4 末篇 |
 | [Build-System/01_AOSP_Build_Environment](../01_AOSP_Build_Environment.md) | 编译环境 |
-| [06-Foundation/SELinux/02](../SELinux/02-策略文件体系：sepolicy.te.cil.编译产物.md) | selinux_policy 也走 Soong → Ninja |
+| [06-Foundation/SELinux/02](../../05-安全基础（SELinux%20·%20AVB）/SELinux/02-策略文件体系：sepolicy.te.cil.编译产物.md) | selinux_policy 也走 Soong → Ninja |
 
 ---
 

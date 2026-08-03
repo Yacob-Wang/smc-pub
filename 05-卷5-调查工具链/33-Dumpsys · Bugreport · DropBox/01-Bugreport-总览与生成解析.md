@@ -11,7 +11,7 @@
 
 - **目的**：把 bugreport 这个 oncall 7×24 最高频工具讲清楚——怎么生成、怎么解析、内部结构、5 类现场 5 分钟取证
 - **不是**：不复述 logcat 命令（[06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../05-卷5-调查工具链/35-断点与 Native 调试/Logcat_Complete_Guide.md)）；不复述 trace 抓取（[06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](../../../05-卷5-调查工具链/35-断点与 Native 调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md)）
-- **承接自**：[00-Meta/缺项规划-P0补全路线图 §1.4 缺项清单](../00-Meta/缺项规划-P0补全路线图.md)（bugreport 系列从 0 到 1 新建）
+- **承接自**：[00-Meta/缺项规划-P0补全路线图 §1.4 缺项清单](../../00-Meta/缺项规划-P0补全路线图.md)（bugreport 系列从 0 到 1 新建）
 - **衔接去**：[02 目录结构全梳理](02-Bugreport-目录结构全梳理.md) / [06-Case/Cases-Extended/](../06-Case/Cases-Extended/) 实战案例 / [04-Tool/Dumpsys/](../04-Tool/Dumpsys/)
 
 ## 校准决策日志

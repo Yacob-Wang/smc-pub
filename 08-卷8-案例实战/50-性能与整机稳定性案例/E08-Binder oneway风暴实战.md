@@ -11,7 +11,7 @@
 ## 本篇定位
 
 - 实战案例第 8 篇（与 Binder 系列强相关，把"oneway 风暴"立成真实剧本）
-- 强依赖：[01-Mechanism/Kernel/Binder 系列](../../01-Mechanism/Kernel/Binder/) 13 篇 / [OC05-SWT 响应剧本](../Oncall/OC05-SWT响应剧本.md) / [02-Symptom/S06-REBOOT/01-症状机制](../../../04-卷4-诊断方法论与稳定性症状/30-REBOOT/01-症状机制.md)
+- 强依赖：[01-Mechanism/Kernel/Binder 系列](../../01-Mechanism/Kernel/Binder/) 13 篇 / [OC05-SWT 响应剧本](../../05-卷5-调查工具链/36-Oncall%20与应急响应/OC05-SWT响应剧本.md) / [02-Symptom/S06-REBOOT/01-症状机制](../../04-卷4-诊断方法论与稳定性症状/30-REBOOT/01-症状机制.md)
 
 ## 校准决策日志
 
@@ -289,7 +289,7 @@ lowmemorykiller: Killing 'system_server' (1234), adj 0,
 - 排查内存大户
 - 升级内存配置
 
-详见 [01-Mechanism/Kernel/Memory_Management/09](../../../03-卷3-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md)。
+详见 [01-Mechanism/Kernel/Memory_Management/09](../../03-卷3-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md)。
 
 ---
 
@@ -338,8 +338,8 @@ lowmemorykiller: Killing 'system_server' (1234), adj 0,
 | Binder 总览 | [01-Mechanism/Kernel/Binder 系列](../../01-Mechanism/Kernel/Binder/) 13 篇 | 完整 |
 | Binder oneway | [Binder/10-Binder-oneway限流与防护方案](../../../03-卷3-核心机制/12-Binder IPC 深度/10-Binder-oneway限流与防护方案.md) | 限流 |
 | Binder 节点 | [Binder/12-Binder节点文件全景与问题实战](../../../03-卷3-核心机制/12-Binder IPC 深度/12-Binder节点文件全景与问题实战.md) | 节点 |
-| SWT 流程 | [OC05-SWT 响应剧本](../Oncall/OC05-SWT响应剧本.md) | 4 层 |
-| REBOOT | [02-Symptom/S06-REBOOT/01-症状机制](../../../04-卷4-诊断方法论与稳定性症状/30-REBOOT/01-症状机制.md) | 4 类 |
+| SWT 流程 | [OC05-SWT 响应剧本](../../05-卷5-调查工具链/36-Oncall%20与应急响应/OC05-SWT响应剧本.md) | 4 层 |
+| REBOOT | [02-Symptom/S06-REBOOT/01-症状机制](../../04-卷4-诊断方法论与稳定性症状/30-REBOOT/01-症状机制.md) | 4 类 |
 
 ## B 路径对账
 

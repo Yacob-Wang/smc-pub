@@ -79,8 +79,8 @@
   - [02 §4 LeakCanary 深度](02-hprof解析工具链.md#4-leakcanary-深度android-专用泄漏检测)——案例自动检测
   - [03 §5.1 Native 堆采样](03-perfetto_hprof详解.md#51-native-堆采样)——Native 案例工具
 - **跨系列引用**:
-  - [AmCommand 04-堆内存转储 dumpheap 详解](AmCommand/04-堆内存转储-dumpheap详解.md)——触发 dump 命令
-  - [Dumpsys 04-内存分析](Dumpsys/04-内存分析.md)——实时对照
+  - [AmCommand 04-堆内存转储 dumpheap 详解](../33-Dumpsys%20·%20Bugreport%20·%20DropBox/04-堆内存转储-dumpheap详解.md)——触发 dump 命令
+  - [Dumpsys 04-内存分析](../33-Dumpsys%20·%20Bugreport%20·%20DropBox/04-内存分析.md)——实时对照
   - [Tool/Perfetto 04](Perfetto/04-定制化实战：ANR后自动抓取trace.md)——perfetto 整体定制
 
 # 写作标准
@@ -928,11 +928,11 @@ Thread → ServiceDispatcher
 
 | 案例 | 本篇 5 件套 | 跨系列引用 |
 |------|------------|-----------|
-| 案例 1 Activity 泄漏 | §2.1 | [01 §1.1 5 工具矩阵](01-hprof原理与文件格式.md#13-5-大内存追踪工具的能力矩阵) / [02 §3.3 Leak Suspects](02-hprof解析工具链.md#33-leak-suspects-报告) / [AmCommand 04 §2.2 am dumpheap](AmCommand/04-堆内存转储-dumpheap详解.md) |
+| 案例 1 Activity 泄漏 | §2.1 | [01 §1.1 5 工具矩阵](01-hprof原理与文件格式.md#13-5-大内存追踪工具的能力矩阵) / [02 §3.3 Leak Suspects](02-hprof解析工具链.md#33-leak-suspects-报告) / [AmCommand 04 §2.2 am dumpheap](../33-Dumpsys%20·%20Bugreport%20·%20DropBox/04-堆内存转储-dumpheap详解.md) |
 | 案例 2 Bitmap 暴涨 | §2.2 | [03 §5.1 Native 堆采样](03-perfetto_hprof详解.md#51-native-堆采样) / [03 §7 实战案例](03-perfetto_hprof详解.md#7-实战native-泄漏持续采样定位) |
 | 案例 3 Handler 堆积 | §2.3 | [02 §4.2 LeakCanary 工作原理](02-hprof解析工具链.md#42-工作原理从-activityondestroy-到报告) |
 | 案例 4 静态缓存 | §2.4 | [02 §3.4 Histogram](02-hprof解析工具链.md#34-histogram--retained-heap) |
-| 案例 5 Native 句柄 | §2.5 | [02 §7.1 MAT 加载失败](02-hprof解析工具链.md#71-mat-加载失败-8-大原因) / [Dumpsys 04 §3 Native 内存](Dumpsys/04-内存分析.md) |
+| 案例 5 Native 句柄 | §2.5 | [02 §7.1 MAT 加载失败](02-hprof解析工具链.md#71-mat-加载失败-8-大原因) / [Dumpsys 04 §3 Native 内存](../33-Dumpsys%20·%20Bugreport%20·%20DropBox/04-内存分析.md) |
 | 案例 6 跨进程泄漏 | §2.6 | [02 §4.4 自定义 watcher](02-hprof解析工具链.md#44-自定义-watcher) |
 
 ---

@@ -178,7 +178,7 @@ signal 6 (SIGABRT), code -1 (SI_TKILL)
   ...（无 backtrace 细节）
 ```
 
-→ 同时 `tombstone` 显示 OOM killer 触发 → 详见 [01-Mechanism/Kernel/Memory_Management/09](../../../03-卷3-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md)
+→ 同时 `tombstone` 显示 OOM killer 触发 → 详见 [01-Mechanism/Kernel/Memory_Management/09](../../03-卷3-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md)
 
 ### 图片 OOM
 
@@ -344,7 +344,7 @@ if (buf == NULL) {
 | HANG 机制 | [../04-卷4-诊断方法论与稳定性症状/28-HANG 与死锁/01-症状机制.md](../../../04-卷4-诊断方法论与稳定性症状/28-HANG 与死锁/01-症状机制.md) | 3 类 |
 | HANG/OOM 取证 | [../04-卷4-诊断方法论与稳定性症状/28-HANG 与死锁/01-取证机制.md](../F06-HANG-OOM/01-取证机制.md) | 完整流程 |
 | Hprof | [04-Tool/Hprof/04-内存泄漏典型案例与排查SOP](../../../05-卷5-调查工具链/34-Hprof 与内存分析/04-内存泄漏典型案例与排查SOP.md) | 案例 |
-| LMKD | [Memory_Management/09](../../../03-卷3-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) | 杀进程决策 |
+| LMKD | [Memory_Management/09](../../03-卷3-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) | 杀进程决策 |
 | oncall 流程 | [OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) | 5/15/30 |
 
 ## B 路径对账

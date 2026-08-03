@@ -28,8 +28,8 @@
 # 上下文
 - 上一篇:[03-真正根因](03-杀进程慢的真正根因：诱因-根因-证伪.md), 已讲诱因 vs 根因 4 条判定标准
 - 下一篇:无(本系列终篇)
-- 本系列 README:[README-杀进程系列](README-杀进程系列.md)
-- 跨系列引用:[Process 09 实战](../Process/09-杀进程慢的根因定位实战.md) / [MM_v2 13 诊断工具链](../../Kernel/Memory_Management/MM_v2/13-内存稳定性诊断工具链.md) / [Kernel Process 05 do_exit](../../Kernel/Process/05-进程的退出_do_exit与资源回收.md)
+- 本系列 README:[README-杀进程系列](../README-杀进程系列.md)
+- 跨系列引用:[Process 09 实战](09-杀进程慢的根因定位实战.md) / [MM_v2 13 诊断工具链](../../Kernel/Memory_Management/MM_v2/13-内存稳定性诊断工具链.md) / [Kernel Process 05 do_exit](05-进程的退出_do_exit与资源回收.md)
 
 # 写作标准
 - v5 规范(本指南)
@@ -760,14 +760,14 @@ adb pull /data/local/tmp/trace.perfetto-trace /tmp/
 | 9 sub-step 源码深潜 | [02-do_exit 9 sub-step 深潜](02-do_exit内部9个sub-step深潜.md) | 源码级 |
 | 真正根因判定 + 证伪 | [03-杀进程慢的真正根因](03-杀进程慢的真正根因：诱因-根因-证伪.md) | 框架 + 反例 |
 | **监控 + 告警 + 治理** | **本篇 04** | **工程落地** |
-| 真实 case | [Process 09 实战](../Process/09-杀进程慢的根因定位实战.md) | 案例 |
+| 真实 case | [Process 09 实战](09-杀进程慢的根因定位实战.md) | 案例 |
 
 ### 11.3 跨系列引用
 
-- [Process 09 实战](../Process/09-杀进程慢的根因定位实战.md) — Process 09 案作为 4 篇理论的应用
+- [Process 09 实战](09-杀进程慢的根因定位实战.md) — Process 09 案作为 4 篇理论的应用
 - [MM_v2 13 诊断工具链](../../Kernel/Memory_Management/MM_v2/13-内存稳定性诊断工具链.md) — 内存诊断工具
 - [MM_v2 15 线上动态内存治理](../../Kernel/Memory_Management/MM_v2/15-线上动态内存治理：不杀进程下的诊断与梳理.md) — 不杀进程的治理视角
-- [Kernel Process 05 do_exit](../../Kernel/Process/05-进程的退出_do_exit与资源回收.md) — Kernel 层 do_exit 细节
+- [Kernel Process 05 do_exit](05-进程的退出_do_exit与资源回收.md) — Kernel 层 do_exit 细节
 
 ### 11.4 Process_Exit 4 篇完成
 
@@ -862,8 +862,8 @@ adb pull /data/local/tmp/trace.perfetto-trace /tmp/
 - 04 监控 + 告警 + 治理（工程落地）
 - **总进度 4/4 = 100%**
 
-**实战引用**：[Process 09 杀进程慢的根因定位实战](../Process/09-杀进程慢的根因定位实战.md) — 4 篇理论在真实 case（OEM `process_reclaim` 案）的应用。
+**实战引用**：[Process 09 杀进程慢的根因定位实战](09-杀进程慢的根因定位实战.md) — 4 篇理论在真实 case（OEM `process_reclaim` 案）的应用。
 
 **跨系列引用**：
 - [MM_v2 15 线上动态内存治理](../../Kernel/Memory_Management/MM_v2/15-线上动态内存治理：不杀进程下的诊断与梳理.md) — 杀进程 vs 不杀进程的治理对比
-- [Kernel Process 05 do_exit](../../Kernel/Process/05-进程的退出_do_exit与资源回收.md) — Kernel 层 do_exit 细节
+- [Kernel Process 05 do_exit](05-进程的退出_do_exit与资源回收.md) — Kernel 层 do_exit 细节

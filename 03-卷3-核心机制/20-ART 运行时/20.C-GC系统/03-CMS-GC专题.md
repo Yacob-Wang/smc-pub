@@ -1612,7 +1612,7 @@ Linux 6.18(`android17-6.18`)的 sheaves 内存分配器对 ART Native 堆影响:
 └────────────────────────────────────────────────────────────────┘
 ```
 
-跨系列引用:详见 [Linux Kernel/DM/09-DM-调优-性能与pcache](../Kernel/DM/09-DM-调优-性能与pcache.md) §3。
+跨系列引用:详见 [Linux Kernel/DM/09-DM-调优-性能与pcache](../../16-IO%20与存储/16.D-Device%20Mapper/09-DM-调优-性能与pcache.md) §3。
 
 ---
 

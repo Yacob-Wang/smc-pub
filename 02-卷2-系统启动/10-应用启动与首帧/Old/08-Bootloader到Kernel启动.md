@@ -297,7 +297,7 @@ dmesg | grep -E "\[.*\]"
 
 - [Init进程与系统服务启动](09-Init进程与系统服务启动.md) - 理解 Init 启动
 - [Android验证启动机制](12-Android验证启动机制.md) - 理解 AVB
-- [ARM64系统调用机制](../syscalls/02-ARM64系统调用机制.md) - 理解内核机制
+- [ARM64系统调用机制](../../../01-卷1-Android系统基础与平台/04-Linux%20Kernel%20基础（Android%20视角）/4.A-系统调用/02-ARM64系统调用机制.md) - 理解内核机制
 
 ## 参考资料
 

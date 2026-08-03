@@ -15,8 +15,8 @@
 >
 > **关联已有系列**:
 > - [02-7 等级设计动机](02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md) §2 §5 ——本篇是它的"决策端"展开
-> - [Kernel/MM 09-杀进程决策子系统](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) §3(LMKD 6 大决策模块)——本篇讲 FWK 端决策,与它对账
-> - [Framework/Process 02-AMS 冷启动判定](../Process/02-AMS-冷启动判定与进程启动链路.md) §3(进程状态识别)——本篇"进程状态"判定共用同一逻辑
+> - [Kernel/MM 09-杀进程决策子系统](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) §3(LMKD 6 大决策模块)——本篇讲 FWK 端决策,与它对账
+> - [Framework/Process 02-AMS 冷启动判定](../13-进程与生命周期/13.B-进程生命周期/02-AMS-冷启动判定与进程启动链路.md) §3(进程状态识别)——本篇"进程状态"判定共用同一逻辑
 
 ---
 
@@ -26,14 +26,14 @@
 - **本篇系列角色**:核心机制(阶段 2 第 1 篇 · 5 大机制中的"机制 2:AMS 决策" 展开)
 - **强依赖**:
   - [02 §2 4 维分类法 + §5 adj/PSS/memcg 对应表](02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md) ——本篇是它的"决策端"
-  - [Kernel/MM 09 §3 LMKD 6 大决策模块](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) ——本篇讲 FWK 端决策,与它对账
+  - [Kernel/MM 09 §3 LMKD 6 大决策模块](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) ——本篇讲 FWK 端决策,与它对账
 - **承接自**:02 已覆盖 7 等级是什么,本篇**不重复**7 等级定义,只讲"AMS 何时调哪个 level"
 - **衔接去**:04 将覆盖"从 ProcessList 到 Application/Activity 的派发链",10 将覆盖"trimMemory 80 → lmkd kill 时序",本篇末尾会预告
 - **不重复内容**:
   - 7 等级语义 → [02](02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md)
-  - adj 体系细节 → [Kernel/MM 13 §1.1](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md)
-  - LMKD 决策模块 → [Kernel/MM 09 §3](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md)
-  - 杀进程执行 → [Framework/Process_Exit 4 篇](../Process_Exit/README-杀进程系列.md)
+  - adj 体系细节 → [Kernel/MM 13 §1.1](13-保护与释放的协同：adj体系与4大释放源.md)
+  - LMKD 决策模块 → [Kernel/MM 09 §3](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md)
+  - 杀进程执行 → [Framework/Process_Exit 4 篇](../13-进程与生命周期/README-杀进程系列.md)
 - **本篇核心价值**:把 AMS 决策从"黑盒" 拉到"决策树"——读完本篇,架构师应能回答:AMS 何时调 trimMemory(5/10/15/20/40/60/80)?何时更新 adj?何时升级到杀进程路径?3 大动作的先后顺序是什么?为什么有时 trimMemory 没触发但 adj 变了?
 
 # 校准决策日志
@@ -72,9 +72,9 @@
   - Kernel/MM 09 §3 LMKD 6 大决策模块
   - Kernel/MM 13 §1.1 adj 体系
 - **跨系列引用**:
-  - [Kernel/MM 09](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) §3 ——LMKD 6 大决策模块
-  - [Kernel/MM 13](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md) §1.1 ——adj 体系
-  - [Framework/Process 02](../Process/02-AMS-冷启动判定与进程启动链路.md) §3 ——进程状态识别
+  - [Kernel/MM 09](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) §3 ——LMKD 6 大决策模块
+  - [Kernel/MM 13](13-保护与释放的协同：adj体系与4大释放源.md) §1.1 ——adj 体系
+  - [Framework/Process 02](../13-进程与生命周期/13.B-进程生命周期/02-AMS-冷启动判定与进程启动链路.md) §3 ——进程状态识别
 
 # 写作标准
 
@@ -174,7 +174,7 @@ $ adb shell dumpsys activity processes | grep com.example.demo
     mProfile: PSS=180MB      ← 但 PSS 早已超过 BACKGROUND 阈值(200MB,差 20MB)
 ```
 
-App 工程师反馈:"我的 PSS 已经 180MB 了,按 [02 §5.2 表](../02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md) 应该收 `TRIM_MEMORY_BACKGROUND(40)`,但实际只收到 `UI_HIDDEN(20)`。"
+App 工程师反馈:"我的 PSS 已经 180MB 了,按 [02 §5.2 表](02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md) 应该收 `TRIM_MEMORY_BACKGROUND(40)`,但实际只收到 `UI_HIDDEN(20)`。"
 
 ——这种情况,**90% 不是"AMS 派发逻辑错",而是"AMS 决策树走到了另一个分支"**。
 
@@ -547,7 +547,7 @@ $ adb shell dumpsys activity processes | grep com.example.im
     mSetProcState=PROCESS_STATE_CACHED_ACTIVITY
 ```
 
-按 [02 §5.2](../02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md),PSS=300MB 应该收 `BACKGROUND(40)`,实际只收 20。
+按 [02 §5.2](02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md),PSS=300MB 应该收 `BACKGROUND(40)`,实际只收 20。
 
 **分析思路**:
 1. 拉 `dumpsys activity services` 看是否有频繁的 bind/unbind:

@@ -1861,7 +1861,7 @@ key changes:
 - **CC GC 的 Native 辅助结构(Region Pool / Mark Bitmap / Stack Map Cache)受益**
 - **GC 内存压力降低 → GenCC 跨代引用拷贝开销降低**
 
-**跨系列引用**:详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](01-Mechanism/Kernel/DM/09-DM-调优-性能与pcache.md) §3(已合并整合)。
+**跨系列引用**:详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../16-IO%20与存储/16.D-Device%20Mapper/09-DM-调优-性能与pcache.md) §3(已合并整合)。
 
 ---
 

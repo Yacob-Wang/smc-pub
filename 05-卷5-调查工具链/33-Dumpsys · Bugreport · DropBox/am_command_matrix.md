@@ -1,6 +1,6 @@
 ﻿# am_command_configs/am_command_matrix.md
 
-> **配套文章**:[README-AmCommand系列 §3 am 全命令矩阵](../README-AmCommand系列.md#3-am-全命令矩阵)
+> **配套文章**:[README-AmCommand系列 §3 am 全命令矩阵](README-AmCommand系列.md#3-am-全命令矩阵)
 >
 > **基线**:AOSP `android-14.0.0_r1`
 

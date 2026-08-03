@@ -21,12 +21,12 @@
 - **承接自**:无(系列开篇)
 - **衔接去**:下一篇 [02-IO 调度器与多队列架构](02-IO调度器与多队列架构.md) 将深入 Block 层之上的调度子系统,本篇末尾会预告
 - **不重复内容**:
-  - **VFS 抽象语义** → 详见 [FS 07-VFS 核心数据结构](../FileSystem/07-VFS%20核心数据结构：super_block,%20inode,%20dentry,%20file%20的设计动机.md)
-  - **Page Cache 的数据结构** → 详见 [FS 10-页缓存机制](../FileSystem/10-页缓存机制：Page%20Cache,%20address_space,%20脏页回写.md)
-  - **文件系统磁盘布局**(ext4 / f2fs) → 详见 [FS 12-ext4 文件系统架构](../FileSystem/12-ext4%20文件系统架构：磁盘布局,%20extent,%20journaling.md) / [FS 13-f2fs 文件系统特性](../FileSystem/13-f2fs%20文件系统特性：闪存友好,%20日志结构,%20GC.md)
-  - **MM 子系统本身的机制**(伙伴系统、SLAB、回收算法) → 详见 [Memory 06-物理内存组织与伙伴系统](../Memory_Management/06-物理内存组织与伙伴系统：Node-Zone-Page的设计.md) / [Memory 07-内存回收子系统](../Memory_Management/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)
+  - **VFS 抽象语义** → 详见 [FS 07-VFS 核心数据结构](07-VFS%20核心数据结构：super_block,%20inode,%20dentry,%20file%20的设计动机.md)
+  - **Page Cache 的数据结构** → 详见 [FS 10-页缓存机制](10-页缓存机制：Page%20Cache,%20address_space,%20脏页回写.md)
+  - **文件系统磁盘布局**(ext4 / f2fs) → 详见 [FS 12-ext4 文件系统架构](12-ext4%20文件系统架构：磁盘布局,%20extent,%20journaling.md) / [FS 13-f2fs 文件系统特性](13-f2fs%20文件系统特性：闪存友好,%20日志结构,%20GC.md)
+  - **MM 子系统本身的机制**(伙伴系统、SLAB、回收算法) → 详见 [Memory 06-物理内存组织与伙伴系统](../15-内存管理全链路/06-物理内存组织与伙伴系统：Node-Zone-Page的设计.md) / [Memory 07-内存回收子系统](../15-内存管理全链路/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)
   - **进程调度算法本身**(CFS / RT / Deadline) → 详见 [Process 09-CFS调度器详解](../Process/09-CFS调度器详解.md)
-  - **程序加载的 ELF/DEX 格式** → 详见 [Program_Execution 02-ELF文件格式深度解析](../Program_Execution/02-ELF文件格式深度解析-从可执行文件到内核视角.md) / [PLE 06-DEX-ODEX-VDEX格式](../Program_Execution/06-DEX-ODEX-VDEX格式-为mmap而生的字节码.md)
+  - **程序加载的 ELF/DEX 格式** → 详见 [Program_Execution 02-ELF文件格式深度解析](../13-进程与生命周期/13.D-程序加载与执行链路/02-ELF文件格式深度解析-从可执行文件到内核视角.md) / [PLE 06-DEX-ODEX-VDEX格式](../13-进程与生命周期/13.D-程序加载与执行链路/06-DEX-ODEX-VDEX格式-为mmap而生的字节码.md)
 - **本篇的核心价值**:在所有具体机制之前,先建立**一条 IO 链路 + IO↔MM↔Process 三系统耦合**的全局认知。这是后续 10 篇共同依赖的"心智地图"。
 
 ## 校准决策日志

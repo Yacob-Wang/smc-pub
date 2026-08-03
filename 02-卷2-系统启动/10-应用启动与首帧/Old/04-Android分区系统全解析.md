@@ -171,7 +171,7 @@ ls -la /dev/block/by-name/
 
 **关联**：
 - 与 GKI 架构相关
-- 参考 [GKI Modules 文章](../gki/03-GKI-Modules深入解析.md)
+- 参考 [GKI Modules 文章](../../../01-卷1-Android系统基础与平台/02-AOSP%20源码结构与构建系统/2.A-GKI%20与内核模块化/03-GKI-Modules深入解析.md)
 
 #### odm_dlkm 分区（GKI 设备）
 

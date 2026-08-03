@@ -3,8 +3,8 @@
 > **本篇定位**:系列第 4 篇。**接管 12 个时间点中的 T5→T8 段**——子进程从 `fork()` 后第一次被调度开始,到 `Activity.onCreate` 第一次被调用为止。
 >
 > **承接上三篇**:
-> - **01 锚点篇**:[01-进程总览:从点图标看 app 进程的诞生消亡与全栈抽象](../Process/01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)(12 时间点 + 四层抽象 + 代表数据结构总图)
-> - **02 AMS 决策**:[02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](../Process/02-AMS-冷启动判定与进程启动链路.md)(T1→T2 — `startActivity` 路由 + `ProcessList.startProcessLocked` 的 5 个判定条件)
+> - **01 锚点篇**:[01-进程总览:从点图标看 app 进程的诞生消亡与全栈抽象](01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)(12 时间点 + 四层抽象 + 代表数据结构总图)
+> - **02 AMS 决策**:[02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](02-AMS-冷启动判定与进程启动链路.md)(T1→T2 — `startActivity` 路由 + `ProcessList.startProcessLocked` 的 5 个判定条件)
 > - **03 Zygote 孵化**:[03-Zygote 孵化:Android 进程工厂](../Process/03-Zygote孵化：Android进程工厂.md)(T3→T5 — `ZygoteProcess.startViaZygote` + `Zygote.forkAndSpecialize` + `zygote::ForkCommon`)
 >
 > **基线**:AOSP `android-14.0.0_r1`(`refs/heads/android14-release`)+ Kernel `android14-5.15` GKI。所有源码路径经 `https://android.googlesource.com/platform/<repo>/+/refs/heads/android14-release/<path>?format=TEXT` 实测 HTTP 200 验证。
@@ -16,7 +16,7 @@
 >
 > **上一篇**:[03-Zygote 孵化:Android 进程工厂](../Process/03-Zygote孵化：Android进程工厂.md)
 >
-> **下一篇**:[05-ART 进程内世界:JIT/AOT、OAT 加载、信号处理与 GC 线程](../Process/05-ART进程内世界：JIT-AOT与GC.md)
+> **下一篇**:[05-ART 进程内世界:JIT/AOT、OAT 加载、信号处理与 GC 线程](05-ART进程内世界：JIT-AOT与GC.md)
 >
 > **关联已有系列**(本篇末"附录 C"展开):
 > - Binder 系列 → `../Binder/`(`IApplicationThread` 是 AIDL Stable,跨进程通信血脉)
@@ -189,7 +189,7 @@
 - 卡在 **T8 bindApplication**:profile 数据未就绪 / Configuration 缺失 → 业务侧看到"配置丢失"
 - 卡在 **T8 scheduleTransaction**:IPC 队列拥塞 → 冷启动延迟
 
-> **线上 80% 的"冷启动慢" 故障,根因落在 T6→T8 这 3 跳里**——而不是 T2→T5 的 fork 阶段。[02 篇](../Process/02-AMS-冷启动判定与进程启动链路.md) 处理"为什么 fork",[03 篇](../Process/03-Zygote孵化：Android进程工厂.md) 处理"怎么 fork",**本篇处理"fork 之后到 main 之间的 Java 化变身"**——这才是冷启动的"重头戏"。
+> **线上 80% 的"冷启动慢" 故障,根因落在 T6→T8 这 3 跳里**——而不是 T2→T5 的 fork 阶段。[02 篇](02-AMS-冷启动判定与进程启动链路.md) 处理"为什么 fork",[03 篇](../Process/03-Zygote孵化：Android进程工厂.md) 处理"怎么 fork",**本篇处理"fork 之后到 main 之间的 Java 化变身"**——这才是冷启动的"重头戏"。
 
 ### 1.2 稳定性视角:T5→T8 这 4 跳在冷启动耗时中的占比
 
@@ -303,7 +303,7 @@ T8.3 (第一帧绘制)                     +1320ms   [80ms View 树 measure/layo
 T5→T8 段总耗时                         1070ms(占比 81%)
 ```
 
-> **速记**:**"T5→T8 占冷启动 80%,T7→T8 占 T5→T8 60%"**——任何冷启动优化,先看 T7→T8 是否被 system_server 阻塞,再看 T6 是否被 ART 加载阻塞,最后才看 [02 篇](../Process/02-AMS-冷启动判定与进程启动链路.md) 的 AMS 决策是否过慢。
+> **速记**:**"T5→T8 占冷启动 80%,T7→T8 占 T5→T8 60%"**——任何冷启动优化,先看 T7→T8 是否被 system_server 阻塞,再看 T6 是否被 ART 加载阻塞,最后才看 [02 篇](02-AMS-冷启动判定与进程启动链路.md) 的 AMS 决策是否过慢。
 
 ---
 
@@ -2273,7 +2273,7 @@ grep -E "(ContentResolver|FileInputStream|Socket|SharedPreferences)" trace.html
 
 ## 附录 B:风险速查表(5 列 × 16 行)
 
-> **这是"进程首生"类问题的全栈速查表**——后续 [08 篇](../Process/08-进程稳定性风险全景与跨层治理.md) 会按这 16 行展开实战故障案例。
+> **这是"进程首生"类问题的全栈速查表**——后续 [08 篇](08-进程稳定性风险全景与跨层治理.md) 会按这 16 行展开实战故障案例。
 
 | # | 问题类型 | 典型场景 | 日志关键字 | dumpsys 特征 | 排查入口 |
 |---|--------|--------|----------|---------|---------|
@@ -2305,22 +2305,22 @@ grep -E "(ContentResolver|FileInputStream|Socket|SharedPreferences)" trace.html
 | 跨进程通信(`IApplicationThread` AIDL) | `../../Android_Framework/Binder/` | `IApplicationThread` 是 AIDL Stable,本篇 §5.3 / §6.3 的 25 个参数都是跨进程数据载荷 |
 | Window / SurfaceFlinger | `../01-Mechanism/Framework/Window/` | `Activity.attach` 阶段会触发 `WindowManagerGlobal` 初始化;`handleLaunchActivity` 完成后触发第一帧 |
 | Input 输入分发 | `../../Android_Framework/Input/` | 冷启动"按了没反应" 的 ANR 在 Input 侧表现;`InputDispatcher` 超时阈值与 attach 阻塞直接相关 |
-| ART 运行时 | 本系列 [05 篇](../Process/05-ART进程内世界：JIT-AOT与GC.md) | ART `Runtime::Init` 在 T5.2 触发;`OAT file` + `JIT` + `GC` 都在本篇 §9.3 概述 |
-| Kernel 调度 | `../01-Mechanism/Kernel/Kernel_Scheduler/` | 子进程的 `task_struct` 在 T5 fork 后第一次被调度;[07 篇](../Process/07-调度与资源：CFS与进程生死.md) 接管调度细节 |
+| ART 运行时 | 本系列 [05 篇](05-ART进程内世界：JIT-AOT与GC.md) | ART `Runtime::Init` 在 T5.2 触发;`OAT file` + `JIT` + `GC` 都在本篇 §9.3 概述 |
+| Kernel 调度 | `../01-Mechanism/Kernel/Kernel_Scheduler/` | 子进程的 `task_struct` 在 T5 fork 后第一次被调度;[07 篇](07-调度与资源：CFS与进程生死.md) 接管调度细节 |
 | 分区 / cgroup | `../01-Mechanism/Kernel/Partition/` | memcg 限额在 attach 后由 `ProcessList` 设置 |
 | 启动流程 | `../../02-卷2-系统启动/` | 早期稿,深度不足;本系列仅引用"启动时序" 的概念 |
 | Watchdog / ANR 检测 | `../04-Tool/Watchdog/` | ANR 检测的 5s 阈值与本篇 10.1 案例直接相关 |
 
 **与本系列"上承下接" 的内部链接**:
 
-- [01-进程总览:从点图标看 app 进程的诞生消亡与全栈抽象](../Process/01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)
-- [02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](../Process/02-AMS-冷启动判定与进程启动链路.md)
+- [01-进程总览:从点图标看 app 进程的诞生消亡与全栈抽象](01-进程总览：从点图标看app进程的诞生消亡与全栈抽象.md)
+- [02-AMS 决策:从 Launcher 触达到"必须冷启动"的判定](02-AMS-冷启动判定与进程启动链路.md)
 - [03-Zygote 孵化:Android 进程工厂](../Process/03-Zygote孵化：Android进程工厂.md)
 - **04-应用进程首生:从 fork 到 ActivityThread.main(本篇)**
-- [05-ART 进程内世界:JIT/AOT、OAT 加载、信号处理与 GC 线程](../Process/05-ART进程内世界：JIT-AOT与GC.md)
+- [05-ART 进程内世界:JIT/AOT、OAT 加载、信号处理与 GC 线程](05-ART进程内世界：JIT-AOT与GC.md)
 - [06-Kernel 进程实现:task_struct、cgroup、namespace 与 procfs](../Process/06-Kernel进程实现：task_struct与cgroup.md)
-- [07-调度与资源:CFS、schedtune、cpuset、memcg、blkio 与进程生死](../Process/07-调度与资源：CFS与进程生死.md)
-- [08-进程稳定性风险全景:ANR/OOM/进程泄漏/僵尸与跨层治理](../Process/08-进程稳定性风险全景与跨层治理.md)
+- [07-调度与资源:CFS、schedtune、cpuset、memcg、blkio 与进程生死](07-调度与资源：CFS与进程生死.md)
+- [08-进程稳定性风险全景:ANR/OOM/进程泄漏/僵尸与跨层治理](08-进程稳定性风险全景与跨层治理.md)
 
 ---
 
@@ -2400,4 +2400,4 @@ grep -E "(ContentResolver|FileInputStream|Socket|SharedPreferences)" trace.html
 
 **《应用进程首生:从 fork 到 ActivityThread.main》至此结束。**
 
-下一篇 [05-ART 进程内世界:JIT/AOT、OAT 加载、信号处理与 GC 线程](../Process/05-ART进程内世界：JIT-AOT与GC.md) 将深入 `art::Runtime::Init` 的 11 个子阶段、`gc::Heap` 的 4 种 GC 触发条件、`SignalCatcher` 的 8 种信号处理、`FinalizerWatchdogDaemon` 的 10s 超时机制——把 "T6+T11" 这段进程内 ART 视角展开给你看。
+下一篇 [05-ART 进程内世界:JIT/AOT、OAT 加载、信号处理与 GC 线程](05-ART进程内世界：JIT-AOT与GC.md) 将深入 `art::Runtime::Init` 的 11 个子阶段、`gc::Heap` 的 4 种 GC 触发条件、`SignalCatcher` 的 8 种信号处理、`FinalizerWatchdogDaemon` 的 10s 超时机制——把 "T6+T11" 这段进程内 ART 视角展开给你看。

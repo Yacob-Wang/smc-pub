@@ -21,7 +21,7 @@
   - [Socket 01-Socket总览](01-Socket总览.md) §2.3(socket 与 VFS 绑定、socket_file_ops)
   - [Socket 04-Socket缓冲区与数据收发](04-Socket缓冲区与数据收发.md) §3.1-3.3(sk_buff 缓冲、SO_SNDBUF/SO_RCVBUF)
   - [Socket 05-listen_backlog与连接队列](05-listen_backlog与连接队列.md) §1.3(UDS 没有半连接队列)
-  - [epoll 01-epoll总览与核心机制](../epoll/01-epoll总览与核心机制.md) §5.1-5.3(InputDispatcher/Looper 的 socketpair 用法)
+  - [epoll 01-epoll总览与核心机制](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md) §5.1-5.3(InputDispatcher/Looper 的 socketpair 用法)
 - **承接自**:socket 01 §2.2 提到 AF_UNIX 是 socket 系列里的"本地 IPC";socket 04 §1.3 讲到 UDS 默认 208KB 缓冲;socket 05 §1.3 说"UDS 没有 backlog 但有 accept 队列"——本篇把 UDS 在 Android 系统中的特殊性集中展开
 - **衔接去**:本篇末尾会预告下一篇 [07-Socket稳定性风险全景](07-Socket稳定性风险全景.md) 把 socket 系列 6 大场景的所有风险统一成风险图
 - **不重复内容**:UDS 是什么、TCP backlog 机制、wait queue 基础——全部由强依赖文章承担
@@ -961,7 +961,7 @@ UDS 相关问题
 | LocalSocket | `frameworks/base/core/java/android/net/LocalSocket.java` | AOSP 14.0.0_r1 | UDS Java 客户端 |
 | LocalServerSocket | `frameworks/base/core/java/android/net/LocalServerSocket.java` | AOSP 14.0.0_r1 | UDS Java 服务端 |
 | adb | `system/core/adb/daemon/usb.cpp` | AOSP 14.0.0_r1 | adbd 内部 LocalServerSocket |
-| fs/eventpoll.c | `fs/eventpoll.c` | Linux 5.10+ | epoll（详见 [epoll 01](../../epoll/01-epoll总览与核心机制.md)） |
+| fs/eventpoll.c | `fs/eventpoll.c` | Linux 5.10+ | epoll（详见 [epoll 01](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md)） |
 
 ---
 
@@ -1038,7 +1038,7 @@ UDS 相关问题
 
 ## 篇尾衔接
 
-下一篇 [07-Socket稳定性风险全景](../socket/07-Socket稳定性风险全景.md) 将把 socket 系列 6 大场景的所有风险统一成风险图：Zygote/InputChannel/Choreographer/adb/LocalSocket/网络 各自的 P0/P1 风险、现象-日志-排查入口对照、监控指标建议——把本系列 01/04/05/06 各篇的零散风险汇总成可指导实战的风险地图。
+下一篇 [07-Socket稳定性风险全景](07-Socket稳定性风险全景.md) 将把 socket 系列 6 大场景的所有风险统一成风险图：Zygote/InputChannel/Choreographer/adb/LocalSocket/网络 各自的 P0/P1 风险、现象-日志-排查入口对照、监控指标建议——把本系列 01/04/05/06 各篇的零散风险汇总成可指导实战的风险地图。
 
 本篇 §3.2 讲的 UDS 缓冲机制、§4 讲的 6 大场景展开、§5 风险速查表——都会在 07 收口。
 

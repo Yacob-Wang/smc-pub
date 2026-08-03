@@ -297,13 +297,13 @@ traceview /tmp/trace.trace
 
 | 命令 | 用途 | 详见 |
 |------|------|------|
-| `am dumpheap` | 触发 Java 堆 dump | [04-堆内存转储-dumpheap 详解](../04-堆内存转储-dumpheap详解.md) |
-| `am hang` | 触发 ANR | [05-诊断与监控](../05-诊断与监控-hang-monitor.md) |
-| `am monitor` | 监控 GC / Crash 事件 | [05-诊断与监控](../05-诊断与监控-hang-monitor.md) |
-| `am kill` | 模拟 LMKD 杀进程 | [02-进程管理三件套](../02-进程管理三件套-kill-crash-restart.md) |
+| `am dumpheap` | 触发 Java 堆 dump | [04-堆内存转储-dumpheap 详解](04-堆内存转储-dumpheap详解.md) |
+| `am hang` | 触发 ANR | [05-诊断与监控](05-诊断与监控-hang-monitor.md) |
+| `am monitor` | 监控 GC / Crash 事件 | [05-诊断与监控](05-诊断与监控-hang-monitor.md) |
+| `am kill` | 模拟 LMKD 杀进程 | [02-进程管理三件套](02-进程管理三件套-kill-crash-restart.md) |
 | `simpleperf record` | Native 函数 CPU 采样 | SimplePerf 系列 |
 | `perfetto -o` | 系统级 trace | Perfetto 系列 |
 
 ---
 
-**返回**:[03-性能分析入口-profile 命令](../03-性能分析入口-profile命令.md)
+**返回**:[03-性能分析入口-profile 命令](03-性能分析入口-profile命令.md)

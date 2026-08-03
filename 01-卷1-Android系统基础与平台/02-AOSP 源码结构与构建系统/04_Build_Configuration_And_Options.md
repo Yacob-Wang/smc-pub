@@ -421,5 +421,5 @@ TARGET_USERIMAGES_USE_F2FS := true
 - `device/{vendor}/{device}/AndroidProducts.mk`
 
 **下一步学习**：
-- 了解系统集成，请阅读 [系统组成和启动](../03_System_Integration/01_System_Composition_And_Boot.md)
+- 了解系统集成，请阅读 [系统组成和启动](../01-Android%20系统全景与%20AOSP%2017/01_System_Composition_And_Boot.md)
 - 了解OTA更新，请阅读 [OTA更新机制](../04_Dynamic_Updates/01_OTA_Update_Mechanism.md)

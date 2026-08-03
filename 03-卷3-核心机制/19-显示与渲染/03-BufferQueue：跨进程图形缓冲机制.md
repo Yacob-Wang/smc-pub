@@ -608,7 +608,7 @@ $ adb shell setprop debug.sf.disable_buffer_cache 1
 | [05 Choreographer / VSync](05-Choreographer-VSync：UI节奏协调.md) | 续篇 |
 | [06 HWC](06-HWC（Hardware-Composer）：display-HAL抽象.md) | 续篇 |
 | [07 jank 实战](07-卡顿-jank实战：trace+logcat5分钟定位.md) | 续篇 |
-| [01-Mechanism/Kernel/Memory_Management/02-一个byte的双重视角](../../../../03-卷3-核心机制/15-内存管理全链路/02-一个byte的双重视角：加载与运行的融会贯通.md) | 内存机制 |
+| [01-Mechanism/Kernel/Memory_Management/02-一个byte的双重视角](../15-内存管理全链路/02-一个byte的双重视角：加载与运行的融会贯通.md) | 内存机制 |
 
 ---
 

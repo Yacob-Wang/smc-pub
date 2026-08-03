@@ -422,7 +422,7 @@ int close_fd_get_file(unsigned int fd)
 | f->f_op->open | file_operations 没实现 | ENOSYS 错误 | [08 file_operations 多态](08-file_operations%20多态分发机制（不是%20hook）.md) |
 | finish_open | fd 配额耗尽 | EMFILE 错误 | [24 FBE + 资源耗尽](24-FBE%20文件级加密启动慢%20+%20三大资源耗尽（FD,inode,配额）.md) |
 | find_get_page | Page Cache 抖动 | read 时延不稳定 | [10 Page Cache](10-页缓存机制：Page%20Cache,%20address_space,%20脏页回写.md) |
-| bio 提交 | 块设备队列满 | 写入卡顿 | [15 FS↔Block](15-块设备层与%20FS%20交互：submit_bio,%20IO%20调度影响.md) + [IO 02-03 调度器+Block](../IO/02-IO调度器与多队列架构.md) |
+| bio 提交 | 块设备队列满 | 写入卡顿 | [15 FS↔Block](15-块设备层与%20FS%20交互：submit_bio,%20IO%20调度影响.md) + [IO 02-03 调度器+Block](02-IO调度器与多队列架构.md) |
 | close | 资源泄漏 | fd / inode 耗尽 | [24 FBE + 资源耗尽](24-FBE%20文件级加密启动慢%20+%20三大资源耗尽（FD,inode,配额）.md) |
 
 **对读者有什么用**:**这张风险地图是"open/read 慢的诊断路径"**——遇到"open 慢"按这个顺序查:path_lookup → FUSE → f_op → fd 配额。

@@ -14,9 +14,9 @@
 > **下一篇**:[08-App 侧资源释放](08-App侧资源释放最佳实践-Glide-OkHttp-Bitmap-Handler.md)——本篇讲"压力检测",08 讲"App 落地"
 >
 > **关联已有系列**:
-> - [Kernel/MM 07-LRU/MGLRU/kswapd](../Kernel/Memory_Management/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md) §6 kswapd 回收
+> - [Kernel/MM 07-LRU/MGLRU/kswapd](07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md) §6 kswapd 回收
 > - [Kernel/MM 08-cgroup v2 memcg](../Kernel/Memory_Management/08-cgroup-v2-memcg节点级控制：从v1到v2的设计动机.md) §5 memcg OOM
-> - [Framework/Process 06 §3 procfs 接口](../Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) §3
+> - [Framework/Process 06 §3 procfs 接口](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) §3
 
 ---
 
@@ -25,14 +25,14 @@
 
 - **本篇系列角色**:核心机制(阶段 4 第 1 篇 · 5 大机制中的"机制 4:压力响应" 压力检测端)
 - **强依赖**:
-  - [Kernel/MM 07 §6 kswapd](../Kernel/Memory_Management/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)——本篇是它的"FWK 接收端"
+  - [Kernel/MM 07 §6 kswapd](07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)——本篇是它的"FWK 接收端"
   - [Kernel/MM 08 §5 memcg](../Kernel/Memory_Management/08-cgroup-v2-memcg节点级控制：从v1到v2的设计动机.md)——本篇是它的"事件通知端"
 - **承接自**:06 已讲诊断,本篇**只讲压力检测**——Kernel 怎么告诉 FWK
 - **衔接去**:08 将覆盖"App 侧落地",本篇末尾会预告
 - **不重复内容**:
-  - kswapd 内部细节 → [Kernel/MM 07 §6](../Kernel/Memory_Management/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)
+  - kswapd 内部细节 → [Kernel/MM 07 §6](07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)
   - memcg 内部细节 → [Kernel/MM 08 §5](../Kernel/Memory_Management/08-cgroup-v2-memcg节点级控制：从v1到v2的设计动机.md)
-  - procfs 接口 → [Framework/Process 06 §3](../Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)
+  - procfs 接口 → [Framework/Process 06 §3](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)
   - App 落地 → [08](08-App侧资源释放最佳实践-Glide-OkHttp-Bitmap-Handler.md)
 - **本篇核心价值**:把"内存压力" 从 Kernel 黑盒拉到 FWK 可见链路——读完本篇,架构师应能回答:Kernel PSI 是什么?memcg 限额触发什么事件?AMS 怎么接收?MemoryPressureReceiver 派发链路是什么?为什么有时 PSI 高但 AMS 没响应?
 
@@ -72,9 +72,9 @@
   - Kernel/MM 08 §5 memcg
   - Framework/Process 06 §3 procfs 接口
 - **跨系列引用**:
-  - [Kernel/MM 07 §6 kswapd](../Kernel/Memory_Management/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)
+  - [Kernel/MM 07 §6 kswapd](07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)
   - [Kernel/MM 08 §5 memcg](../Kernel/Memory_Management/08-cgroup-v2-memcg节点级控制：从v1到v2的设计动机.md)
-  - [Framework/Process 06 §3 procfs](../Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)
+  - [Framework/Process 06 §3 procfs](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md)
 
 # 写作标准
 

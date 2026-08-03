@@ -1736,7 +1736,7 @@ key changes:
 - **GenCC 跨代引用拷贝开销降低**(Native 辅助结构受益)
 - **GC 内存压力降低 → Minor GC 频率下降**
 
-**跨系列引用**:详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](01-Mechanism/Kernel/DM/09-DM-调优-性能与pcache.md) §3(已合并整合)。
+**跨系列引用**:详见 [Linux_Kernel/DM/09-DM-调优-性能与pcache](../../16-IO%20与存储/16.D-Device%20Mapper/09-DM-调优-性能与pcache.md) §3(已合并整合)。
 
 ---## 十、风险地图(GenCC 在什么场景下咬你一口)
 

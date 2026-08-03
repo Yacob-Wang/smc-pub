@@ -4,13 +4,13 @@
 >
 > **角色**：稳定性架构师 · oncall 工程师 · 耗电 / 唤醒风暴实战
 >
-> **强依赖**：[01 PowerManager 概览](01-PowerManager概览：Doze-Standby-唤醒机制全景.md) · [02 WakeLock](02-唤醒锁WakeLock：类型-获取-释放-实战.md) · [03 Doze / App Standby](03-Doze-App-Standby：后台冻结机制.md) · [06-Foundation/Graphics/07 卡顿实战](../../Graphics/07-卡顿-jank实战：trace+logcat5分钟定位.md)
+> **强依赖**：[01 PowerManager 概览](01-PowerManager概览：Doze-Standby-唤醒机制全景.md) · [02 WakeLock](02-唤醒锁WakeLock：类型-获取-释放-实战.md) · [03 Doze / App Standby](03-Doze-App-Standby：后台冻结机制.md) · [06-Foundation/Graphics/07 卡顿实战](../19-显示与渲染/07-卡顿-jank实战：trace+logcat5分钟定位.md)
 
 <!-- AUTHOR_ONLY:START -->
 ## 本篇定位
 
 - **目的**：把耗电 / wakeup 风暴 4 大真实案例（WakeLock 泄漏 / alarm 风暴 / sensor 风暴 / Doze 推迟）的完整排查流程讲清楚——oncall 5 分钟定位"耗电源头"
-- **不是**：不复述 WakeLock 类型 / flags（[02 §1](02-唤醒锁WakeLock：类型-获取-释放-实战.md) 详）；不复述 Doze 状态机（[03 §1](03-Doze-App-Standby：后台冻结机制.md) 详）；不复述 perfetto 基础（[Graphics 07 §2](../../Graphics/07-卡顿-jank实战：trace+logcat5分钟定位.md) 详）
+- **不是**：不复述 WakeLock 类型 / flags（[02 §1](02-唤醒锁WakeLock：类型-获取-释放-实战.md) 详）；不复述 Doze 状态机（[03 §1](03-Doze-App-Standby：后台冻结机制.md) 详）；不复述 perfetto 基础（[Graphics 07 §2](../19-显示与渲染/07-卡顿-jank实战：trace+logcat5分钟定位.md) 详）
 - **承接自**：[02 §6 5 类 oncall 排查](02-唤醒锁WakeLock：类型-获取-释放-实战.md) + [03 §8 5 类 oncall 排查](03-Doze-App-Standby：后台冻结机制.md)
 - **衔接去**：[01-Mechanism/App/Process_Exit](../../../01-Mechanism/App/Process_Exit/) / [02-Symptom/S06-耗电](../../../02-Symptom/S06-耗电.md)（待写） / [01-Mechanism/Kernel/IO/01-中断子系统](../../../01-Mechanism/Kernel/IO/01-中断子系统.md)
 
@@ -740,8 +740,8 @@ AOSP 17 PowerStats 监测 Modem power 异常
 | [01 PowerManager 概览](01-PowerManager概览：Doze-Standby-唤醒机制全景.md) | §1-7 | 5 大子系统全景 |
 | [02 WakeLock](02-唤醒锁WakeLock：类型-获取-释放-实战.md) | §5-6 | WakeLock 泄漏 + 5 类 oncall 模板 |
 | [03 Doze / App Standby](03-Doze-App-Standby：后台冻结机制.md) | §5 + §8 | app 被冻 5 类 + 5 oncall 模板 |
-| [06-Foundation/Graphics/07 卡顿实战](../../Graphics/07-卡顿-jank实战：trace+logcat5分钟定位.md) | 全文 | 同样的 5-step 模板 (trace + logcat + dumpsys) |
-| [06-Foundation/Network/08 诊断工具](../../Network/08-网络栈诊断工具：tcpdump-ss-netstat-ping.md) | 全文 | 网络诊断对照 |
+| [06-Foundation/Graphics/07 卡顿实战](../19-显示与渲染/07-卡顿-jank实战：trace+logcat5分钟定位.md) | 全文 | 同样的 5-step 模板 (trace + logcat + dumpsys) |
+| [06-Foundation/Network/08 诊断工具](../17-网络与连接/08-网络栈诊断工具：tcpdump-ss-netstat-ping.md) | 全文 | 网络诊断对照 |
 | [01-Mechanism/App/Process_Exit](../../../01-Mechanism/App/Process_Exit/) | §3 | 后台被冻被杀 |
 | [01-Mechanism/Kernel/IO/01-中断子系统](../../../01-Mechanism/Kernel/IO/01-中断子系统.md) | §6 | wakeup source 的中断起源 |
 | [02-Symptom/S05-后台被冻结](../../../02-Symptom/S05-后台被冻结.md) | 全文 | "为何 app 被冻" 用户视角 |

@@ -137,7 +137,7 @@ public class DataProvider extends ContentProvider {
 - 关键监控：`LoadedApk.installProvider` 耗时从 1200ms 降到 5ms
 - 关键监控：冷启动总时长从 1500ms 降到 600ms
 
-> 跨系列引用：见 [Activity · 启动 ANR 案例](../Activity/07_Activity_Launch_ANR.md)（启动 ANR 案例）
+> 跨系列引用：见 [Activity · 启动 ANR 案例](07_Activity_Launch_ANR.md)（启动 ANR 案例）
 
 ---
 
@@ -290,8 +290,8 @@ CursorWindow  ←  Cursor  ←  ContentResolver  ←  MainActivity
 - 关键监控：LeakCanary 报告 0 泄漏
 - 关键监控：用户反复进出 100 次后，Cursor 占用稳定
 
-> 跨系列引用：见 [Service · bindService 跨进程通信](../Service/03_Service_BindService_Path.md)（bindService 泄漏类比）
-> 跨系列引用：见 [Broadcast · 动态注册 Receiver 流程](../Broadcast/B02_Broadcast_Register.md)（ReceiverDispatcher 泄漏类比）
+> 跨系列引用：见 [Service · bindService 跨进程通信](03_Service_BindService_Path.md)（bindService 泄漏类比）
+> 跨系列引用：见 [Broadcast · 动态注册 Receiver 流程](B02_Broadcast_Register.md)（ReceiverDispatcher 泄漏类比）
 
 ---
 

@@ -16,14 +16,14 @@
 - **强依赖**：
   - [A01-启动链路总览](A01-启动链路总览.md)（必读前置）
   - [A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md)（必读前置）
-  - [Linux_Kernel/Process · 01-子系统全景](../../03-卷3-核心机制/13-进程与生命周期/01-进程子系统全景与边界契约.md)
+  - [Linux_Kernel/Process · 01-子系统全景](../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/01-进程子系统全景与边界契约.md)
   - [Stability S04-SWT 专题](../Stability/S04-SWT卡死与Watchdog专题.md)（init 卡死 → Watchdog 杀进程）
-  - [Dumpsys D02-Activity 与 AMS 视角](../Dumpsys/02-Activity与AMS视角.md)
+  - [Dumpsys D02-Activity 与 AMS 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md)
 - **承接自**：[A02 §4.2 T10 rest_init](A02-Bootloader到Kernel.md) → init 进程创建
 - **衔接去**：
   - 下一篇 [A04-Zygote + SystemServer](A04-Zygote+SystemServer.md) 深入 A3 下半段 + A4 阶段
   - 风险排查跳转 [C01-启动 ANR](../Stability/C01-启动ANR与BootCompleted.md)（如已写）
-  - 工具跳转 [D02-dumpsys + dropbox + bootstat 联用](../D-启动工具/D02-dumpsys+dropbox+bootstat联用.md)
+  - 工具跳转 [D02-dumpsys + dropbox + bootstat 联用](../11-系统启动性能专项/D-启动工具/D02-dumpsys+dropbox+bootstat联用.md)
 - **不重复内容**：
   - **不重复** [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/) 已深入的进程机制
   - **不重复** A01+A02 已有的硬件层内容
@@ -65,7 +65,7 @@
 
 # 写作标准
 
-- 本规范（[PROMPT-技术系列文章写作指南.md](../../../PROMPT-技术系列文章写作指南.md)）
+- 本规范（[PROMPT-技术系列文章写作指南.md](../../PROMPT-技术系列文章写作指南.md)）
 - 章节编号：# 总章 / # 章 / ## 节 / ### 子节
 - 必备：每章配 1 个 ASCII / mermaid 时序图
 - 必备：数据后接"所以呢"段
@@ -728,9 +728,9 @@ Watchdog 默认 30s 监测 SystemServer，但 **init 进程不被 Watchdog 监�
 
 | Step | 命令 | 目的 | 详见 |
 |:-----|:-----|:-----|:----|
-| 1 | `adb shell getprop \| grep init.svc` | 看 service 状态 | [D02 §3.5](../Dumpsys/02-Activity与AMS视角.md) |
-| 2 | `adb shell dumpsys bootstat` | 看启动耗时 | [D11 §3.4](../Dumpsys/11-稳定性监控集成.md) |
-| 3 | `adb shell dumpsys dropbox --print SYSTEM_BOOT` | 看启动历史 | [D11 §3.1](../Dumpsys/11-稳定性监控集成.md) |
+| 1 | `adb shell getprop \| grep init.svc` | 看 service 状态 | [D02 §3.5](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) |
+| 2 | `adb shell dumpsys bootstat` | 看启动耗时 | [D11 §3.4](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) |
+| 3 | `adb shell dumpsys dropbox --print SYSTEM_BOOT` | 看启动历史 | [D11 §3.1](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) |
 | 4 | `adb shell logcat -d -b crash` | 看 init crash | logcat crash buffer |
 
 ## 8.2 init 卡死取证脚本
@@ -1106,7 +1106,7 @@ on boot
 > **本篇不重复**：
 > - [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/) 已深入的进程机制
 > - [A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md) 已深入的硬件层
-> - [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md) 已深入的 AMS dumpsys
+> - [Dumpsys D02-AMS 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) 已深入的 AMS dumpsys
 >
 > **视角互补**：
 > - **本篇**：**"用户态第一棒"**——init 进程 + init.rc + property
@@ -1218,8 +1218,8 @@ on boot
 > - **上一篇**：[A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md)
 > - **下一篇**：[A04-Zygote + SystemServer](A04-Zygote+SystemServer.md)
 > - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
-> - **机制联动**：[Stability S04-SWT 专题](../Stability/S04-SWT卡死与Watchdog专题.md) · [Dumpsys D02-AMS 视角](../Dumpsys/02-Activity与AMS视角.md) · [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/)
-> - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [Perfetto 系列](../Perfetto/)
+> - **机制联动**：[Stability S04-SWT 专题](../Stability/S04-SWT卡死与Watchdog专题.md) · [Dumpsys D02-AMS 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) · [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/)
+> - **工具联动**：[Dumpsys D11-dropbox](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) · [Perfetto 系列](../Perfetto/)
 
 ---
 

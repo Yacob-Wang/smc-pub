@@ -56,7 +56,7 @@
 
 ### 第三部分：系统集成
 
-9. **[系统组成和启动流程](../System-Integration/01_System_Composition_And_Boot.md)**
+9. **[系统组成和启动流程](../01-Android%20系统全景与%20AOSP%2017/01_System_Composition_And_Boot.md)**
    - Android系统启动流程
    - 各分区在启动中的作用
    - 分区加载顺序
@@ -221,9 +221,9 @@ adb shell mount | grep -E "system|vendor|product"
 
 ## 🔗 相关文档
 
-- [ACK内核编译与刷入指南](../05_Linux_Kernel/Architecture/ACK_Build_And_Flash_Complete_Guide.md)
-- [GKI 2.0 vs 非GKI完整指南](../05_Linux_Kernel/Architecture/GKI2.0_vs_Non_GKI_Complete_Guide.md)
-- [Android内核架构概述](../05_Linux_Kernel/Architecture/Android_Kernel_Architecture_Overview.md)
+- [ACK内核编译与刷入指南](2.A-GKI%20与内核模块化/ACK_Build_And_Flash_Complete_Guide.md)
+- [GKI 2.0 vs 非GKI完整指南](2.A-GKI%20与内核模块化/GKI2.0_vs_Non_GKI_Complete_Guide.md)
+- [Android内核架构概述](2.A-GKI%20与内核模块化/Android_Kernel_Architecture_Overview.md)
 
 ---
 

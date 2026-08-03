@@ -23,7 +23,7 @@
 | **ART 17 Async-Signal-Safety 强化** | ✓ ART 17 新增 | — |
 | ANR 详细机制 | — | [02-ANR_Trace 完整链路](02-ANR_Trace完整链路.md) |
 
-**承接自**：[05-JNI](../05-JNI/01-JNI完整解析.md) 详述了 JNI Native 调用；本篇**深入信号处理**——Native 崩溃如何被 ART 捕获并生成 trace。
+**承接自**：[05-JNI](../20.B-编译与执行/01-JNI完整解析.md) 详述了 JNI Native 调用；本篇**深入信号处理**——Native 崩溃如何被 ART 捕获并生成 trace。
 
 **衔接去**：[02-ANR_Trace 完整链路](02-ANR_Trace完整链路.md) 详解 ANR 检测；[03-ART17信号处理与ANR兜底 v2](03-ART17信号处理与ANR兜底v2-v2.md) 详述 ART 17 信号侧硬变化。
 
@@ -411,7 +411,7 @@ Linux 6.18 扩展了 `pidfds`（进程 fd）支持内核命名空间：
 
 - ART 17 利用 `pidfds` 实现**跨命名空间进程监控**
 - 容器化场景下 ANR 检测更可靠
-- 详见 [Linux_Kernel/DM/10-DM-排障-实战体系](../01-Mechanism/Kernel/DM/10-DM-排障-实战体系.md)
+- 详见 [Linux_Kernel/DM/10-DM-排障-实战体系](../../16-IO%20与存储/16.D-Device%20Mapper/10-DM-排障-实战体系.md)
 
 ### 7.4 ART 17 与 debuggerd 集成
 

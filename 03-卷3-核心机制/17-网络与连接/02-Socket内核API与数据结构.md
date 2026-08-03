@@ -21,8 +21,8 @@
 - **本篇系列角色**:Socket 系列第 2 篇「内核 API 与核心数据结构」(socket 系列 8 篇规划"第二篇章:核心机制深潜"的第 1 篇;与 01 总览的"四层架构图"对应——本篇把它填成可读源码)
 - **强依赖**:
   - [Socket 01-Socket总览](01-Socket总览.md)(§4.4 四层架构图——本篇全部按此架构展开)
-  - [IO 06-IO 与进程的深度耦合](../../IO/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md) §1-2(D 状态、wait queue 唤醒——socket 阻塞时关联)
-  - [epoll 01-epoll总览与核心机制](../epoll/01-epoll总览与核心机制.md)(socket 的 f_op->poll 是 epoll 监听的入口——本篇会展开 socket_file_ops 中的 poll)
+  - [IO 06-IO 与进程的深度耦合](../16-IO%20与存储/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md) §1-2(D 状态、wait queue 唤醒——socket 阻塞时关联)
+  - [epoll 01-epoll总览与核心机制](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md)(socket 的 f_op->poll 是 epoll 监听的入口——本篇会展开 socket_file_ops 中的 poll)
   - [VFS 04-VFS 与文件系统](../FS/04-VFS设计理念与统一接口.md)(VFS 基础:struct file、struct inode、struct file_operations 的关系——本篇讲 socket 与 VFS 的绑定)
 - **承接自**:01 §4.4 的"四层架构"——本篇把每一层的具体结构体与调用链展开
 - **衔接去**:本篇末尾会预告下一篇 [03-Socket连接生命周期:从创建到关闭](03-Socket连接生命周期.md) 讲 socket() → bind() → listen() → accept() → close() 的完整状态机
@@ -1399,7 +1399,7 @@ static __poll_t sock_poll(struct file *file, struct poll_table_struct *wait)
 **关键**：
 - `poll_wait` 把当前进程挂入 `sock->wq`（socket 的 wait queue）
 - `sock->ops->poll` 跳到协议族 poll（如 `tcp_poll`）
-- **这就是为什么 epoll 能监听 socket——见 [epoll 01](../epoll/01-epoll总览与核心机制.md) §3 详细机制**
+- **这就是为什么 epoll 能监听 socket——见 [epoll 01](../14-线程与%20Handler%20消息机制/14.A-epoll%20与事件循环/01-epoll总览与核心机制.md) §3 详细机制**
 
 ### 5.3 socket 的特殊 inode（sock_inode）
 
@@ -2093,7 +2093,7 @@ public void fetchData() {
 
 ## 篇尾衔接
 
-本篇把 socket 的"骨架"（API + 数据结构）展开为可读源码——下一篇 [03-Socket连接生命周期：从创建到关闭](../socket/03-Socket连接生命周期.md) 将以本篇为基础，展开 socket 对象的**完整生命周期**：
+本篇把 socket 的"骨架"（API + 数据结构）展开为可读源码——下一篇 [03-Socket连接生命周期：从创建到关闭](03-Socket连接生命周期.md) 将以本篇为基础，展开 socket 对象的**完整生命周期**：
 
 - **创建**：`socket()` → `__sys_socket` → `sock_create` → 协议族 create（01/02 已涉及，本篇深化）
 - **绑定**：`bind()` → `sock->ops->bind` → `inet_bind` / `unix_bind`（端口冲突、抽象命名空间）

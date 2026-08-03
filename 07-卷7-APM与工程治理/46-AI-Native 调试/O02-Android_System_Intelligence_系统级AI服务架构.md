@@ -28,7 +28,7 @@
 | **ASI 是什么 / 为什么需要** | ✓ 范式 + 边界 | — |
 | **进程模型 + 沙箱** | ✓ system_app + 隔离机制 | 详细进程隔离机制见 `Linux_Kernel/Process` |
 | **ContentProvider 范式** | ✓ 接口设计 | ContentProvider 内部实现见 `Android_Framework/ContentProvider` |
-| **4 大服务内部机制** | ✓ Live Caption / Now Playing / Smart Reply / Smart Linkify | 各服务用的 ML 模型细节见 [R04 TFLite](../01_AI_Native_Runtime/R04-TFLite运行时详解.md) |
+| **4 大服务内部机制** | ✓ Live Caption / Now Playing / Smart Reply / Smart Linkify | 各服务用的 ML 模型细节见 [R04 TFLite](46.A-端侧%20AI%20运行时/R04-TFLite运行时详解.md) |
 | **权限模型** | ✓ 调用边界 | — |
 | **风险地图** | ✓ ANR / 内存 / 功耗 | AICore 调度风险见 O03；端侧 LLM 风险见 O05 |
 | **实战案例** | 1 个（Live Caption 翻译延迟 800ms → 200ms） | — |
@@ -106,7 +106,7 @@ ASI (Android System Intelligence)
 - **Smart Reply**：Notification 智能回复建议（如"OK" / "马上到"）
 - **Smart Linkify**：聊天中识别地址/电话/航班号，转为可点击
 
-> **本篇不重复**：每个服务用的 ML 模型细节（ASR 模型、Music ID 模型、NLP 模型）见 [R04 TFLite](../01_AI_Native_Runtime/R04-TFLite运行时详解.md) + 各厂商 SDK。本篇专注**系统级服务层**的架构。
+> **本篇不重复**：每个服务用的 ML 模型细节（ASR 模型、Music ID 模型、NLP 模型）见 [R04 TFLite](46.A-端侧%20AI%20运行时/R04-TFLite运行时详解.md) + 各厂商 SDK。本篇专注**系统级服务层**的架构。
 
 ### 1.5 ASI 的历史演进
 
@@ -838,7 +838,7 @@ public class TranslationCache {
 - ASI 的进程隔离机制详见 `Linux_Kernel/Process`（CFS、cgroup、uclamp）
 - ASI 的 ContentProvider 机制详见 `Android_Framework/ContentProvider`（抽象层、权限、Binder）
 - ASI 服务的 Service 生命周期详见 `Android_Framework/Service`（onCreate/onStartCommand/onBind）
-- ASI 用的 ML 模型详见 [R04 TFLite](../01_AI_Native_Runtime/R04-TFLite运行时详解.md)（模型格式 + Delegate）
+- ASI 用的 ML 模型详见 [R04 TFLite](46.A-端侧%20AI%20运行时/R04-TFLite运行时详解.md)（模型格式 + Delegate）
 - ASI 在 Android 14+ 演进到 AICore 详见 O03（统一 AI 入口）
 
 ---

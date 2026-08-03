@@ -404,4 +404,4 @@ simg2img system.sparse.img system.raw.img
 
 **下一步学习**：
 - 了解编译配置选项，请阅读 [编译配置和选项](04_Build_Configuration_And_Options.md)
-- 了解系统集成，请阅读 [系统组成和启动](../03_System_Integration/01_System_Composition_And_Boot.md)
+- 了解系统集成，请阅读 [系统组成和启动](../01-Android%20系统全景与%20AOSP%2017/01_System_Composition_And_Boot.md)

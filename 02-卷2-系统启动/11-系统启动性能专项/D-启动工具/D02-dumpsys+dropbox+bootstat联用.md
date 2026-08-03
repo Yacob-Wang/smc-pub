@@ -16,7 +16,7 @@
 - **强依赖**：
   - [B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md)
   - [C01-C05 启动稳定性](../AOSP_Startup/)（5 篇 · 风险地图 + dumpsys 取证）
-  - [Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md)
+  - [Dumpsys D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md)
 - **承接自**：[D01-Perfetto Boot Trace](D01-Perfetto-Boot-Trace抓全栈启动时序.md)
 - **衔接去**：
   - 下一篇 [D03-bootchart 工具链](D03-bootchart工具链.md)
@@ -24,7 +24,7 @@
 - **不重复内容**：
   - **不重复** B01 已深入的 perfetto + bootchart
   - **不重复** C01-C05 已深入的 5 类启动问题
-  - **不重复** [D11-dropbox](../Dumpsys/11-稳定性监控集成.md) 已深入的 dropbox 工具
+  - **不重复** [D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) 已深入的 dropbox 工具
   - 本篇与之关系：**"启动场景" dumpsys + dropbox + bootstat 联用视角**——把三件套作为 oncall 排查的"金标准"
 - **本篇贡献**：让架构师能：
   - 联用 dumpsys + dropbox + bootstat 三件套排查启动问题
@@ -525,7 +525,7 @@ adb shell dumpsys dropbox --print KERNEL_PANIC_CONSOLE | tail -30
 > **本篇不重复**：
 > - [B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md) 已深入的 perfetto + bootchart
 > - [C01-C05 启动稳定性](../AOSP_Startup/) 已深入的 5 类启动问题
-> - [Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) 已深入的 dropbox 工具
+> - [Dumpsys D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) 已深入的 dropbox 工具
 >
 > **视角互补**：
 > - **本篇**：**"启动场景" 三件套联用视角**——5 大场景脚本
@@ -612,8 +612,8 @@ adb shell dumpsys dropbox --print KERNEL_PANIC_CONSOLE | tail -30
 > - **上一篇**：[D01-Perfetto Boot Trace](D01-Perfetto-Boot-Trace抓全栈启动时序.md)
 > - **下一篇**：[D03-bootchart 工具链](D03-bootchart工具链.md)
 > - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
-> - **机制联动**：[B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md) · [Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md)
-> - **工具联动**：[Dumpsys D11-dropbox](../Dumpsys/11-稳定性监控集成.md) · [D04-启动期综合调试](D04-启动期dumpsys-systrace-traceview综合.md)
+> - **机制联动**：[B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md) · [Dumpsys D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md)
+> - **工具联动**：[Dumpsys D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) · [D04-启动期综合调试](D04-启动期dumpsys-systrace-traceview综合.md)
 
 ---
 

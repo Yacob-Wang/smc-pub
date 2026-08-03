@@ -76,7 +76,7 @@ def test_watchdog_light_keeps_anchor() -> None:
 def test_art_heavy_keeps_body() -> None:
     raw = (
         REPO
-        / "01-Mechanism/Runtime/ART/08-对比与演进/04-监控与诊断基础设施.md"
+        / "03-卷3-核心机制/20-ART 运行时/20.D-信号与Hook/04-监控与诊断基础设施.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "ART should strip")
@@ -240,7 +240,9 @@ def test_mm_blockquote_meta() -> None:
 
 def test_epoll_pre_title_preamble() -> None:
     raw = (
-        REPO / "01-Mechanism/Kernel/epoll/01-epoll总览与核心机制.md"
+        REPO
+        / "03-卷3-核心机制/14-线程与 Handler 消息机制/14.A-epoll 与事件循环"
+        / "01-epoll总览与核心机制.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "epoll should strip pre-title preamble")

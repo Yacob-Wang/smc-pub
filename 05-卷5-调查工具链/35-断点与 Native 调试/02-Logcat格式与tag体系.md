@@ -4,7 +4,7 @@
 >
 > **角色**：稳定性架构师 · oncall 工程师 · 自定义 log
 >
-> **强依赖**：[Logcat_Complete_Guide](./Logcat_Complete_Guide.md) · [06-Foundation/SELinux/04-AVC与avc_denied](../../SELinux/04-AVC与avc_denied：从一次denied反推策略.md)
+> **强依赖**：[Logcat_Complete_Guide](./Logcat_Complete_Guide.md) · [06-Foundation/SELinux/04-AVC与avc_denied](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md)
 
 <!-- AUTHOR_ONLY:START -->
 ## 本篇定位
@@ -12,7 +12,7 @@
 - **目的**：把 logcat 行的完整格式 + 5 大 buffer + tag 体系 + level 体系 + 自定义 tag 5 大块讲清楚——oncall 5 秒从一行 logcat 读到完整信息
 - **不是**：不复述 [Logcat_Complete_Guide](./Logcat_Complete_Guide.md) 基础命令（本文是它的体系化扩展）
 - **承接自**：[Logcat_Complete_Guide §1 基础命令](./Logcat_Complete_Guide.md)（本文讲"行格式 + 体系"）
-- **衔接去**：[03 Logcat 过滤与持久化](03-Logcat过滤与持久化.md) / [04 Logcat 与 SELinux/avc](04-Logcat与SELinux-avc-denied行解读.md) / [06-Foundation/SELinux/04-AVC与avc_denied](../../SELinux/04-AVC与avc_denied：从一次denied反推策略.md)
+- **衔接去**：[03 Logcat 过滤与持久化](03-Logcat过滤与持久化.md) / [04 Logcat 与 SELinux/avc](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/04-Logcat与SELinux-avc-denied行解读.md) / [06-Foundation/SELinux/04-AVC与avc_denied](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md)
 
 ## 校准决策日志
 
@@ -505,7 +505,7 @@ $ adb logcat -d -b crash | head -50
 $ adb logcat -d -b kernel | grep "avc: denied"
 07-27 10:30:00.123 0 0 I type=1400 audit(...): avc: denied { write } for ...
 
-# 2. 8 字段解读（见 [06-Foundation/SELinux/04 §1.2](../../SELinux/04-AVC与avc_denied：从一次denied反推策略.md)）
+# 2. 8 字段解读（见 [06-Foundation/SELinux/04 §1.2](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md)）
 ```
 
 ### 6.4 案例 4：Jank 帧
@@ -604,10 +604,10 @@ $ adb logcat -v threadtime
 |:----------------|:-----|
 | [Logcat_Complete_Guide](./Logcat_Complete_Guide.md) | 基础命令 |
 | [03 Logcat 过滤与持久化](03-Logcat过滤与持久化.md) | 下篇 |
-| [04 Logcat 与 SELinux/avc](04-Logcat与SELinux-avc-denied行解读.md) | SELinux 集成 |
-| [06-Foundation/SELinux/04-AVC与avc_denied](../../SELinux/04-AVC与avc_denied：从一次denied反推策略.md) | avc: denied 完整解读 |
+| [04 Logcat 与 SELinux/avc](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/04-Logcat与SELinux-avc-denied行解读.md) | SELinux 集成 |
+| [06-Foundation/SELinux/04-AVC与avc_denied](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md) | avc: denied 完整解读 |
 | [03-Forensics/Bugreport/02 §4 logcat/ 详解](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/02-Bugreport-目录结构全梳理.md) | bugreport 中 logcat 文件 |
-| [06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](../Tracing/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) | trace 对应 logcat |
+| [06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) | trace 对应 logcat |
 
 ---
 

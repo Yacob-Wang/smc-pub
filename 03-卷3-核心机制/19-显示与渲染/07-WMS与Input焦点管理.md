@@ -1011,7 +1011,7 @@ adb shell dumpsys input | grep -A 5 "InputMethod"
 
 ### 7.1 InputDispatcher 的焦点处理 — 详见 Input 系列 03
 
-[Input 系列-03-InputDispatcher](../Input/03-InputDispatcher.md) 详细分析了 `findFocusedWindowTargetsLocked()` 和 `findTouchedWindowTargetsLocked()` 的完整实现。关键要点：
+[Input 系列-03-InputDispatcher](../18-输入系统/18.A-Framework%20输入链路/03-InputDispatcher.md) 详细分析了 `findFocusedWindowTargetsLocked()` 和 `findTouchedWindowTargetsLocked()` 的完整实现。关键要点：
 
 ```cpp
 // frameworks/native/services/inputflinger/dispatcher/InputDispatcher.cpp
@@ -1049,7 +1049,7 @@ int32_t InputDispatcher::findFocusedWindowTargetsLocked(
 
 ### 7.2 Input ANR 的无焦点窗口检测 — 详见 Input 系列 06
 
-[Input 系列-06-Input ANR](../Input/06-InputANR.md) 详细分析了 ANR 的超时检测机制。与本篇相关的核心逻辑：
+[Input 系列-06-Input ANR](../18-输入系统/18.A-Framework%20输入链路/06-InputANR.md) 详细分析了 ANR 的超时检测机制。与本篇相关的核心逻辑：
 
 ```
 ANR 超时检测的两条路径:
@@ -1069,7 +1069,7 @@ ANR 超时检测的两条路径:
 
 ### 7.3 InputChannel 注册与焦点的关系 — 详见 Input 系列 04
 
-[Input 系列-04-InputChannel 与跨进程投递](../Input/04-InputChannel与跨进程投递.md) 详细分析了 `openInputChannel()` 和 `registerInputChannel()` 的过程。与本篇焦点管理的关联：
+[Input 系列-04-InputChannel 与跨进程投递](../18-输入系统/18.A-Framework%20输入链路/04-InputChannel与跨进程投递.md) 详细分析了 `openInputChannel()` 和 `registerInputChannel()` 的过程。与本篇焦点管理的关联：
 
 ```
 窗口必须完成 InputChannel 注册后，才能成为有效的焦点窗口:

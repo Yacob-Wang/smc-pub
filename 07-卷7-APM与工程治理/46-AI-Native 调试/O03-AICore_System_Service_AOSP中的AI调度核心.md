@@ -361,7 +361,7 @@ interface IDevice {
 **源码路径**：`hardware/interfaces/ai/aidl/`
 **基线版本**：AOSP android-14.0.0_r1
 
-> **本篇不重复**：AI HAL 内部细节见 [R02 AI HAL](../01_AI_Native_Runtime/R02-Android_AI_HAL.md)，本篇只讲 AICore 与 AI HAL 的边界。
+> **本篇不重复**：AI HAL 内部细节见 [R02 AI HAL](46.A-端侧%20AI%20运行时/R02-Android_AI_HAL.md)，本篇只讲 AICore 与 AI HAL 的边界。
 
 ### 2.6 4 层的数据流转
 
@@ -1013,7 +1013,7 @@ NPU/GPU 驱动
 - AICore 怎么调 AI HAL
 - 厂商扩展点
 
-> **本篇不重复**：AI HAL 内部细节见 [R02 AI HAL](../01_AI_Native_Runtime/R02-Android_AI_HAL.md)
+> **本篇不重复**：AI HAL 内部细节见 [R02 AI HAL](46.A-端侧%20AI%20运行时/R02-Android_AI_HAL.md)
 
 ### 7.5 AI HAL 的版本演进
 
@@ -1332,8 +1332,8 @@ public class RuntimeRegistry {
 - AICore 的内存治理与 `Linux_Kernel/Memory_Management` LMKD 协同
 - AICore 的 NPU Thermal 与 `Linux_Kernel/Power_Management` PM08 协同
 - AICore 的 JNI 边界与 `Runtime/ART` M5 协同
-- AICore 的端侧 LLM Runtime 与 [R08 端侧 LLM](../01_AI_Native_Runtime/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md) 协同
-- AICore 的 AI HAL 与 [R02 AI HAL](../01_AI_Native_Runtime/R02-Android_AI_HAL.md) 协同
+- AICore 的端侧 LLM Runtime 与 [R08 端侧 LLM](46.A-端侧%20AI%20运行时/R08-端侧LLM落地_Llama_Qwen_Phi在Android上的推理优化全链路.md) 协同
+- AICore 的 AI HAL 与 [R02 AI HAL](46.A-端侧%20AI%20运行时/R02-Android_AI_HAL.md) 协同
 
 ---
 

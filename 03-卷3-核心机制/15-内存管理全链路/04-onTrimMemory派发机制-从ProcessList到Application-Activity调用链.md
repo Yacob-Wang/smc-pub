@@ -16,7 +16,7 @@
 > **关联已有系列**:
 > - [02-7 等级设计动机](02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md) §3.4 派发时序图 ——本篇是它的"派发端"展开
 > - [03-AMS 决策链](03-AMS内存决策链：何时调trimMemory何时更新adj何时杀进程.md) §4.3 applyOomAdjLocked ——本篇是它的下游
-> - [Kernel/MM 13-保护与释放的协同](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md) §3.1 ——trimMemory 4 大释放源协同
+> - [Kernel/MM 13-保护与释放的协同](13-保护与释放的协同：adj体系与4大释放源.md) §3.1 ——trimMemory 4 大释放源协同
 
 ---
 
@@ -32,7 +32,7 @@
 - **不重复内容**:
   - 7 等级语义 → [02](02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md)
   - 决策端时序 → [03](03-AMS内存决策链：何时调trimMemory何时更新adj何时杀进程.md)
-  - 4 大释放源协同 → [Kernel/MM 13 §3.1](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md)
+  - 4 大释放源协同 → [Kernel/MM 13 §3.1](13-保护与释放的协同：adj体系与4大释放源.md)
   - App 侧释放最佳实践 → [08](08-App侧资源释放最佳实践-Glide-OkHttp-Bitmap-Handler.md)
 - **本篇核心价值**:把派发从"一次神秘调用" 拉到"链路可读" ——读完本篇,架构师应能回答:`Application.dispatchTrimMemory` 内部怎么遍历?Activity/Fragment/Service 的派发顺序是什么?派发失败时怎么处理?为什么有时 `Log.d("onTrimMemory", level)` 打 2 次?
 
@@ -75,8 +75,8 @@
 - **跨系列引用**:
   - [02 §3.4 派发时序图](02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md)
   - [03 §4.3 applyOomAdjLocked](03-AMS内存决策链：何时调trimMemory何时更新adj何时杀进程.md)
-  - [Kernel/MM 13 §3.1 trimMemory 设计](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md)
-  - [Framework/Process 02-AMS 冷启动判定](../Process/02-AMS-冷启动判定与进程启动链路.md) §3(进程状态识别)
+  - [Kernel/MM 13 §3.1 trimMemory 设计](13-保护与释放的协同：adj体系与4大释放源.md)
+  - [Framework/Process 02-AMS 冷启动判定](../13-进程与生命周期/13.B-进程生命周期/02-AMS-冷启动判定与进程启动链路.md) §3(进程状态识别)
 
 # 写作标准
 

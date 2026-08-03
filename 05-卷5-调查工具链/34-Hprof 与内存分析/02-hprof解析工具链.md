@@ -75,8 +75,8 @@
   - [01 §3 二进制结构](01-hprof原理与文件格式.md#3-hprof-二进制文件结构header--record--tag)——理解工具怎么读取
   - [01 §4 5 大 RECORD 类型](01-hprof原理与文件格式.md#4-关键-record-详解string--class--instance--root)——理解工具显示什么
 - **跨系列引用**:
-  - [AmCommand 04-堆内存转储 dumpheap 详解](AmCommand/04-堆内存转储-dumpheap详解.md)——`am dumpheap` 触发流程
-  - [Dumpsys 04-内存分析](Dumpsys/04-内存分析.md)——`dumpsys meminfo` 实时对照
+  - [AmCommand 04-堆内存转储 dumpheap 详解](../33-Dumpsys%20·%20Bugreport%20·%20DropBox/04-堆内存转储-dumpheap详解.md)——`am dumpheap` 触发流程
+  - [Dumpsys 04-内存分析](../33-Dumpsys%20·%20Bugreport%20·%20DropBox/04-内存分析.md)——`dumpsys meminfo` 实时对照
   - [Perfetto 04-定制化实战:ANR 后自动抓取 trace](Perfetto/04-定制化实战：ANR后自动抓取trace.md)——本篇 §1.3 第 3 条路径
 
 # 写作标准

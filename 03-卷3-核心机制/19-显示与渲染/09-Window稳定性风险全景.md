@@ -1387,7 +1387,7 @@ Window 系统的稳定性风险贯穿 App → WMS → SurfaceFlinger 三层架�
 - 焦点管理的详细机制，详见 [07-WMS 与 Input 焦点管理](07-WMS与Input焦点管理.md)
 - WMS 锁竞争与 Watchdog 超时，详见 [10-WMS 锁竞争与 Watchdog](10-WMS锁竞争与Watchdog.md)
 - Surface 生命周期与 SurfaceFlinger 交互，详见 [05-Surface 管理与 SurfaceFlinger 交互](05-Surface管理与SurfaceFlinger交互.md)
-- Input ANR 的触发与裁决流程，详见 [Input 系列-06-Input ANR](../Input/06-InputANR.md)
+- Input ANR 的触发与裁决流程，详见 [Input 系列-06-Input ANR](../18-输入系统/18.A-Framework%20输入链路/06-InputANR.md)
 
 ---
 

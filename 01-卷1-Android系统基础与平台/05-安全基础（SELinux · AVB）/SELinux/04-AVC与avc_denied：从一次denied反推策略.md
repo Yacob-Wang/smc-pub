@@ -497,7 +497,7 @@ $ adb shell restorecon -v /init.rc
 | [06 常见稳定性问题](06-常见稳定性问题：service-crash.neverallow.build-失败.md) | 下篇讲 SELinux 引起的 7 大症状 |
 | [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | Perfetto trace 怎么结合 SELinux denied 看 |
 | [05-Governance/Security](../../../05-Governance/Security/) | 治理：denied 怎么门禁 / 审批 |
-| [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../Tools/Android_Tools/Logcat_Complete_Guide.md) | logcat 过滤 denied 的 5 条命令 |
+| [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../05-卷5-调查工具链/35-断点与%20Native%20调试/Logcat_Complete_Guide.md) | logcat 过滤 denied 的 5 条命令 |
 
 ---
 

@@ -154,7 +154,7 @@ Android 启动可以分为以下几个主要阶段：
 
 #### 关联知识
 
-- 参考 [ARM64系统调用机制](../syscalls/02-ARM64系统调用机制.md)
+- 参考 [ARM64系统调用机制](../../../01-卷1-Android系统基础与平台/04-Linux%20Kernel%20基础（Android%20视角）/4.A-系统调用/02-ARM64系统调用机制.md)
 - 参考 [Bootloader到Kernel启动](08-Bootloader到Kernel启动.md)
 
 ### 阶段三：Init 进程阶段

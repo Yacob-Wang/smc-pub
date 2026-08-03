@@ -19,5 +19,5 @@ ftrace 是 Perfetto 的数据来源——理解 ftrace 才能解释 Perfetto 里
 
 ---
 
-**状态**：🚧 骨架完成，内容撰写中
+**状态**：📋 骨架完成，待撰写
 **生成**：sync_book_index.py（源：00-Meta/书籍目录-v1.md）

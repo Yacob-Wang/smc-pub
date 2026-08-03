@@ -15,8 +15,8 @@
 >
 > **关联已有系列**(本篇末"附录 C"展开):
 > - [Kernel/Memory_Management 15 篇](../Kernel/Memory_Management/README.md)——本篇的"Kernel 视角对应篇"
-> - [Framework/Process 9 篇](../Process/README-进程架构演进系列.md)——进程视角,本篇是内存视角
-> - [Framework/Process_Exit 4 篇](../Process_Exit/README-杀进程系列.md)——杀进程视角,本篇 10 会与它对账
+> - [Framework/Process 9 篇](../13-进程与生命周期/README-进程架构演进系列.md)——进程视角,本篇是内存视角
+> - [Framework/Process_Exit 4 篇](../13-进程与生命周期/README-杀进程系列.md)——杀进程视角,本篇 10 会与它对账
 
 ---
 
@@ -63,10 +63,10 @@
 - **本系列 README**:README.md(待批 1 完成后补)
 - **本篇的强依赖**:无
 - **跨系列引用**:
-  - [Kernel/MM 01-Android 内存分类学](../Kernel/Memory_Management/01-Android内存分类学：5大管理职责与全景.md)——5 大管理职责全景
-  - [Kernel/MM 10-Framework 层内存账本](../Kernel/Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md)——本篇是它的全景定位
-  - [Framework/Process 9 篇](../Process/README-进程架构演进系列.md)——进程视角
-  - [Framework/Process_Exit 4 篇](../Process_Exit/README-杀进程系列.md)——杀进程视角
+  - [Kernel/MM 01-Android 内存分类学](01-Android内存分类学：5大管理职责与全景.md)——5 大管理职责全景
+  - [Kernel/MM 10-Framework 层内存账本](10-Framework层内存账本：ProcessRecord-5维14字段的设计.md)——本篇是它的全景定位
+  - [Framework/Process 9 篇](../13-进程与生命周期/README-进程架构演进系列.md)——进程视角
+  - [Framework/Process_Exit 4 篇](../13-进程与生命周期/README-杀进程系列.md)——杀进程视角
 
 # 写作标准
 
@@ -567,14 +567,14 @@ public void onTrimMemory(int level) {
 
 | 本篇涉及主题 | 跨系列引用 | 引用理由 |
 |------------|-----------|---------|
-| 5 大内存子系统全景 | [Kernel/MM 01-Android 内存分类学](../Kernel/Memory_Management/01-Android内存分类学：5大管理职责与全景.md) §2-3 | 5 大管理职责的"分配 / 跟踪 / 限额 / 保护 / 释放" 矩阵 |
-| ProcessRecord 14 字段账本 | [Kernel/MM 10-Framework 层内存账本](../Kernel/Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) §3 | 本篇是它的全景定位,**本系列 05 篇会扩展** |
-| adj 体系 | [Kernel/MM 13-保护与释放的协同](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md) §1.1 | adj 6 大常量 + 范围 -1000 ~ 1001 |
-| LMKD 6 大决策模块 | [Kernel/MM 09-杀进程决策子系统](../Kernel/Memory_Management/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) §3 | 本系列 03 篇会展开 AMS 何时调用它 |
-| 4 大释放源协同 | [Kernel/MM 13](../Kernel/Memory_Management/13-保护与释放的协同：adj体系与4大释放源.md) §3 | 本系列 09-10 篇会展开 FWK 视角 |
-| 进程生命周期 | [Framework/Process 9 篇](../Process/README-进程架构演进系列.md) | 进程视角,本系列是内存视角 |
-| 杀进程全链路 | [Framework/Process_Exit 4 篇](../Process_Exit/README-杀进程系列.md) | 杀进程视角,本系列 10 篇会与之对账 |
-| ART 堆 / scudo | [Kernel/MM 03-ART 堆与 GC](../Kernel/Memory_Management/03-ART堆与GC的设计动机：为什么这样设计.md) / [Kernel/MM 04-Native 堆与 scudo](../Kernel/Memory_Management/04-Native堆与分配器的设计动机：bionic-scudo的取舍.md) | ART 视角,本系列 02-08 引用 |
+| 5 大内存子系统全景 | [Kernel/MM 01-Android 内存分类学](01-Android内存分类学：5大管理职责与全景.md) §2-3 | 5 大管理职责的"分配 / 跟踪 / 限额 / 保护 / 释放" 矩阵 |
+| ProcessRecord 14 字段账本 | [Kernel/MM 10-Framework 层内存账本](10-Framework层内存账本：ProcessRecord-5维14字段的设计.md) §3 | 本篇是它的全景定位,**本系列 05 篇会扩展** |
+| adj 体系 | [Kernel/MM 13-保护与释放的协同](13-保护与释放的协同：adj体系与4大释放源.md) §1.1 | adj 6 大常量 + 范围 -1000 ~ 1001 |
+| LMKD 6 大决策模块 | [Kernel/MM 09-杀进程决策子系统](09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) §3 | 本系列 03 篇会展开 AMS 何时调用它 |
+| 4 大释放源协同 | [Kernel/MM 13](13-保护与释放的协同：adj体系与4大释放源.md) §3 | 本系列 09-10 篇会展开 FWK 视角 |
+| 进程生命周期 | [Framework/Process 9 篇](../13-进程与生命周期/README-进程架构演进系列.md) | 进程视角,本系列是内存视角 |
+| 杀进程全链路 | [Framework/Process_Exit 4 篇](../13-进程与生命周期/README-杀进程系列.md) | 杀进程视角,本系列 10 篇会与之对账 |
+| ART 堆 / scudo | [Kernel/MM 03-ART 堆与 GC](03-ART堆与GC的设计动机：为什么这样设计.md) / [Kernel/MM 04-Native 堆与 scudo](04-Native堆与分配器的设计动机：bionic-scudo的取舍.md) | ART 视角,本系列 02-08 引用 |
 
 ## 附录 D:本系列 11 篇地图速查表
 

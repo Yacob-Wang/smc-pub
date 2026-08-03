@@ -200,11 +200,11 @@ Window 系统与 Input 系统深度耦合，以下是两个系列的关键交叉
 
 | 交叉点 | Window 系列相关文章 | Input 系列相关文章 | 说明 |
 | --- | --- | --- | --- |
-| **焦点管理** | [07-WMS 与 Input 焦点管理](07-WMS与Input焦点管理.md) | [03-InputDispatcher](../Input/03-InputDispatcher.md) | WMS 计算焦点窗口 → InputDispatcher 使用焦点窗口分发按键事件 |
-| **InputChannel 注册** | [02-Window 的创建与添加](02-Window的创建与添加.md) | [04-InputChannel 与跨进程投递](../Input/04-InputChannel与跨进程投递.md) | addWindow 时创建 InputChannel → 注册到 InputDispatcher |
-| **窗口焦点丢失导致 ANR** | [09-Window 稳定性风险全景](09-Window稳定性风险全景.md) | [06-Input ANR](../Input/06-InputANR.md) | 焦点窗口为空 → InputDispatcher 等待超时 → ANR |
-| **窗口列表同步** | [07-WMS 与 Input 焦点管理](07-WMS与Input焦点管理.md) | [03-InputDispatcher](../Input/03-InputDispatcher.md) | InputMonitor 将窗口信息同步给 InputDispatcher 用于触摸命中测试 |
-| **WMS 锁阻塞 Input** | [10-WMS 锁竞争与 Watchdog](10-WMS锁竞争与Watchdog.md) | [06-Input ANR](../Input/06-InputANR.md) | WMS 锁竞争导致焦点更新延迟 → 级联引发 Input ANR |
+| **焦点管理** | [07-WMS 与 Input 焦点管理](07-WMS与Input焦点管理.md) | [03-InputDispatcher](../18-输入系统/18.A-Framework%20输入链路/03-InputDispatcher.md) | WMS 计算焦点窗口 → InputDispatcher 使用焦点窗口分发按键事件 |
+| **InputChannel 注册** | [02-Window 的创建与添加](02-Window的创建与添加.md) | [04-InputChannel 与跨进程投递](../18-输入系统/18.A-Framework%20输入链路/04-InputChannel与跨进程投递.md) | addWindow 时创建 InputChannel → 注册到 InputDispatcher |
+| **窗口焦点丢失导致 ANR** | [09-Window 稳定性风险全景](09-Window稳定性风险全景.md) | [06-Input ANR](../18-输入系统/18.A-Framework%20输入链路/06-InputANR.md) | 焦点窗口为空 → InputDispatcher 等待超时 → ANR |
+| **窗口列表同步** | [07-WMS 与 Input 焦点管理](07-WMS与Input焦点管理.md) | [03-InputDispatcher](../18-输入系统/18.A-Framework%20输入链路/03-InputDispatcher.md) | InputMonitor 将窗口信息同步给 InputDispatcher 用于触摸命中测试 |
+| **WMS 锁阻塞 Input** | [10-WMS 锁竞争与 Watchdog](10-WMS锁竞争与Watchdog.md) | [06-Input ANR](../18-输入系统/18.A-Framework%20输入链路/06-InputANR.md) | WMS 锁竞争导致焦点更新延迟 → 级联引发 Input ANR |
 
 ---
 

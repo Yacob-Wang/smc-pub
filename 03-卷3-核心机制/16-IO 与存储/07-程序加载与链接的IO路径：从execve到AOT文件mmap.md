@@ -6,7 +6,7 @@
 >
 > **目标读者**:Android 稳定性框架架构师(已熟悉 Process / MM / FS 基础)
 >
-> **强依赖**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md)(IO 链路全景) + [05-IO 与内存的深度耦合](05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md)(Page Cache 与 dirty 机制) + [06-IO 与进程的深度耦合](06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md)(D 状态与 IO 阻塞) + [PLE 01-程序加载全景图](../Program_Execution/01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md)(ELF / linker / Zygote 全景) + [PLE 02-ELF 文件格式深度解析](../Program_Execution/02-ELF文件格式深度解析-从可执行文件到内核视角.md)(ELF 数据结构) + [PLE 03-Bionic 动态链接器](../Program_Execution/03-Bionic动态链接器-linker64的工作机制.md)(linker64 实现) + [PLE 12-进程启动全景 Zygote fork](../Program_Execution/12-进程启动全景-Zygote-fork-第一帧.md)(Zygote fork 机制)
+> **强依赖**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md)(IO 链路全景) + [05-IO 与内存的深度耦合](05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md)(Page Cache 与 dirty 机制) + [06-IO 与进程的深度耦合](06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md)(D 状态与 IO 阻塞) + [PLE 01-程序加载全景图](../13-进程与生命周期/13.D-程序加载与执行链路/01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md)(ELF / linker / Zygote 全景) + [PLE 02-ELF 文件格式深度解析](../13-进程与生命周期/13.D-程序加载与执行链路/02-ELF文件格式深度解析-从可执行文件到内核视角.md)(ELF 数据结构) + [PLE 03-Bionic 动态链接器](../13-进程与生命周期/13.D-程序加载与执行链路/03-Bionic动态链接器-linker64的工作机制.md)(linker64 实现) + [PLE 12-进程启动全景 Zygote fork](../13-进程与生命周期/13.D-程序加载与执行链路/12-进程启动全景-Zygote-fork-第一帧.md)(Zygote fork 机制)
 >
 > **写作规范**:v5 单版指南(5 段作者前言 + 顶部 7-11 行元信息 + 案例 5 件套)
 
@@ -20,18 +20,18 @@
   - [01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md)（IO 链路全景）
   - [05-IO 与内存的深度耦合](05-IO与内存的深度耦合：Page-Cache脏页回写、回收路径、swap-IO.md)（Page Cache 与 dirty 机制）
   - [06-IO 与进程的深度耦合](06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md)（D 状态与 IO 阻塞）
-  - [PLE 01-程序加载全景图](../Program_Execution/01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md)（ELF / linker / Zygote 全景）
-  - [PLE 02-ELF 文件格式深度解析](../Program_Execution/02-ELF文件格式深度解析-从可执行文件到内核视角.md)（ELF 数据结构）
-  - [PLE 03-Bionic 动态链接器](../Program_Execution/03-Bionic动态链接器-linker64的工作机制.md)（linker64 实现）
-  - [PLE 12-进程启动全景 Zygote fork](../Program_Execution/12-进程启动全景-Zygote-fork-第一帧.md)（Zygote fork 机制）
+  - [PLE 01-程序加载全景图](../13-进程与生命周期/13.D-程序加载与执行链路/01-程序加载与执行全景图-从execve到第一行Java代码的完整链路.md)（ELF / linker / Zygote 全景）
+  - [PLE 02-ELF 文件格式深度解析](../13-进程与生命周期/13.D-程序加载与执行链路/02-ELF文件格式深度解析-从可执行文件到内核视角.md)（ELF 数据结构）
+  - [PLE 03-Bionic 动态链接器](../13-进程与生命周期/13.D-程序加载与执行链路/03-Bionic动态链接器-linker64的工作机制.md)（linker64 实现）
+  - [PLE 12-进程启动全景 Zygote fork](../13-进程与生命周期/13.D-程序加载与执行链路/12-进程启动全景-Zygote-fork-第一帧.md)（Zygote fork 机制）
 - **承接自**：
   - PLE 系列已讲 ELF 格式、linker64 实现、Zygote fork 机制——本篇从 **IO 视角**深入
   - 05、06 已建立 IO ↔ MM、IO ↔ Process 桥接——本篇是"Process + MM + IO 三系统联动"的集大成
 - **衔接去**：本篇是 IO 系列横切专题的最后一篇。读者如有需要，下一步可读 [08-Android 存储栈](08-Android存储栈：从FUSE、sdcardfs、StorageManager到块设备.md) 或 [10-IO 风险全景与诊断工具链](10-IO稳定性风险全景与诊断工具链.md)
 - **不重复内容**：
-  - **ELF 格式的字段细节**（ELF header / program header / section header）→ 详见 [PLE 02](../Program_Execution/02-ELF文件格式深度解析-从可执行文件到内核视角.md)
-  - **linker64 的符号解析、PLT/GOT、relro 机制** → 详见 [PLE 03](../Program_Execution/03-Bionic动态链接器-linker64的工作机制.md) / [PLE 04](../Program_Execution/04-符号解析与重定位-plt-got-relro全景.md)
-  - **DEX/OAT/ART 文件格式** → 详见 [PLE 06](../Program_Execution/06-DEX-ODEX-VDEX格式-为mmap而生的字节码.md)
+  - **ELF 格式的字段细节**（ELF header / program header / section header）→ 详见 [PLE 02](../13-进程与生命周期/13.D-程序加载与执行链路/02-ELF文件格式深度解析-从可执行文件到内核视角.md)
+  - **linker64 的符号解析、PLT/GOT、relro 机制** → 详见 [PLE 03](../13-进程与生命周期/13.D-程序加载与执行链路/03-Bionic动态链接器-linker64的工作机制.md) / [PLE 04](../13-进程与生命周期/13.D-程序加载与执行链路/04-符号解析与重定位-plt-got-relro全景.md)
+  - **DEX/OAT/ART 文件格式** → 详见 [PLE 06](../13-进程与生命周期/13.D-程序加载与执行链路/06-DEX-ODEX-VDEX格式-为mmap而生的字节码.md)
 
 ## 校准决策日志
 
@@ -91,10 +91,10 @@
 <!-- AUTHOR_ONLY:END -->
 
 
-  - **ClassLoader 体系** → 详见 [PLE 07](../Program_Execution/07-ART-ClassLoader体系-从BootClassLoader到PathClassLoader.md)
-  - **dex2oat 的 AOT 编译算法** → 详见 [PLE 09](../Program_Execution/09-AOT-JIT编译流水线-dex2oat与ART运行时编译.md)
-  - **Zygote fork 的 Process 视角** → 详见 [PLE 12](../Program_Execution/12-进程启动全景-Zygote-fork-第一帧.md)
-  - **APK ZIP / resources.arsc 格式** → 详见 [PLE 11](../Program_Execution/11-APK容器解析-ZIP-arsc-资源ID体系.md)
+  - **ClassLoader 体系** → 详见 [PLE 07](../13-进程与生命周期/13.D-程序加载与执行链路/07-ART-ClassLoader体系-从BootClassLoader到PathClassLoader.md)
+  - **dex2oat 的 AOT 编译算法** → 详见 [PLE 09](../13-进程与生命周期/13.D-程序加载与执行链路/09-AOT-JIT编译流水线-dex2oat与ART运行时编译.md)
+  - **Zygote fork 的 Process 视角** → 详见 [PLE 12](../13-进程与生命周期/13.D-程序加载与执行链路/12-进程启动全景-Zygote-fork-第一帧.md)
+  - **APK ZIP / resources.arsc 格式** → 详见 [PLE 11](../13-进程与生命周期/13.D-程序加载与执行链路/11-APK容器解析-ZIP-arsc-资源ID体系.md)
 
 - **本篇的核心价值**：**冷启动 60-80% 的耗时是程序加载 IO**——这是稳定性架构师优化冷启动的"金钥匙"。本篇让读者能直接从 Perfetto trace / systrace 中识别"哪些 IO 是程序加载 IO"、"每个阶段的 IO 耗时占比"、"如何优化"。
 
@@ -505,7 +505,7 @@ vm_fault_t filemap_fault(struct vm_fault *vmf) {
 
 ### 5.1 linker64 的整体流程
 
-详见 [PLE 03-Bionic 动态链接器](../Program_Execution/03-Bionic动态链接器-linker64的工作机制.md)。本节只关注 IO 视角：
+详见 [PLE 03-Bionic 动态链接器](../13-进程与生命周期/13.D-程序加载与执行链路/03-Bionic动态链接器-linker64的工作机制.md)。本节只关注 IO 视角：
 
 ```c
 // bionic/linker/linker.cpp 简化

@@ -616,4 +616,4 @@ task_struct 释放用 RCU 延迟（`call_rcu(&tsk->rcu, delayed_free_task)`）�
 | copy_process | `kernel/fork.c:1790` |
 | RCU 释放 | `kernel/fork.c:131`（free_task） |
 | Android 14 内核符号 | `vmlinux`（需 Android 内核 debug build） |
-| Framework 镜像 | [Framework/Process/06 §3.1 投影视角](../../03-卷3-核心机制/13-进程与生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) |
+| Framework 镜像 | [Framework/Process/06 §3.1 投影视角](06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) |

@@ -46,7 +46,7 @@
 - [F05 大模型日志分析](F05-大模型日志分析.md)（Native 解读）
 
 **跨系列引用**：
-- 端侧 LLM：[O05 端侧大模型系统集成](../02_AI_Native_OS/O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md)
+- 端侧 LLM：[O05 端侧大模型系统集成](O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md)
 - 监控基础：[Tools/Perfetto](../06-Foundation/Tools/) / Prometheus / Grafana（传统监控）
 
 ---
@@ -899,7 +899,7 @@ class RegressionVerifier:
 | 数据采集 | DropBoxManager | `frameworks/base/services/core/java/com/android/server/DropBoxManagerService.java` | AOSP 14+ | dropbox |
 | 数据采集 | Tombstone | `system/core/debuggerd/libdebuggerd/tombstone_proto.cpp` | AOSP 14+ | Native 崩溃 |
 | AI 引擎 | AICore | `frameworks/base/services/core/java/com/android/server/aiintegration/` | AOSP 14+ | AI 调度（O03） |
-| AI 引擎 | 端侧 LLM | 见 [O05](../02_AI_Native_OS/O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md) | AOSP 14+ | LLM 推理 |
+| AI 引擎 | 端侧 LLM | 见 [O05](O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md) | AOSP 14+ | LLM 推理 |
 | AI 引擎 | AI HAL | `hardware/interfaces/ai/` | AOSP 14+ | AI HAL |
 | 智能告警 | ActivityManager | `frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java` | AOSP 14+ | ANR 触发 |
 | 智能告警 | Watchdog | `frameworks/base/services/core/java/com/android/server/Watchdog.java` | AOSP 14+ | HandlerChecker |
@@ -985,7 +985,7 @@ class RegressionVerifier:
 | §3 AI 引擎 | AI_for_Stability | [F03 智能归因](F03-智能归因.md) | Java 归因核心 |
 | §3 AI 引擎 | AI_for_Stability | [F04 AI 预测 ANR](F04-AI预测ANR.md) | ANR 预警核心 |
 | §3 AI 引擎 | AI_for_Stability | [F05 大模型日志分析](F05-大模型日志分析.md) | Native 解读核心 |
-| §3 端云协同 | AI_Native_OS | [O05 端侧大模型系统集成](../02_AI_Native_OS/O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md) | 端侧 LLM 推理 |
+| §3 端云协同 | AI_Native_OS | [O05 端侧大模型系统集成](O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md) | 端侧 LLM 推理 |
 | §3 端云协同 | AI_Native_Runtime | [R02 AI HAL](../01_AI_Native_Runtime/R02-Android_AI_HAL_从Hardware_Abstraction到Vendor_Extension.md) | AI HAL 集成 |
 | §4 归因整合 | Runtime/Java_Crash | Java Crash 系列 | Java 堆栈格式 |
 | §4 归因整合 | Runtime/Native_Crash | Native Crash 系列 | Tombstone 格式 |

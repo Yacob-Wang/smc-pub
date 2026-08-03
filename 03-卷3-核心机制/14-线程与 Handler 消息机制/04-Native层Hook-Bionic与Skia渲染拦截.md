@@ -136,7 +136,7 @@
 └─────────────────────────────────────────────────────────────┘
 ```
 
-注:三种姿势的 ELF 格式基础详见 **[PLE-04-符号解析与重定位-plt-got-relro 全景](../01-Mechanism/Kernel/Program_Execution/04-符号解析与重定位-plt-got-relro全景.md)**,本章不重复展开。
+注:三种姿势的 ELF 格式基础详见 **[PLE-04-符号解析与重定位-plt-got-relro 全景](../13-进程与生命周期/13.D-程序加载与执行链路/04-符号解析与重定位-plt-got-relro全景.md)**,本章不重复展开。
 
 ---
 
@@ -574,7 +574,7 @@ HOOK_API(void, SkCanvas_drawCircle,
 └─────────────────────────────────────────────────────────────┘
 ```
 
-注:InputReader/InputDispatcher 完整机制详见 **[Input 系列文章](../Input/02-EventHub与InputReader.md)**(本章不重复展开)。
+注:InputReader/InputDispatcher 完整机制详见 **[Input 系列文章](../18-输入系统/18.A-Framework%20输入链路/02-EventHub与InputReader.md)**(本章不重复展开)。
 
 ### 4.2 EventHub Hook 点
 

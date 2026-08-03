@@ -11,7 +11,7 @@
 ## 本篇定位
 
 - oncall 7 大症状剧本第 7 篇（REBOOT）
-- 强依赖：[OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) / [02-Symptom/S06-REBOOT](../../../04-卷4-诊断方法论与稳定性症状/30-REBOOT/01-症状机制.md) / [04-Tool/Watchdog 系列](../../04-Tool/Watchdog/) 9 篇
+- 强依赖：[OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) / [02-Symptom/S06-REBOOT](../../04-卷4-诊断方法论与稳定性症状/30-REBOOT/01-症状机制.md) / [04-Tool/Watchdog 系列](../../04-Tool/Watchdog/) 9 篇
 - 衔接去：[OC08-KE 响应剧本](OC08-KE响应剧本.md)（KE 经常触发 REBOOT）
 
 ## 校准决策日志
@@ -299,9 +299,9 @@ AndroidRuntime: ART: JNI ERROR (app bug): local reference table overflow
 
 | 模块 | 路径 | 关键 |
 |:-----|:-----|:-----|
-| REBOOT 机制 | [../04-卷4-诊断方法论与稳定性症状/30-REBOOT/01-症状机制.md](../../../04-卷4-诊断方法论与稳定性症状/30-REBOOT/01-症状机制.md) | 4 类 |
+| REBOOT 机制 | [../04-卷4-诊断方法论与稳定性症状/30-REBOOT/01-症状机制.md](../../04-卷4-诊断方法论与稳定性症状/30-REBOOT/01-症状机制.md) | 4 类 |
 | Watchdog | [OC05-SWT 响应剧本](OC05-SWT响应剧本.md) | 4 层 |
-| pstore | [Kernel/01-Mechanism/Kernel/Partition/05-动态分区与super容器](../../01-Mechanism/Kernel/Partition/05-动态分区与super容器.md) | pstore |
+| pstore | [Kernel/01-Mechanism/Kernel/Partition/05-动态分区与super容器](../../01-卷1-Android系统基础与平台/02-AOSP%20源码结构与构建系统/2.B-分区架构演进/05-动态分区与super容器.md) | pstore |
 | dropbox | [Dumpsys/11-稳定性监控集成](../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/11-稳定性监控集成.md) | dropbox |
 | oncall 流程 | [OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) | 5/15/30 |
 

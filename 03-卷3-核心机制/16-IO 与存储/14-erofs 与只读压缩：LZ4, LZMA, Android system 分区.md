@@ -356,7 +356,7 @@ static int verity_verify_io(struct dm_verity_io *io)
 | **dm-verity 校验失败** | /system 被篡改 | 启动失败 / 黑屏 | (本篇) |
 | **解压慢** | LZMA + 高压缩等级 | 启动慢 1-2s | (本篇) |
 | **挂载失败** | 超级块损坏 | 启动循环 | (本篇) |
-| **块设备读慢** | UFS 慢 | 启动慢 + IO 等待 | [IO 09 设备性能](../IO/09-存储设备与IO性能：UFS、eMMC、NVMe命令队列与延迟特性.md) |
+| **块设备读慢** | UFS 慢 | 启动慢 + IO 等待 | [IO 09 设备性能](09-存储设备与IO性能：UFS、eMMC、NVMe命令队列与延迟特性.md) |
 | **mmap 失败** | ro 限制 | 应用异常 | (本篇) |
 
 **对读者有什么用**:**5 类风险中,dm-verity 失败 + 解压慢最常见**——架构师做 erofs 调优,看压缩参数。

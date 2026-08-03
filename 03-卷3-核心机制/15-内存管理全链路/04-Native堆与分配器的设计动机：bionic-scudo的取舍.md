@@ -1758,7 +1758,7 @@ adb shell logcat -s libc | grep -E "scudo|ImageProc"
 
 - **ART 03-GC 系统**：[ART 分代假说](../Runtime/ART/03-GC系统/05-Generational-CC/01-分代假说.md) — 对比 ART 堆和 Native 堆的"自治"哲学
 - **ART 05-JNI 02**：[ART17-JNI 优化与 Hook 兼容性](../Runtime/ART/05-JNI/02-ART17-JNI优化与Hook兼容性-v2.md) — 验证 §1 Native 堆 vs JNI 协作
-- **Process 06**：[Framework 视角的 Kernel 进程接口](../Framework/Process/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) — cgroup memory.max 限额接口
+- **Process 06**：[Framework 视角的 Kernel 进程接口](../13-进程与生命周期/13.B-进程生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md) — cgroup memory.max 限额接口
 - **本系列 03**：[第 03 篇：ART 堆与 GC](03-ART堆与GC的设计动机：为什么这样设计.md) — 对比 ART 堆和 Native 堆的"双堆对照"
 - **本系列 05**：[第 05 篇：进程虚拟地址子系统](05-进程虚拟地址子系统：mmap-VMA-缺页的设计哲学.md) — Native 堆的 mmap 请求"翻译"成 vaddr + VMA 字段
 

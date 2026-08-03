@@ -11,7 +11,7 @@
 ## 本篇定位
 
 - 实战案例第 6 篇（与 E05 InputDispatcher 互补，把"渲染卡死"立成真实剧本）
-- 强依赖：[01-Mechanism/Framework/Window 系列](../../01-Mechanism/Framework/Window/) 11 篇 / [04-Tool/Perfetto 系列](../../04-Tool/Perfetto/) 5 篇 / [OC02-ANR 响应剧本](../Oncall/OC02-ANR响应剧本.md) / [02-Symptom/S01-ANR/01-症状机制](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-症状机制.md)
+- 强依赖：[01-Mechanism/Framework/Window 系列](../../01-Mechanism/Framework/Window/) 11 篇 / [04-Tool/Perfetto 系列](../../04-Tool/Perfetto/) 5 篇 / [OC02-ANR 响应剧本](../../05-卷5-调查工具链/36-Oncall%20与应急响应/OC02-ANR响应剧本.md) / [02-Symptom/S01-ANR/01-症状机制](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-症状机制.md)
 
 ## 校准决策日志
 
@@ -374,9 +374,9 @@ for (int i = 0; i < 1000; i++) {
 | 模块 | 路径 | 关键 |
 |:-----|:-----|:-----|
 | Window 机制 | [01-Mechanism/Framework/Window 系列](../../01-Mechanism/Framework/Window/) 11 篇 | Window |
-| Choreographer | [01-Mechanism/Framework/Window/05-Surface管理与SurfaceFlinger交互](../../../03-卷3-核心机制/19-显示与渲染/05-Surface管理与SurfaceFlinger交互.md) | SurfaceFlinger |
+| Choreographer | [01-Mechanism/Framework/Window/05-Surface管理与SurfaceFlinger交互](../../03-卷3-核心机制/19-显示与渲染/05-Surface管理与SurfaceFlinger交互.md) | SurfaceFlinger |
 | Perfetto | [04-Tool/Perfetto 系列](../../04-Tool/Perfetto/) 5 篇 | 抓 trace |
-| OC02 ANR | [OC02-ANR 响应剧本](../Oncall/OC02-ANR响应剧本.md) | 黄金 5/15/30 |
+| OC02 ANR | [OC02-ANR 响应剧本](../../05-卷5-调查工具链/36-Oncall%20与应急响应/OC02-ANR响应剧本.md) | 黄金 5/15/30 |
 | S01-ANR | [02-Symptom/S01-ANR/01-症状机制](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-症状机制.md) | ANR |
 
 ## B 路径对账

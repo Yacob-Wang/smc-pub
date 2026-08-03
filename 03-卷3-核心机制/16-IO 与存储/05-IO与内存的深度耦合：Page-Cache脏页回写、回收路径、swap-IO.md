@@ -6,7 +6,7 @@
 >
 > **目标读者**:Android 稳定性框架架构师(已熟悉 Process / MM / FS 基础)
 >
-> **强依赖**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) §4(关键数据结构速查) + [Memory 07-内存回收](../Memory_Management/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)(reclaim 算法) + [Memory 05-进程虚拟地址子系统](../Memory_Management/05-进程虚拟地址子系统：mmap-VMA-缺页的设计哲学.md)(Page Cache VMA)
+> **强依赖**:[01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) §4(关键数据结构速查) + [Memory 07-内存回收](../15-内存管理全链路/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)(reclaim 算法) + [Memory 05-进程虚拟地址子系统](../15-内存管理全链路/05-进程虚拟地址子系统：mmap-VMA-缺页的设计哲学.md)(Page Cache VMA)
 >
 > **写作规范**:v5 单版指南(5 段作者前言 + 顶部 7-11 行元信息 + 案例 5 件套)
 
@@ -18,16 +18,16 @@
 - **本篇系列角色**：横切专题第 1 篇（IO ↔ MM 桥接，系列价值高地之一）
 - **强依赖**：
   - [01-IO 子系统总览](01-IO子系统总览：从进程read、write到磁盘的完整链路.md) §4（关键数据结构速查）
-  - [Memory 07-内存回收](../Memory_Management/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)（reclaim 算法）
-  - [Memory 05-进程虚拟地址子系统](../Memory_Management/05-进程虚拟地址子系统：mmap-VMA-缺页的设计哲学.md)（Page Cache VMA）
+  - [Memory 07-内存回收](../15-内存管理全链路/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)（reclaim 算法）
+  - [Memory 05-进程虚拟地址子系统](../15-内存管理全链路/05-进程虚拟地址子系统：mmap-VMA-缺页的设计哲学.md)（Page Cache VMA）
 - **承接自**：
   - 01 总览已建立"Page Cache 是 IO 与 MM 共享数据结构"的认知（§7.1）
   - Memory 07 已讲 reclaim 算法的内存视角，本篇从 IO 视角看 reclaim
 - **衔接去**：下一篇 [06-IO 与进程的深度耦合](06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md) 将从 Process 视角看 IO 阻塞（D 状态、IO hang）
 - **不重复内容**：
   - **Page Cache 的 address_space / radix tree 数据结构** → 详见 [FS 08-页缓存机制详解](../FS/08-页缓存机制详解.md)
-  - **reclaim 算法的 LRU 链表、refault 机制** → 详见 [Memory 07-内存回收](../Memory_Management/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)
-  - **物理页组织（Node/Zone/Page）** → 详见 [Memory 06-物理内存组织](../Memory_Management/06-物理内存组织与伙伴系统：Node-Zone-Page的设计.md)
+  - **reclaim 算法的 LRU 链表、refault 机制** → 详见 [Memory 07-内存回收](../15-内存管理全链路/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md)
+  - **物理页组织（Node/Zone/Page）** → 详见 [Memory 06-物理内存组织](../15-内存管理全链路/06-物理内存组织与伙伴系统：Node-Zone-Page的设计.md)
   - **内核同步机制（writeback 工作队列）** → 详见 [FS 18-文件系统与Block层交互](../FS/18-文件系统与Block层交互.md)
 
 - **本篇的核心价值**:揭示**内存压力如何变成 IO 压力**——这是稳定性架构师最容易忽视的传导链。脏页回写、reclaim IO、swap-out 是内存子系统在"内存不够"时的三大 IO 通道。
@@ -253,7 +253,7 @@ Linux/Android 视角（对）：
 | `struct swap_info_struct` | `include/linux/swap.h` | `flags`、`bdev`、`inuse_pages` | swap 设备描述符 |
 | `struct backing_dev_info` | `include/linux/backing-dev.h` | `wb`、`capabilities`、`min_ratio` | per-device MM 策略 |
 
-> **📌 提醒**：`struct page` / `struct folio` 的字段细节详见 [Memory 06-物理内存组织](../Memory_Management/06-物理内存组织与伙伴系统：Node-Zone-Page的设计.md)。本节只列出 IO-内存耦合特有的几个结构体。
+> **📌 提醒**：`struct page` / `struct folio` 的字段细节详见 [Memory 06-物理内存组织](../15-内存管理全链路/06-物理内存组织与伙伴系统：Node-Zone-Page的设计.md)。本节只列出 IO-内存耦合特有的几个结构体。
 
 ---
 
@@ -1111,7 +1111,7 @@ UFS 队列打满
 
 1. **增大 zRAM**：`zram_size = 2048MB`（原来 1024MB）
 2. **调 swappiness**：`vm.swappiness = 100`（倾向 zRAM）
-3. **优化应用层内存**：排查内存泄漏（参考 [Memory 10-Framework 账本](../Memory_Management/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md)）
+3. **优化应用层内存**：排查内存泄漏（参考 [Memory 10-Framework 账本](../15-内存管理全链路/10-Framework层内存账本：ProcessRecord-5维14字段的设计.md)）
 
 **修复后**：swap 占用稳定在 1.5GB（全部 zRAM），系统响应流畅。
 

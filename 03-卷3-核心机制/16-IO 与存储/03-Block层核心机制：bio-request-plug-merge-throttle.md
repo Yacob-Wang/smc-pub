@@ -26,9 +26,9 @@
 - **衔接去**:下一篇 [04-IO 优先级与 cgroup IO 控制器](04-IO优先级与cgroup-IO控制器.md) 将深入 cgroup IO 限流与 ionice 的细节
 - **不重复内容**:
   - **IO 调度器算法(mq-deadline/bfq/kyber)** → 详见 [02-IO 调度器](02-IO调度器与多队列架构.md) §5-§7
-  - **Page Cache 路径(VFS → Page Cache)** → 详见 [FS 10-页缓存机制](../FileSystem/10-页缓存机制：Page%20Cache,%20address_space,%20脏页回写.md) / [FS 09-路径解析与挂载机制](../FileSystem/09-路径解析与挂载机制：path_lookup,%20mount%20namespace,%20overlay.md)
-  - **VFS 多态分发(file_operations)** → 详见 [FS 08-file_operations 多态分发机制](../FileSystem/08-file_operations%20多态分发机制（不是%20hook）.md)
-  - **文件 mmap 机制** → 详见 [FS 11-内存映射文件机制](../FileSystem/11-内存映射文件机制：mmap,%20缺页处理,%20Android%20应用.md)
+  - **Page Cache 路径(VFS → Page Cache)** → 详见 [FS 10-页缓存机制](10-页缓存机制：Page%20Cache,%20address_space,%20脏页回写.md) / [FS 09-路径解析与挂载机制](09-路径解析与挂载机制：path_lookup,%20mount%20namespace,%20overlay.md)
+  - **VFS 多态分发(file_operations)** → 详见 [FS 08-file_operations 多态分发机制](08-file_operations%20多态分发机制（不是%20hook）.md)
+  - **文件 mmap 机制** → 详见 [FS 11-内存映射文件机制](11-内存映射文件机制：mmap,%20缺页处理,%20Android%20应用.md)
 - **本篇的核心价值**:让稳定性架构师能**从 bio / request 视角定位 IO 性能瓶颈**——plug 卡死、merge 失败、bio 泄漏、throttle 配错等问题都直接体现在这些结构体上。
 
 ## 校准决策日志
