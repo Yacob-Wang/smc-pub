@@ -16,12 +16,13 @@
 | [阅读指南](阅读指南.md) | 入门 / 工程师 / 面试三条路径 |
 | [JD 匹配矩阵](JD匹配矩阵.md) | 面试维度 × 内容覆盖 |
 | [缺口一览](缺口一览.md) | 尚未写完的章节 |
+| [Harness 工程控制面](harness/README.md) | 目标 · 技术债务 · 长任务 · 系列更新流水 |
 | [术语表](术语表.md) | 稳定性常用术语 |
 | [案例索引](案例索引.md) | 跨卷案例速查 |
 | [版本基线](版本基线.md) | AOSP 17 + Kernel 6.18 约定 |
 | [书籍目录](书籍目录-v1.md) | 8 卷 50 章完整大纲 |
 
-更深的跨系列引用与专项索引见 [Reference/](Reference/)。
+更深的跨系列引用与专项索引见 [Reference/](Reference/)。Agent / 作者改系列正文须同步 `harness/SERIES_CHANGELOG.md`（见 `.cursor/rules/`）。
 
 ## 全书结构
 
@@ -40,4 +41,5 @@
 
 ## 作者向（不进站点正文导航）
 
-写作规范统一见仓库根 [`PROMPT-技术系列文章写作指南.md`](../PROMPT-技术系列文章写作指南.md)。历史工作文档在 `_archive/`。
+写作规范统一见仓库根 [`PROMPT-技术系列文章写作指南.md`](../PROMPT-技术系列文章写作指南.md)。  
+工程按 harness 管理：[`harness/`](harness/) + [`.cursor/rules/`](../.cursor/rules/)。历史工作文档在 `_archive/`。

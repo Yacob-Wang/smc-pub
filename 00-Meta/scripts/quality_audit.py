@@ -20,7 +20,7 @@ from pathlib import Path
 from datetime import datetime
 from collections import Counter, defaultdict
 
-REPO = Path(r'C:\Users\deepLife\Documents\GitHub\smc-pub')
+REPO = Path(__file__).resolve().parents[2]  # 00-Meta/scripts → 仓库根
 EXCLUDE = ['00-Meta/overrides', '00-Meta/reader', '00-Meta/web', 'docs', 'site', '_archive']
 
 

@@ -1,5 +1,5 @@
 # 编辑器与系统
-.cursor/
+# .cursor/ 入库：rules 等为 harness 工程约束（若日后出现本机密钥/索引，再单独 ignore 具体文件）
 .claude/
 .mavis/
 .obsidian/

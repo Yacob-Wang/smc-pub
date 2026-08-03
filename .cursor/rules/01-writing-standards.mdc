@@ -1,0 +1,37 @@
+---
+description: 正文写作规范 v6（基线、结构、质量等级）
+globs: "**/0[1-8]-卷*/**/*.md"
+alwaysApply: false
+---
+
+# 写作规范（v6 §0）
+
+完整规范：`PROMPT-技术系列文章写作指南.md`。冲突时以 **§0** 为准。
+
+## 硬性基线
+
+- AOSP：`android-17.0.0_r1`（API 37）
+- Kernel：`android17-6.18` GKI
+- 新文禁止 AOSP &lt; 14；存量 D/E 级按 `00-Meta/harness/TECH_DEBT.md` 排队重写
+
+## 结构最低要求
+
+1. 顶部元信息（blockquote ≤ 3 行，或 YAML frontmatter）
+2. 作者前言用成对 `<!-- AUTHOR_ONLY:START/END -->`（禁止嵌套新 marker）
+3. 七节骨架：开场 → 子问题 → 展开 → SOP → 案例 → Takeaway → 前置 → 下一步
+4. ≥1 源码路径、≥1 OEM/实战案例、数字标注「实测/估算/推测」
+
+## 质量等级（完稿自查）
+
+| 等级 | 标准 | 处置 |
+|:---:|:---|:---|
+| A/B | AOSP 17 + 篇幅达标 | 可发布 |
+| C | 适中 | 小修 |
+| D | AOSP 14–15 篇幅够 | 升基线到 17 |
+| E | &lt;14 或极短 | 重写或删除 |
+
+单篇校验可参考：`scripts/verify_gc_publish.py`。系列审计样板：`03-卷3-核心机制/16-IO 与存储/AUDIT_REPORT.md`。
+
+## 完成后
+
+追加一条到 `00-Meta/harness/SERIES_CHANGELOG.md`（见同目录 `02-series-changelog.mdc`）。

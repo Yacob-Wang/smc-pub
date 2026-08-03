@@ -213,6 +213,8 @@ EXCLUDE_PATH_PREFIXES = [
     "00-Meta/reader/",
     "00-Meta/scripts/",
     "00-Meta/overrides/",
+    # harness 为作者/Agent 控制面，不进公开站
+    "00-Meta/harness/",
     # web/ 由 prepare 单独拷到 docs/ 根（stylesheets/javascripts/about），勿进 00-Meta 导航
     "00-Meta/web/",
 ]

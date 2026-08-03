@@ -1,0 +1,43 @@
+---
+description: SMC 稳知库 harness 工程总则——目标、账本、Agent 强制流程
+alwaysApply: true
+---
+
+# SMC Harness 总则
+
+本仓库是**写书工程**，按 **harness 工程**管理：目标、规范、技术债务、长任务、系列更新均有账本，Agent 改内容必须同步账本。
+
+## 工程目标（单一真相源）
+
+见 `00-Meta/harness/GOALS.md`。摘要：
+
+1. 产出《Android 系统稳定性架构师》8 卷 50 章可发布正文（AOSP 17 + Kernel 6.18）。
+2. 读者可按症状 / 机制 / 治理三条路径通读；缺口与质量可审计。
+3. 用 harness 账本跟踪补章、重写、债务与长任务，禁止「只改文不记账」。
+
+## 账本（每次相关改动必更新）
+
+| 账本 | 路径 | 何时更新 |
+|:---|:---|:---|
+| 目标 | `00-Meta/harness/GOALS.md` | 目标/里程碑变更 |
+| 技术债务 | `00-Meta/harness/TECH_DEBT.md` | 发现/偿还债务 |
+| 长任务 | `00-Meta/harness/LONG_TASKS.md` | 开/推进/关闭跨会话任务 |
+| 系列更新 | `00-Meta/harness/SERIES_CHANGELOG.md` | **任何系列正文新增/重写/大改** |
+| 缺口 | `00-Meta/缺口一览.md` | 补章完成或发现新缺口 |
+
+入口：`00-Meta/harness/README.md`。
+
+## Agent 强制检查清单
+
+改动正文或系列结构前：
+
+1. 读 `LONG_TASKS.md` 当前 `in_progress` 任务，优先推进而非另开平行大任务。
+2. 写作规范以 `PROMPT-技术系列文章写作指南.md` **§0** 为准（v6）。
+3. 完成后：**追加** `SERIES_CHANGELOG.md` 一条；若关缺口则改 `缺口一览.md`；若引入/偿还债务则改 `TECH_DEBT.md`。
+4. 禁止臆造旧 module 路径（`01-Mechanism/`、`05-Governance/` 等已清空）。
+5. 不主动 commit，除非用户明确要求。
+
+## 不做的事
+
+- 不把 `_archive/`、`_tmp/`、`site/`、`docs/` 当正文真相源。
+- 不更新过期进度表却不核对磁盘（账本必须与文件存在性一致）。

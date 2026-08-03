@@ -1,0 +1,34 @@
+---
+description: 技术债务与长任务跟踪协议
+alwaysApply: true
+---
+
+# 技术债务与长任务
+
+## 技术债务 → `00-Meta/harness/TECH_DEBT.md`
+
+发现下列任一情况，**当场登记**（勿只口头说「以后再说」）：
+
+- 旧基线（AOSP &lt; 17 且计划保留的正文）
+- 极短骨架 / E 级篇幅
+- 死链、旧 module 路径引用
+- 脚本硬编码错误路径、审计快照过期
+- 账本与磁盘不一致（如缺口一览过期）
+
+字段：`ID` · `优先级(P0–P3)` · `类型` · `症状` · `偿还标准` · `状态` · `关联路径`
+
+偿还后：状态改 `done`，并在 `SERIES_CHANGELOG.md` 留痕（若涉及正文）。
+
+## 长任务 → `00-Meta/harness/LONG_TASKS.md`
+
+跨会话、跨多文件、预估 &gt;1 小时的工作必须建 `LT-xxx`：
+
+- 状态：`todo` | `in_progress` | `blocked` | `done`
+- 每推进一批：更新「进度」一行 + 勾选子项
+- **同时只允许 1 个** `in_progress` 写作长任务（工具/基建可并行 1 个）
+
+新开长任务前：先扫现有 `todo/in_progress`，避免重复开坑。
+
+## 与 CI 的边界
+
+GitHub Pages CI 只管链接/导航/前言剥离，**不管**写作质量与缺口。质量靠 `quality_audit.py` + 本账本人工/Agent 维护。
