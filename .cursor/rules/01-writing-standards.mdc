@@ -1,37 +1,68 @@
 ---
-description: 正文写作规范 v6（基线、结构、质量等级）
-globs: "**/0[1-8]-卷*/**/*.md"
-alwaysApply: false
+description: 正文写作硬约束——AOSP 17 / GKI 6.18 基线、真实源码、结构与完稿清单
+alwaysApply: true
 ---
 
-# 写作规范（v6 §0）
+# 写作规范（强制执行层）
 
-完整规范：`PROMPT-技术系列文章写作指南.md`。冲突时以 **§0** 为准。
+详规与提示词模板仍见 `PROMPT-技术系列文章写作指南.md`（§1–§10 方法论按需 `@`）。  
+**冲突时以本 MDC 为准。** 完稿后追加 `00-Meta/harness/SERIES_CHANGELOG.md`。
 
-## 硬性基线
+## 1. 版本基线（写进每篇顶部）
 
-- AOSP：`android-17.0.0_r1`（API 37）
-- Kernel：`android17-6.18` GKI
-- 新文禁止 AOSP &lt; 14；存量 D/E 级按 `00-Meta/harness/TECH_DEBT.md` 排队重写
+| 维度 | 必须使用的值 |
+|:---|:---|
+| **Android / AOSP** | `android-17.0.0_r1`（**API 37**） |
+| **Linux / GKI** | `android17-6.18`（**GKI 6.18 LTS**） |
+| 参考 SoC（举例） | Qualcomm SM8550 / MTK 天玑 9200 级 |
+| 参考设备（举例） | Pixel 7/8；或标注具体 OEM 机型 |
 
-## 结构最低要求
+硬性要求：
 
-1. 顶部元信息（blockquote ≤ 3 行，或 YAML frontmatter）
-2. 作者前言用成对 `<!-- AUTHOR_ONLY:START/END -->`（禁止嵌套新 marker）
-3. 七节骨架：开场 → 子问题 → 展开 → SOP → 案例 → Takeaway → 前置 → 下一步
-4. ≥1 源码路径、≥1 OEM/实战案例、数字标注「实测/估算/推测」
+- 新写 / 重写正文**只允许**上述基线；禁止以 AOSP 14 以下为主线。
+- 文内须出现可读基线句，例如：`AOSP android-17.0.0_r1 + Linux android17-6.18 (GKI)`。
+- 讲历史演进时：先写 17/6.18 行为，再对比前代，并标明版本范围。
+- 厂商 GKI / vendor 差异必须标「厂商 GKI」或具体 tag，不得写成 AOSP 主线事实。
+- 存量 AOSP 14–15 且篇幅够 → 质量 **D**（待升到 17）；&lt;14 或极短 → **E**（重写或删除）。**可发布默认要求 AOSP 17。**
 
-## 质量等级（完稿自查）
+## 2. 必须结合真实 AOSP / 内核代码
 
-| 等级 | 标准 | 处置 |
-|:---:|:---|:---|
-| A/B | AOSP 17 + 篇幅达标 | 可发布 |
-| C | 适中 | 小修 |
-| D | AOSP 14–15 篇幅够 | 升基线到 17 |
-| E | &lt;14 或极短 | 重写或删除 |
+禁止「只讲概念、不贴路径」的空文。每篇至少满足：
 
-单篇校验可参考：`scripts/verify_gc_publish.py`。系列审计样板：`03-卷3-核心机制/16-IO 与存储/AUDIT_REPORT.md`。
+1. **源码定位**：关键机制给出 AOSP 或内核树路径（如 `frameworks/base/...`、`system/core/init/...`、`kernel/...`）。
+2. **代码块标注**：
 
-## 完成后
+```c
+// path: system/core/init/init.cpp
+// commit: android-17.0.0_r1
+```
 
-追加一条到 `00-Meta/harness/SERIES_CHANGELOG.md`（见同目录 `02-series-changelog.mdc`）。
+3. **对账表**（文末或附录）：路径列表 + `已校对` / `待确认`；未核对的类名、属性、数值标「待确认」，禁止臆造。
+4. **可验证**：关键结论能对应到 dump / logcat / dmesg / perfetto / 命令；参数给出默认值与选用准则。
+5. **稳定性挂钩**：每个机制点明会在何种 Crash / ANR / OOM / 卡死 / 重启场景出事。
+
+## 3. 结构与版式（新文）
+
+优先（与公开站剥离一致）：
+
+- 顶部 blockquote **≤ 3 行**（系列/基线/读者）。
+- 作者前言仅用成对 `<!-- AUTHOR_ONLY:START -->` … `<!-- AUTHOR_ONLY:END -->`；禁止嵌套新 marker。
+- 正文七节：开场 → 核心子问题 → 详细展开 → 关键产出(SOP) → 实战案例 → Takeaway → 前置 → 下一步。
+- 字数以章型为准：章首节 ≥4000；章内节 ≥2500；内容重章 ≥5000（目标可更高）。勿再套用「一律 300 行」旧口径。
+
+## 4. FAIL 黑名单（出现即不合格）
+
+- 旧仓库路径当现行：`01-Mechanism/`、`02-Symptom/`、`05-Governance/` 等。
+- 臆造不存在的 AOSP 类 / 属性 / init 触发器。
+- 把首启慢（odsign / sepolicy 现编）写成「性能劣化」。
+- 中文标题链接里用半角冒号（`第7章:xxx`）。
+- AI 套话：「值得注意的是」「让我们深入探讨」「在当今快速发展的」等。
+- 无源码路径的大段机制断言；无案例的「治理结论」。
+
+## 5. 完稿最小清单
+
+- [ ] 基线写明 AOSP 17.0.0_r1 + android17-6.18
+- [ ] ≥1 真实源码路径与标注代码块；对账表有「已校对/待确认」
+- [ ] ≥1 脱敏实战案例（现象→定位→根因→修复）
+- [ ] Takeaway + 下一步链接；无 TODO/FIXME 草稿残留
+- [ ] 已追加 `00-Meta/harness/SERIES_CHANGELOG.md`；关缺口则更新 `缺口一览.md`

@@ -33,6 +33,6 @@
 | 规则 | 作用 |
 |:---|:---|
 | `.cursor/rules/00-smc-harness.mdc` | 总则（always） |
-| `.cursor/rules/01-writing-standards.mdc` | 卷内正文写作 |
+| `.cursor/rules/01-writing-standards.mdc` | 写作强制：AOSP 17 + GKI 6.18 + 真实源码（always） |
 | `.cursor/rules/02-series-changelog.mdc` | 强制变更记录 |
 | `.cursor/rules/03-tech-debt-long-tasks.mdc` | 债务与长任务协议 |

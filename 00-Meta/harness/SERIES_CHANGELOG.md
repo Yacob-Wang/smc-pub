@@ -5,6 +5,13 @@
 
 ## 最新
 
+### 2026-08-03 · writing-standards · 规范升级
+- **路径**：`.cursor/rules/01-writing-standards.mdc` · `PROMPT-技术系列文章写作指南.md` · `AGENTS.md`
+- **动作**：规范升级（§0 硬约束转为 always-on MDC）
+- **摘要**：明确写作基线 AOSP android-17.0.0_r1 + GKI android17-6.18；强制真实源码路径/对账表；废止「AOSP 14 可发布」旧 B 级口径；PROMPT 改为详规+方法论
+- **规范**：MDC 为准
+- **关联**：与 harness 写作入口对齐
+
 ### 2026-08-03 · harness · 基建
 - **路径**：`.cursor/rules/*.mdc` · `00-Meta/harness/*` · `00-Meta/缺口一览.md` · `00-Meta/scripts/quality_audit.py`
 - **动作**：新增（工程约束 + 账本）+ 缺口账本刷新 + 修审计脚本路径

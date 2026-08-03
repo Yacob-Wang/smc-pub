@@ -32,7 +32,7 @@ alwaysApply: true
 改动正文或系列结构前：
 
 1. 读 `LONG_TASKS.md` 当前 `in_progress` 任务，优先推进而非另开平行大任务。
-2. 写作规范以 `PROMPT-技术系列文章写作指南.md` **§0** 为准（v6）。
+2. 写作硬约束以 `.cursor/rules/01-writing-standards.mdc` 为准（AOSP 17 + GKI 6.18 + 真实源码）；详规/模板见 `PROMPT-技术系列文章写作指南.md`。
 3. 完成后：**追加** `SERIES_CHANGELOG.md` 一条；若关缺口则改 `缺口一览.md`；若引入/偿还债务则改 `TECH_DEBT.md`。
 4. 禁止臆造旧 module 路径（`01-Mechanism/`、`05-Governance/` 等已清空）。
 5. 不主动 commit，除非用户明确要求。

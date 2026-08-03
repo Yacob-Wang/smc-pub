@@ -41,5 +41,6 @@
 
 ## 作者向（不进站点正文导航）
 
-写作规范统一见仓库根 [`PROMPT-技术系列文章写作指南.md`](../PROMPT-技术系列文章写作指南.md)。  
+写作**强制约束**见 [`.cursor/rules/01-writing-standards.mdc`](../.cursor/rules/01-writing-standards.mdc)（AOSP 17 + GKI 6.18 + 真实源码）。  
+详规与提示词模板见 [`PROMPT-技术系列文章写作指南.md`](../PROMPT-技术系列文章写作指南.md)。  
 工程按 harness 管理：[`harness/`](harness/) + [`.cursor/rules/`](../.cursor/rules/)。历史工作文档在 `_archive/`。
