@@ -89,7 +89,7 @@ def test_render_series_feed_card_is_minimal() -> None:
         FeedCard(
             href="Activity/",
             title="Activity 系列导读",
-            media_module="01-Mechanism",
+            media_module="03-卷3-核心机制",
             media_color="forensics",
             media_text="Activity 系列导读",
             variant="series",
@@ -141,10 +141,10 @@ def test_module_index_series_cards_use_varied_colors() -> None:
 
 
 def test_subcategory_index_still_uses_cards() -> None:
-    art = REPO / "01-Mechanism/Runtime/ART"
+    art = REPO / "03-卷3-核心机制/20-ART 运行时"
     if not art.is_dir():
         return
-    html = build_subcategory_index("01-Mechanism", art)
+    html = build_subcategory_index("03-卷3-核心机制", art)
     _assert("jk-feed-grid" in html, "subcategory keeps feed grid")
     _assert("jk-article-list" not in html, "subcategory no article list")
     _assert("jk-feed-card--series" in html, "subcategory uses series cards")
@@ -154,15 +154,15 @@ def test_subcategory_index_still_uses_cards() -> None:
 def test_render_module_feed_card_is_minimal() -> None:
     html = render_feed_card(
         FeedCard(
-            href="01-Mechanism/",
-            title="Mechanism",
-            media_module="01-Mechanism",
-            media_text="Mechanism",
+            href="03-卷3-核心机制/",
+            title="卷 3 机制",
+            media_module="03-卷3-核心机制",
+            media_text="卷 3 机制",
             variant="module",
         )
     )
     _assert("jk-feed-card--module" in html, "module modifier class")
-    _assert("Mechanism" in html, "title in media text")
+    _assert("卷 3 机制" in html, "title in media text")
     _assert("jk-feed-label" not in html, "no module label")
     _assert("jk-feed-card__summary" not in html, "no summary")
     _assert("jk-feed-card__date" not in html, "no date")
@@ -182,7 +182,7 @@ def test_render_problem_index_html() -> None:
     _assert(
         'href="04-卷4-诊断方法论与稳定性症状/23-ANR 深度/"' in html, "ANR link href"
     )
-    _assert("ANR 症状" in html, "ANR link label")
+    _assert("ANR 深度" in html, "ANR link label")
     _assert("按问题进入" in html, "summary text")
     _assert('<details class="jk-collapsible" open' in html, "problem index open by default")
 

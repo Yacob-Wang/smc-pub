@@ -99,7 +99,7 @@ def main() -> int:
             raw = pages.read_text(encoding="utf-8") if pages.is_file() else ""
             if not pages_matches_series_nav(dir_path, raw):
                 bad_pages.append(str(dir_path.relative_to(DOCS_DIR)))
-            for fname in _article_files(dir_path):
+            for fname in _article_files(dir_path, include_guides=False):
                 article_count += 1
                 if has_not_in_nav(dir_path / fname):
                     bad_articles.append(str((dir_path / fname).relative_to(DOCS_DIR)))
@@ -120,7 +120,7 @@ def main() -> int:
 
     if bad_pages or bad_articles:
         return 1
-    print("OK: all leaf series list articles in nav (no not_in_nav)")
+    print("OK: all leaf series list articles in nav (guides excluded; no not_in_nav)")
     return 0
 
 

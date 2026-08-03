@@ -1,113 +1,43 @@
-﻿# smc-pub · Android 稳定性 / 性能 / 启动 / 治理 系列大本营
+﻿# 00-Meta · 地图与元信息
 
-> **项目**：Android 稳定性架构师实战大本营（smc-pub = Stability Matrix Course Pub）
+> **所属**：稳知库 · 《Android 系统稳定性架构师：从启动到性能》
 >
-> **基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS）
+> **基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（GKI）
 >
-> **目标读者**：Android 稳定性架构师 / 性能架构师 / BSP 工程师
->
-> **完成日期**：2026-07-19
+> **定位**：全书地图、学习路线、术语与引用索引。正文在 8 卷目录下。
 
 ---
 
-## 项目地图
+## 读者入口
 
-本仓库按 **AOSP 系统分层 + oncall 工作流**双轴设计 8 大分类：
+| 入口 | 说明 |
+|:-----|:-----|
+| [学习路线](学习路线-稳定性架构师.md) | 按角色与阶段通读 |
+| [阅读指南](阅读指南.md) | 入门 / 工程师 / 面试三条路径 |
+| [JD 匹配矩阵](JD匹配矩阵.md) | 面试维度 × 内容覆盖 |
+| [缺口一览](缺口一览.md) | 尚未写完的章节 |
+| [术语表](术语表.md) | 稳定性常用术语 |
+| [案例索引](案例索引.md) | 跨卷案例速查 |
+| [版本基线](版本基线.md) | AOSP 17 + Kernel 6.18 约定 |
+| [书籍目录](书籍目录-v1.md) | 8 卷 50 章完整大纲 |
 
-| 分类 | 角色 | 子模块 | 文件数 |
-|:-----|:-----|:-------|:------:|
-| **00-Meta/** | 项目地图 + 构建产物 | Reference/ + reader/ + web/ + scripts/ + overrides/ | 86 |
-| **01-Mechanism/** | 机制（按 AOSP 分层）| Hardware/ + Kernel/ + Native/ + Runtime/ + Framework/ + App/ | 441 |
-| **02-Symptom/** | 症状（11 大类 S01-S11）| S00 总览 + S01-ANR ~ S10-Measure + S11-Startup 4 子分类 | 49 |
-| **03-Forensics/** | 取证（8 大类 F00-F07）| F00-Overview + F01-ANR ~ F06-HANG-OOM + F07-Governance | 9 |
-| **04-Tool/** | 7 大工具 | Dumpsys/ + Watchdog/ + Perfetto/ + Hprof/ + AmCommand/ + ANR-Detection/ + Tracing/ | 90 |
-| **05-Governance/** | 8 大治理主题 | APM/ + OEM-BSP/ + CrossPlatform/ + LowEnd/ + AI-Native/ + AI-Debug/ + PerfMem/ + Security/ | 37 |
-| **06-Case/** | 案例库（跨分类）| Startup/（E01-E11 占位）| 4 |
-| **06-Foundation/** | 4 大基础主题 | Build-System/ + System-Integration/ + Dynamic-Updates/ + Tools/ | 37 |
+更深的跨系列引用与专项索引见 [Reference/](Reference/)。
 
-**总文档量**：753 个 md 文件 / 169 个子目录 / 20.29 MB
-
----
-
-## 核心索引（按阅读顺序）
-
-### 0. 项目入口（先看这个）
-
-1. **[README.md](../../README.md)**（仓库根）— 一页纸项目介绍
-2. **[阅读指南-稳定性架构师.md](Reference/阅读指南-稳定性架构师.md)** — 入门 / 工程师 / 架构师面试三条路径
-3. **[JD-匹配矩阵.md](Reference/JD-匹配矩阵.md)** — 13 维 JD × 系列覆盖度与面试优先级
-4. **[学习路线-稳定性架构师.md](学习路线-稳定性架构师.md)** — Phase 0→6 全量路线图
-5. **[缺口一览.md](缺口一览.md)** — P0/P1/P2 补全进度（读者向）
-6. **[缺项规划-P0补全路线图.md](缺项规划-P0补全路线图.md)** — 作者向执行清单（不进公开站）
-6. **[迁移日志.md](迁移日志.md)** — 2026-07-19 目录重构全记录
-7. **[引用矩阵.md](引用矩阵.md)** — 跨系列引用全景 + 21 项映射表
-
-### 1. 元信息（项目级）
-
-4. **[版本基线.md](版本基线.md)** — AOSP 17 + android17-6.18 基线声明
-5. **[术语表.md](术语表.md)** — Stability / Performance / Hook / ART 17 / K 6.18 关键术语
-6. **[案例索引.md](案例索引.md)** — 跨系列案例索引（CASE-STAB-01 ~ CASE-STAB-10）
-
-### 2. 核心入口（按需深读）
-
-- **症状总览**：[02-Symptom/S00-症状总览.md](../04-卷4-诊断方法论与稳定性症状/22-稳定性调查方法论/S00-症状总览.md)
-- **取证总览**：[03-Forensics/README.md](../03-Forensics/README.md)
-- **学习路线**：[02-Symptom/README-学习路线.md](README-学习路线.md)
-- **启动专项**：[02-Symptom/S11-Startup/README.md](../02-卷2-系统启动/README.md)
-- **启动案例**：[../08-卷8-案例实战/47-启动性能案例/README.md](../08-卷8-案例实战/47-启动性能案例/README.md)
-
----
-
-## 阅读路径建议
-
-### 路径 A：稳定性架构师（推荐）
+## 全书结构
 
 ```
-L00 学习路线 → S00 总览 → S01-S07 7 大症状 → F01-F06 对应取证 → 04-Tool 工具链 → 案例索引
+卷 1  Android 系统基础与平台     地基
+卷 2  系统启动                   时序主线
+卷 3  核心机制                   机制字典
+卷 4  诊断方法论与稳定性症状      主战场
+卷 5  调查工具链                 工具手册
+卷 6  性能工程                   性能专项
+卷 7  APM 与工程治理             事前治理
+卷 8  案例实战                   综合演练
 ```
 
-### 路径 B：性能架构师
+仓库根 [README.md](../README.md) 有症状速查表与各卷章节索引。全库正文扫表见 [文章总目录](../文章总目录.md)。
 
-```
-AOSP_Startup 22 篇 → 01-Mechanism/Runtime/ART (99 篇) → 04-Tool/Perfetto → 02-Symptom/S11-Startup/B 性能
-```
+## 作者向（不进站点正文导航）
 
-### 路径 C：BSP 工程师
-
-```
-01-Mechanism/Kernel (14 子系统) → 01-Mechanism/Hardware → 02-Symptom/S07-KE → 05-Governance/OEM-BSP
-```
-
-### 路径 D：AI Native 工程师
-
-```
-05-Governance/AI-Native (37 篇) → 05-Governance/AI-Debug → 02-Symptom/S08-AOSP17-K618
-```
-
----
-
-## 6 大分类设计原则
-
-1. **AOSP 分层（机制维度）**：`01-Mechanism/` 按 Hardware → Kernel → Native → Runtime → Framework → App 分层
-2. **症状/取证对齐（oncall 维度）**：`02-Symptom/S01-ANR` ↔ `03-Forensics/F01-ANR` 一一对应
-3. **工具独立（专业维度）**：`04-Tool/` 不混症状 / 不混机制，独立成类
-4. **治理统一（运营维度）**：`05-Governance/` 装 APM / OEM / 跨平台 / 低端机 / AI / 安全 等
-5. **案例分离（场景维度）**：`06-Case/` 跨系列案例库，不重复症状内的实战段
-6. **基础后置（依赖维度）**：`06-Foundation/` 装 BSP / 构建 / 杂项，最后查
-
----
-
-## 维护与更新
-
-- **添加新文档**：参考写作指南（[`PROMPT-技术系列文章写作指南.md`](../PROMPT-技术系列文章写作指南.md)）
-- **跨系列引用**：参考 [引用矩阵.md](引用矩阵.md) 的 21 项映射
-- **目录重构**：参考 [迁移日志.md](迁移日志.md) 的 3 阶段模板
-- **质量门**：单篇 300 行 / 9 项硬指标 / 4 附录 / 3 轮校准决策日志
-
----
-
-## 联系与反馈
-
-- **作者**：Mavis · Stability Matrix Course
-- **最后更新**：2026-07-19（阶段 3 完成）
-
+写作规范统一见仓库根 [`PROMPT-技术系列文章写作指南.md`](../PROMPT-技术系列文章写作指南.md)。历史工作文档在 `_archive/`。

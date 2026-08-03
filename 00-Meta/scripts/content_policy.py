@@ -53,7 +53,7 @@ TOP_NAV_GROUPS: list[tuple[str, list[tuple[str, str]]]] = [
         "查问题",
         [
             ("诊断", "04-卷4-诊断方法论与稳定性症状"),
-            ("工具", "05-卷5-调查工具链"),
+            ("取证工具", "05-卷5-调查工具链"),
             ("案例", "08-卷8-案例实战"),
         ],
     ),
@@ -67,7 +67,7 @@ TOP_NAV_GROUPS: list[tuple[str, list[tuple[str, str]]]] = [
         ],
     ),
     (
-        "工具与治理",
+        "性能与治理",
         [
             ("性能", "06-卷6-性能工程"),
             ("治理", "07-卷7-APM与工程治理"),
@@ -99,7 +99,7 @@ SERIES_NAV_TITLES: dict[str, dict[str, str]] = {
 # 各卷内部的「系列」就是章目录（12-Binder IPC 深度 …），目录名本身已经
 # 可读，按数字前缀天然有序，不需要再维护短名与顺序表。
 MODULE_SERIES_ORDER: dict[str, list[str]] = {
-    "00-Meta": ["Reference"],
+    "00-Meta": ["Reference", "Industry-Benchmark"],
 }
 
 # 首页「按问题进入」表格 — 集中维护，供 public_readme 与链接校验共用
@@ -114,14 +114,14 @@ PROBLEM_INDEX: list[tuple[str, list[tuple[str, str]]]] = [
         ],
     ),
     (
-        "Native Crash",
-        [("Native Crash", "04-卷4-诊断方法论与稳定性症状/25-Native 异常/")],
+        "ANR",
+        [("ANR 深度", "04-卷4-诊断方法论与稳定性症状/23-ANR 深度/")],
     ),
     (
-        "Java 异常 / ANR",
+        "Java / Native 崩溃",
         [
-            ("ANR 深度", "04-卷4-诊断方法论与稳定性症状/23-ANR 深度/"),
             ("Java 异常", "04-卷4-诊断方法论与稳定性症状/24-Java 异常/"),
+            ("Native 异常", "04-卷4-诊断方法论与稳定性症状/25-Native 异常/"),
         ],
     ),
     ("Binder / IPC", [("Binder", "03-卷3-核心机制/12-Binder IPC 深度/")]),
@@ -134,7 +134,7 @@ PROBLEM_INDEX: list[tuple[str, list[tuple[str, str]]]] = [
         ],
     ),
     (
-        "Watchdog / SWT",
+        "Watchdog / HANG",
         [
             (
                 "Watchdog",
@@ -144,77 +144,32 @@ PROBLEM_INDEX: list[tuple[str, list[tuple[str, str]]]] = [
         ],
     ),
     (
-        "Socket / epoll",
-        [
-            ("Socket", "03-卷3-核心机制/17-网络与连接/"),
-            (
-                "epoll",
-                "03-卷3-核心机制/14-线程与 Handler 消息机制/14.A-epoll 与事件循环/",
-            ),
-        ],
-    ),
-    (
         "启动专项",
         [
             ("卷 2 启动", "02-卷2-系统启动/"),
             ("启动案例", "08-卷8-案例实战/47-启动性能案例/"),
-            (
-                "Perfetto Boot Trace",
-                "05-卷5-调查工具链/31-Perfetto 全栈使用/",
-            ),
+            ("Perfetto", "05-卷5-调查工具链/31-Perfetto 全栈使用/"),
         ],
     ),
     (
-        "AOSP 17 + K 6.18 演进",
+        "性能与基线",
         [
-            (
-                "AOSP 17 入门",
-                "01-卷1-Android系统基础与平台/01-Android 系统全景与 AOSP 17/",
-            ),
+            ("性能基线", "06-卷6-性能工程/37-性能基线与回归防劣化/"),
+            ("低配机", "06-卷6-性能工程/40-低配机适配/"),
         ],
     ),
     (
-        "性能 vs 稳定性",
-        [("性能基线", "06-卷6-性能工程/37-性能基线与回归防劣化/")],
-    ),
-    (
-        "度量 + 门禁",
+        "APM / AI 调试",
         [
-            ("度量门禁", "06-卷6-性能工程/37-性能基线与回归防劣化/"),
             ("APM", "07-卷7-APM与工程治理/43-APM 架构与自研实践/"),
+            ("AI-Native", "07-卷7-APM与工程治理/46-AI-Native 调试/"),
         ],
     ),
     (
-        "OEM 厂商适配",
-        [("OEM Hook", "03-卷3-核心机制/14-线程与 Handler 消息机制/")],
-    ),
-    (
-        "跨平台 / HarmonyOS",
+        "安全",
         [
             (
-                "HAL / Treble",
-                "01-卷1-Android系统基础与平台/03-硬件抽象层（HAL）与 Treble 架构/",
-            ),
-        ],
-    ),
-    ("低端机治理", [("低配机适配", "06-卷6-性能工程/40-低配机适配/")]),
-    (
-        "端侧 AI / AI OS",
-        [
-            ("AI Native", "07-卷7-APM与工程治理/46-AI-Native 调试/"),
-            ("AI for Stability", "07-卷7-APM与工程治理/46-AI-Native 调试/"),
-        ],
-    ),
-    ("AI 辅助调试", [("AI-Debug", "07-卷7-APM与工程治理/46-AI-Native 调试/")]),
-    (
-        "性能 vs 内存",
-        [("PerfMem", "06-卷6-性能工程/37-性能基线与回归防劣化/")],
-    ),
-    (
-        "安全 + 稳定性",
-        [
-            (
-                "Security",
+                "SELinux / AVB",
                 "01-卷1-Android系统基础与平台/05-安全基础（SELinux · AVB）/",
             ),
         ],
@@ -227,12 +182,10 @@ PUBLIC_ROOT_FILES: list[str] = [
 
 PUBLIC_TOOLING_FILES = [
     "mkdocs.yml",
-    "scripts/content_policy.py",
-    "scripts/prepare_web_docs.py",
-    "scripts/public_readme.py",
-    "scripts/requirements-docs.txt",
-    "scripts/pack-content.ps1",
-    "scripts/pack-content.cmd",
+    "00-Meta/scripts/content_policy.py",
+    "00-Meta/scripts/prepare_web_docs.py",
+    "00-Meta/scripts/public_readme.py",
+    "00-Meta/scripts/requirements-docs.txt",
     ".github/workflows/pages.yml",
 ]
 

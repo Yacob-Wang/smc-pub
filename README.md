@@ -6,7 +6,7 @@
 >
 > **在线站点**：[https://yacob-wang.github.io/smc-pub/](https://yacob-wang.github.io/smc-pub/)
 >
-> 已成稿 **<!-- CATALOG-TOTAL:START -->565<!-- CATALOG-TOTAL:END -->** 篇（由脚本统计）
+> 已成稿 **<!-- CATALOG-TOTAL:START -->567<!-- CATALOG-TOTAL:END -->** 篇（由脚本统计）
 
 ---
 
@@ -42,7 +42,7 @@ Android 稳定性是个横跨全栈的领域——一个 ANR 可能源自 Kernel
 
 | 卷 | 内容 | 章数 | 文章数 |
 |:---|:-----|-----:|-------:|
-| [**地图 · 元信息**](00-Meta/) | 学习路线 · 阅读指南 · JD 匹配 · 缺口一览 · Reference | — | 19 |
+| [**地图 · 元信息**](00-Meta/) | 学习路线 · 阅读指南 · JD 匹配 · 缺口一览 · Reference | — | 21 |
 | [**卷 1 · Android 系统基础与平台**](01-卷1-Android系统基础与平台/) | Android 系统全景 · AOSP 源码 · HAL/Treble · Kernel 基础 · 安全基础（SELinux · AVB） | 4 | 53 |
 | [**卷 2 · 系统启动**](02-卷2-系统启动/) | Bootloader · Init · Zygote · SystemServer · 应用启动 · 启动性能 | 4 | 32 |
 | [**卷 3 · 核心机制**](03-卷3-核心机制/) | Binder · 进程 · 线程 · 内存 · IO · 网络 · 输入 · 显示 · ART · 电源 | 10 | 302 |
@@ -51,7 +51,7 @@ Android 稳定性是个横跨全栈的领域——一个 ANR 可能源自 Kernel
 | [**卷 6 · 性能工程**](06-卷6-性能工程/) | 性能基线 · 应用启动 · 滑动渲染 · 低端机 · WebView | 1 | 6 |
 | [**卷 7 · APM 与工程治理**](07-卷7-APM与工程治理/) | SLI/SLO · APM 自研 · 告警 · 灰度 · AI-Native 调试 | 2 | 45 |
 | [**卷 8 · 案例实战**](08-卷8-案例实战/) | 启动性能 · ANR 与无响应 · 崩溃与内存 · 整机稳定性 | 2 | 10 |
-| **合计** | [文章总目录](文章总目录.md) | **36** | **565** |
+| **合计** | [文章总目录](文章总目录.md) | **36** | **567** |
 
 <!-- CATALOG-STATS:END -->
 

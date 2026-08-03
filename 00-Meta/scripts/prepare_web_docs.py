@@ -151,7 +151,7 @@ def write_root_pages(
     *,
     groups: list[tuple[str, list[tuple[str, str]]]] = TOP_NAV_GROUPS,
 ) -> None:
-    """顶栏：首页 / 总目录 / 意图分组（查问题·学机制·工具与治理）。"""
+    """顶栏：首页 / 总目录 / 意图分组（查问题·学机制·性能与治理）。"""
     lines = [
         "nav:",
         f'  - {yaml_quote("首页")}: index.md',
@@ -476,16 +476,26 @@ def ensure_subcategory_landing_pages(mod_dir: Path, module: str) -> None:
         ensure_subcategory_landing_pages(sub, module)
 
 
-def _article_files(dir_path: Path) -> list[str]:
+def _is_series_guide(filename: str) -> bool:
+    """系列导读 / 总览：进落地页列表，但不塞进叶子侧栏（避免 00- 噪音）。"""
+    stem = Path(filename).stem
+    if stem.startswith("00-"):
+        return True
+    return "系列导读" in stem or stem.endswith("导读")
+
+
+def _article_files(dir_path: Path, *, include_guides: bool = True) -> list[str]:
     """目录内可作为篇章的 md（排除 README / index）。"""
-    files = [
-        p.name
-        for p in dir_path.iterdir()
-        if p.is_file()
-        and p.suffix.lower() == ".md"
-        and not p.name.lower().startswith("readme")
-        and p.name.lower() != "index.md"
-    ]
+    files = []
+    for p in dir_path.iterdir():
+        if not p.is_file() or p.suffix.lower() != ".md":
+            continue
+        name = p.name
+        if name.lower().startswith("readme") or name.lower() == "index.md":
+            continue
+        if not include_guides and _is_series_guide(name):
+            continue
+        files.append(name)
     return sorted(files, key=natural_key)
 
 
@@ -493,6 +503,12 @@ def _article_nav_label(path: Path) -> str:
     """侧栏 / 篇章横条用的短标题。"""
     content = path.read_text(encoding="utf-8", errors="replace").replace("\ufeff", "")
     title = get_title_from_markdown(content, path.name)
+    if _is_series_guide(path.name):
+        short = re.sub(r"^00[-_.\s、]+", "", title).strip()
+        short = re.sub(r"(系列)?导读$", "", short).strip(" ·-_")
+        if len(short) > 28:
+            short = short[:26] + "…"
+        return f"导读 · {short}" if short else "导读"
     m = re.match(r"^(\d+)[-_]", path.stem)
     if m:
         idx = m.group(1)
@@ -506,9 +522,9 @@ def _article_nav_label(path: Path) -> str:
 
 
 def _series_nav_entries(dir_path: Path) -> list[tuple[str, str]]:
-    """叶子系列 nav：系列总览 + 各篇章（供篇章横条与 nav 树读取）。"""
+    """叶子系列 nav：系列总览 + 正文篇章（导读不进侧栏，从落地页进入）。"""
     nav: list[tuple[str, str]] = [("系列总览", "index.md")]
-    for fname in _article_files(dir_path):
+    for fname in _article_files(dir_path, include_guides=False):
         nav.append((_article_nav_label(dir_path / fname), fname))
     return nav
 
@@ -624,7 +640,7 @@ def generate_module_pages(mod_dir: Path, module: str) -> None:
 def generate_pages_tree(docs_root: Path) -> None:
     """导航策略：
 
-    1. 顶层 .pages：首页 / 总目录 / 查问题 / 学机制 / 工具与治理（意图分组）
+    1. 顶层 .pages：首页 / 总目录 / 查问题 / 学机制 / 性能与治理（意图分组）
     2. module 层强制生成 index.md（Material grid cards 卡片式落地页）
     3. module 层 .pages：「本模块总览」指向 index.md + 子分类列表
     4. 叶子系列 .pages：系列总览 + 各篇章；Feed 总览页保留

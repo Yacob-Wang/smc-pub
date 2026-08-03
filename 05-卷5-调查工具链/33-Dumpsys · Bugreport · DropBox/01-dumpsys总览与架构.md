@@ -52,7 +52,7 @@
 - **上一篇**：无（系列首篇）
 - **下一篇**：[D02-Activity与AMS视角](02-Activity与AMS视角.md) 将深入 `dumpsys activity` 的 5 大子命令
 - **本系列 README**：[README-Dumpsys系列.md](README-Dumpsys系列.md)
-- **学习路线**：[L00-稳定性架构师学习路线](../02-Symptom/README-学习路线-稳定性架构师.md)
+- **学习路线**：[L00-稳定性架构师学习路线](../../../00-Meta/学习路线-稳定性架构师.md)
 - **质量评估**：[Q00-系列质量评估报告](../02-Symptom/README-系列质量评估报告.md)
 - **全局术语表**：[Reference/术语表.md](../../00-Meta/术语表.md)
 
@@ -803,7 +803,7 @@ $ adb shell dumpsys meminfo com.example.app | grep -E "TOTAL PSS|Views|Activitie
 > - **上一篇**：无（系列首篇）
 > - **下一篇**：[D02-Activity与AMS视角](02-Activity与AMS视角.md)
 > - **本系列 README**：[README-Dumpsys系列.md](README-Dumpsys系列.md)
-> - **学习路线**：[L00-稳定性架构师学习路线](../02-Symptom/README-学习路线-稳定性架构师.md)
+> - **学习路线**：[L00-稳定性架构师学习路线](../../../00-Meta/学习路线-稳定性架构师.md)
 > - **质量评估**：[Q00-系列质量评估报告](../02-Symptom/README-系列质量评估报告.md)
 
 ---

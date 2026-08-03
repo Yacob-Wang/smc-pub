@@ -106,12 +106,12 @@ def build_reader_homepage(repo_root: Path | None = None, docs_dir: Path | None =
 
     hero = render_page_hero(
         "稳知库 · Android 稳定性架构师系列",
-        "从 Linux 内核到 Framework、从 ART 到应用层 — 按 AOSP 系统分层与 oncall 工作流组织，"
-        "覆盖 Crash / ANR / OOM / 性能退化等 11 大症状。",
+        "从启动到性能 — 以稳定性问题为中心、横跨 Kernel / Native / Framework 的体系化参考。"
+        "按 8 卷 50 章组织：机制、症状、工具、治理一条链路。",
         chips=[
             "AOSP 17 + android17-6.18",
             f"{article_count} 篇文章",
-            "8 大分类",
+            "8 卷 50 章",
         ],
     )
 
@@ -129,7 +129,7 @@ def build_reader_homepage(repo_root: Path | None = None, docs_dir: Path | None =
         render_section_title("全站文章目录")
         + '<p class="jk-catalog-cta" markdown="0">'
         + f'共 <strong>{article_count}</strong> 篇文章。'
-        + '按 <strong>一级模块 → 二级系列 → 三级正文</strong> 浏览，表格支持跳转：'
+        + '按 <strong>卷 → 章 → 篇</strong> 浏览，表格支持跳转：'
         + f' <a href="{attr_href(to_site_href("文章总目录.md"))}">打开文章总目录</a>。'
         + "</p>\n\n"
     )

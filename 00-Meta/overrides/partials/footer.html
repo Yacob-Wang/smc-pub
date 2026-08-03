@@ -10,7 +10,7 @@
         <ul>
           <li><a href="{{ nav.homepage.url | url }}">首页</a></li>
           {% for item in nav.items %}
-            {% if item.title in ['查问题', '学机制', '工具与治理'] and item.children %}
+            {% if item.title in ['查问题', '学机制', '性能与治理'] and item.children %}
               <li><a href="{{ navutil.resolve_href(item) }}">{{ item.title }}</a></li>
             {% endif %}
           {% endfor %}
@@ -21,7 +21,7 @@
         <h3>模块入口</h3>
         <ul>
           {% for item in nav.items %}
-            {% if item.title in ['查问题', '学机制', '工具与治理'] and item.children %}
+            {% if item.title in ['查问题', '学机制', '性能与治理'] and item.children %}
               {% for child in item.children %}
                 <li><a href="{{ navutil.resolve_href(child) }}">{{ child.title }}</a></li>
               {% endfor %}
@@ -61,11 +61,7 @@
         <ul>
           <li><a href="{{ 'about/' | url }}">关于我</a></li>
           <li><a href="{{ 'about/collaborate/' | url }}">合作</a></li>
-          {% for item in nav.items %}
-            {% if item.title == 'Map' and item.children %}
-              <li><a href="{{ navutil.resolve_href(item) }}">Map</a></li>
-            {% endif %}
-          {% endfor %}
+          <li><a href="{{ '00-Meta/' | url }}">地图</a></li>
           {% if config.repo_url %}
           <li><a href="{{ config.repo_url }}" target="_blank" rel="noopener">GitHub</a></li>
           {% endif %}

@@ -64,7 +64,7 @@ class FeedCard:
     summary: str = ""
     label: str = ""
     date: str = ""
-    media_module: str = "01-Mechanism"
+    media_module: str = "03-卷3-核心机制"
     media_color: str = ""  # 可选 CSS slug 覆盖（系列卡片多色）
     media_text: str = ""
     variant: str = "default"  # default | series | module
