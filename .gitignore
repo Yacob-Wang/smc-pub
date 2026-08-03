@@ -47,6 +47,8 @@ tmp/
 
 # MkDocs / GitHub Pages 构建产物（docs/ 由 scripts/prepare_web_docs.py 生成）
 docs/
+docs._build/
+docs._old/
 site/
 .cache/
 dist/

@@ -3,7 +3,7 @@
 
 导航策略（分层，避免侧栏一次铺开）：
 1. 顶栏 Tab = 七大模块
-2. 模块页 = 系列目录（短名）
+2. 模块页 = 有序系列列表（自上而下即阅读顺序）
 3. 系列页 = 系列总览 Feed + 篇章横条跳转各篇（无左侧主侧栏）
 4. 有子目录的系列（如 ART）再展开一层子模块
 """
@@ -41,6 +41,7 @@ from feed_cards import (  # noqa: E402
     ArticleListItem,
     FeedCard,
     article_item_from_markdown,
+    extract_index_from_filename,
     landing_frontmatter,
     render_article_list,
     render_feed_grid,
@@ -52,6 +53,8 @@ from public_readme import build_public_readme  # noqa: E402
 
 REPO_ROOT = _SCRIPTS.parent.parent  # 适配阶段 3 移到 00-Meta/scripts/（原 _SCRIPTS.parent 是仓库根）
 DOCS_DIR = REPO_ROOT / "docs"
+DOCS_STAGING = REPO_ROOT / "docs._build"
+DOCS_OLD = REPO_ROOT / "docs._old"
 
 # 跨模块累计：文首作者前言剥离数（供 main 打印）
 _PREAMBLE_STRIPPED = 0
@@ -299,26 +302,24 @@ def _module_stats(mod_dir: Path, subdirs: list[Path]) -> tuple[int, int]:
     return series_count, article_count
 
 
-def _series_feed_cards(
+def _series_list_items(
     module: str,
     target_dir: Path,
     *,
     link_prefix: str = "",
-) -> list[FeedCard]:
-    cards: list[FeedCard] = []
+) -> list[ArticleListItem]:
+    """卷 / 子分类落地页：有序系列列表（自上而下即阅读顺序）。"""
+    items: list[ArticleListItem] = []
     for sub in _list_nav_subdirs(target_dir):
         short = _short_title(module, sub.name, sub)
-        cards.append(
-            FeedCard(
+        items.append(
+            ArticleListItem(
                 href=to_site_href(f"{link_prefix}{sub.name}/"),
                 title=short,
-                media_module=module,
-                media_color=series_media_slug(sub.name),
-                media_text=short,
-                variant="series",
+                index=extract_index_from_filename(sub.name),
             )
         )
-    return cards
+    return items
 
 
 def _article_list_items(dir_path: Path) -> list[ArticleListItem]:
@@ -375,7 +376,7 @@ def build_meta_module_index(module: str, mod_dir: Path) -> str:
 
 
 def build_module_index(module: str, mod_dir: Path) -> str:
-    """生成 module 落地页（News Feed 卡片式）。"""
+    """生成 module 落地页（有序系列列表，自上而下即阅读顺序）。"""
     if module == "00-Meta":
         return build_meta_module_index(module, mod_dir)
     title = MODULE_TITLES.get(module, module)
@@ -387,34 +388,37 @@ def build_module_index(module: str, mod_dir: Path) -> str:
     if blurb:
         lead_parts.append(blurb)
     if series_count:
-        lead_parts.append(f"本模块共 {series_count} 个系列、约 {article_count} 篇文章。")
+        lead_parts.append(
+            f"本模块共 {series_count} 个系列、约 {article_count} 篇文章。按顺序阅读。"
+        )
     lead = " · ".join(lead_parts)
 
     hero = render_page_hero(title, lead)
-    cards: list[FeedCard] = []
-
     if not subdirs:
+        items: list[ArticleListItem] = []
         readme = _pick_readme(mod_dir)
         if readme:
-            cards.append(
-                FeedCard(
+            items.append(
+                ArticleListItem(
                     href=to_site_href(readme.name),
                     title="本系列",
-                    media_module=module,
-                    media_color=series_media_slug(mod_dir.name),
-                    media_text="本系列",
-                    variant="series",
+                    index="01",
                 )
             )
     else:
-        cards = _series_feed_cards(module, mod_dir)
+        items = _series_list_items(module, mod_dir)
+
+    if items:
+        body = render_article_list(items, aria_label="本卷系列")
+    else:
+        body = '<p class="jk-article-list__empty">本卷尚未收录系列。</p>\n\n'
 
     footer = '\n<p class="jk-foot">返回 <a href="../">站点首页</a>。</p>\n'
-    return landing_frontmatter(title) + hero + render_feed_grid(cards) + footer
+    return landing_frontmatter(title) + hero + body + footer
 
 
 def build_subcategory_index(module: str, sub_dir: Path) -> str:
-    """生成子分类落地页（News Feed 卡片式）。"""
+    """生成子分类落地页（有序系列列表）。"""
     short = _short_title(module, sub_dir.name, sub_dir)
     subdirs = _list_nav_subdirs(sub_dir)
     series_count, article_count = _module_stats(sub_dir, subdirs)
@@ -422,10 +426,16 @@ def build_subcategory_index(module: str, sub_dir: Path) -> str:
 
     lead = ""
     if series_count:
-        lead = f"本层共 {series_count} 个系列、约 {article_count} 篇文章。"
+        lead = (
+            f"本层共 {series_count} 个系列、约 {article_count} 篇文章。按顺序阅读。"
+        )
 
     hero = render_page_hero(short, lead)
-    cards = _series_feed_cards(module, sub_dir)
+    items = _series_list_items(module, sub_dir)
+    if items:
+        body = render_article_list(items, aria_label="本层系列")
+    else:
+        body = '<p class="jk-article-list__empty">本层尚未收录系列。</p>\n\n'
     try:
         rel = sub_dir.relative_to(DOCS_DIR)
         if len(rel.parts) > 2:
@@ -436,7 +446,7 @@ def build_subcategory_index(module: str, sub_dir: Path) -> str:
     except ValueError:
         back_label = f"{module_title} 模块总览"
     footer = f'\n<p class="jk-foot">返回 <a href="../">{back_label}</a>。</p>\n'
-    return landing_frontmatter(short) + hero + render_feed_grid(cards) + footer
+    return landing_frontmatter(short) + hero + body + footer
 
 
 def build_series_landing_index(module: str | None, dir_path: Path) -> str:
@@ -641,7 +651,7 @@ def generate_pages_tree(docs_root: Path) -> None:
     """导航策略：
 
     1. 顶层 .pages：首页 / 总目录 / 查问题 / 学机制 / 性能与治理（意图分组）
-    2. module 层强制生成 index.md（Material grid cards 卡片式落地页）
+    2. module 层强制生成 index.md（有序系列列表落地页）
     3. module 层 .pages：「本模块总览」指向 index.md + 子分类列表
     4. 叶子系列 .pages：系列总览 + 各篇章；Feed 总览页保留
     """
@@ -649,7 +659,7 @@ def generate_pages_tree(docs_root: Path) -> None:
         mod_dir = docs_root / mod
         if not mod_dir.is_dir():
             continue
-        # 强制生成 index.md（卡片式）—— 覆盖可能存在的手写 README 索引
+        # 强制生成 index.md（有序列表）—— 覆盖可能存在的手写 README 索引
         (mod_dir / "index.md").write_text(
             build_module_index(mod, mod_dir),
             encoding="utf-8",
@@ -836,103 +846,124 @@ def copy_tree(src: Path, dst: Path) -> int:
     return count
 
 
+def publish_docs_atomically(staging: Path, target: Path) -> None:
+    """用 staging 替换 target，避免 watcher 扫到空目录或半成品树。
+
+    顺序：staging → target；旧 target 先改名为 docs._old 再删。
+    """
+    if DOCS_OLD.exists():
+        shutil.rmtree(DOCS_OLD, ignore_errors=True)
+    if target.exists():
+        try:
+            target.rename(DOCS_OLD)
+        except OSError:
+            shutil.rmtree(target)
+    try:
+        staging.rename(target)
+    except OSError:
+        # Windows 偶发 rename 失败：退回拷贝 + 清理 staging
+        if target.exists():
+            shutil.rmtree(target, ignore_errors=True)
+        shutil.copytree(staging, target)
+        shutil.rmtree(staging, ignore_errors=True)
+    if DOCS_OLD.exists():
+        shutil.rmtree(DOCS_OLD, ignore_errors=True)
+
+
 def main() -> int:
-    global _PREAMBLE_STRIPPED
+    global _PREAMBLE_STRIPPED, DOCS_DIR
     _PREAMBLE_STRIPPED = 0
 
-    if DOCS_DIR.exists():
-        shutil.rmtree(DOCS_DIR)
-    DOCS_DIR.mkdir(parents=True)
+    live_docs = REPO_ROOT / "docs"
+    staging = DOCS_STAGING
+    if staging.exists():
+        shutil.rmtree(staging)
+    staging.mkdir(parents=True)
 
-    # 阶段 3+：收集被改名的文件（避免 mkdocs 把 ： 当目录分隔符）
-    name_map = collect_renamed_files(REPO_ROOT)
-    if name_map:
-        print(f"  sanitized {len(name_map)} filenames: 冒号 → 连字符")
+    # 构建期全局指向 staging，使 sort_subdirs / build_public_index 等与输出一致
+    prev_docs = DOCS_DIR
+    DOCS_DIR = staging
+    try:
+        # 阶段 3+：收集被改名的文件（避免 mkdocs 把 ： 当目录分隔符）
+        name_map = collect_renamed_files(REPO_ROOT)
+        if name_map:
+            print(f"  sanitized {len(name_map)} filenames: 冒号 → 连字符")
 
-    total = 0
-    skipped_meta = 0
-    for module in MODULE_DIRS:
-        src = REPO_ROOT / module
-        if src.is_dir():
-            for p in src.rglob("*.md"):
-                if is_meta_file(p.relative_to(REPO_ROOT)):
-                    skipped_meta += 1
-        n = copy_tree(src, DOCS_DIR / module)
-        print(f"  {module}: {n} files")
-        total += n
+        total = 0
+        skipped_meta = 0
+        for module in MODULE_DIRS:
+            src = REPO_ROOT / module
+            if src.is_dir():
+                for p in src.rglob("*.md"):
+                    if is_meta_file(p.relative_to(REPO_ROOT)):
+                        skipped_meta += 1
+            n = copy_tree(src, DOCS_DIR / module)
+            print(f"  {module}: {n} files")
+            total += n
 
-    for src_name, dst_name in ROOT_FILES:
-        src = REPO_ROOT / src_name
-        if not src.is_file():
-            print(f"  skip missing root file: {src_name}", file=sys.stderr)
-            continue
-        shutil.copy2(src, DOCS_DIR / dst_name)
+        for src_name, dst_name in ROOT_FILES:
+            src = REPO_ROOT / src_name
+            if not src.is_file():
+                print(f"  skip missing root file: {src_name}", file=sys.stderr)
+                continue
+            shutil.copy2(src, DOCS_DIR / dst_name)
+            total += 1
+            print(f"  root: {src_name} -> {dst_name}")
+
+        index = build_public_index()
+        (DOCS_DIR / "index.md").write_text(index, encoding="utf-8")
         total += 1
-        print(f"  root: {src_name} -> {dst_name}")
+        print("  root: index.md (blog homepage)")
 
-    index = build_public_index()
-    (DOCS_DIR / "index.md").write_text(index, encoding="utf-8")
-    total += 1
-    print("  root: index.md (blog homepage)")
+        # 站点静态资源（CSS/JS 等）；主题 overrides 由 mkdocs.yml custom_dir 直指 00-Meta/overrides
+        web_src = REPO_ROOT / "00-Meta" / "web"
+        if web_src.is_dir():
+            for path in web_src.rglob("*"):
+                if not path.is_file():
+                    continue
+                rel = path.relative_to(web_src)
+                # 勿把 about/.pages 以外的主题覆盖误拷；web/ 不含 overrides
+                dst = DOCS_DIR / rel
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(path, dst)
+                total += 1
+            print("  00-Meta/web/: assets copied into docs/")
 
-    # 站点静态资源（顶栏 / 首页样式等）
-    # 阶段 3：web/ 和 overrides/ 都在 00-Meta/ 下
-    web_src = REPO_ROOT / "00-Meta" / "web"
-    if web_src.is_dir():
-        for path in web_src.rglob("*"):
-            if not path.is_file():
-                continue
-            rel = path.relative_to(web_src)
-            dst = DOCS_DIR / rel
-            dst.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(path, dst)
-            total += 1
-        print("  00-Meta/web/: assets copied into docs/")
+        # 修复 docs 内所有 md 的链接（同步新文件名）
+        if name_map:
+            n_fixed = fix_links_in_docs(DOCS_DIR, name_map)
+            print(f"  fixed links in {n_fixed} files (synced renamed files)")
 
-    overrides_src = REPO_ROOT / "00-Meta" / "overrides"
-    if overrides_src.is_dir():
-        # 保留 overrides/ 子目录结构（mkdocs.yml 用 custom_dir: overrides，
-        # 需要 docs/overrides/partials/header.html）
-        for path in overrides_src.rglob("*"):
-            if not path.is_file():
-                continue
-            rel = path.relative_to(overrides_src.parent)  # 保留 overrides/ 前缀
-            dst = DOCS_DIR / rel
-            dst.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(path, dst)
-            total += 1
-        print("  00-Meta/overrides/: header/footer copied into docs/overrides/")
+        generate_pages_tree(DOCS_DIR)
+        # 须在 generate_pages_tree 之后：此时系列/子分类 index.md 已齐
+        n_dir_links = fix_directory_links_for_mkdocs(DOCS_DIR)
+        if n_dir_links:
+            print(
+                f"  rewrote directory links → index.md in {n_dir_links} files "
+                f"(use_directory_urls)"
+            )
+        print(f"Prepared docs/ with {total} content files; skipped ~{skipped_meta} meta docs")
+        if _PREAMBLE_STRIPPED:
+            print(
+                f"  stripped author preamble from {_PREAMBLE_STRIPPED} pages "
+                f"(public site → Activity-style lead)"
+            )
+        leftovers = audit_docs_for_preamble(DOCS_DIR)
+        if leftovers:
+            print(
+                f"  WARN: {len(leftovers)} docs/ pages still have author preamble near top:",
+                file=sys.stderr,
+            )
+            for p in leftovers[:20]:
+                print(f"    - {p}", file=sys.stderr)
+            if len(leftovers) > 20:
+                print(f"    ... +{len(leftovers) - 20} more", file=sys.stderr)
+        print("Generated layered .pages navigation")
+    finally:
+        DOCS_DIR = prev_docs
 
-    # 修复 docs 内所有 md 的链接（同步新文件名）
-    if name_map:
-        n_fixed = fix_links_in_docs(DOCS_DIR, name_map)
-        print(f"  fixed links in {n_fixed} files (synced renamed files)")
-
-    generate_pages_tree(DOCS_DIR)
-    # 须在 generate_pages_tree 之后：此时系列/子分类 index.md 已齐
-    n_dir_links = fix_directory_links_for_mkdocs(DOCS_DIR)
-    if n_dir_links:
-        print(
-            f"  rewrote directory links → index.md in {n_dir_links} files "
-            f"(use_directory_urls)"
-        )
-    print(f"Prepared docs/ with {total} content files; skipped ~{skipped_meta} meta docs")
-    if _PREAMBLE_STRIPPED:
-        print(
-            f"  stripped author preamble from {_PREAMBLE_STRIPPED} pages "
-            f"(public site → Activity-style lead)"
-        )
-    leftovers = audit_docs_for_preamble(DOCS_DIR)
-    if leftovers:
-        print(
-            f"  WARN: {len(leftovers)} docs/ pages still have author preamble near top:",
-            file=sys.stderr,
-        )
-        for p in leftovers[:20]:
-            print(f"    - {p}", file=sys.stderr)
-        if len(leftovers) > 20:
-            print(f"    ... +{len(leftovers) - 20} more", file=sys.stderr)
-    print("Generated layered .pages navigation")
+    publish_docs_atomically(staging, live_docs)
+    print(f"Published staging → {live_docs.name}/")
     return 0
 
 

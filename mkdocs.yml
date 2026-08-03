@@ -16,7 +16,8 @@ use_directory_urls: true
 
 theme:
   name: material
-  custom_dir: docs/overrides
+  # 主题覆盖与 docs/ 解耦：prepare 可清空 docs/，serve 不会因 custom_dir 丢失而卡死
+  custom_dir: 00-Meta/overrides
   language: zh
   features:
     # 主导航 = 顶栏 Tab / 下拉 + 篇章横条；右栏 = 页内 TOC（无左侧主侧栏）

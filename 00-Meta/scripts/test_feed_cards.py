@@ -114,41 +114,28 @@ def test_series_media_slug_is_stable_and_varied() -> None:
     _assert(len(a) > 0, "non-empty slug")
 
 
-def test_module_index_series_cards_use_varied_colors() -> None:
-    mod_dir = REPO / "03-卷3-核心机制"
+def test_module_index_uses_ordered_series_list() -> None:
+    mod_dir = REPO / "01-卷1-Android系统基础与平台"
     if not mod_dir.is_dir():
         return
-    html = build_module_index("03-卷3-核心机制", mod_dir)
-    _assert("jk-feed-grid" in html, "module keeps feed grid")
-    _assert("jk-article-list" not in html, "module no article list")
-    _assert("jk-feed-card--series" in html, "module landing uses series cards")
-    _assert("jk-feed-card__summary" not in html, "module landing no card summaries")
-    colors = {
-        slug
-        for slug in (
-            "mechanism",
-            "symptom",
-            "forensics",
-            "tool",
-            "governance",
-            "case",
-            "foundation",
-            "meta",
-        )
-        if f"jk-feed-card__media--{slug}" in html
-    }
-    _assert(len(colors) >= 2, "module landing uses multiple series colors")
+    html = build_module_index("01-卷1-Android系统基础与平台", mod_dir)
+    _assert("jk-article-list" in html, "module uses article list")
+    _assert("jk-feed-grid" not in html, "module no feed grid")
+    _assert("jk-feed-card--series" not in html, "module no series cards")
+    _assert("按顺序阅读" in html, "module hero hints reading order")
+    _assert("jk-article-list__index" in html, "series index chips")
+    _assert("Android 系统全景" in html, "first series title present")
 
 
-def test_subcategory_index_still_uses_cards() -> None:
+def test_subcategory_index_uses_ordered_list() -> None:
     art = REPO / "03-卷3-核心机制/20-ART 运行时"
     if not art.is_dir():
         return
     html = build_subcategory_index("03-卷3-核心机制", art)
-    _assert("jk-feed-grid" in html, "subcategory keeps feed grid")
-    _assert("jk-article-list" not in html, "subcategory no article list")
-    _assert("jk-feed-card--series" in html, "subcategory uses series cards")
-    _assert("jk-feed-card__summary" not in html, "subcategory no summaries")
+    _assert("jk-article-list" in html, "subcategory uses article list")
+    _assert("jk-feed-grid" not in html, "subcategory no feed grid")
+    _assert("jk-feed-card--series" not in html, "subcategory no series cards")
+    _assert("按顺序阅读" in html, "subcategory hero hints reading order")
 
 
 def test_render_module_feed_card_is_minimal() -> None:
@@ -241,8 +228,8 @@ def main() -> int:
         test_render_problem_index_html,
         test_homepage_uses_list_for_latest,
         test_series_landing_uses_list_not_cards,
-        test_module_index_series_cards_use_varied_colors,
-        test_subcategory_index_still_uses_cards,
+        test_module_index_uses_ordered_series_list,
+        test_subcategory_index_uses_ordered_list,
         test_meta_module_index_has_hub_cards,
     ]
     for fn in tests:
