@@ -518,7 +518,7 @@ Phase 5（整合收口）
 
 ### 10.2 Reference 基础设施
 
-- [Reference/术语表.md](../../00-Meta/Reference/术语表.md) — 全局术语表
+- [Reference/术语表.md](../../00-Meta/术语表.md) — 全局术语表
 - [Reference/Stability-跨系列引用矩阵.md](../../00-Meta/Reference/Stability-跨系列引用矩阵.md) — 引用矩阵
 
 ### 10.3 行业资料

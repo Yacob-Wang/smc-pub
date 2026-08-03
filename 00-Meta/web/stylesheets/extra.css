@@ -1721,6 +1721,10 @@ article > h1:first-child,
   background: linear-gradient(135deg, #00acc1 0%, #00838f 100%);
 }
 
+.jk-feed-card__media--perf {
+  background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+}
+
 .jk-feed-label {
   margin: 0 0 0.35rem;
   color: var(--jk-text-faint);

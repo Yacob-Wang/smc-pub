@@ -23,12 +23,12 @@
 
 | 文档 | 用途 |
 |:-----|:-----|
-| [版本基线.md](版本基线.md) | AOSP 17 + K 6.18 基线声明 |
-| [术语表.md](术语表.md) | Stability / ART / Hook 关键术语 |
+| [版本基线.md](../版本基线.md) | AOSP 17 + K 6.18 基线声明 |
+| [术语表.md](../术语表.md) | Stability / ART / Hook 关键术语 |
 | [术语表_Android_Framework.md](术语表_Android_Framework.md) | Framework 专用术语 |
 | [引用矩阵.md](引用矩阵.md) | 四大组件跨系列引用 |
 | [Stability-跨系列引用矩阵.md](Stability-跨系列引用矩阵.md) | 症状 × 机制引用 |
 | [Forensics-跨系列引用矩阵.md](Forensics-跨系列引用矩阵.md) | 取证 × 工具引用 |
-| [案例索引.md](案例索引.md) | 跨系列案例索引 |
+| [案例索引.md](../案例索引.md) | 跨系列案例索引 |
 | [Stability-案例索引.md](Stability-案例索引.md) | 稳定性专项案例 |
 | [Forensics-案例索引.md](Forensics-案例索引.md) | 取证专项案例 |

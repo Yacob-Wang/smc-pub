@@ -8,9 +8,10 @@ import re
 import sys
 from pathlib import Path
 
+# 8 卷 50 章书籍结构。旧的 7 module 目录（01-Mechanism 等）已于
+# 2026-08-03 全部清空并删除，正文迁入各卷，导航类 README 进 _archive。
 PUBLIC_MODULES = [
     "00-Meta",
-    # 8 卷 50 章书籍结构（2026-08-02 改造）
     "01-卷1-Android系统基础与平台",
     "02-卷2-系统启动",
     "03-卷3-核心机制",
@@ -19,15 +20,19 @@ PUBLIC_MODULES = [
     "06-卷6-性能工程",
     "07-卷7-APM与工程治理",
     "08-卷8-案例实战",
-    # 旧 7 module（迁移残留，下一阶段清理）
-    "01-Mechanism",
-    "02-Symptom",
-    "03-Forensics",
-    "04-Tool",
-    "05-Governance",
-    "06-Case",
-    "06-Foundation",
 ]
+
+# 卷号 → 章目录前缀，供目录生成与导航使用
+VOLUME_CHAPTERS: dict[str, range] = {
+    "01-卷1-Android系统基础与平台": range(1, 6),
+    "02-卷2-系统启动": range(6, 12),
+    "03-卷3-核心机制": range(12, 22),
+    "04-卷4-诊断方法论与稳定性症状": range(22, 31),
+    "05-卷5-调查工具链": range(31, 37),
+    "06-卷6-性能工程": range(37, 42),
+    "07-卷7-APM与工程治理": range(42, 47),
+    "08-卷8-案例实战": range(47, 51),
+}
 
 MODULE_TITLES = {
     "00-Meta": "Map",
@@ -40,14 +45,6 @@ MODULE_TITLES = {
     "06-卷6-性能工程": "卷 6 性能",
     "07-卷7-APM与工程治理": "卷 7 治理",
     "08-卷8-案例实战": "卷 8 案例",
-    # 旧 module
-    "01-Mechanism": "Mechanism",
-    "02-Symptom": "Symptoms",
-    "03-Forensics": "Forensics",
-    "04-Tool": "Tools",
-    "05-Governance": "Governance",
-    "06-Case": "Cases",
-    "06-Foundation": "Foundation",
 }
 
 # 顶栏按读者意图分组（不搬迁仓库目录）；Tab 文案用中文任务名
@@ -89,14 +86,6 @@ MODULE_BLURBS = {
     "06-卷6-性能工程": "性能基线 · 应用启动 · 滑动渲染 · 低端机 · WebView",
     "07-卷7-APM与工程治理": "SLI/SLO · APM 自研 · 告警 · 灰度 · AI-Native 调试",
     "08-卷8-案例实战": "启动性能 · ANR 与无响应 · 崩溃与内存 · 整机稳定性",
-    # 旧 module
-    "01-Mechanism": "Hardware · Kernel · Runtime · Framework · App",
-    "02-Symptom": "11 大症状机制（ANR · JE · NE · SWT · HANG · REBOOT · KE 等）",
-    "03-Forensics": "8 大取证链（与症状编号一一对应）",
-    "04-Tool": "Dumpsys · Watchdog · Perfetto · Hprof · AmCommand · ANR-Detection",
-    "05-Governance": "APM · OEM-BSP · 跨平台 · 低端机 · AI Native · AI-Debug · 性能内存 · 安全",
-    "06-Case": "启动场景案例 + 跨系列实战",
-    "06-Foundation": "Build-System · System-Integration · Dynamic-Updates · Tools",
 }
 
 # 侧栏短名：避免把系列 README 长标题整条塞进导航
@@ -105,125 +94,12 @@ SERIES_NAV_TITLES: dict[str, dict[str, str]] = {
         "Reference": "Reference 索引",
         "Industry-Benchmark": "Industry Benchmark",
     },
-    "01-Mechanism": {
-        "Hardware": "硬件层",
-        "Kernel": "内核层",
-        "Runtime": "运行时",
-        "Framework": "Framework",
-        "App": "应用层",
-    },
-    "02-Symptom": {
-        "S01-ANR": "S01 ANR",
-        "S02-JE": "S02 Java 异常",
-        "S03-NE": "S03 Native 异常",
-        "S04-SWT": "S04 SWT",
-        "S05-HANG": "S05 HANG",
-        "S06-REBOOT": "S06 REBOOT",
-        "S07-KE": "S07 KE",
-        "S08-AOSP17-K618": "S08 AOSP 17 + K 6.18",
-        "S09-PerfVsStab": "S09 性能 vs 稳定性",
-        "S10-Measure": "S10 度量门禁",
-        "S11-Startup": "S11 启动专项",
-    },
-    "03-Forensics": {
-        "F00-Overview": "F00 总览",
-        "F01-ANR": "F01 ANR 取证",
-        "F02-SWT": "F02 SWT 取证",
-        "F03-JE": "F03 JE 取证",
-        "F04-NE": "F04 NE 取证",
-        "F05-KE": "F05 KE 取证",
-        "F06-HANG-OOM": "F06 HANG / OOM",
-        "F07-Governance": "F07 治理",
-        "Oncall": "Oncall 剧本",
-    },
-    "04-Tool": {
-        "Dumpsys": "Dumpsys",
-        "Watchdog": "Watchdog",
-        "Perfetto": "Perfetto",
-        "Hprof": "Hprof",
-        "AmCommand": "AmCommand",
-        "ANR-Detection": "ANR-Detection",
-    },
-    "05-Governance": {
-        "APM": "APM",
-        "OEM-BSP": "OEM-BSP",
-        "CrossPlatform": "跨平台",
-        "LowEnd": "低端机",
-        "AI-Native": "AI Native",
-        "AI-Debug": "AI-Debug",
-        "PerfMem": "性能 vs 内存",
-        "Security": "安全",
-    },
-    "06-Case": {
-        "Startup": "启动案例",
-        "Cases-Extended": "扩展案例",
-    },
-    "06-Foundation": {
-        "Build-System": "Build-System",
-        "System-Integration": "System-Integration",
-        "Dynamic-Updates": "Dynamic-Updates",
-        "Tools": "Tools",
-    },
 }
 
+# 各卷内部的「系列」就是章目录（12-Binder IPC 深度 …），目录名本身已经
+# 可读，按数字前缀天然有序，不需要再维护短名与顺序表。
 MODULE_SERIES_ORDER: dict[str, list[str]] = {
     "00-Meta": ["Reference"],
-    "01-Mechanism": [
-        "Hardware",
-        "Kernel",
-        "Runtime",
-        "Framework",
-        "App",
-    ],
-    "02-Symptom": [
-        "S01-ANR",
-        "S02-JE",
-        "S03-NE",
-        "S04-SWT",
-        "S05-HANG",
-        "S06-REBOOT",
-        "S07-KE",
-        "S08-AOSP17-K618",
-        "S09-PerfVsStab",
-        "S10-Measure",
-        "S11-Startup",
-    ],
-    "03-Forensics": [
-        "F00-Overview",
-        "F01-ANR",
-        "F02-SWT",
-        "F03-JE",
-        "F04-NE",
-        "F05-KE",
-        "F06-HANG-OOM",
-        "F07-Governance",
-        "Oncall",
-    ],
-    "04-Tool": [
-        "Dumpsys",
-        "Watchdog",
-        "Perfetto",
-        "Hprof",
-        "AmCommand",
-        "ANR-Detection",
-    ],
-    "05-Governance": [
-        "APM",
-        "OEM-BSP",
-        "CrossPlatform",
-        "LowEnd",
-        "AI-Native",
-        "AI-Debug",
-        "PerfMem",
-        "Security",
-    ],
-    "06-Case": ["Startup", "Cases-Extended"],
-    "06-Foundation": [
-        "Build-System",
-        "System-Integration",
-        "Dynamic-Updates",
-        "Tools",
-    ],
 }
 
 # 首页「按问题进入」表格 — 集中维护，供 public_readme 与链接校验共用

@@ -1,240 +1,209 @@
 # smc-pub · 稳知库
 
-> **Stability Matrix Course** —— 面向 Android 稳定性架构师的端到端知识库
+> **《Android 系统稳定性架构师：从启动到性能》** —— 全书写作仓库
 >
-> **基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（6.18 LTS）
+> **基线**：AOSP `android-17.0.0_r1`（API 37）+ Linux `android17-6.18`（GKI 默认内核）
 >
 > **在线站点**：[https://yacob-wang.github.io/smc-pub/](https://yacob-wang.github.io/smc-pub/)
 >
-> 正文约 **<!-- CATALOG-TOTAL:START -->570<!-- CATALOG-TOTAL:END -->** 篇（由脚本统计）
+> 已成稿 **<!-- CATALOG-TOTAL:START -->565<!-- CATALOG-TOTAL:END -->** 篇（由脚本统计）
 
 ---
 
-## 项目定位
+## 这是什么
 
-**smc-pub（稳知库）** 按双轴组织 Android 稳定性 / 性能 / 工具 / 案例内容：
+Android 稳定性是个横跨全栈的领域——一个 ANR 可能源自 Kernel 调度、Native 库、Framework 服务或 App 主线程中的任何一环。但现有资料要么是单层视角的源码解析，要么是应用开发教程，缺一本**以稳定性问题为中心、横跨全栈**的体系化参考。
 
-- **机制轴**：Hardware → Kernel → Runtime → Framework → App（对齐 AOSP 分层）
-- **工作流轴**：症状 → 取证 → 工具 → 治理 → 案例 → 基础（对齐 oncall 日常）
+本仓库按「8 卷 50 章」组织这套知识，从上电启动一路讲到性能治理。完整的章节规划（含尚未撰写的部分）见 **[书籍目录](00-Meta/书籍目录-v1.md)**。
 
-适合稳定性架构师、性能工程师、oncall、BSP / 系统集成工程师按角色选读。
+## 全书结构
 
-## 怎么找到文章
-
-文章太多时，不要一个个点目录。推荐路径：
-
-1. 先看下面的 **一级模块总览** 和 **二级系列索引**，定位到系列文件夹
-2. 需要一次扫完全库正文时，打开 **[文章总目录.md](文章总目录.md)**（一级 → 二级 → 三级表格，均可跳转）
-3. 或使用站点搜索：[稳知库](https://yacob-wang.github.io/smc-pub/)
-
-更新目录（新增/移动文章后）：
-
-```bash
-py -3.12 00-Meta/scripts/generate_article_catalog.py
+```
+卷 1  Android 系统基础与平台     5 章   (1-5)    地基
+卷 2  系统启动                   6 章   (6-11)   时序主线
+卷 3  核心机制                  10 章   (12-21)  机制字典
+卷 4  诊断方法论与稳定性症状      9 章   (22-30)  主战场
+卷 5  调查工具链                 6 章   (31-36)  工具手册
+卷 6  性能工程                   5 章   (37-41)  性能专项
+卷 7  APM 与工程治理             5 章   (42-46)  事前治理
+卷 8  案例实战                   4 章   (47-50)  综合演练
 ```
 
-## 一级模块总览
+卷间依赖（实线＝强依赖，虚线＝按需跳转）：
+
+```
+卷 1 ──→ 卷 2 ──→ 卷 3 ──→ 卷 4 ──→ 卷 8
+                    │        ↕
+                    │      卷 5（工具，随用随查）
+                    └────→ 卷 6 ──→ 卷 7
+```
 
 <!-- CATALOG-STATS:START -->
 
-| 一级模块 | 角色 | 二级系列 | 文章数 | 目录 |
-|:---------|:-----|--------:|-------:|:-----|
-| **00-Meta** | 学习路线 · 阅读指南 · JD 匹配 · 缺口一览 · Reference | 3 | 24 | [00-Meta/](00-Meta/) |
-| **01-Mechanism** | Hardware · Kernel · Runtime · Framework · App | 37 | 322 | [01-Mechanism/](01-Mechanism/) |
-| **02-Symptom** | 11 大症状机制（ANR · JE · NE · SWT · HANG · REBOOT · KE 等） | 15 | 34 | [02-Symptom/](02-Symptom/) |
-| **03-Forensics** | 8 大取证链（与症状编号一一对应） | 10 | 21 | [03-Forensics/](03-Forensics/) |
-| **04-Tool** | Dumpsys · Watchdog · Perfetto · Hprof · AmCommand · ANR-Detection | 7 | 42 | [04-Tool/](04-Tool/) |
-| **05-Governance** | APM · OEM-BSP · 跨平台 · 低端机 · AI Native · AI-Debug · 性能内存 · 安全 | 5 | 42 | [05-Governance/](05-Governance/) |
-| **06-Case** | 启动场景案例 + 跨系列实战 | 2 | 11 | [06-Case/](06-Case/) |
-| **06-Foundation** | Build-System · System-Integration · Dynamic-Updates · Tools | 14 | 74 | [06-Foundation/](06-Foundation/) |
-| **合计** | | | **570** | [文章总目录](文章总目录.md) |
+| 卷 | 内容 | 章数 | 文章数 |
+|:---|:-----|-----:|-------:|
+| [**地图 · 元信息**](00-Meta/) | 学习路线 · 阅读指南 · JD 匹配 · 缺口一览 · Reference | — | 19 |
+| [**卷 1 · Android 系统基础与平台**](01-卷1-Android系统基础与平台/) | Android 系统全景 · AOSP 源码 · HAL/Treble · Kernel 基础 · 安全基础（SELinux · AVB） | 4 | 53 |
+| [**卷 2 · 系统启动**](02-卷2-系统启动/) | Bootloader · Init · Zygote · SystemServer · 应用启动 · 启动性能 | 4 | 32 |
+| [**卷 3 · 核心机制**](03-卷3-核心机制/) | Binder · 进程 · 线程 · 内存 · IO · 网络 · 输入 · 显示 · ART · 电源 | 10 | 302 |
+| [**卷 4 · 诊断方法论与稳定性症状**](04-卷4-诊断方法论与稳定性症状/) | 调查方法论 · ANR · JE · NE · OOM · SWT · HANG · KE · REBOOT | 8 | 36 |
+| [**卷 5 · 调查工具链**](05-卷5-调查工具链/) | Perfetto · Systrace · Dumpsys/Bugreport · Hprof · 断点调试 · Oncall | 5 | 62 |
+| [**卷 6 · 性能工程**](06-卷6-性能工程/) | 性能基线 · 应用启动 · 滑动渲染 · 低端机 · WebView | 1 | 6 |
+| [**卷 7 · APM 与工程治理**](07-卷7-APM与工程治理/) | SLI/SLO · APM 自研 · 告警 · 灰度 · AI-Native 调试 | 2 | 45 |
+| [**卷 8 · 案例实战**](08-卷8-案例实战/) | 启动性能 · ANR 与无响应 · 崩溃与内存 · 整机稳定性 | 2 | 10 |
+| **合计** | [文章总目录](文章总目录.md) | **36** | **565** |
 
 <!-- CATALOG-STATS:END -->
 
-## 二级系列索引
+## 怎么找内容
 
-每个系列对应一组正文；点目录进入后按文件名序号阅读。全量三级正文见 [文章总目录.md](文章总目录.md)。
+三条路径，按你的目的选：
+
+**按症状速查**（已经有现场，想尽快定位）
+
+| 症状 | 主章 | 机制章 | 工具章 |
+|:-----|:-----|:-------|:-------|
+| ANR | 卷 4 第 23 章 | 卷 3 第 14 / 18 章 | 卷 5 第 31 / 33 章 |
+| Java 崩溃 | 卷 4 第 24 章 | 卷 3 第 20 章 | 卷 5 第 33 章 |
+| Native 崩溃 | 卷 4 第 25 章 | 卷 3 第 13 章 | 卷 5 第 35 章 |
+| OOM / 被杀进程 | 卷 4 第 26 章 | 卷 3 第 15 章 | 卷 5 第 34 章 |
+| 系统卡死 / SWT | 卷 4 第 27 章 | 卷 3 第 12 / 14 章 | 卷 5 第 31 章 |
+| 死锁 / HANG | 卷 4 第 28 章 | 卷 3 第 12 / 14 章 | 卷 5 第 35 章 |
+| Kernel panic | 卷 4 第 29 章 | 卷 1 第 4 章 | 卷 5 第 32 章 |
+| 异常重启 | 卷 4 第 30 章 | 卷 1 第 4 章 | 卷 5 第 33 章 |
+| 开机慢 / 开机失败 | 卷 2 第 11 章 | 卷 2 第 6-9 章 | 卷 5 第 31 章 |
+| 应用启动慢 | 卷 6 第 38 章 | 卷 2 第 10 章 | 卷 5 第 31 章 |
+| 滑动卡顿 / 掉帧 | 卷 6 第 39 章 | 卷 3 第 19 章 | 卷 5 第 31 章 |
+| 耗电异常 | 卷 3 第 21 章 | 卷 3 第 21 章 | 卷 5 第 33 章 |
+
+**按角色通读**（系统性补齐）
+
+| 角色 | 路径 | 预计投入 |
+|:-----|:-----|:---------|
+| 稳定性工程师 | 全书通读 | 4-6 个月 |
+| 性能工程师 | 卷 1-3 选读 → 卷 6 → 卷 4 → 卷 8 | 2-3 个月 |
+| Framework / 系统开发 | 卷 1-3 精读 → 卷 4 选读 | 2-3 个月 |
+| 架构师 / 技术 Lead | 卷 1 → 卷 4 概览 → 卷 7 精读 | 1 个月 |
+| 新人 / 转方向 | 卷 1-2 → 卷 4 第 22 章 → 卷 5 → 卷 8 | 3 个月 |
+
+详细的阶段拆分见 [学习路线](00-Meta/学习路线-稳定性架构师.md)。
+
+**扫全库正文**：[文章总目录.md](文章总目录.md)（卷 → 章 → 篇，均可跳转），或直接用[站点搜索](https://yacob-wang.github.io/smc-pub/)。
+
+## 各卷章节索引
 
 <!-- CATALOG-SERIES:START -->
 
-### 00-Meta · 元信息 / 地图
+### 卷 1 · Android 系统基础与平台
 
-| 二级系列 | 文章数 | 目录 |
-|:---------|-------:|:-----|
-| （模块根） | 9 | [00-Meta/](00-Meta/) |
-| Industry-Benchmark | 4 | [00-Meta/Industry-Benchmark/](00-Meta/Industry-Benchmark/) |
-| Reference | 11 | [00-Meta/Reference/](00-Meta/Reference/) |
+| 章 | 文章数 | 目录 |
+|:---|-------:|:-----|
+| 第 1 章　Android 系统全景与 AOSP 17 | 2 | [01-卷1-Android系统基础与平台/01-Android 系统全景与 AOSP 17/](01-卷1-Android系统基础与平台/01-Android 系统全景与 AOSP 17/) |
+| 第 2 章　AOSP 源码结构与构建系统 | 34 | [01-卷1-Android系统基础与平台/02-AOSP 源码结构与构建系统/](01-卷1-Android系统基础与平台/02-AOSP 源码结构与构建系统/) |
+| 第 4 章　Linux Kernel 基础（Android 视角） | 8 | [01-卷1-Android系统基础与平台/04-Linux Kernel 基础（Android 视角）/](01-卷1-Android系统基础与平台/04-Linux Kernel 基础（Android 视角）/) |
+| 第 5 章　安全基础（SELinux · AVB） | 9 | [01-卷1-Android系统基础与平台/05-安全基础（SELinux · AVB）/](01-卷1-Android系统基础与平台/05-安全基础（SELinux · AVB）/) |
 
-### 01-Mechanism · 机制（AOSP 分层）
+### 卷 2 · 系统启动
 
-| 二级系列 | 文章数 | 目录 |
-|:---------|-------:|:-----|
-| App / Handler-MessageQueue-Looper / Handler_MessageQueue_Looper | 11 | [01-Mechanism/App/Handler-MessageQueue-Looper/Handler_MessageQueue_Looper/](01-Mechanism/App/Handler-MessageQueue-Looper/Handler_MessageQueue_Looper/) |
-| App / Hook | 15 | [01-Mechanism/App/Hook/](01-Mechanism/App/Hook/) |
-| Framework / Activity | 9 | [01-Mechanism/Framework/Activity/](01-Mechanism/Framework/Activity/) |
-| Framework / Broadcast | 9 | [01-Mechanism/Framework/Broadcast/](01-Mechanism/Framework/Broadcast/) |
-| Framework / ContentProvider | 9 | [01-Mechanism/Framework/ContentProvider/](01-Mechanism/Framework/ContentProvider/) |
-| Framework / Input | 8 | [01-Mechanism/Framework/Input/](01-Mechanism/Framework/Input/) |
-| Framework / Memory_Management | 11 | [01-Mechanism/Framework/Memory_Management/](01-Mechanism/Framework/Memory_Management/) |
-| Framework / Process | 9 | [01-Mechanism/Framework/Process/](01-Mechanism/Framework/Process/) |
-| Framework / Process_Exit | 4 | [01-Mechanism/Framework/Process_Exit/](01-Mechanism/Framework/Process_Exit/) |
-| Framework / Service | 9 | [01-Mechanism/Framework/Service/](01-Mechanism/Framework/Service/) |
-| Framework / Window | 11 | [01-Mechanism/Framework/Window/](01-Mechanism/Framework/Window/) |
-| Hardware | 1 | [01-Mechanism/Hardware/](01-Mechanism/Hardware/) |
-| Kernel / Binder | 13 | [01-Mechanism/Kernel/Binder/](01-Mechanism/Kernel/Binder/) |
-| Kernel / cgroup | 6 | [01-Mechanism/Kernel/cgroup/](01-Mechanism/Kernel/cgroup/) |
-| Kernel / DM | 10 | [01-Mechanism/Kernel/DM/](01-Mechanism/Kernel/DM/) |
-| Kernel / epoll | 1 | [01-Mechanism/Kernel/epoll/](01-Mechanism/Kernel/epoll/) |
-| Kernel / FileSystem | 26 | [01-Mechanism/Kernel/FileSystem/](01-Mechanism/Kernel/FileSystem/) |
-| Kernel / GKI | 13 | [01-Mechanism/Kernel/GKI/](01-Mechanism/Kernel/GKI/) |
-| Kernel / Input_Driver | 19 | [01-Mechanism/Kernel/Input_Driver/](01-Mechanism/Kernel/Input_Driver/) |
-| Kernel / Interrupt | 7 | [01-Mechanism/Kernel/Interrupt/](01-Mechanism/Kernel/Interrupt/) |
-| Kernel / IO | 11 | [01-Mechanism/Kernel/IO/](01-Mechanism/Kernel/IO/) |
-| Kernel / Memory_Management | 15 | [01-Mechanism/Kernel/Memory_Management/](01-Mechanism/Kernel/Memory_Management/) |
-| Kernel / Partition | 8 | [01-Mechanism/Kernel/Partition/](01-Mechanism/Kernel/Partition/) |
-| Kernel / Process | 14 | [01-Mechanism/Kernel/Process/](01-Mechanism/Kernel/Process/) |
-| Kernel / Program_Execution | 14 | [01-Mechanism/Kernel/Program_Execution/](01-Mechanism/Kernel/Program_Execution/) |
-| Kernel / socket | 8 | [01-Mechanism/Kernel/socket/](01-Mechanism/Kernel/socket/) |
-| Kernel / Syscalls | 12 | [01-Mechanism/Kernel/Syscalls/](01-Mechanism/Kernel/Syscalls/) |
-| Runtime / ART / 00-总览 | 2 | [01-Mechanism/Runtime/ART/00-总览/](01-Mechanism/Runtime/ART/00-总览/) |
-| Runtime / ART / 01-字节码与指令集 | 2 | [01-Mechanism/Runtime/ART/01-字节码与指令集/](01-Mechanism/Runtime/ART/01-字节码与指令集/) |
-| Runtime / ART / 02-编译与执行 | 2 | [01-Mechanism/Runtime/ART/02-编译与执行/](01-Mechanism/Runtime/ART/02-编译与执行/) |
-| Runtime / ART / 03-GC系统 | 11 | [01-Mechanism/Runtime/ART/03-GC系统/](01-Mechanism/Runtime/ART/03-GC系统/) |
-| Runtime / ART / 03-类加载与链接 | 2 | [01-Mechanism/Runtime/ART/03-类加载与链接/](01-Mechanism/Runtime/ART/03-类加载与链接/) |
-| Runtime / ART / 05-JNI | 2 | [01-Mechanism/Runtime/ART/05-JNI/](01-Mechanism/Runtime/ART/05-JNI/) |
-| Runtime / ART / 06-信号与ANR-Trace | 3 | [01-Mechanism/Runtime/ART/06-信号与ANR-Trace/](01-Mechanism/Runtime/ART/06-信号与ANR-Trace/) |
-| Runtime / ART / 07-启动流程 | 2 | [01-Mechanism/Runtime/ART/07-启动流程/](01-Mechanism/Runtime/ART/07-启动流程/) |
-| Runtime / ART / 08-对比与演进 | 5 | [01-Mechanism/Runtime/ART/08-对比与演进/](01-Mechanism/Runtime/ART/08-对比与演进/) |
-| Runtime / Native_Crash | 8 | [01-Mechanism/Runtime/Native_Crash/](01-Mechanism/Runtime/Native_Crash/) |
+| 章 | 文章数 | 目录 |
+|:---|-------:|:-----|
+| 第 6 章　Bootloader 到 Kernel | 7 | [02-卷2-系统启动/06-Bootloader 到 Kernel/](02-卷2-系统启动/06-Bootloader 到 Kernel/) |
+| 第 7 章　Init 进程与 init.rc | 6 | [02-卷2-系统启动/07-Init 进程与 init.rc/](02-卷2-系统启动/07-Init 进程与 init.rc/) |
+| 第 10 章　应用启动与首帧 | 6 | [02-卷2-系统启动/10-应用启动与首帧/](02-卷2-系统启动/10-应用启动与首帧/) |
+| 第 11 章　系统启动性能专项 | 13 | [02-卷2-系统启动/11-系统启动性能专项/](02-卷2-系统启动/11-系统启动性能专项/) |
 
-### 02-Symptom · 症状
+### 卷 3 · 核心机制
 
-| 二级系列 | 文章数 | 目录 |
-|:---------|-------:|:-----|
-| （模块根） | 1 | [02-Symptom/](02-Symptom/) |
-| S01-ANR | 1 | [02-Symptom/S01-ANR/](02-Symptom/S01-ANR/) |
-| S02-JE | 1 | [02-Symptom/S02-JE/](02-Symptom/S02-JE/) |
-| S03-NE | 1 | [02-Symptom/S03-NE/](02-Symptom/S03-NE/) |
-| S04-SWT | 1 | [02-Symptom/S04-SWT/](02-Symptom/S04-SWT/) |
-| S05-HANG | 1 | [02-Symptom/S05-HANG/](02-Symptom/S05-HANG/) |
-| S06-REBOOT | 1 | [02-Symptom/S06-REBOOT/](02-Symptom/S06-REBOOT/) |
-| S07-KE | 1 | [02-Symptom/S07-KE/](02-Symptom/S07-KE/) |
-| S08-AOSP17-K618 | 1 | [02-Symptom/S08-AOSP17-K618/](02-Symptom/S08-AOSP17-K618/) |
-| S09-PerfVsStab | 1 | [02-Symptom/S09-PerfVsStab/](02-Symptom/S09-PerfVsStab/) |
-| S10-Measure | 5 | [02-Symptom/S10-Measure/](02-Symptom/S10-Measure/) |
-| S11-Startup / A-启动机制 | 6 | [02-Symptom/S11-Startup/A-启动机制/](02-Symptom/S11-Startup/A-启动机制/) |
-| S11-Startup / B-启动性能 | 4 | [02-Symptom/S11-Startup/B-启动性能/](02-Symptom/S11-Startup/B-启动性能/) |
-| S11-Startup / C-启动稳定性 | 5 | [02-Symptom/S11-Startup/C-启动稳定性/](02-Symptom/S11-Startup/C-启动稳定性/) |
-| S11-Startup / D-启动工具 | 4 | [02-Symptom/S11-Startup/D-启动工具/](02-Symptom/S11-Startup/D-启动工具/) |
+| 章 | 文章数 | 目录 |
+|:---|-------:|:-----|
+| 第 12 章　Binder IPC 深度 | 13 | [03-卷3-核心机制/12-Binder IPC 深度/](03-卷3-核心机制/12-Binder IPC 深度/) |
+| 第 13 章　进程与生命周期 | 92 | [03-卷3-核心机制/13-进程与生命周期/](03-卷3-核心机制/13-进程与生命周期/) |
+| 第 14 章　线程与 Handler 消息机制 | 27 | [03-卷3-核心机制/14-线程与 Handler 消息机制/](03-卷3-核心机制/14-线程与 Handler 消息机制/) |
+| 第 15 章　内存管理全链路 | 25 | [03-卷3-核心机制/15-内存管理全链路/](03-卷3-核心机制/15-内存管理全链路/) |
+| 第 16 章　IO 与存储 | 48 | [03-卷3-核心机制/16-IO 与存储/](03-卷3-核心机制/16-IO 与存储/) |
+| 第 17 章　网络与连接 | 17 | [03-卷3-核心机制/17-网络与连接/](03-卷3-核心机制/17-网络与连接/) |
+| 第 18 章　输入系统 | 27 | [03-卷3-核心机制/18-输入系统/](03-卷3-核心机制/18-输入系统/) |
+| 第 19 章　显示与渲染 | 18 | [03-卷3-核心机制/19-显示与渲染/](03-卷3-核心机制/19-显示与渲染/) |
+| 第 20 章　ART 运行时 | 25 | [03-卷3-核心机制/20-ART 运行时/](03-卷3-核心机制/20-ART 运行时/) |
+| 第 21 章　电源与续航 | 10 | [03-卷3-核心机制/21-电源与续航/](03-卷3-核心机制/21-电源与续航/) |
 
-### 03-Forensics · 取证
+### 卷 4 · 诊断方法论与稳定性症状
 
-| 二级系列 | 文章数 | 目录 |
-|:---------|-------:|:-----|
-| F00-Overview | 1 | [03-Forensics/F00-Overview/](03-Forensics/F00-Overview/) |
-| F01-ANR | 1 | [03-Forensics/F01-ANR/](03-Forensics/F01-ANR/) |
-| F02-SWT | 1 | [03-Forensics/F02-SWT/](03-Forensics/F02-SWT/) |
-| F03-JE | 1 | [03-Forensics/F03-JE/](03-Forensics/F03-JE/) |
-| F04-NE | 1 | [03-Forensics/F04-NE/](03-Forensics/F04-NE/) |
-| F05-KE | 1 | [03-Forensics/F05-KE/](03-Forensics/F05-KE/) |
-| F06-HANG-OOM | 1 | [03-Forensics/F06-HANG-OOM/](03-Forensics/F06-HANG-OOM/) |
-| F07-Governance | 1 | [03-Forensics/F07-Governance/](03-Forensics/F07-Governance/) |
-| Bugreport | 5 | [03-Forensics/Bugreport/](03-Forensics/Bugreport/) |
-| Oncall | 8 | [03-Forensics/Oncall/](03-Forensics/Oncall/) |
+| 章 | 文章数 | 目录 |
+|:---|-------:|:-----|
+| （目录根） | 2 | [04-卷4-诊断方法论与稳定性症状/](04-卷4-诊断方法论与稳定性症状/) |
+| 第 22 章　稳定性调查方法论 | 2 | [04-卷4-诊断方法论与稳定性症状/22-稳定性调查方法论/](04-卷4-诊断方法论与稳定性症状/22-稳定性调查方法论/) |
+| 第 23 章　ANR 深度 | 5 | [04-卷4-诊断方法论与稳定性症状/23-ANR 深度/](04-卷4-诊断方法论与稳定性症状/23-ANR 深度/) |
+| 第 24 章　Java 异常 | 2 | [04-卷4-诊断方法论与稳定性症状/24-Java 异常/](04-卷4-诊断方法论与稳定性症状/24-Java 异常/) |
+| 第 25 章　Native 异常 | 10 | [04-卷4-诊断方法论与稳定性症状/25-Native 异常/](04-卷4-诊断方法论与稳定性症状/25-Native 异常/) |
+| 第 27 章　系统无响应（SWT · Watchdog） | 10 | [04-卷4-诊断方法论与稳定性症状/27-系统无响应（SWT · Watchdog）/](04-卷4-诊断方法论与稳定性症状/27-系统无响应（SWT · Watchdog）/) |
+| 第 28 章　HANG 与死锁 | 2 | [04-卷4-诊断方法论与稳定性症状/28-HANG 与死锁/](04-卷4-诊断方法论与稳定性症状/28-HANG 与死锁/) |
+| 第 29 章　Kernel Exception | 2 | [04-卷4-诊断方法论与稳定性症状/29-Kernel Exception/](04-卷4-诊断方法论与稳定性症状/29-Kernel Exception/) |
+| 第 30 章　REBOOT | 1 | [04-卷4-诊断方法论与稳定性症状/30-REBOOT/](04-卷4-诊断方法论与稳定性症状/30-REBOOT/) |
 
-### 04-Tool · 工具
+### 卷 5 · 调查工具链
 
-| 二级系列 | 文章数 | 目录 |
-|:---------|-------:|:-----|
-| AmCommand | 6 | [04-Tool/AmCommand/](04-Tool/AmCommand/) |
-| AmCommand / am_command_configs | 3 | [04-Tool/AmCommand/am_command_configs/](04-Tool/AmCommand/am_command_configs/) |
-| ANR-Detection | 3 | [04-Tool/ANR-Detection/](04-Tool/ANR-Detection/) |
-| Dumpsys | 12 | [04-Tool/Dumpsys/](04-Tool/Dumpsys/) |
-| Hprof | 5 | [04-Tool/Hprof/](04-Tool/Hprof/) |
-| Perfetto | 5 | [04-Tool/Perfetto/](04-Tool/Perfetto/) |
-| Watchdog | 8 | [04-Tool/Watchdog/](04-Tool/Watchdog/) |
+| 章 | 文章数 | 目录 |
+|:---|-------:|:-----|
+| 第 31 章　Perfetto 全栈使用 | 5 | [05-卷5-调查工具链/31-Perfetto 全栈使用/](05-卷5-调查工具链/31-Perfetto 全栈使用/) |
+| 第 33 章　Dumpsys · Bugreport · DropBox | 26 | [05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/](05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/) |
+| 第 34 章　Hprof 与内存分析 | 6 | [05-卷5-调查工具链/34-Hprof 与内存分析/](05-卷5-调查工具链/34-Hprof 与内存分析/) |
+| 第 35 章　断点与 Native 调试 | 17 | [05-卷5-调查工具链/35-断点与 Native 调试/](05-卷5-调查工具链/35-断点与 Native 调试/) |
+| 第 36 章　Oncall 与应急响应 | 8 | [05-卷5-调查工具链/36-Oncall 与应急响应/](05-卷5-调查工具链/36-Oncall 与应急响应/) |
 
-### 05-Governance · 治理
+### 卷 6 · 性能工程
 
-| 二级系列 | 文章数 | 目录 |
-|:---------|-------:|:-----|
-| AI-Native / 01_AI_Native_Runtime | 8 | [05-Governance/AI-Native/01_AI_Native_Runtime/](05-Governance/AI-Native/01_AI_Native_Runtime/) |
-| AI-Native / 02_AI_Native_OS | 6 | [05-Governance/AI-Native/02_AI_Native_OS/](05-Governance/AI-Native/02_AI_Native_OS/) |
-| AI-Native / 03_AI_for_Stability | 6 | [05-Governance/AI-Native/03_AI_for_Stability/](05-Governance/AI-Native/03_AI_for_Stability/) |
-| AI-Native / 04_AI_Engineering | 12 | [05-Governance/AI-Native/04_AI_Engineering/](05-Governance/AI-Native/04_AI_Engineering/) |
-| APM | 10 | [05-Governance/APM/](05-Governance/APM/) |
+| 章 | 文章数 | 目录 |
+|:---|-------:|:-----|
+| 第 37 章　性能基线与回归防劣化 | 6 | [06-卷6-性能工程/37-性能基线与回归防劣化/](06-卷6-性能工程/37-性能基线与回归防劣化/) |
 
-### 06-Case · 案例
+### 卷 7 · APM 与工程治理
 
-| 二级系列 | 文章数 | 目录 |
-|:---------|-------:|:-----|
-| Cases-Extended | 8 | [06-Case/Cases-Extended/](06-Case/Cases-Extended/) |
-| Startup | 3 | [06-Case/Startup/](06-Case/Startup/) |
+| 章 | 文章数 | 目录 |
+|:---|-------:|:-----|
+| 第 43 章　APM 架构与自研实践 | 11 | [07-卷7-APM与工程治理/43-APM 架构与自研实践/](07-卷7-APM与工程治理/43-APM 架构与自研实践/) |
+| 第 46 章　AI-Native 调试 | 34 | [07-卷7-APM与工程治理/46-AI-Native 调试/](07-卷7-APM与工程治理/46-AI-Native 调试/) |
 
-### 06-Foundation · 基础
+### 卷 8 · 案例实战
 
-| 二级系列 | 文章数 | 目录 |
-|:---------|-------:|:-----|
-| Build-System | 12 | [06-Foundation/Build-System/](06-Foundation/Build-System/) |
-| Build-System / Soong | 8 | [06-Foundation/Build-System/Soong/](06-Foundation/Build-System/Soong/) |
-| Dynamic-Updates | 4 | [06-Foundation/Dynamic-Updates/](06-Foundation/Dynamic-Updates/) |
-| Graphics | 7 | [06-Foundation/Graphics/](06-Foundation/Graphics/) |
-| Network | 8 | [06-Foundation/Network/](06-Foundation/Network/) |
-| Power | 4 | [06-Foundation/Power/](06-Foundation/Power/) |
-| SELinux | 8 | [06-Foundation/SELinux/](06-Foundation/SELinux/) |
-| System-Integration | 3 | [06-Foundation/System-Integration/](06-Foundation/System-Integration/) |
-| Tools / Android_Tools | 6 | [06-Foundation/Tools/Android_Tools/](06-Foundation/Tools/Android_Tools/) |
-| Tools / Filesystem-Cheat-Sheet | 1 | [06-Foundation/Tools/Filesystem-Cheat-Sheet/](06-Foundation/Tools/Filesystem-Cheat-Sheet/) |
-| Tools / Filesystem-Cheat-Sheet / 01- | 1 | [06-Foundation/Tools/Filesystem-Cheat-Sheet/01-/](06-Foundation/Tools/Filesystem-Cheat-Sheet/01-/) |
-| Tools / Git_Mastery | 5 | [06-Foundation/Tools/Git_Mastery/](06-Foundation/Tools/Git_Mastery/) |
-| Tools / Memory_Analysis | 1 | [06-Foundation/Tools/Memory_Analysis/](06-Foundation/Tools/Memory_Analysis/) |
-| Tools / Tracing | 6 | [06-Foundation/Tools/Tracing/](06-Foundation/Tools/Tracing/) |
+| 章 | 文章数 | 目录 |
+|:---|-------:|:-----|
+| 第 47 章　启动性能案例 | 3 | [08-卷8-案例实战/47-启动性能案例/](08-卷8-案例实战/47-启动性能案例/) |
+| 第 50 章　性能与整机稳定性案例 | 7 | [08-卷8-案例实战/50-性能与整机稳定性案例/](08-卷8-案例实战/50-性能与整机稳定性案例/) |
 
 <!-- CATALOG-SERIES:END -->
 
-## 双轴设计
+## 目录约定
 
 ```
-机制 (AOSP 分层)          症状    取证    工具    治理    案例    基础
-┌──────────────┐         S01…   F00…   dumpsys  APM    E01…   Build
-│ Hardware     │         ANR    ANR    Perfetto OEM    启动   SELinux
-│ Kernel       │         JE     SWT    Hprof    AI…           Network
-│ Runtime/ART  │         …      …      …
-│ Framework    │
-│ App          │
-└──────────────┘
+00-Meta/                书籍目录、学习路线、术语表、构建脚本
+0N-卷N-xxx/             卷目录
+  NN-章标题/             章目录，NN 为全书连续章号（1-50）
+    NN.X-子章标题/        素材多的章会再分子章，如 13.A / 20.C
+    N.N-节标题.md         正文
+    index.md            章落地页，由脚本从书籍目录生成
+_archive/               历史遗留，不进站点
+docs/ · site/           构建产物，勿手改
 ```
 
-## 推荐阅读路径
+正文以文首 `#` 标题为准；同级按文件名数字前缀递进。
 
-| 角色 | 入口 |
-|:-----|:-----|
-| 所有人 | [`00-Meta/学习路线-稳定性架构师.md`](00-Meta/学习路线-稳定性架构师.md) |
-| 通用开发者 | [`01-Mechanism/`](01-Mechanism/) → Framework / ART |
-| 稳定性架构师 | [`02-Symptom/`](02-Symptom/) → [`03-Forensics/`](03-Forensics/) → [`05-Governance/APM/`](05-Governance/APM/) |
-| oncall | 症状 → 取证 → [`04-Tool/`](04-Tool/) |
-| BSP / 系统集成 | [`01-Mechanism/Kernel/`](01-Mechanism/Kernel/) → [`06-Foundation/`](06-Foundation/) |
-
-跨系列引用见 [`00-Meta/引用矩阵.md`](00-Meta/引用矩阵.md)。
-
-## 本地预览站点
+## 本地预览
 
 ```bash
 pip install -r 00-Meta/scripts/requirements-docs.txt
-py -3.12 00-Meta/scripts/generate_article_catalog.py
-py -3.12 00-Meta/scripts/prepare_web_docs.py
+py -3.12 00-Meta/scripts/generate_article_catalog.py   # 刷新目录
+py -3.12 00-Meta/scripts/prepare_web_docs.py           # 生成 docs/
 mkdocs serve
 ```
 
-`docs/` 由脚本生成，请勿手改。
+新增或移动文章后，跑一遍 `generate_article_catalog.py` 更新目录；改了书籍目录后，跑 `sync_book_index.py` 重生成各章落地页。
 
-## 质量约定
+## 写作规范
 
-- 源码基线：AOSP 17 + android17-6.18
-- 正文以文首 `#` 标题为准；系列内 `NN-标题.md` 递进
-- 写作规范见仓库根目录 `PROMPT-技术系列文章写作指南.md`（作者向，不进站点）
+统一见 [`PROMPT-技术系列文章写作指南.md`](PROMPT-技术系列文章写作指南.md)（作者向，不进站点）——含每节的标准结构、质量检查清单、反例库与校准机制。
 
 ---
 
-**作者**：JacobKing · Stability Matrix Course  
+**作者**：JacobKing · Stability Matrix Course
 **仓库**：[yacob-wang/smc-pub](https://github.com/yacob-wang/smc-pub)

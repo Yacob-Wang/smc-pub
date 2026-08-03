@@ -54,7 +54,7 @@
 - **本系列 README**：[README-Dumpsys系列.md](README-Dumpsys系列.md)
 - **学习路线**：[L00-稳定性架构师学习路线](../02-Symptom/README-学习路线-稳定性架构师.md)
 - **质量评估**：[Q00-系列质量评估报告](../02-Symptom/README-系列质量评估报告.md)
-- **全局术语表**：[Reference/术语表.md](../../00-Meta/Reference/术语表.md)
+- **全局术语表**：[Reference/术语表.md](../../00-Meta/术语表.md)
 
 # 写作标准
 

@@ -61,7 +61,7 @@
 - **本系列 README**：[README-Stability系列.md](../README.md)
 - **跨系列引用矩阵**：[Reference/Stability-跨系列引用矩阵.md](../../00-Meta/Reference/Stability-跨系列引用矩阵.md)
 - **本系列案例索引**：[Reference/Stability-案例索引.md](../../00-Meta/Reference/Stability-案例索引.md)
-- **全局术语表**：[Reference/术语表.md](../../00-Meta/Reference/术语表.md)
+- **全局术语表**：[Reference/术语表.md](../../00-Meta/术语表.md)
 - **本篇专题类型**：§8 演进对比专题型（破例）
 
 # 写作标准

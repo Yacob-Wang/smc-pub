@@ -76,10 +76,10 @@ def test_article_item_from_markdown() -> None:
 
 
 def test_series_landing_uses_list_not_cards() -> None:
-    cgroup = REPO / "01-Mechanism/Kernel/cgroup"
-    if not cgroup.is_dir():
+    binder = REPO / "03-卷3-核心机制/12-Binder IPC 深度"
+    if not binder.is_dir():
         return
-    html = build_series_landing_index("01-Mechanism", cgroup)
+    html = build_series_landing_index("03-卷3-核心机制", binder)
     _assert("jk-article-list" in html, "series uses article list")
     _assert("jk-feed-grid" not in html, "series no feed grid")
 
@@ -115,10 +115,10 @@ def test_series_media_slug_is_stable_and_varied() -> None:
 
 
 def test_module_index_series_cards_use_varied_colors() -> None:
-    mod_dir = REPO / "01-Mechanism"
+    mod_dir = REPO / "03-卷3-核心机制"
     if not mod_dir.is_dir():
         return
-    html = build_module_index("01-Mechanism", mod_dir)
+    html = build_module_index("03-卷3-核心机制", mod_dir)
     _assert("jk-feed-grid" in html, "module keeps feed grid")
     _assert("jk-article-list" not in html, "module no article list")
     _assert("jk-feed-card--series" in html, "module landing uses series cards")

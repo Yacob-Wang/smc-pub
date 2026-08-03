@@ -272,7 +272,9 @@ def test_binder_article_calibration_appendix() -> None:
 
 
 def test_symptom_readme_calibration_tail() -> None:
-    raw = (REPO / "02-Symptom/README.md").read_text(encoding="utf-8")
+    raw = (
+        REPO / "04-卷4-诊断方法论与稳定性症状/00-症状体系总览.md"
+    ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "Symptom README should strip calibration tail")
     _assert("校准决策日志" not in out, "Symptom README calibration gone")

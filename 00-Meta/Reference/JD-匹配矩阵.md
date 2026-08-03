@@ -51,7 +51,7 @@
 
 | JD 维度 | 覆盖度 | 面试优先级 | 推荐入口系列 / 路径 | 备注 |
 |:--------|:------:|:----------:|:--------------------|:-----|
-| **D1 Java Crash** | **高** | P0 | [S02-JE](../../02-Symptom/S02-JE/) → [F03-JE](../../03-Forensics/F03-JE/) → [Hprof](../../04-Tool/Hprof/) | 四大组件内嵌 40+ 案例见 [案例索引.md](案例索引.md) |
+| **D1 Java Crash** | **高** | P0 | [S02-JE](../../02-Symptom/S02-JE/) → [F03-JE](../../03-Forensics/F03-JE/) → [Hprof](../../04-Tool/Hprof/) | 四大组件内嵌 40+ 案例见 [案例索引.md](../案例索引.md) |
 | **D2 ANR** | **高** | P0 | [S01-ANR](../../02-Symptom/S01-ANR/) → [F01-ANR](../../03-Forensics/F01-ANR/) → [ANR-Detection](../../04-Tool/ANR-Detection/) → [Input/06](../../01-Mechanism/Framework/Input/) → [Handler/06](../../01-Mechanism/App/Handler-MessageQueue-Looper/Handler_MessageQueue_Looper/) | 约 80% P0 工单来源 |
 | **D3 Native Crash** | **高** | P0 | [S03-NE](../../02-Symptom/S03-NE/) → [F04-NE](../../03-Forensics/F04-NE/) → [Native_Crash](../../01-Mechanism/Runtime/Native_Crash/)（8 篇） | Tombstone 16 段是面试高频 |
 | **D4 OOM / 内存** | **高** | P0 | [Memory_Management](../../01-Mechanism/Kernel/Memory_Management/)（15）→ [ART/03-GC系统](../../01-Mechanism/Runtime/ART/03-GC系统/) → [Hprof](../../04-Tool/Hprof/) → [F06-HANG-OOM](../../03-Forensics/F06-HANG-OOM/) | 全库最厚子系列 |
@@ -102,7 +102,7 @@
 | oncall / 7×24 响应 | **部分** | 先读 [Oncall/OC01–OC06](../../03-Forensics/Oncall/)；REBOOT/KE 对照 F02/F05 + S06/S07 |
 | 架构师级 APM 设计 | **弱** | 必读 A01–A04 + S10-01/02；A05–A10 与 S10-03–05 是 P0 补全项 |
 | OEM 厂商经验 | **弱** | 机制：[Hook/](../../01-Mechanism/App/Hook/)；治理：等 OEM-BSP/；案例：等 E11 |
-| 面试案例叙述 | **中** | E01–E04 + [案例索引](案例索引.md)；缺跨系列 E05–E11 |
+| 面试案例叙述 | **中** | E01–E04 + [案例索引](../案例索引.md)；缺跨系列 E05–E11 |
 | 行业 SLO 对标 | **缺失** | 等 `Industry-Benchmark/`；临时用 [S10-02](../../06-卷6-性能工程/37-性能基线与回归防劣化/02-SLI与SLO设计：从指标到门禁.md) |
 
 ---

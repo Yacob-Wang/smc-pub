@@ -13,18 +13,22 @@ from pathlib import Path
 from content_policy import MODULE_TITLES, PUBLIC_MODULES, is_excluded_path, is_meta_file
 from preamble_transform import strip_author_preamble
 
+# 卷 → 卡片配色。slug 是历史沿用的调色板名（对应 extra.css 里的
+# .jk-feed-card__media--*，reader 应用也在用），不再表示模块语义，
+# 改这里只会换颜色，不影响导航。
 MODULE_MEDIA: dict[str, str] = {
     "00-Meta": "meta",
-    "01-Mechanism": "mechanism",
-    "02-Symptom": "symptom",
-    "03-Forensics": "forensics",
-    "04-Tool": "tool",
-    "05-Governance": "governance",
-    "06-Case": "case",
-    "06-Foundation": "foundation",
+    "01-卷1-Android系统基础与平台": "foundation",
+    "02-卷2-系统启动": "forensics",
+    "03-卷3-核心机制": "mechanism",
+    "04-卷4-诊断方法论与稳定性症状": "symptom",
+    "05-卷5-调查工具链": "tool",
+    "06-卷6-性能工程": "perf",
+    "07-卷7-APM与工程治理": "governance",
+    "08-卷8-案例实战": "case",
 }
 
-# 系列卡片调色板：复用首页模块色，保证对比度与视觉语言一致
+# 章卡片调色板：复用同一组颜色，保证对比度与视觉语言一致
 SERIES_PALETTE: tuple[str, ...] = (
     "mechanism",
     "symptom",
@@ -33,6 +37,7 @@ SERIES_PALETTE: tuple[str, ...] = (
     "governance",
     "case",
     "foundation",
+    "perf",
     "meta",
 )
 
@@ -165,7 +170,7 @@ def module_for_path(path: Path, repo_root: Path | None = None) -> str:
                     return first
         except ValueError:
             pass
-    return "01-Mechanism"
+    return "03-卷3-核心机制"
 
 
 def module_media_slug(module: str) -> str:
@@ -412,7 +417,7 @@ def collect_latest_articles(content_root: Path, *, limit: int = 12) -> list[Feed
             rel = path.relative_to(content_root)
         except ValueError:
             continue
-        module = rel.parts[0] if rel.parts else "01-Mechanism"
+        module = rel.parts[0] if rel.parts else "03-卷3-核心机制"
         cards.append(
             card_from_markdown(
                 path,
@@ -432,7 +437,7 @@ def collect_latest_article_items(content_root: Path, *, limit: int = 12) -> list
             rel = path.relative_to(content_root)
         except ValueError:
             continue
-        module = rel.parts[0] if rel.parts else "01-Mechanism"
+        module = rel.parts[0] if rel.parts else "03-卷3-核心机制"
         content = path.read_text(encoding="utf-8", errors="replace")
         items.append(
             ArticleListItem(

@@ -78,7 +78,7 @@ md.extend([
     '---',
     '',
     '**生成脚本**：`00-Meta/scripts/quality_audit.py`',
-    '**配套文档**：`00-Meta/写作标准-v1.md`',
+    '**配套文档**：`PROMPT-技术系列文章写作指南.md` §0',
 ])
 
 out = REPO / '00-Meta' / '拟删除清单-v1.md'
