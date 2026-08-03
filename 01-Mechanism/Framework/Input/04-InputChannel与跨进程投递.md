@@ -20,7 +20,7 @@
 - **强依赖**:
   - [01-Input 系统总览](01-Input系统总览.md) §3 五层架构(本篇聚焦 Layer 4)
   - [03-InputDispatcher](03-InputDispatcher.md)(本篇消费 InputDispatcher 产出)
-  - [Socket 06-UDS](../01-Mechanism/Kernel/socket/06-Unix_Domain_Socket与Android使用.md)(InputChannel 底层是 socketpair)
+  - [Socket 06-UDS](../../03-卷3-核心机制/17-网络与连接/06-Unix_Domain_Socket与Android使用.md)(InputChannel 底层是 socketpair)
 - **承接自**:03 已讲分发层。本篇深入"跨进程传输"
 - **衔接去**:05 View 消费 + 06 ANR 触发
 - **不重复内容**:UDS socketpair 详见 06;ANR 判定详见 06 §3

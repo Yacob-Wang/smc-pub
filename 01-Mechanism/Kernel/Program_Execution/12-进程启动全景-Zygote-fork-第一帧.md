@@ -21,7 +21,7 @@
 - **不重复内容**:
   - **各加载器内部细节** → 详见对应 PLE-02~11
   - **运行时内存布局** → 详见 [MM_v2 14-Android 进程内存类型学](../Memory_Management/MM_v2/14-Android进程内存类型学-zygote-system_server-app-kernel-native守护进程.md)
-  - **调度与进程生死** → 详见 [Android_Framework/Process/07-调度与资源](../01-Mechanism/Framework/Process/07-调度与资源：CFS与进程生死.md)
+  - **调度与进程生死** → 详见 [Android_Framework/Process/07-调度与资源](../../03-卷3-核心机制/13-进程与生命周期/07-调度与资源：CFS与进程生死.md)
 
 ## 0. 写在前面:为什么进程启动单独成篇
 

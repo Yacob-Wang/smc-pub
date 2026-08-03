@@ -10,6 +10,16 @@ from pathlib import Path
 
 PUBLIC_MODULES = [
     "00-Meta",
+    # 8 卷 50 章书籍结构（2026-08-02 改造）
+    "01-卷1-Android系统基础与平台",
+    "02-卷2-系统启动",
+    "03-卷3-核心机制",
+    "04-卷4-稳定性症状诊断",
+    "05-卷5-调查方法论与工具链",
+    "06-卷6-性能工程",
+    "07-卷7-APM与工程治理",
+    "08-卷8-案例实战",
+    # 旧 7 module（迁移残留，下一阶段清理）
     "01-Mechanism",
     "02-Symptom",
     "03-Forensics",
@@ -21,6 +31,16 @@ PUBLIC_MODULES = [
 
 MODULE_TITLES = {
     "00-Meta": "Map",
+    # 8 卷
+    "01-卷1-Android系统基础与平台": "卷 1 基础",
+    "02-卷2-系统启动": "卷 2 启动",
+    "03-卷3-核心机制": "卷 3 机制",
+    "04-卷4-稳定性症状诊断": "卷 4 症状",
+    "05-卷5-调查方法论与工具链": "卷 5 调查",
+    "06-卷6-性能工程": "卷 6 性能",
+    "07-卷7-APM与工程治理": "卷 7 治理",
+    "08-卷8-案例实战": "卷 8 案例",
+    # 旧 module
     "01-Mechanism": "Mechanism",
     "02-Symptom": "Symptoms",
     "03-Forensics": "Forensics",
@@ -59,6 +79,16 @@ TOP_NAV_GROUPS: list[tuple[str, list[tuple[str, str]]]] = [
 
 MODULE_BLURBS = {
     "00-Meta": "学习路线 · 阅读指南 · JD 匹配 · 缺口一览 · Reference",
+    # 8 卷
+    "01-卷1-Android系统基础与平台": "Android 系统全景 · AOSP 源码 · HAL/Treble · Kernel 基础 · 安全基础（SELinux · AVB）",
+    "02-卷2-系统启动": "Bootloader · Init · Zygote · SystemServer · 应用启动 · 启动性能",
+    "03-卷3-核心机制": "Binder · 进程 · 线程 · 内存 · IO · 网络 · 显示 · 电源 · ART",
+    "04-卷4-稳定性症状诊断": "ANR · JE · NE · SWT · HANG · REBOOT · KE · 性能退化",
+    "05-卷5-调查方法论与工具链": "调查方法论 · Perfetto · Systrace · Dumpsys/Bugreport · Hprof · 断点 · Oncall",
+    "06-卷6-性能工程": "性能基线 · 启动 · 滑动 · 低端机 · WebView",
+    "07-卷7-APM与工程治理": "SLI/SLO · APM 自研 · 告警 · 灰度 · AI-Native 调试",
+    "08-卷8-案例实战": "冷启动优化 · ANR 调查 · Native Crash 调查 · 性能优化",
+    # 旧 module
     "01-Mechanism": "Hardware · Kernel · Runtime · Framework · App",
     "02-Symptom": "11 大症状机制（ANR · JE · NE · SWT · HANG · REBOOT · KE 等）",
     "03-Forensics": "8 大取证链（与症状编号一一对应）",

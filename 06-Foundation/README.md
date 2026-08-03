@@ -54,8 +54,8 @@
 | # | 文章 | 重点 | 看完能做什么 |
 |:-:|:-----|:-----|:------------|
 | 1 | [System-Integration/01_System_Composition_And_Boot](../06-Foundation/System-Integration/01_System_Composition_And_Boot.md) | 系统组成 + 启动链 | 能从 boot.img 顺到 zygote |
-| 2 | [Tools/Android_Tools/Init_RC_Complete_Guide](../06-Foundation/Tools/Android_Tools/Init_RC_Complete_Guide.md) | init.rc 语法 + section + trigger | 能读懂 service / on / trigger |
-| 3 | [02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc](../../02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc.md) | Init 进程源码视角 | 能从 init.cpp 顺到 first stage |
+| 2 | [Tools/Android_Tools/Init_RC_Complete_Guide](../../05-卷5-调查方法论与工具链/35-断点与 Native 调试/Init_RC_Complete_Guide.md) | init.rc 语法 + section + trigger | 能读懂 service / on / trigger |
+| 3 | [02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc](../../../02-卷2-系统启动/A-启动机制/A03-Init进程与init.rc.md) | Init 进程源码视角 | 能从 init.cpp 顺到 first stage |
 | 4 | [System-Integration/02_Partition_Mount_And_Usage](../06-Foundation/System-Integration/02_Partition_Mount_And_Usage.md) | fstab + 挂载时机 | 能解释 vendor / system / product 挂载关系 |
 | 5 | [System-Integration/03_System_Initialization_Flow](../06-Foundation/System-Integration/03_System_Initialization_Flow.md) | rc 文件解析 + 服务启动顺序 | 能解释 service 之间的依赖 |
 
@@ -69,12 +69,12 @@
 
 | # | 文章 | 重点 | 看完能做什么 |
 |:-:|:-----|:-----|:------------|
-| 1 | [Build-System/01_AOSP_Build_Environment](../06-Foundation/Build-System/01_AOSP_Build_Environment.md) | AOSP 17 编译环境搭建 | 能 source build/envsetup.sh + lunch |
-| 2 | [Build-System/02_Partition_Build_Process](../06-Foundation/Build-System/02_Partition_Build_Process.md) | 分区编译流程 | 能 m system / m vendor / m product |
-| 3 | [Build-System/03_Image_Generation_And_Packaging](../06-Foundation/Build-System/03_Image_Generation_And_Packaging.md) | 镜像生成 + 打包 | 能解释 system.img 怎么来 |
-| 4 | [Build-System/04_Build_Configuration_And_Options](../06-Foundation/Build-System/04_Build_Configuration_And_Options.md) | BoardConfig.mk + 编译选项 | 能改 BOARD_SYSTEM_IMAGE_FILE_SYSTEM_TYPE |
-| 5 | [Tools/Android_Tools/Init_RC_Complete_Guide](../06-Foundation/Tools/Android_Tools/Init_RC_Complete_Guide.md) | init.rc 自定义 service | 能写自己的 init.<device>.rc |
-| 6 | [Tools/Git_Mastery/Git_Expert_Tutorial](../06-Foundation/Tools/Git_Mastery/Git_Expert_Tutorial.md) | AOSP 多仓 git 操作 | 能 repo forall + git push 到自己的分支 |
+| 1 | [Build-System/01_AOSP_Build_Environment](../../01-卷1-Android系统基础与平台/02-AOSP 源码结构与构建系统/01_AOSP_Build_Environment.md) | AOSP 17 编译环境搭建 | 能 source build/envsetup.sh + lunch |
+| 2 | [Build-System/02_Partition_Build_Process](../../01-卷1-Android系统基础与平台/02-AOSP 源码结构与构建系统/02_Partition_Build_Process.md) | 分区编译流程 | 能 m system / m vendor / m product |
+| 3 | [Build-System/03_Image_Generation_And_Packaging](../../01-卷1-Android系统基础与平台/02-AOSP 源码结构与构建系统/03_Image_Generation_And_Packaging.md) | 镜像生成 + 打包 | 能解释 system.img 怎么来 |
+| 4 | [Build-System/04_Build_Configuration_And_Options](../../01-卷1-Android系统基础与平台/02-AOSP 源码结构与构建系统/04_Build_Configuration_And_Options.md) | BoardConfig.mk + 编译选项 | 能改 BOARD_SYSTEM_IMAGE_FILE_SYSTEM_TYPE |
+| 5 | [Tools/Android_Tools/Init_RC_Complete_Guide](../../05-卷5-调查方法论与工具链/35-断点与 Native 调试/Init_RC_Complete_Guide.md) | init.rc 自定义 service | 能写自己的 init.<device>.rc |
+| 6 | [Tools/Git_Mastery/Git_Expert_Tutorial](../../05-卷5-调查方法论与工具链/35-断点与 Native 调试/Git_Expert_Tutorial.md) | AOSP 多仓 git 操作 | 能 repo forall + git push 到自己的分支 |
 
 **读完去**：M3 新系列 [Android.bp / Soong / Blueprint 系列](#m3-m4-新系列androidbp--soong) 深入编译系统。
 
@@ -86,14 +86,14 @@
 
 | # | 文章 | 重点 | 看完能做什么 |
 |:-:|:-----|:-----|:------------|
-| 1 | [Tools/Tracing/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto](../06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) | 4 类 trace 全景 | 知道哪种场景用哪个 |
-| 2 | [Tools/Tracing/Android设备如何抓取trace](../06-Foundation/Tools/Tracing/Android设备如何抓取trace.md) | 抓 trace 的 6 种方法 | 任何设备都能抓到 |
-| 3 | [Tools/Tracing/ftrace的语法解析](../06-Foundation/Tools/Tracing/ftrace的语法解析.md) | ftrace 语法 | 能读懂 ftrace log |
-| 4 | [Tools/Android_Tools/Logcat_Complete_Guide](../06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide.md) | logcat 完整指南 | 能用 logcat -d -t -s 过滤 |
-| 5 | [Tools/Tracing/block_bio_complete 与 block_rq_complete 核心区别](../06-Foundation/Tools/Tracing/block_bio_complete 与 block_rq_complete 核心区别.md) | IO trace 关键事件 | 能区分 bio 级别 vs rq 级别 |
-| 6 | [Tools/Tracing/ftrace-QA](../06-Foundation/Tools/Tracing/ftrace-QA.md) | ftrace 常见 Q&A | 能解答"为什么 trace 抓不到" |
-| 7 | [Tools/Memory_Analysis/PSI_Memory_Pressure_Analysis](../06-Foundation/Tools/Memory_Analysis/PSI_Memory_Pressure_Analysis.md) | PSI 内存压力 | 能读懂 /proc/pressure/memory |
-| 8 | [Dynamic-Updates/04_Update_Verification_And_Rollback](../06-Foundation/Dynamic-Updates/04_Update_Verification_And_Rollback.md) | AVB 验证 + 回滚 | 能解释 bootloop 时的回滚链路 |
+| 1 | [Tools/Tracing/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto](../../05-卷5-调查方法论与工具链/35-断点与 Native 调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) | 4 类 trace 全景 | 知道哪种场景用哪个 |
+| 2 | [Tools/Tracing/Android设备如何抓取trace](../../05-卷5-调查方法论与工具链/35-断点与 Native 调试/Android设备如何抓取trace.md) | 抓 trace 的 6 种方法 | 任何设备都能抓到 |
+| 3 | [Tools/Tracing/ftrace的语法解析](../../05-卷5-调查方法论与工具链/35-断点与 Native 调试/ftrace的语法解析.md) | ftrace 语法 | 能读懂 ftrace log |
+| 4 | [Tools/Android_Tools/Logcat_Complete_Guide](../../05-卷5-调查方法论与工具链/35-断点与 Native 调试/Logcat_Complete_Guide.md) | logcat 完整指南 | 能用 logcat -d -t -s 过滤 |
+| 5 | [Tools/Tracing/block_bio_complete 与 block_rq_complete 核心区别](../../05-卷5-调查方法论与工具链/35-断点与 Native 调试/block_bio_complete 与 block_rq_complete 核心区别.md) | IO trace 关键事件 | 能区分 bio 级别 vs rq 级别 |
+| 6 | [Tools/Tracing/ftrace-QA](../../05-卷5-调查方法论与工具链/35-断点与 Native 调试/ftrace-QA.md) | ftrace 常见 Q&A | 能解答"为什么 trace 抓不到" |
+| 7 | [Tools/Memory_Analysis/PSI_Memory_Pressure_Analysis](../../05-卷5-调查方法论与工具链/35-断点与 Native 调试/PSI_Memory_Pressure_Analysis.md) | PSI 内存压力 | 能读懂 /proc/pressure/memory |
+| 8 | [Dynamic-Updates/04_Update_Verification_And_Rollback](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux · AVB）/Dynamic-Updates/04_Update_Verification_And_Rollback.md) | AVB 验证 + 回滚 | 能解释 bootloop 时的回滚链路 |
 
 **读完去**：M4 新系列 [Bugreport 完整解析系列](#m4-m5-新系列bugreport-完整解析) 抓现场证据。
 
@@ -163,7 +163,7 @@
 ### M5-M6 取证补全
 
 - `06-Foundation/Tools/Filesystem-Cheat-Sheet/` 2 篇（/proc /sys 字典）
-- `06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide.md` 扩展 3 篇
+- `../05-卷5-调查方法论与工具链/35-断点与 Native 调试/Logcat_Complete_Guide.md` 扩展 3 篇
 - `01-Mechanism/Framework/Service/` 加 1 篇 dropbox / crash buffer
 
 ---

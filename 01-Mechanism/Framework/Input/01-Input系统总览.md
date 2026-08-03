@@ -18,8 +18,8 @@
 
 - **本篇系列角色**:核心机制第 1 篇(Input 系统总览,建立"硬件 → InputFlinger → App"全链路认知)
 - **强依赖**:
-  - [Socket 01-Socket 总览](../01-Mechanism/Kernel/socket/01-Socket总览.md)(UDS socketpair 是 InputChannel 底层,本篇会涉及)
-  - [IO 06-IO 与进程](../01-Mechanism/Kernel/IO/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md)(D 状态 + ANR 判定)
+  - [Socket 01-Socket 总览](../../03-卷3-核心机制/17-网络与连接/01-Socket总览.md)(UDS socketpair 是 InputChannel 底层,本篇会涉及)
+  - [IO 06-IO 与进程](../../03-卷3-核心机制/16-IO 与存储/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md)(D 状态 + ANR 判定)
 - **承接自**:Input 系列首篇,无前置正文
 - **衔接去**:
   - 02 深入 EventHub 与 InputReader(硬件读取层)

@@ -56,7 +56,7 @@
 
 - **核心能力**：boot trace + main thread + system_server + surfaceflinger
 - **v4 特色**：配置 + sql + 实战脚本
-- **联动**：[AOSP_Startup/D01 Perfetto Boot Trace](../02-Symptom/S11-Startup/D-启动工具/D01-Perfetto-Boot-Trace抓全栈启动时序.md)
+- **联动**：[AOSP_Startup/D01 Perfetto Boot Trace](../../02-卷2-系统启动/D-启动工具/D01-Perfetto-Boot-Trace抓全栈启动时序.md)
 
 ### 1.4 Hprof/（14 篇）
 

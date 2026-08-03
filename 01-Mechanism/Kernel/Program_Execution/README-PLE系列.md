@@ -210,10 +210,10 @@
 | **linker64 / 重定位** | [MM_v2 04-Native 堆](../Memory_Management/MM_v2/04-Native堆分配与scudo.md) | .so 加载时 scudo reserve;Native 内存峰值 |
 | **ClassLoader / DEX 加载** | [MM_v2 03-ART 堆](../Memory_Management/MM_v2/03-ART堆内存与GC全景.md) | DEX mmap 后的 ART 堆管理;Class 对象分配 |
 | **AOT/JIT 编译** | [MM_v2 03-ART 堆](../Memory_Management/MM_v2/03-ART堆内存与GC全景.md) | AOT 产物 VDEX 占用 ART 元数据堆;JIT code cache |
-| **Zygote fork** | [Android_Framework/Process 03](../01-Mechanism/Framework/Process/03-Zygote-Android进程工厂.md) | Zygote 的进程工厂角色;fork 的实现细节 |
+| **Zygote fork** | [Android_Framework/Process 03](../../03-卷3-核心机制/13-进程与生命周期/03-Zygote-Android进程工厂.md) | Zygote 的进程工厂角色;fork 的实现细节 |
 | **Zygote preload** | [MM_v2 14-进程类型学](../Memory_Management/MM_v2/14-Android进程内存类型学-zygote-system_server-app-kernel-native守护进程.md) | preload 后的 zygote 进程内存长啥样 |
 | **进程类型差异** | [MM_v2 14-进程类型学](../Memory_Management/MM_v2/14-Android进程内存类型学-zygote-system_server-app-kernel-native守护进程.md) | **完全对仗**:MM_v2 14 看运行时,PLE 13 看启动时 |
-| **Resources 加载** | [Android_Framework/Process 04](../01-Mechanism/Framework/Process/04-应用进程首生-fork到ActivityThread.md) | 应用首生时 AssetManager 创建;resources.arsc 解析 |
+| **Resources 加载** | [Android_Framework/Process 04](../../03-卷3-核心机制/13-进程与生命周期/04-应用进程首生-fork到ActivityThread.md) | 应用首生时 AssetManager 创建;resources.arsc 解析 |
 | **冷启动慢** | (本系列 PLE 14) | 8 阶段拆解 + 异常映射 |
 | **加载失败** | (本系列 PLE 14) | 异常关键字 → 阶段 → 文章 |
 

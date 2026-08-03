@@ -226,14 +226,14 @@ Step 3：跳到 §5 治理（dump 取证 + 修复模式）——这才是线上�
 
 | 优先级 | 文章 | 原因 |
 |:------|:-----|:-----|
-| **⭐ 必读** | [01-NativeCrash总览](../01-Mechanism/Runtime/Native_Crash/01-NativeCrash总览.md) | debuggerd 入口 |
-| **⭐ 必读** | [02-Linux信号机制](../01-Mechanism/Runtime/Native_Crash/02-Linux信号机制.md) | 6 种致命信号根因 |
-| **⭐ 必读** | [04-debuggerd与Tombstone](../01-Mechanism/Runtime/Native_Crash/04-debuggerd与Tombstone.md) | tombstone 抓取链路 |
-| **⭐ 必读** | [06-Tombstone深度解读](../01-Mechanism/Runtime/Native_Crash/06-Tombstone深度解读.md) | 16 段结构怎么读 |
-| **⭐ 必读** | [08-APM集成与治理](../01-Mechanism/Runtime/Native_Crash/08-APM集成与治理.md) | 监控落地 |
-| 选读 | [03-内存管理与保护](../01-Mechanism/Runtime/Native_Crash/03-内存管理与保护.md) | 内存越界原理 |
-| 选读 | [05-栈回溯与符号化](../01-Mechanism/Runtime/Native_Crash/05-栈回溯与符号化.md) | unwinding |
-| 选读 | [07-检测工具体系](../01-Mechanism/Runtime/Native_Crash/07-检测工具体系.md) | asan / fuzzer / 内存检测 |
+| **⭐ 必读** | [01-NativeCrash总览](../../04-卷4-稳定性症状诊断/24-Native 异常/01-NativeCrash总览.md) | debuggerd 入口 |
+| **⭐ 必读** | [02-Linux信号机制](../../04-卷4-稳定性症状诊断/24-Native 异常/02-Linux信号机制.md) | 6 种致命信号根因 |
+| **⭐ 必读** | [04-debuggerd与Tombstone](../../04-卷4-稳定性症状诊断/24-Native 异常/04-debuggerd与Tombstone.md) | tombstone 抓取链路 |
+| **⭐ 必读** | [06-Tombstone深度解读](../../04-卷4-稳定性症状诊断/24-Native 异常/06-Tombstone深度解读.md) | 16 段结构怎么读 |
+| **⭐ 必读** | [08-APM集成与治理](../../04-卷4-稳定性症状诊断/24-Native 异常/08-APM集成与治理.md) | 监控落地 |
+| 选读 | [03-内存管理与保护](../../04-卷4-稳定性症状诊断/24-Native 异常/03-内存管理与保护.md) | 内存越界原理 |
+| 选读 | [05-栈回溯与符号化](../../04-卷4-稳定性症状诊断/24-Native 异常/05-栈回溯与符号化.md) | unwinding |
+| 选读 | [07-检测工具体系](../../04-卷4-稳定性症状诊断/24-Native 异常/07-检测工具体系.md) | asan / fuzzer / 内存检测 |
 
 #### 🧠 ART（按需深读，~10-15 小时）
 
@@ -284,9 +284,9 @@ Step 3：跳到 §5 治理（dump 取证 + 修复模式）——这才是线上�
 
 | 场景 | 必读 |
 |:-----|:-----|
-| **Binder hang / 饿死** | [Linux_Kernel/Binder/05-线程模型](../01-Mechanism/Kernel/Binder/05-Binder线程模型.md) + [07-稳定性风险全景](../01-Mechanism/Kernel/Binder/07-Binder稳定性风险全景.md) + [10-oneway限流](../01-Mechanism/Kernel/Binder/10-Binder-oneway限流与防护方案.md) |
+| **Binder hang / 饿死** | [Linux_Kernel/Binder/05-线程模型](../../03-卷3-核心机制/12-Binder IPC 深度/05-Binder线程模型.md) + [07-稳定性风险全景](../../03-卷3-核心机制/12-Binder IPC 深度/07-Binder稳定性风险全景.md) + [10-oneway限流](../../03-卷3-核心机制/12-Binder IPC 深度/10-Binder-oneway限流与防护方案.md) |
 | **IO hang / 存储卡顿** | [Linux_Kernel/IO/](../01-Mechanism/Kernel/IO/) 全部 + [Linux_Kernel/FS/](../01-Mechanism/Kernel/FS/) 全部 + [Linux_Kernel/DM/](../01-Mechanism/Kernel/DM/) |
-| **Kernel panic / oops** | [Linux_Kernel/Process/13-进程调试与稳定性关联](../01-Mechanism/Kernel/Process/13-进程调试与稳定性关联.md) + [Linux_Kernel/Process/11-信号机制](../01-Mechanism/Kernel/Process/11-信号机制_从产生到投递.md) |
+| **Kernel panic / oops** | [Linux_Kernel/Process/13-进程调试与稳定性关联](../../03-卷3-核心机制/13-进程与生命周期/13-进程调试与稳定性关联.md) + [Linux_Kernel/Process/11-信号机制](../../03-卷3-核心机制/13-进程与生命周期/11-信号机制_从产生到投递.md) |
 | **内存 / OOM 链路** | [Linux_Kernel/Memory_Management/MM_v2/](../01-Mechanism/Kernel/Memory_Management/MM_v2/) 全部 |
 | **epoll 死锁 / socket hang** | [Linux_Kernel/epoll/](../01-Mechanism/Kernel/epoll/) 全部 + [Linux_Kernel/socket/](../01-Mechanism/Kernel/socket/) 全部 |
 | **GKI 设备驱动** | [Linux_Kernel/GKI/](../01-Mechanism/Kernel/GKI/) + [Linux_Kernel/Input_Driver/](../01-Mechanism/Kernel/Input_Driver/) |
