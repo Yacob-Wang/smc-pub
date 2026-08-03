@@ -1,0 +1,28 @@
+{#-
+  系列篇章横条：列出当前系列内各篇（含系列总览），供桌面 / 窄屏跳转。
+  数据源：page.parent.children（不再依赖左侧主侧栏 DOM）。
+-#}
+{% if page and page.parent and page.parent.children %}
+  {% set ns = namespace(links=[]) %}
+  {% for child in page.parent.children %}
+    {% if child.is_page %}
+      {% set _ = ns.links.append(child) %}
+    {% endif %}
+  {% endfor %}
+  {% if ns.links | length >= 2 %}
+    <nav class="jk-article-strip jk-article-strip--ready" data-jk-article-strip aria-label="当前系列篇章">
+      <div class="jk-article-strip__scroll">
+        {% for child in ns.links %}
+          {% set label = child.title %}
+          {% if child.is_index %}
+            {% set label = "系列总览" %}
+          {% endif %}
+          <a
+            class="jk-strip__link jk-article-strip__link{% if child.active %} jk-strip__link--active jk-article-strip__link--active{% endif %}"
+            href="{{ child.url | url }}"
+          >{{ label }}</a>
+        {% endfor %}
+      </div>
+    </nav>
+  {% endif %}
+{% endif %}

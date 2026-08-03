@@ -55,24 +55,25 @@ TOP_NAV_GROUPS: list[tuple[str, list[tuple[str, str]]]] = [
     (
         "查问题",
         [
-            ("症状", "02-Symptom"),
-            ("取证", "03-Forensics"),
-            ("案例", "06-Case"),
+            ("症状", "04-卷4-稳定性症状诊断"),
+            ("调查", "05-卷5-调查方法论与工具链"),
+            ("案例", "08-卷8-案例实战"),
         ],
     ),
     (
         "学机制",
         [
             ("地图", "00-Meta"),
-            ("机制", "01-Mechanism"),
-            ("基础", "06-Foundation"),
+            ("基础", "01-卷1-Android系统基础与平台"),
+            ("启动", "02-卷2-系统启动"),
+            ("机制", "03-卷3-核心机制"),
         ],
     ),
     (
         "工具与治理",
         [
-            ("工具", "04-Tool"),
-            ("治理", "05-Governance"),
+            ("性能", "06-卷6-性能工程"),
+            ("治理", "07-卷7-APM与工程治理"),
         ],
     ),
 ]
@@ -227,62 +228,107 @@ MODULE_SERIES_ORDER: dict[str, list[str]] = {
 
 # 首页「按问题进入」表格 — 集中维护，供 public_readme 与链接校验共用
 PROBLEM_INDEX: list[tuple[str, list[tuple[str, str]]]] = [
-    ("Native Crash", [("Native Crash", "01-Mechanism/Runtime/Native_Crash/")]),
+    (
+        "Native Crash",
+        [("Native Crash", "04-卷4-稳定性症状诊断/24-Native 异常/")],
+    ),
     (
         "Java 异常 / ANR",
         [
-            ("ANR 症状", "02-Symptom/S01-ANR/"),
-            ("ANR 取证", "03-Forensics/F01-ANR/"),
-            ("ANR-Detection", "04-Tool/ANR-Detection/"),
+            ("ANR 症状", "04-卷4-稳定性症状诊断/22-ANR 深度/"),
+            ("ANR 取证", "04-卷4-稳定性症状诊断/22-ANR 深度/"),
+            ("ANR-Detection", "04-卷4-稳定性症状诊断/22-ANR 深度/"),
         ],
     ),
-    ("Binder / IPC", [("Binder", "01-Mechanism/Kernel/Binder/")]),
+    ("Binder / IPC", [("Binder", "03-卷3-核心机制/12-Binder IPC 深度/")]),
     (
         "OOM / 内存",
         [
-            ("内存管理", "01-Mechanism/Kernel/Memory_Management/"),
-            ("ART", "01-Mechanism/Runtime/ART/"),
-            ("Hprof", "04-Tool/Hprof/"),
+            ("内存管理", "03-卷3-核心机制/15-内存管理全链路/"),
+            ("ART", "03-卷3-核心机制/20-ART 运行时/"),
+            ("Hprof", "05-卷5-调查方法论与工具链/34-Hprof 与内存分析/"),
         ],
     ),
     (
         "Watchdog / SWT",
-        [("Watchdog", "04-Tool/Watchdog/"), ("SWT 取证", "03-Forensics/F02-SWT/")],
+        [
+            ("Watchdog", "04-卷4-稳定性症状诊断/25-系统无响应（SWT · Watchdog）/"),
+            ("SWT 取证", "04-卷4-稳定性症状诊断/25-系统无响应（SWT · Watchdog）/"),
+        ],
     ),
     (
         "Socket / epoll",
         [
-            ("Socket", "01-Mechanism/Kernel/socket/"),
+            ("Socket", "03-卷3-核心机制/17-网络与连接/"),
             ("epoll", "01-Mechanism/Kernel/epoll/"),
         ],
     ),
     (
         "启动专项",
         [
-            ("S11 启动专项", "02-Symptom/S11-Startup/"),
-            ("启动案例", "06-Case/Startup/"),
-            ("Perfetto Boot Trace", "04-Tool/Perfetto/"),
+            ("卷 2 启动", "02-卷2-系统启动/"),
+            ("启动案例", "08-卷8-案例实战/47-冷启动优化案例/"),
+            (
+                "Perfetto Boot Trace",
+                "05-卷5-调查方法论与工具链/31-Perfetto 全栈使用/",
+            ),
         ],
     ),
-    ("AOSP 17 + K 6.18 演进", [("S08 演进全景", "02-Symptom/S08-AOSP17-K618/")]),
-    ("性能 vs 稳定性", [("S09 横切专题", "02-Symptom/S09-PerfVsStab/")]),
+    (
+        "AOSP 17 + K 6.18 演进",
+        [
+            (
+                "AOSP 17 入门",
+                "01-卷1-Android系统基础与平台/01-Android 系统全景与 AOSP 17/",
+            ),
+        ],
+    ),
+    (
+        "性能 vs 稳定性",
+        [("性能退化", "04-卷4-稳定性症状诊断/29-性能退化与稳定性边界/")],
+    ),
     (
         "度量 + 门禁",
-        [("S10 度量门禁", "02-Symptom/S10-Measure/"), ("APM", "05-Governance/APM/")],
+        [
+            ("度量门禁", "06-卷6-性能工程/37-性能基线与回归测试/"),
+            ("APM", "07-卷7-APM与工程治理/43-APM 架构与自研实践/"),
+        ],
     ),
-    ("OEM 厂商适配", [("OEM-BSP", "05-Governance/OEM-BSP/")]),
-    ("跨平台 / HarmonyOS", [("CrossPlatform", "05-Governance/CrossPlatform/")]),
-    ("低端机治理", [("LowEnd", "05-Governance/LowEnd/")]),
+    (
+        "OEM 厂商适配",
+        [("OEM Hook", "03-卷3-核心机制/14-线程与 Handler 消息机制/")],
+    ),
+    (
+        "跨平台 / HarmonyOS",
+        [
+            (
+                "HAL / Treble",
+                "01-卷1-Android系统基础与平台/03-硬件抽象层（HAL）与 Treble 架构/",
+            ),
+        ],
+    ),
+    ("低端机治理", [("低配机适配", "06-卷6-性能工程/40-低配机适配/")]),
     (
         "端侧 AI / AI OS",
         [
-            ("AI Native", "05-Governance/AI-Native/"),
-            ("AI for Stability", "05-Governance/AI-Native/03_AI_for_Stability/"),
+            ("AI Native", "07-卷7-APM与工程治理/46-AI-Native 调试/"),
+            ("AI for Stability", "07-卷7-APM与工程治理/46-AI-Native 调试/"),
         ],
     ),
-    ("AI 辅助调试", [("AI-Debug", "05-Governance/AI-Debug/")]),
-    ("性能 vs 内存", [("PerfMem", "05-Governance/PerfMem/")]),
-    ("安全 + 稳定性", [("Security", "05-Governance/Security/")]),
+    ("AI 辅助调试", [("AI-Debug", "07-卷7-APM与工程治理/46-AI-Native 调试/")]),
+    (
+        "性能 vs 内存",
+        [("PerfMem", "06-卷6-性能工程/37-性能基线与回归测试/")],
+    ),
+    (
+        "安全 + 稳定性",
+        [
+            (
+                "Security",
+                "01-卷1-Android系统基础与平台/05-安全基础（SELinux · AVB）/",
+            ),
+        ],
+    ),
 ]
 
 PUBLIC_ROOT_FILES: list[str] = [

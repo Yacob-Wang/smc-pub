@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""审计叶子系列导航：侧栏只挂系列总览，单篇须 not_in_nav。"""
+"""审计叶子系列导航：.pages 须含系列总览与各篇章，单篇不得 not_in_nav。"""
 
 from __future__ import annotations
 
@@ -13,7 +13,12 @@ SCRIPTS = Path(__file__).resolve().parent
 sys.path.insert(0, str(SCRIPTS))
 
 from content_policy import PUBLIC_MODULES  # noqa: E402
-from prepare_web_docs import NAV_SKIP_DIR_NAMES, _dir_has_content  # noqa: E402
+from prepare_web_docs import (  # noqa: E402
+    NAV_SKIP_DIR_NAMES,
+    _article_files,
+    _dir_has_content,
+    _series_nav_entries,
+)
 
 
 def is_leaf_series(dir_path: Path) -> bool:
@@ -29,25 +34,33 @@ def is_leaf_series(dir_path: Path) -> bool:
     ]
     if nested:
         return False
-    articles = [
-        p
-        for p in dir_path.iterdir()
-        if p.is_file()
-        and p.suffix.lower() == ".md"
-        and p.name.lower() != "index.md"
-        and not p.name.lower().startswith("readme")
-    ]
-    return bool(articles)
+    return bool(_article_files(dir_path))
 
 
-def pages_is_series_overview_only(text: str) -> bool:
+def parse_pages_nav(text: str) -> list[tuple[str, str]]:
     text = text.replace("\r\n", "\n").replace("\r", "\n")
-    lines = [ln.rstrip() for ln in text.strip().splitlines() if ln.strip()]
-    return lines == [
-        "collapse: true",
-        "nav:",
-        '  - "系列总览": index.md',
-    ]
+    entries: list[tuple[str, str]] = []
+    in_nav = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped == "nav:":
+            in_nav = True
+            continue
+        if not in_nav or not stripped.startswith("- "):
+            continue
+        m = re.match(r'-\s+"((?:\\.|[^"\\])*)"\s*:\s*(.+)$', stripped)
+        if not m:
+            m = re.match(r"-\s+(.+?)\s*:\s*(.+)$", stripped)
+        if m:
+            title = m.group(1).replace('\\"', '"')
+            target = m.group(2).strip()
+            entries.append((title, target))
+    return entries
+
+
+def pages_matches_series_nav(dir_path: Path, text: str) -> bool:
+    expected = _series_nav_entries(dir_path)
+    return parse_pages_nav(text) == expected
 
 
 def has_not_in_nav(path: Path) -> bool:
@@ -70,27 +83,26 @@ def main() -> int:
     leaf_count = 0
     article_count = 0
 
+    module_roots = {DOCS_DIR / mod for mod in PUBLIC_MODULES}
+
     for mod in PUBLIC_MODULES:
         mod_dir = DOCS_DIR / mod
         if not mod_dir.is_dir():
             continue
         for dir_path in [mod_dir, *sorted(mod_dir.rglob("*"))]:
+            if dir_path in module_roots:
+                continue
             if not dir_path.is_dir() or not is_leaf_series(dir_path):
                 continue
             leaf_count += 1
             pages = dir_path / ".pages"
             raw = pages.read_text(encoding="utf-8") if pages.is_file() else ""
-            if not pages_is_series_overview_only(raw):
+            if not pages_matches_series_nav(dir_path, raw):
                 bad_pages.append(str(dir_path.relative_to(DOCS_DIR)))
-            for p in sorted(dir_path.iterdir()):
-                if not p.is_file() or p.suffix.lower() != ".md":
-                    continue
-                name = p.name.lower()
-                if name == "index.md" or name.startswith("readme"):
-                    continue
+            for fname in _article_files(dir_path):
                 article_count += 1
-                if not has_not_in_nav(p):
-                    bad_articles.append(str(p.relative_to(DOCS_DIR)))
+                if has_not_in_nav(dir_path / fname):
+                    bad_articles.append(str((dir_path / fname).relative_to(DOCS_DIR)))
 
     print(f"leaf series: {leaf_count}; articles checked: {article_count}")
     if bad_pages:
@@ -100,7 +112,7 @@ def main() -> int:
         if len(bad_pages) > 40:
             print(f"  ... +{len(bad_pages) - 40}")
     if bad_articles:
-        print(f"MISSING not_in_nav ({len(bad_articles)}):")
+        print(f"STALE not_in_nav ({len(bad_articles)}):")
         for p in bad_articles[:40]:
             print(f"  {p}")
         if len(bad_articles) > 40:
@@ -108,7 +120,7 @@ def main() -> int:
 
     if bad_pages or bad_articles:
         return 1
-    print("OK: all leaf series use series-overview-only nav")
+    print("OK: all leaf series list articles in nav (no not_in_nav)")
     return 0
 
 

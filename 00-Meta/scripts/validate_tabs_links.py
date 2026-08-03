@@ -18,17 +18,16 @@ HREF_RE = re.compile(r'href="([^"#]+)"')
 SAMPLE_PAGES = [
     "index.html",
     "00-Meta/index.html",
-    "01-Mechanism/index.html",
-    "01-Mechanism/Kernel/index.html",
-    "01-Mechanism/Kernel/Memory_Management/index.html",
-    "02-Symptom/index.html",
-    "02-Symptom/S01-ANR/index.html",
-    "03-Forensics/index.html",
-    "04-Tool/index.html",
-    "05-Governance/index.html",
-    "06-Case/index.html",
-    "06-Foundation/index.html",
-    "06-Foundation/Tools/Tracing/index.html",
+    "01-卷1-Android系统基础与平台/index.html",
+    "03-卷3-核心机制/index.html",
+    "03-卷3-核心机制/15-内存管理全链路/index.html",
+    "04-卷4-稳定性症状诊断/index.html",
+    "04-卷4-稳定性症状诊断/22-ANR 深度/index.html",
+    "05-卷5-调查方法论与工具链/index.html",
+    "06-卷6-性能工程/index.html",
+    "07-卷7-APM与工程治理/index.html",
+    "08-卷8-案例实战/index.html",
+    "02-卷2-系统启动/11-启动性能专项/index.html",
 ]
 
 

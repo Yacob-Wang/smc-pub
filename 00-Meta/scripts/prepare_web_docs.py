@@ -4,7 +4,7 @@
 导航策略（分层，避免侧栏一次铺开）：
 1. 顶栏 Tab = 七大模块
 2. 模块页 = 系列目录（短名）
-3. 系列页 = 仅「系列总览」；单篇从总览表格进入
+3. 系列页 = 系列总览 Feed + 篇章横条跳转各篇（无左侧主侧栏）
 4. 有子目录的系列（如 ART）再展开一层子模块
 """
 
@@ -453,11 +453,7 @@ def build_series_landing_index(module: str | None, dir_path: Path) -> str:
 
 
 def _nav_entry_for_child(module: str, child: Path) -> tuple[str, str]:
-    """子目录导航项：始终挂目录名，由子级 .pages（仅系列总览）承接。
-
-    不要写成 ``Child/index.md``：awesome-pages 会把它当成未解析的裸链接，
-    顶栏下拉 href 变成 ``S01-ANR/index.md`` 这类相对路径，校验与点击都会挂。
-    """
+    """子目录导航项：始终挂目录名，由子级 .pages 承接。"""
     label = _short_title(module, child.name, child)
     return label, child.name
 
@@ -491,6 +487,49 @@ def _article_files(dir_path: Path) -> list[str]:
         and p.name.lower() != "index.md"
     ]
     return sorted(files, key=natural_key)
+
+
+def _article_nav_label(path: Path) -> str:
+    """侧栏 / 篇章横条用的短标题。"""
+    content = path.read_text(encoding="utf-8", errors="replace").replace("\ufeff", "")
+    title = get_title_from_markdown(content, path.name)
+    m = re.match(r"^(\d+)[-_]", path.stem)
+    if m:
+        idx = m.group(1)
+        short = re.sub(r"^\d+[-_.\s、]+", "", title).strip()
+        if len(short) > 42:
+            short = short[:40] + "…"
+        return f"{idx} · {short}" if short else title
+    if len(title) > 46:
+        return title[:44] + "…"
+    return title
+
+
+def _series_nav_entries(dir_path: Path) -> list[tuple[str, str]]:
+    """叶子系列 nav：系列总览 + 各篇章（供篇章横条与 nav 树读取）。"""
+    nav: list[tuple[str, str]] = [("系列总览", "index.md")]
+    for fname in _article_files(dir_path):
+        nav.append((_article_nav_label(dir_path / fname), fname))
+    return nav
+
+
+def remove_not_in_nav(path: Path) -> None:
+    """去掉 front matter 中的 not_in_nav（系列篇章应出现在 nav 树）。"""
+    text = path.read_text(encoding="utf-8", errors="replace").replace("\ufeff", "")
+    if not text.lstrip().startswith("---"):
+        return
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        return
+    fm = parts[1]
+    if not re.search(r"(?m)^\s*not_in_nav\s*:", fm):
+        return
+    new_fm = re.sub(r"(?m)^\s*not_in_nav\s*:\s*true\s*\n?", "", fm)
+    path.write_text(
+        f"---{new_fm}---{parts[2]}",
+        encoding="utf-8",
+        newline="\n",
+    )
 
 
 def ensure_not_in_nav(path: Path) -> None:
@@ -535,14 +574,15 @@ def mark_series_articles_not_in_nav(series_dir: Path) -> int:
 
 
 def _ensure_series_overview(dir_path: Path, module: str | None) -> str:
-    """保证系列有总览页；生成 Feed 式 index.md，侧栏只挂这一页。"""
+    """保证系列有总览页；生成 Feed 式 index.md，.pages 列出各篇章。"""
     index_path = dir_path / "index.md"
     index_path.write_text(
         build_series_landing_index(module, dir_path),
         encoding="utf-8",
     )
-    write_pages_file(dir_path, [("系列总览", "index.md")], collapse=True)
-    mark_series_articles_not_in_nav(dir_path)
+    write_pages_file(dir_path, _series_nav_entries(dir_path), collapse=True)
+    for fname in _article_files(dir_path):
+        remove_not_in_nav(dir_path / fname)
     return "index.md"
 
 
@@ -560,11 +600,8 @@ def generate_meta_module_pages(mod_dir: Path) -> None:
 def generate_module_pages(mod_dir: Path, module: str) -> None:
     """module 层 .pages：本模块总览（卡片式 index.md） + 子分类列表。
 
-    叶子系列的 .pages 由 `_ensure_series_index_md` 写入，仅挂「系列总览」，
-    单篇从 Feed 篇章表进入，不再铺进侧栏。
-
-    `collapse: true` —— 侧栏默认折叠所有 AOSP 分层下的子分类，
-    用户点顶部 tab 回 module 落地页时侧栏不会铺满 500+ 篇。
+    叶子系列的 .pages 由 `_ensure_series_overview` 写入（系列总览 + 各篇章），
+    篇章横条从 nav 树读取兄弟链接。
     """
     if module == "00-Meta":
         generate_meta_module_pages(mod_dir)
@@ -590,7 +627,7 @@ def generate_pages_tree(docs_root: Path) -> None:
     1. 顶层 .pages：首页 / 总目录 / 查问题 / 学机制 / 工具与治理（意图分组）
     2. module 层强制生成 index.md（Material grid cards 卡片式落地页）
     3. module 层 .pages：「本模块总览」指向 index.md + 子分类列表
-    4. 叶子系列 .pages：仅「系列总览」；单篇 not_in_nav，从 Feed 表进入
+    4. 叶子系列 .pages：系列总览 + 各篇章；Feed 总览页保留
     """
     for mod in MODULE_DIRS:
         mod_dir = docs_root / mod

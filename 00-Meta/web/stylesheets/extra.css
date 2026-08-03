@@ -1,6 +1,6 @@
 /* ==========================================================================
    稳知库 · Source 骨架 + smc-pub 灵魂
-   - 骨架学 source.android.com：白底、三栏、紧凑、克制
+   - 骨架学 source.android.com：白底、正文+右 TOC、紧凑、克制
    - 品牌色（Android 绿 #3DDC84）只用在 logo + 链接 hover
    - 主色用 Google Blue (#1a73e8 / #e8f0fe)，更接近工程师文档的工具感
    - 字体：Roboto Flex（英文）+ Noto Sans SC（中文）
@@ -456,12 +456,17 @@ pre,
   min-width: 13.5rem;
 }
 
-/* 移动端：模块 / 分层 / 系列 chips + 底部导航 Sheet */
+/* 模块 / 分层横条仅窄屏；篇章横条桌面 + 窄屏均可见 */
 .jk-module-strip,
-.jk-series-strip,
-.jk-article-strip {
+.jk-series-strip {
   display: none;
   border-bottom: 1px solid var(--jk-line);
+}
+
+.jk-article-strip {
+  display: block;
+  border-bottom: 1px solid var(--jk-line);
+  background: color-mix(in srgb, var(--jk-bg-soft) 70%, var(--jk-bg-page));
 }
 
 .jk-module-strip[hidden],
@@ -892,11 +897,15 @@ body.jk-nav-sheet-open {
 }
 
 /* ==========================================================================
-   全屏布局：左栏贴左 + 右 TOC 贴右 + 中间撑满
+   全屏布局：正文 + 右 TOC（无左侧主侧栏）
+   - 主导航：顶栏 Tab / 下拉 + 篇章横条
    - 取消 Material 默认的 .md-grid max-width: 61rem + margin: 0 auto 居中
-   - 取消 .md-content 的 max-width
-   - 让 content 撑满中间剩余空间
    ========================================================================== */
+
+/* 无左侧抽屉时隐藏菜单按钮 */
+.md-header__button[for="__drawer"] {
+  display: none !important;
+}
 
 /* 全局：取消 md-grid 居中和最大宽度（让所有 .md-grid 内容撑满） */
 .md-grid {
@@ -909,13 +918,13 @@ body.jk-nav-sheet-open {
   padding: 0 1.2rem;
 }
 
-/* 取消 main 区域的内边距限制（让左栏紧贴左、右 TOC 紧贴右） */
+/* 取消 main 区域的内边距限制（右 TOC 紧贴右） */
 .md-main {
   padding: 0;
   max-width: none;
 }
 
-/* 内容区：侧栏已在 flex 流中占位，禁止再加 margin-left（否则会出现双倍空白） */
+/* 内容区：禁止再加 margin（否则会出现双倍空白） */
 .md-main__inner {
   display: flex;
   align-items: flex-start;
@@ -938,25 +947,29 @@ body.jk-nav-sheet-open {
   max-width: none;
 }
 
-/* 主内容：紧贴侧栏 */
 @media screen and (min-width: 60em) {
-  .md-sidebar--primary {
-    flex: 0 0 12.5rem;
-    width: 12.5rem;
-    background: var(--jk-bg-side);
-    border-right: 1px solid var(--jk-line);
+  .md-content {
+    padding-left: 1.75rem;
+    padding-right: 1.5rem;
   }
 
-  .md-sidebar--primary .md-sidebar__scrollwrap {
-    padding: 0.4rem 0.55rem 1.4rem;
+  .jk-article-strip__scroll {
+    padding-left: 1.75rem;
+    padding-right: 1.5rem;
+  }
+
+  .jk-article-strip__link,
+  .jk-article-strip__scroll .jk-strip__link {
+    max-width: 16rem;
+    font-size: 0.72rem;
   }
 }
 
 /* 右侧 TOC：紧贴屏幕右 */
 @media screen and (min-width: 76.25em) {
   .md-sidebar--secondary {
-    flex: 0 0 11rem;
-    width: 11rem;
+    flex: 0 0 13rem;
+    width: 13rem;
     margin-left: 0;
   }
 
@@ -1510,7 +1523,6 @@ article > h1:first-child,
    News Feed 布局（developer.android.com/news 风格）
    ========================================================================== */
 
-.jk-landing .md-sidebar--primary,
 .jk-landing .md-sidebar--secondary {
   display: none !important;
 }
@@ -2125,18 +2137,10 @@ body:not(.jk-landing) .md-content__inner.md-typeset {
   }
 
   .jk-module-strip:not([hidden]),
-  .jk-series-strip:not([hidden]),
-  .jk-article-strip:not([hidden]) {
+  .jk-series-strip:not([hidden]) {
     display: block;
   }
 
-  .md-sidebar--primary {
-    background: var(--jk-bg-page);
-    border-right: 1px solid var(--jk-line);
-  }
-  .jk-filter {
-    background: var(--jk-bg-page);
-  }
   .jk-landing .md-content {
     padding: 1.25rem 1rem 2.5rem;
   }

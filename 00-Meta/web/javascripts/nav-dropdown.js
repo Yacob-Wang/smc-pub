@@ -166,66 +166,16 @@
     return links;
   }
 
-  function articleLinksFromSidebar() {
-    var active = document.querySelector(".md-sidebar--primary .md-nav__link--active");
-    if (!active) return [];
-    var item = active.closest(".md-nav__item");
-    if (!item) return [];
-    var list = item.parentElement;
-    if (!list) return [];
-    var items = list.querySelectorAll(":scope > .md-nav__item");
-    if (items.length < 2) {
-      var section = list.closest(".md-nav__item");
-      if (!section) return [];
-      var nested = section.querySelector(":scope > nav .md-nav__list");
-      if (!nested) return [];
-      items = nested.querySelectorAll(":scope > .md-nav__item");
+  function initArticleStrip() {
+    var strip = document.querySelector("[data-jk-article-strip]");
+    if (!strip) return;
+    if (strip.classList.contains("jk-article-strip--ready")) {
+      var scroll = strip.querySelector(".jk-article-strip__scroll");
+      scrollChipIntoView(scroll, ".jk-strip__link--active");
+      return;
     }
-    if (items.length < 2) return [];
-    var links = [];
-    items.forEach(function (navItem) {
-      var link = navItem.querySelector(":scope > .md-nav__link");
-      if (link && link.getAttribute("href")) links.push(link);
-    });
-    return links;
+    strip.hidden = true;
   }
-
-  function getSeriesDirPrefix() {
-    var canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) return null;
-    var path = resolveNavPath(canonical.href);
-    if (!path) return null;
-    var parts = path.split("/").filter(Boolean);
-    if (parts.length < 3) return null;
-    parts.pop();
-    return "/" + parts.join("/") + "/";
-  }
-
-  function articleLinksFromSeriesPath() {
-    var prefix = getSeriesDirPrefix();
-    if (!prefix) return [];
-    var links = [];
-    var seen = new Set();
-    document.querySelectorAll(".md-sidebar--primary .md-nav__link[href]").forEach(function (link) {
-      var href = link.getAttribute("href");
-      var path = resolveNavPath(href);
-      if (!path || seen.has(href)) return;
-      if (path + "/" === prefix || path.startsWith(prefix)) {
-        if (path !== prefix.replace(/\/$/, "")) {
-          seen.add(href);
-          links.push(link);
-        }
-      }
-    });
-    return links;
-  }
-
-  function collectArticleLinks() {
-    var sidebar = articleLinksFromSidebar();
-    if (sidebar.length >= 2) return sidebar;
-    return articleLinksFromSeriesPath();
-  }
-
   function initSeriesStrip() {
     var strip = document.querySelector("[data-jk-series-strip]");
     if (!strip) return;
@@ -249,28 +199,6 @@
       return;
     }
     buildStrip(strip, links, "jk-series-strip__scroll", "jk-series-strip__link", false);
-  }
-
-  function initArticleStrip() {
-    var strip = document.querySelector("[data-jk-article-strip]");
-    if (!strip) return;
-    if (!isMobile()) {
-      strip.hidden = true;
-      return;
-    }
-    var links = collectArticleLinks();
-    if (links.length < 2) {
-      strip.hidden = true;
-      return;
-    }
-    buildStrip(
-      strip,
-      links,
-      "jk-article-strip__scroll",
-      "jk-article-strip__link",
-      false,
-      formatArticleLabel
-    );
   }
 
   function closeNavSheet() {
@@ -473,28 +401,6 @@
     document.body.classList.toggle("jk-landing", landing);
   }
 
-  function sidebarModuleLinks() {
-    var active = document.querySelector(".md-sidebar--primary .md-nav__link--active");
-    if (!active) return [];
-    var item = active.closest(".md-nav__item");
-    if (!item) return [];
-    var list = item.parentElement;
-    if (!list) return [];
-    var section = list.closest(".md-nav__item");
-    if (section) {
-      var nested = section.querySelector(":scope > nav > .md-nav__list");
-      if (nested) list = nested;
-    }
-    var items = list.querySelectorAll(":scope > .md-nav__item");
-    if (items.length < 2) return [];
-    var links = [];
-    items.forEach(function (navItem) {
-      var link = navItem.querySelector(":scope > .md-nav__link[href]");
-      if (link) links.push(link);
-    });
-    return links;
-  }
-
   function initModuleStrip() {
     var strip = document.querySelector("[data-jk-module-strip]");
     if (!strip) return;
@@ -505,7 +411,8 @@
     var menu = getActiveTabMenu();
     var links = menu ? moduleLinks(menu) : [];
     if (links.length < 2) {
-      links = sidebarModuleLinks();
+      strip.hidden = true;
+      return;
     }
     buildStrip(strip, links, "jk-module-strip__scroll", "jk-module-strip__link", true);
   }

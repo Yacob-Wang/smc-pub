@@ -20,7 +20,9 @@ def _assert(cond: bool, msg: str) -> None:
 
 
 def test_s01_heavy() -> None:
-    raw = (REPO / "02-Symptom/S01-ANR/01-症状机制.md").read_text(encoding="utf-8")
+    raw = (
+        REPO / "04-卷4-稳定性症状诊断/22-ANR 深度/01-症状机制.md"
+    ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "S01 should strip")
     _assert("**版本基线**" in out or "**系列**" in out, "S01 keep meta")
@@ -30,7 +32,9 @@ def test_s01_heavy() -> None:
 
 
 def test_f01_heavy() -> None:
-    raw = (REPO / "03-Forensics/F01-ANR/01-取证机制.md").read_text(encoding="utf-8")
+    raw = (
+        REPO / "04-卷4-稳定性症状诊断/22-ANR 深度/01-取证机制.md"
+    ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "F01 should strip")
     _assert("# 1. 背景与定义" in out, "F01 body")
@@ -38,7 +42,10 @@ def test_f01_heavy() -> None:
 
 
 def test_dumpsys_heavy() -> None:
-    raw = (REPO / "04-Tool/Dumpsys/01-dumpsys总览与架构.md").read_text(encoding="utf-8")
+    raw = (
+        REPO
+        / "05-卷5-调查方法论与工具链/33-Dumpsys · Bugreport · DropBox/01-dumpsys总览与架构.md"
+    ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "Dumpsys should strip")
     _assert("# 本篇定位" not in out, "Dumpsys 定位 gone")
@@ -46,7 +53,9 @@ def test_dumpsys_heavy() -> None:
 
 
 def test_case_heavy() -> None:
-    raw = (REPO / "06-Case/Startup/E01-冷启动8s-1s.md").read_text(encoding="utf-8")
+    raw = (
+        REPO / "08-卷8-案例实战/47-冷启动优化案例/E01-冷启动8s-1s.md"
+    ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "Case E01 should strip")
     _assert("# 本篇定位" not in out, "Case 定位 gone")
@@ -54,7 +63,8 @@ def test_case_heavy() -> None:
 
 def test_watchdog_light_keeps_anchor() -> None:
     raw = (
-        REPO / "04-Tool/Watchdog/01-Watchdog概述与体系位置.md"
+        REPO
+        / "04-卷4-稳定性症状诊断/25-系统无响应（SWT · Watchdog）/01-Watchdog概述与体系位置.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "Watchdog should strip 本篇定位")
@@ -86,7 +96,7 @@ def test_process_08_lead_blockquote_compact() -> None:
     """Process 长文首作者前言 → 读者视图只留基线，从 H1/正文切入。"""
     raw = (
         REPO
-        / "01-Mechanism/Framework/Process/08-进程稳定性风险全景与跨层治理.md"
+        / "03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/08-进程稳定性风险全景与跨层治理.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "Process 08 should strip lead author blockquote")
@@ -107,9 +117,10 @@ def test_process_08_lead_blockquote_compact() -> None:
 
 
 def test_activity_lead_keeps_reader_meta_only() -> None:
-    raw = (REPO / "01-Mechanism/Framework/Activity/01_Activity_Overview.md").read_text(
-        encoding="utf-8"
-    )
+    raw = (
+        REPO
+        / "03-卷3-核心机制/13-进程与生命周期/13.A-Android四大组件/01_Activity_Overview.md"
+    ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "Activity A01 should strip 承接/衔接 from lead")
     lead = out.split("## 一、")[0]
@@ -121,7 +132,9 @@ def test_activity_lead_keeps_reader_meta_only() -> None:
 
 
 def test_s01_drops_author_status_fields() -> None:
-    raw = (REPO / "02-Symptom/S01-ANR/01-症状机制.md").read_text(encoding="utf-8")
+    raw = (
+        REPO / "04-卷4-稳定性症状诊断/22-ANR 深度/01-症状机制.md"
+    ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "S01 should strip 目标读者/状态等")
     lead = out.split("# 1. 背景与定义")[0]
@@ -134,7 +147,7 @@ def test_s01_drops_author_status_fields() -> None:
 def test_mm_author_only_blocks() -> None:
     raw = (
         REPO
-        / "01-Mechanism/Kernel/Memory_Management/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md"
+        / "03-卷3-核心机制/15-内存管理全链路/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "MM 07 should strip AUTHOR_ONLY")
@@ -154,7 +167,7 @@ def test_mm_author_only_blocks() -> None:
 def test_cgroup_author_only_lead() -> None:
     raw = (
         REPO
-        / "01-Mechanism/Kernel/cgroup/01-cgroup的诞生与历史演进_从2006到Android17.md"
+        / "03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/01-cgroup的诞生与历史演进_从2006到Android17.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "cgroup 01 should strip")
@@ -165,7 +178,7 @@ def test_cgroup_author_only_lead() -> None:
 def test_process_exit_author_only_before_title() -> None:
     raw = (
         REPO
-        / "01-Mechanism/Framework/Process_Exit/03-杀进程慢的真正根因：诱因-根因-证伪.md"
+        / "03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/03-杀进程慢的真正根因：诱因-根因-证伪.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "Process_Exit 03 should strip")
@@ -176,7 +189,7 @@ def test_process_exit_author_only_before_title() -> None:
 def test_art_gc_merged_author_only() -> None:
     """GC 已收官为 11 篇合并单版；旧 appendix/D-工程基线 路径不再存在。"""
     raw = (
-        REPO / "01-Mechanism/Runtime/ART/03-GC系统/01-基础理论专题.md"
+        REPO / "03-卷3-核心机制/20-ART 运行时/20.C-GC系统/01-基础理论专题.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "ART GC 01 should strip")
@@ -188,9 +201,10 @@ def test_art_gc_merged_author_only() -> None:
 
 
 def test_activity_exception_decision_at_lead() -> None:
-    raw = (REPO / "01-Mechanism/Framework/Activity/01_Activity_Overview.md").read_text(
-        encoding="utf-8"
-    )
+    raw = (
+        REPO
+        / "03-卷3-核心机制/13-进程与生命周期/13.A-Android四大组件/01_Activity_Overview.md"
+    ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "Activity A01 should strip")
     _assert("破例决策记录" not in out, "Activity A01 破例决策记录 gone")
@@ -200,7 +214,7 @@ def test_activity_exception_decision_at_lead() -> None:
 def test_art_gc_blockquote_meta() -> None:
     """原 07-GC调度与触发/01-9种GcCause.md 已并入 07-GC调度与触发专题.md。"""
     raw = (
-        REPO / "01-Mechanism/Runtime/ART/03-GC系统/07-GC调度与触发专题.md"
+        REPO / "03-卷3-核心机制/20-ART 运行时/20.C-GC系统/07-GC调度与触发专题.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "ART GcCause should strip")
@@ -213,7 +227,7 @@ def test_art_gc_blockquote_meta() -> None:
 def test_mm_blockquote_meta() -> None:
     raw = (
         REPO
-        / "01-Mechanism/Kernel/Memory_Management/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md"
+        / "03-卷3-核心机制/15-内存管理全链路/07-内存回收子系统：LRU-MGLRU-kswapd-的演进逻辑.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "MM 07 should strip blockquote meta")
@@ -237,7 +251,7 @@ def test_epoll_pre_title_preamble() -> None:
 
 def test_binder_readme_author_table() -> None:
     raw = (
-        REPO / "01-Mechanism/Kernel/Binder/README-Binder系列.md"
+        REPO / "03-卷3-核心机制/12-Binder IPC 深度/README-Binder系列.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "Binder README should strip")
@@ -247,7 +261,7 @@ def test_binder_readme_author_table() -> None:
 
 def test_binder_article_calibration_appendix() -> None:
     raw = (
-        REPO / "01-Mechanism/Kernel/Binder/01-Binder总览.md"
+        REPO / "03-卷3-核心机制/12-Binder IPC 深度/01-Binder总览.md"
     ).read_text(encoding="utf-8")
     out, changed = strip_author_preamble(raw)
     _assert(changed, "Binder 01 should strip")
