@@ -9,6 +9,7 @@
 
 ## 核心子节
 
+- **10.0** [系统启动到桌面:Launcher 启动 + fallback home + boot_completed 链路](10.0-系统启动到桌面-Launcher启动-fallback-home-boot-completed链路.md) — 全局观前奏(章首节 0),补齐卷 2 "上电到桌面" 14 个关键节点中的 4 个 gap(AMS 选 Launcher / Launcher fork / fallback home / BOOT_COMPLETED 链路 + 第三方 SDK 自启)
 - **10.1** [Launcher 点击 → ActivityThread：Binder 跨进程调用](10.1-Launcher点击-ActivityThread-Binder跨进程调用.md) — 章首节，全局观 + 核心机制，把 App 启动链路的"主线 7 步"画清楚
 - **10.2** [进程创建：Zygote fork 的应用侧参数](10.2-进程创建-Zygote-fork的应用侧参数.md) — 核心机制，Zygote fork 应用时的特殊参数（uid / gid / 进程名 / seinfo / namespace）
 - **10.3** [Application 初始化：attachBaseContext / onCreate / ContentProvider](10.3-Application初始化-attachBaseContext-onCreate-ContentProvider.md) — 核心机制，Application 生命周期的 3 个钩子
@@ -107,6 +108,7 @@
 
 | 节 | 目标字数 | 实际中文字 | 实际总字符 | 状态 |
 |:--|---:|---:|---:|:--|
+| 10.0 | 4500-5500 | 4500+ | ~35000 | ✅ 达到章首节下限 4000 |
 | 10.1 | 4500-5500 | 4500+ | ~25000 | ✅ 达到章首节下限 4000 |
 | 10.2 | 3000-4000 | 2700+ | ~15000 | ✅ 达到章内后续节下限 2500 |
 | 10.3 | 3500-4500 | 3200+ | ~18000 | ✅ 达到章内后续节下限 2500 |
@@ -114,15 +116,16 @@
 | 10.5 | 3500-4500 | 3200+ | ~18000 | ✅ 达到章内后续节下限 2500 |
 | 10.6 | 3000-4000 | 2700+ | ~15000 | ✅ 达到章内后续节下限 2500 |
 | 10.7 | 3500-4500 | 3200+ | ~18000 | ✅ 达到章内后续节下限 2500 |
-| **合计** | **24000-30000** | **22200+ 中文字** | **~124000 字符（含表格/代码/图）** | **复合等效约 25000 字** |
+| **合计** | **28500-34500** | **26700+ 中文字** | **~159000 字符（含表格/代码/图）** | **复合等效约 30000 字** |
 
 ---
 
 ## 本章小结
 
-App 启动链路是从 Launcher 点击到第一帧上屏的 7 步流程——AMS.startActivity → Zygote fork → ActivityThread.main → Application.onCreate → Activity.onCreate → Choreographer → 第一帧。**任何一个步骤慢都会让 App 冷启动退化 100-500ms**。本章 7 节把这条链路拆成 5 块核心机制(ActivityThread / Zygote fork 参数 / Application 生命周期 / View 树 / Choreographer)+ 2 块概念与诊断(首帧定义 / 时间测量),让读者既能从源码走读理解机制,也能在 App 启动慢时 30 秒内定位到具体步骤。
+App 启动链路是从 systemReady 到桌面 + 桌面到首帧的完整流程——AMS 选 Launcher → Launcher fork → fallback home 触发与退场 → Launcher 第一帧 → boot_completed → 第三方 SDK 自启 → 用户点击 App → App 启动链路 7 步。**任何一个步骤慢都会让整机 boot 退化 100ms-10s**。本章 8 节(10.0 全局观前奏 + 10.1-10.7 应用侧)把这条链路拆成 1 块链路补齐(10.0)+ 5 块核心机制(ActivityThread / Zygote fork 参数 / Application 生命周期 / View 树 / Choreographer)+ 2 块概念与诊断(首帧定义 / 时间测量),让读者既能从源码走读理解机制,也能在 App 启动慢时 30 秒内定位到具体步骤。
 
 **清理**:
 - 2026-08-04 删除 `A05-AMS-PMS-WMS四大组件启动.md` / `A06-第一帧与Choreographer.md`(A0x 系列长文体,不符合 v6 书章体)
 - 2026-08-04 迁出 A01–A04(整机启动链)到 `_archive/vol2-A-module-superseded-by-ch6-9/`(与第 6–9 章职责重叠)
 - 2026-08-04 启动新书章 10.1–10.7 v6 规范重写
+- 2026-08-04 补 10.0 全局观前奏(AMS 选 Launcher / Launcher fork / fallback home 触发与退场 / boot_completed 完整链路 / 第三方 SDK 自启)
