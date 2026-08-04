@@ -34,10 +34,10 @@ hide:
 
 ## Agent 报告 · USICPRO-584523
 
-LogInsight Agent 分析报告静态快照（ANR，准确度 88）。
+LogInsight Agent 分析报告**静态副本**（ANR，准确度 88），已入库，外网可直接看。
 
-- [打开报告页](report-usicpro-584523.md)（站内 iframe 阅读）
-- [内网原链](http://10.216.68.19:8081/api/reports/file?path=E%3A%5CLogInsightAnalysis%5Csummary_reports%5Cagent_reports%5CUSICPRO-584523_20260804_172728%5Cagent_report_USICPRO-584523.html)（仅局域网）
+- [打开报告页](report-usicpro-584523.md)
+- [直接打开静态 HTML](../assets/agent_report_USICPRO-584523.html)
 
 ## Skill 看板
 

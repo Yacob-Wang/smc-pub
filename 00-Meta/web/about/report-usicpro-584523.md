@@ -13,8 +13,10 @@ hide:
 
 [← 返回作品](works.md)
 
-LogInsight Agent 报告静态快照（2026-08-04，单号 `USICPRO-584523`，ANR）。  
-内网原链仅局域网可开：[LogInsight 原报告](http://10.216.68.19:8081/api/reports/file?path=E%3A%5CLogInsightAnalysis%5Csummary_reports%5Cagent_reports%5CUSICPRO-584523_20260804_172728%5Cagent_report_USICPRO-584523.html)
+**本页展示的是仓库内静态副本**（约 108KB，含完整正文 + 内联样式），push 到 GitHub Pages 后任意电脑可打开，不依赖内网 `10.216.68.19`。
+
+- [直接打开静态 HTML](../assets/agent_report_USICPRO-584523.html)
+- 来源单号：`USICPRO-584523`（ANR，快照日期 2026-08-04）
 
 <div class="jk-report" markdown="0">
   <iframe
