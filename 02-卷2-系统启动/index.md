@@ -46,14 +46,16 @@
 ### 第 8 章　Zygote 与 ART 启动
 
 > Java 进程工厂——所有 App 进程的模板。ART 的完整机制见卷 3 第 20 章，本章只讲**启动阶段**。
+> **章级覆盖**：Zygote fork 机制 / ART 启动（libart.so / ClassLinker / OAT）/ PGC + Cloud Profile / deferred class load / Zygote fork 慢与 crash 调查 / Zygote 内存治理（fork COW 与 RSS）
 
-- 8.1 Zygote 启动：fork + 预加载（preload classes / resources）
-- 8.2 ART 启动：libart.so / ClassLinker / OAT 镜像加载
-- 8.3 启动预优化：Profile Guided Compilation / Cloud Profile
-- 8.4 启动类加载优化：deferred class load / lazy verification
-- 8.5 Zygote fork 慢 / Zygote crash 的调查
+- 8.1 [Zygote 启动：从 app_process64 到 runSelectLoop](08-Zygote%20与%20ART%20启动/8.1-Zygote启动-fork与预加载.md) — 章首节，全局观 + 核心机制
+- 8.2 [ART 启动：libart.so / ClassLinker / OAT 镜像加载](08-Zygote%20与%20ART%20启动/8.2-ART启动-libart与ClassLinker.md) — Runtime::Init 4 大步 + OAT 损坏 3 类自愈
+- 8.3 [启动预优化：PGC + Cloud Profile](08-Zygote%20与%20ART%20启动/8.3-启动预优化-PGC与Cloud-Profile.md) — dex2oat 触发链 + Cloud Profile 3 类来源
+- 8.4 [启动类加载优化：deferred class load / lazy verification](08-Zygote%20与%20ART%20启动/8.4-启动类加载优化-deferred-class-load.md) — preload vs lazy 判定准则
+- 8.5 [Zygote fork 慢 / Zygote crash 调查](08-Zygote%20与%20ART%20启动/8.5-Zygote-fork慢与crash调查.md) — 风险地图 + 诊断治理（Zygote 内部视角）
+- 8.6 [Zygote 内存治理：fork copy-on-write 与 RSS 控制](08-Zygote%20与%20ART%20启动/8.6-Zygote内存治理-fork-copy-on-write.md) — 本卷新增节，3 类压力点 + LMKD 联动
 
-**本章小结**：Zygote 是所有 App 启动的公共瓶颈——它慢 1 次，全系统慢 N 次。
+**本章小结**：Zygote 是所有 App 启动的公共瓶颈——它慢 1 次，全系统慢 N 次。**全章 6 节，复合等效约 25000 字**，20 张图，10+ 案例。
 
 ### 第 9 章　SystemServer 启动
 
