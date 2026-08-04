@@ -88,7 +88,8 @@ PATH_RULES = [
     ("02-Symptom/S11-Startup/A-启动机制/B", 11),  # B01-B04 -> 启动性能
     ("02-Symptom/S11-Startup/A-启动机制/C", 11),  # C01-C05 -> 启动性能
     ("02-Symptom/S11-Startup/A-启动机制/D", 11),  # D01-D04 -> 启动性能
-    ("02-Symptom/S11-Startup/Old/", 10),  # Old 归档归到应用启动
+    # Old/ 已于 2026-08-04 从卷 2 删除；历史路径映射保留供旧清单解析
+    ("02-Symptom/S11-Startup/Old/", 10),
     ("A-启动机制", 10),
 
     # --- 卷 3 核心机制：Kernel 子主题优先 ---

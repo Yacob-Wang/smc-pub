@@ -1,6 +1,6 @@
 # 技术债务 · TECH_DEBT
 
-> **最后更新**：2026-08-03  
+> **最后更新**：2026-08-04  
 > **协议**：见 `.cursor/rules/03-tech-debt-long-tasks.mdc`  
 > **状态枚举**：`open` | `in_progress` | `done` | `wontfix`
 
@@ -23,6 +23,7 @@
 
 | 日期 | ID | 动作 |
 |:---|:---|:---|
+| 2026-08-04 | — | 卷 2 删除 `10-.../Old/` 15 篇无效 v1 稿；修正卷/章 index 过期状态 |
 | 2026-08-03 | TD-002 | 刷新 `缺口一览.md`，建立 harness 账本 |
 | 2026-08-03 | TD-001 | `quality_audit.py` 的 `REPO` 改为 `Path(__file__).parents[2]` |
 | 2026-08-03 | — | 建立本登记表与 MDC 约束 |

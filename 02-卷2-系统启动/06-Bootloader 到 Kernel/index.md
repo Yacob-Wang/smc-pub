@@ -14,9 +14,9 @@
   - include/linux/init.h  (__init / __setup 宏)
   - drivers/of/fdt.c  (设备树展开)
 验证方式: pstore last_kmsg + serial console log + dmesg + ramoops + ab_partition
-状态: 🚧 撰写中（P0 第 1 个 0 篇章）
-字数: 估算 12000-18000（6 节 × 2000-3000 字）
-素材: 0 篇（已映射素材皆来自 01-Mechanism/Hardware 体系，迁移至本章需 B 阶段处理）
+状态: 🚧 撰写中（6.1–6.6 已落地；综合稿 A02 仍作前置素材）
+字数: 已有书章正文（见 6.1–6.6）
+素材: A02-Bootloader：LK体系分析与AOSP迁移.md（综合稿，勿当读者主入口）
 ---
 
 # 第 6 章　Bootloader 到 Kernel
@@ -148,16 +148,11 @@ Kernel 启动阶段出问题 = boot loop，调查工具是 last_kmsg / pstore。
 3. 解读 ABL 输出的设备树与 cmdline
 4. 抓 ramdump 分析 Kernel panic 现场
 
-## 本章素材（待 B 阶段迁移）
+## 本章素材
 
-本章现有素材映射见 `00-Meta/章节-素材映射表-v1.md` 表格。
-**当前状态**：0 篇已映射。素材主要来自：
-- `../02-卷2-系统启动/06-Bootloader 到 Kernel/A02-Bootloader：LK体系分析与AOSP迁移.md`（已存在，1 篇）
-- AOSP `bootable/bootloader/` 源码
-- Qualcomm / MTK 公开文档
-- AOSP 启动文档（source.android.com）
-
-**B 阶段任务**：将 `../02-卷2-系统启动/06-Bootloader 到 Kernel/A02-Bootloader：LK体系分析与AOSP迁移.md` 迁移至本章作为 6.1 节素材。
+- 书章正文：`6.1`–`6.6`（现行读者入口）
+- 综合稿：`A02-Bootloader：LK体系分析与AOSP迁移.md`（拆章前置素材，已吸收进 6.x）
+- 源码 / 文档：AOSP `bootable/bootloader/`、Qualcomm/MTK 公开文档、source.android.com bootloader 文档
 
 ## 参考资料
 
@@ -169,6 +164,6 @@ Kernel 启动阶段出问题 = boot loop，调查工具是 last_kmsg / pstore。
 
 ---
 
-**状态**：🚧 撰写中（P0 第 1 个 0 篇章）
+**状态**：🚧 撰写中（6.1–6.6 已落地）
 **生成**：build_book_skeleton.py + 第 6 章写作大纲
-**更新**：2026-08-02 C-1 阶段
+**更新**：2026-08-04（清理过期「0 篇章 / B 阶段迁移」元数据）

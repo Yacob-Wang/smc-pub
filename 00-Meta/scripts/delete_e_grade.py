@@ -72,7 +72,7 @@ STAGE3_EVAL = [
     "01-Mechanism/Kernel/GKI/05-KMI-Kernel-Module-Interface详解.md",
     "01-Mechanism/Kernel/GKI/10-GKI实战案例分析.md",
     "01-Mechanism/Kernel/GKI/GKI2.0_vs_Non_GKI_Complete_Guide.md",
-    "02-卷2-系统启动/10-应用启动与首帧/Old/02-Android系统架构演进.md",
+    # 已于 2026-08-04 删除：02-卷2-系统启动/10-应用启动与首帧/Old/（含 02-架构演进）
     "01-Mechanism/Kernel/GKI/ACK_Build_And_Flash_Complete_Guide.md",
 ]
 
