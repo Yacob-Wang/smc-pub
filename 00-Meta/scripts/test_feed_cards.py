@@ -15,9 +15,11 @@ from feed_cards import (  # noqa: E402
     FeedCard,
     article_item_from_markdown,
     extract_index_from_filename,
+    get_title_from_markdown,
     render_article_list,
     render_feed_card,
     series_media_slug,
+    title_from_filename,
 )
 from prepare_web_docs import (  # noqa: E402
     DOCS_DIR,
@@ -37,7 +39,23 @@ def _assert(cond: bool, msg: str) -> None:
 def test_extract_index_from_filename() -> None:
     _assert(extract_index_from_filename("01-背景.md") == "01", "numeric prefix")
     _assert(extract_index_from_filename("12-cgroup-v2.md") == "12", "two-digit prefix")
+    _assert(extract_index_from_filename("7.1-Init进程启动流程.md") == "7.1", "chapter.section")
+    _assert(extract_index_from_filename("A02-Bootloader.md") == "A02", "letter prefix")
     _assert(extract_index_from_filename("overview.md") == "", "no prefix")
+
+
+def test_title_from_filename_not_h1() -> None:
+    _assert(title_from_filename("7.1-Init进程启动流程.md") == "Init进程启动流程", "strip 7.1-")
+    _assert(title_from_filename("01-背景.md") == "背景", "strip 01-")
+    bogus = (
+        "---\n节: 7.1 Init 启动\n---\n\n## 一句话开场\n\n"
+        "```bash\n# 1. 看 init 是否卡在 SetupSelinux\n```\n"
+        "# 1. 看 init 是否卡在 SetupSelinux\n"
+    )
+    title = get_title_from_markdown(bogus, "7.1-Init进程启动流程.md")
+    _assert(title == "Init进程启动流程", "filename wins over shell comment h1")
+    idx = get_title_from_markdown("# 第 7 章　Init\n", "index.md")
+    _assert(idx == "第 7 章　Init", "index.md still uses h1")
 
 
 def test_render_article_list_structure() -> None:
@@ -68,9 +86,9 @@ def test_render_article_list_structure() -> None:
 def test_article_item_from_markdown() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / "03-demo-topic.md"
-        path.write_text("# Demo Title\n\nThis is a compact summary line.\n", encoding="utf-8")
+        path.write_text("# Wrong H1 From Body\n\nThis is a compact summary line.\n", encoding="utf-8")
         item = article_item_from_markdown(path, href="03-demo-topic.md")
-    _assert(item.title == "Demo Title", "title from h1")
+    _assert(item.title == "demo-topic", "title from filename not h1")
     _assert(item.index == "03", "index from filename")
     _assert("summary" in item.summary.lower() or "compact" in item.summary.lower(), "summary")
 
@@ -220,6 +238,7 @@ def test_meta_module_index_has_hub_cards() -> None:
 def main() -> int:
     tests = [
         test_extract_index_from_filename,
+        test_title_from_filename_not_h1,
         test_render_article_list_structure,
         test_article_item_from_markdown,
         test_render_series_feed_card_is_minimal,

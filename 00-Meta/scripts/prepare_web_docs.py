@@ -42,6 +42,7 @@ from feed_cards import (  # noqa: E402
     FeedCard,
     article_item_from_markdown,
     extract_index_from_filename,
+    get_title_from_markdown,
     landing_frontmatter,
     render_article_list,
     render_feed_grid,
@@ -86,17 +87,6 @@ def should_copy(path: Path) -> bool:
         return False
     suffix = path.suffix.lower()
     return suffix == ".md" or suffix in ASSET_SUFFIXES
-
-
-def get_title_from_markdown(content: str, fallback: str) -> str:
-    for line in content.splitlines():
-        m = re.match(r"^\s*#\s+(.+)$", line)
-        if m:
-            return m.group(1).strip()
-    name = Path(fallback).stem
-    m = re.match(r"^\d+-(.+)$", name)
-    return m.group(1) if m else name
-
 
 
 def natural_key(name: str) -> tuple:
@@ -510,7 +500,7 @@ def _article_files(dir_path: Path, *, include_guides: bool = True) -> list[str]:
 
 
 def _article_nav_label(path: Path) -> str:
-    """侧栏 / 篇章横条用的短标题。"""
+    """侧栏 / 篇章横条用的短标题（以文件名为准）。"""
     content = path.read_text(encoding="utf-8", errors="replace").replace("\ufeff", "")
     title = get_title_from_markdown(content, path.name)
     if _is_series_guide(path.name):
@@ -519,13 +509,12 @@ def _article_nav_label(path: Path) -> str:
         if len(short) > 28:
             short = short[:26] + "…"
         return f"导读 · {short}" if short else "导读"
-    m = re.match(r"^(\d+)[-_]", path.stem)
-    if m:
-        idx = m.group(1)
-        short = re.sub(r"^\d+[-_.\s、]+", "", title).strip()
+    idx = extract_index_from_filename(path.name)
+    if idx:
+        short = title.strip()
         if len(short) > 42:
             short = short[:40] + "…"
-        return f"{idx} · {short}" if short else title
+        return f"{idx} · {short}" if short else path.stem
     if len(title) > 46:
         return title[:44] + "…"
     return title

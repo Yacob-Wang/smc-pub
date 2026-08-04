@@ -5,6 +5,13 @@
 
 ## 最新
 
+### 2026-08-04 · web · 系列列表标题以文件名为准
+- **路径**：`00-Meta/scripts/feed_cards.py` · `00-Meta/scripts/prepare_web_docs.py` · `00-Meta/scripts/test_feed_cards.py`
+- **动作**：大改（构建脚本）
+- **摘要**：系列总览篇名不再取正文首个 `#`（曾把 Init 壳注释当成标题）；改为文件名（支持 `7.1-` / `A02-` 前缀），index/README 仍用 H1
+- **规范**：n/a
+- **关联**：修复 Init 系列 Pages 列表错名
+
 ### 2026-08-03 · writing-standards · 规范升级
 - **路径**：`.cursor/rules/01-writing-standards.mdc` · `PROMPT-技术系列文章写作指南.md` · `AGENTS.md`
 - **动作**：规范升级（§0 硬约束转为 always-on MDC）

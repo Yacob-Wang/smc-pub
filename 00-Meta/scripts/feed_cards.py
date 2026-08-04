@@ -117,14 +117,43 @@ def format_updated(path: Path) -> str:
     return f"Updated {_MONTHS[dt.month - 1]} {dt.day}, {dt.year}"
 
 
-def get_title_from_markdown(content: str, fallback: str) -> str:
+# 文件名序号前缀：01- / 7.1- / A02- / OC01- / E05-
+_FILENAME_INDEX_RE = re.compile(
+    r"^(?P<idx>\d+(?:\.\d+)*|[A-Za-z]+\d+)[-_](?P<title>.+)$"
+)
+
+
+def title_from_filename(filename: str) -> str:
+    """系列列表 / 导航显示名：以文件名为准（去掉 7.1- / 01- / A02- 等前缀）。"""
+    stem = Path(filename).stem
+    m = _FILENAME_INDEX_RE.match(stem)
+    return m.group("title").strip() if m else stem
+
+
+def _first_h1_outside_fences(content: str) -> str:
+    in_fence = False
     for line in content.splitlines():
+        if line.strip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
         m = re.match(r"^\s*#\s+(.+)$", line)
         if m:
             return m.group(1).strip()
-    name = Path(fallback).stem
-    m = re.match(r"^\d+-(.+)$", name)
-    return m.group(1) if m else name
+    return ""
+
+
+def get_title_from_markdown(content: str, fallback: str) -> str:
+    """正文篇章标题以文件名为准（不用 H1 / frontmatter / 壳注释）。
+
+    index/README 等结构页仍用正文首个 H1（跳过代码块）。
+    """
+    stem = Path(fallback).stem
+    lower = stem.lower()
+    if lower in ("index", "readme") or lower.startswith("readme"):
+        return _first_h1_outside_fences(content) or stem
+    return title_from_filename(fallback)
 
 
 def extract_summary(content: str, *, max_len: int = 120) -> str:
@@ -278,9 +307,12 @@ def render_feed_grid(cards: list[FeedCard], *, grid_class: str = "") -> str:
 
 
 def extract_index_from_filename(filename: str) -> str:
-    """从文件名提取序号前缀（如 01-xxx.md → 01）。"""
+    """从文件名提取序号前缀（01-xxx → 01；7.1-xxx → 7.1；A02-xxx → A02）。"""
     stem = Path(filename).stem
-    m = re.match(r"^(\d+)", stem)
+    m = _FILENAME_INDEX_RE.match(stem)
+    if m:
+        return m.group("idx")
+    m = re.match(r"^(\d+(?:\.\d+)*|[A-Za-z]+\d+)", stem)
     return m.group(1) if m else ""
 
 
