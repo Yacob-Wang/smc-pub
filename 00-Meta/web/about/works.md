@@ -29,6 +29,7 @@ hide:
 | 能效看板 | 视频 | 见下方播放器（约 1 分 54 秒） |
 | Jira 分析报告 | 视频 | 见下方播放器（完整版，约 2 分 53 秒） |
 | 版本分析 | 视频 | 见下方播放器（约 26 秒） |
+| 批量 | 视频 | 见下方播放器（约 59 秒） |
 
 ## Skill 看板
 
@@ -69,5 +70,15 @@ hide:
     <source src="../assets/version-analysis.mp4" type="video/mp4">
     你的浏览器不支持 HTML5 视频，请
     <a href="../assets/version-analysis.mp4">下载观看</a>。
+  </video>
+</div>
+
+## 批量
+
+<div class="jk-video" markdown="0">
+  <video controls preload="metadata" playsinline>
+    <source src="../assets/batch.mp4" type="video/mp4">
+    你的浏览器不支持 HTML5 视频，请
+    <a href="../assets/batch.mp4">下载观看</a>。
   </video>
 </div>
