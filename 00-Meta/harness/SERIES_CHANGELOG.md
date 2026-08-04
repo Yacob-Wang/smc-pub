@@ -5,6 +5,23 @@
 
 ## 最新
 
+### 2026-08-04 · meta · v6.0 GA 正式生效(写作规范唯一)
+- **路径**：`PROMPT-技术系列文章写作指南.md` v6.0 GA · `.cursor/rules/01-writing-standards.mdc` · `AGENTS.md` · `scripts/verify_v6/` · `00-Meta/v6.0-GA-切换记录.md`
+- **动作**：规范升级(v6 草案 v0.1 → v6.0 GA,取代 v5 / v4-Binder 同期)
+- **摘要**：v6.0 GA 正式生效——
+  - 顶部加 v6.0 GA 声明(版本/生效日期/维护者/取代/实战基础)
+  - §1 补多版本内核矩阵(借 v4,5 版本:5.10/5.15/6.1/6.6/6.18 LTS)
+  - §5 反例库 #1-#12 错例全文补全(借 v4,4614 字符)
+  - §8 破例适用场景明确列表(借 v4,横切型/演进型/总览型/诊断工具型 4 类)
+  - 附录 B 切换流程标记已生效 + 附录 C 加 C.2 第 8/9 章 v6 落地数据
+- **工程基线落地**：
+  - `scripts/verify_v6/` 7 个工具(verify_marker / verify_strip / verify_colon / verify_paths / verify_bug6 / verify_control / verify_ai_words)+ run_all.py 入口 + README
+  - 9.1 实测 ALL TOOLS PASS
+  - 设计原则:每个工具独立可执行 + 统一退出码 + 用 chr() 拼字符串 + STRICT/WARN 双层
+- **强制升级 3 个文件**：01-writing-standards.mdc / AGENTS.md / PROMPT 主文档
+- **规范**：v6 唯一,后续所有写作任务强制 v6;_archive/ 历史快照只读
+- **关联**：LT-000 完成,实战数据第 8/9 章 12 节 v6 落地 23564 中文字 / 12 个实战案例
+
 ### 2026-08-04 · archive · v4-Binder 同期 vs v6 规范对比样本
 - **路径**：`_archive/v4-binder-同期-09-对照/9.1-...md` + `对比-v4-vs-v6-9.1.md`
 - **动作**：新增（v4-Binder 同期规范下的 9.1 对照样本 + 对比报告）

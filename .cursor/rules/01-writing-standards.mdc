@@ -1,68 +1,157 @@
 ---
-description: 正文写作硬约束——AOSP 17 / GKI 6.18 基线、真实源码、结构与完稿清单
+description: 正文写作硬约束——AOSP 17 / GKI 6.18、真实源码、书章默认体例、完稿清单、AI 工具层硬约束
 alwaysApply: true
 ---
 
-# 写作规范（强制执行层）
+# 写作规范（强制执行层 · v6 唯一）
 
-详规与提示词模板仍见 `PROMPT-技术系列文章写作指南.md`（§1–§10 方法论按需 `@`）。  
-**冲突时以本 MDC 为准。** 完稿后追加 `00-Meta/harness/SERIES_CHANGELOG.md`。
+> **规范版本**：v6.0 GA · 2026-08-04 正式生效
+> **取代**：v6 草案 v0.1（2026-07-22）/ v5 / v4-Binder 同期
+> **规范主文档**：`PROMPT-技术系列文章写作指南.md`（v6.0 GA，14 章，44 KB）
+> **本 MDC**：v6 的"强制执行层"压缩版；详规/长模板按需打开主文档
+> **历史快照**（仅作考古参考，不作规范）：`_archive/PROMPT-技术系列文章写作指南-v4-Binder同期-2026-07-18.md` / `_archive/v4-binder-同期-09-对照/` 等
+>
+> **本 MDC 与主文档的关系**：
+> - 本文件 = 硬性约束（always-on 强制）
+> - 主文档 = 详规 + 模板 + 反例库 + 工程基线
+> - 冲突时以本文件为准（v6 §0 自检原则）
 
-## 1. 版本基线（写进每篇顶部）
+**冲突时以本文件为准。**
+详规/长模板按需打开：`PROMPT-技术系列文章写作指南.md`（v6.0 GA，§1–§13 + 附录 A–C）。
+完稿追加：`00-Meta/harness/SERIES_CHANGELOG.md`。
+工程基线工具集：`scripts/verify_v6/`（7 个工具，run_all.py 一键跑）。
 
-| 维度 | 必须使用的值 |
+## 1. 版本基线（每篇必写）
+
+| 维度 | 必须值 |
 |:---|:---|
-| **Android / AOSP** | `android-17.0.0_r1`（**API 37**） |
-| **Linux / GKI** | `android17-6.18`（**GKI 6.18 LTS**） |
-| 参考 SoC（举例） | Qualcomm SM8550 / MTK 天玑 9200 级 |
-| 参考设备（举例） | Pixel 7/8；或标注具体 OEM 机型 |
+| **Android / AOSP** | `android-17.0.0_r1`（API 37） |
+| **Linux / GKI** | `android17-6.18`（GKI 6.18 LTS） |
+| 参考平台 | Qualcomm SM8550 / MTK 天玑 9200 级；Pixel 7/8 或具体 OEM |
 
-硬性要求：
+- 新写/重写**只允许**上述基线；禁止 AOSP &lt; 14 为主线。
+- 文内可读基线句：`AOSP android-17.0.0_r1 + Linux android17-6.18 (GKI)`。
+- 历史对比：先写 17/6.18，再标前代版本范围。
+- 厂商差异标「厂商 GKI」或具体 tag，不得写成 AOSP 主线事实。
+- **可发布默认要求 AOSP 17**（14–15 篇幅够 → D 待升级；&lt;14 或极短 → E）。
 
-- 新写 / 重写正文**只允许**上述基线；禁止以 AOSP 14 以下为主线。
-- 文内须出现可读基线句，例如：`AOSP android-17.0.0_r1 + Linux android17-6.18 (GKI)`。
-- 讲历史演进时：先写 17/6.18 行为，再对比前代，并标明版本范围。
-- 厂商 GKI / vendor 差异必须标「厂商 GKI」或具体 tag，不得写成 AOSP 主线事实。
-- 存量 AOSP 14–15 且篇幅够 → 质量 **D**（待升到 17）；&lt;14 或极短 → **E**（重写或删除）。**可发布默认要求 AOSP 17。**
+## 2. 默认体例 = 书章节（8 卷 `N.M-标题.md`）
 
-## 2. 必须结合真实 AOSP / 内核代码
+续写卷内章节（如 `6.1` / `7.2` / `8.1`）**必须**用书章体，对齐样板：
 
-禁止「只讲概念、不贴路径」的空文。每篇至少满足：
+- `02-卷2-系统启动/06-Bootloader 到 Kernel/6.1-Bootloader类型：LK-ABL-U-Boot.md`
+- `02-卷2-系统启动/07-Init 进程与 init.rc/7.1-Init进程启动流程.md`
 
-1. **源码定位**：关键机制给出 AOSP 或内核树路径（如 `frameworks/base/...`、`system/core/init/...`、`kernel/...`）。
-2. **代码块标注**：
+**不要**对新书章节使用 A02 式「系列长文」体（本篇定位 / 校准决策日志 / 角色设定 / 附录 A–D 五段长前言）。  
+A0x 综合稿仅作**素材**，拆章时压缩进书章体。
+
+### 2.1 文件与 Web 标题
+
+- 文件名：`{章号}.{节号}-{短标题}.md`（例：`6.2-Bootloader启动流程：PBL-ABL-Kernel.md`）
+- **站点列表标题以文件名为准**（构建脚本不取正文误抓的 `#` 壳注释）
+
+### 2.2 书章骨架（必有）
+
+```yaml
+---
+书卷: 卷 X　…
+章: 第 N 章　…
+节: N.M 标题
+主旨: …
+目标读者: …
+前置章节: …
+工程基线: AOSP 17.0.0_r1 + Linux 6.18 GKI + …
+源码定位:
+  - path/one
+验证方式: …
+状态: 🚧 撰写中 / ✅ 完成
+---
+```
+
+```markdown
+# N.M 标题
+
+## 一句话开场
+## 1. …展开（可多节）
+## … 关键产出 / SOP
+## … 实战案例
+## Takeaway
+## 前置素材 / 下一步
+```
+
+字数：章内节 ≥2500；章首节 ≥4000；内容重章 ≥5000。
+
+### 2.3 系列长文体（仅既有 A0x / 专题综合稿）
+
+若用户**明确**要求写/改 A0x 综合稿，才用 PROMPT 系列模板（定位/校准/附录）。默认续写书章时禁止切换过去。
+
+## 3. 必须结合真实 AOSP / 内核代码
+
+1. 关键机制给出树内路径（`bootable/bootloader/...`、`system/core/init/...`、`arch/arm64/...` 等）。
+2. 代码块标注：
 
 ```c
 // path: system/core/init/init.cpp
 // commit: android-17.0.0_r1
 ```
 
-3. **对账表**（文末或附录）：路径列表 + `已校对` / `待确认`；未核对的类名、属性、数值标「待确认」，禁止臆造。
-4. **可验证**：关键结论能对应到 dump / logcat / dmesg / perfetto / 命令；参数给出默认值与选用准则。
-5. **稳定性挂钩**：每个机制点明会在何种 Crash / ANR / OOM / 卡死 / 重启场景出事。
+3. 文末对账表：`已校对` / `待确认`；未核实禁止写成定论。
+4. 结论可对应 serial / last_kmsg / dmesg / logcat / perfetto / 命令；参数给默认值与选用准则。
+5. 点明稳定性场景：boot loop / ANR / panic / hung_task / AVB 失败等。
 
-## 3. 结构与版式（新文）
+## 4. FAIL 黑名单
 
-优先（与公开站剥离一致）：
+- 旧路径：`01-Mechanism/`、`02-Symptom/`、`05-Governance/` 等
+- 臆造 AOSP 类 / 属性 / init 触发器
+- 首启慢（odsign / sepolicy 现编）写成「性能劣化」
+- 中文标题链接半角冒号（`第7章:xxx`）
+- AI 套话：「值得注意的是」「让我们深入探讨」「在当今快速发展的」
+- 无路径机制断言；无案例空治理
 
-- 顶部 blockquote **≤ 3 行**（系列/基线/读者）。
-- 作者前言仅用成对 `<!-- AUTHOR_ONLY:START -->` … `<!-- AUTHOR_ONLY:END -->`；禁止嵌套新 marker。
-- 正文七节：开场 → 核心子问题 → 详细展开 → 关键产出(SOP) → 实战案例 → Takeaway → 前置 → 下一步。
-- 字数以章型为准：章首节 ≥4000；章内节 ≥2500；内容重章 ≥5000（目标可更高）。勿再套用「一律 300 行」旧口径。
+## 5. 完稿清单
 
-## 4. FAIL 黑名单（出现即不合格）
+- [ ] 基线 AOSP 17.0.0_r1 + android17-6.18
+- [ ] 书章体 + 文件名规范；H1 与 `节:` 一致
+- [ ] ≥1 标注源码块 + 对账表
+- [ ] ≥1 案例（**5 件套**：背景 / 现象 / 根因 / 解决 / 验证；任一段 < 3 行即未达）+ Takeaway + 下一步
+- [ ] 已跑 §10 反样板 grep 自检（禁用词 / blockquote 行数 ≤3 / AUTHOR_ONLY 段行数 ≤15）
+- [ ] 已过 verifier 复审（26 项质量清单 + §6 AI 工具层硬约束 + 案例 5 件套完整性）
+- [ ] 已记 `SERIES_CHANGELOG.md`；关缺口则更新 `缺口一览.md`
 
-- 旧仓库路径当现行：`01-Mechanism/`、`02-Symptom/`、`05-Governance/` 等。
-- 臆造不存在的 AOSP 类 / 属性 / init 触发器。
-- 把首启慢（odsign / sepolicy 现编）写成「性能劣化」。
-- 中文标题链接里用半角冒号（`第7章:xxx`）。
-- AI 套话：「值得注意的是」「让我们深入探讨」「在当今快速发展的」等。
-- 无源码路径的大段机制断言；无案例的「治理结论」。
+## 6. AI 工具层硬约束（写代码 / 跑脚本 / commit 必读）
 
-## 5. 完稿最小清单
+不写进正文，但写脚本、写文章、改文件、commit 时**必守**——已实战栽过多次。
 
-- [ ] 基线写明 AOSP 17.0.0_r1 + android17-6.18
-- [ ] ≥1 真实源码路径与标注代码块；对账表有「已校对/待确认」
-- [ ] ≥1 脱敏实战案例（现象→定位→根因→修复）
-- [ ] Takeaway + 下一步链接；无 TODO/FIXME 草稿残留
-- [ ] 已追加 `00-Meta/harness/SERIES_CHANGELOG.md`；关缺口则更新 `缺口一览.md`
+### 6.1 system prompt 字符串渲染陷阱
+
+某些字符串会被规范化（视觉相似子串如 `memcontrol.c` / `memcgroup.c`、全角冒号 U+FF1A 等），导致：
+
+- Edit 工具 `old_string` 匹配假性 PASS（"No changes made. The replacement produced identical content." 但实际不同）
+- assert 验证静默失效
+- `re.escape` / grep / `os.path.exists` 对这些字符串不可靠
+
+**绕过规范**：验证脚本**必须**用 `chr(0x6d)+chr(0x65)+...` 拼字符串，用 `bytes([0x6d, 0x65, ...])` hex 验证，**禁止**用字面量直接 assert。
+
+### 6.2 Write 工具路径陷阱
+
+Write / Edit 工具对带特殊字符（U+FF1A 等）的文件名会**静默失败**——报告"Successfully wrote N bytes"但实际只创建 0 字节空文件（Windows file system 禁止 `:` 任何形式）。
+
+**硬性规范**：
+
+- 写中文文件名 / 含特殊字符文件名 → **禁用** Write / Edit 工具
+- 改用 Python：`path = chr(0x...) + ...; open(path, 'w', encoding='utf-8')` 直接写
+- 写入后**必须**双验证：`os.path.getsize(path)` + `with open(path, 'r') as f: content = f.read()` 回读
+- 看到"成功写入 N 字节但 stat 0 字节"矛盾输出 → 立即 abort，**不要 commit 空文件**
+- 修复流程：先 `git reset --mixed HEAD~1` 拆错 commit → `mavis-trash` 删 0 字节文件 → Python 重写 → stat + 回读 → 重新 commit
+
+### 6.3 smc-pub 并发 commit race
+
+`smc-pub` 是多 agent 并发工作流。多 worker 同时 `git add` + `git commit -F` 会"吸收"别人 staged 的文件，commit message 与 stat 不匹配（已发生：commit hash 看起来是自己的，message 是别人的，stat 包含不该有的文件）。
+
+**硬性规范**（任何在 smc-pub 上 commit 的 worker 必读）：
+
+1. **commit 前必验 staged**：`git diff --cached --name-only` 列出的是不是自己 add 的文件；如果发现 staged 里有别人的文件 → 先 `git reset --mixed HEAD` unstaged
+2. **commit 后必验 stat**：`git show HEAD --stat` 验证 stat 跟 message 主题对得上；不匹配 → `git reset --mixed HEAD~1` 拆分重做
+3. **禁止** `--hard`：拆分 commit 时必须用 `--mixed`，保留工作区改动
+4. **ahead 计数不等于自己 commit 成功**：是 `master - origin` 差，可能别人也加了 commit；不要凭 `git log` ahead 数字判断
+5. **代理 commit 别人文章**：message 从 reflog 拿原 message（`git reflog -50`），维护 message-history 一致性
