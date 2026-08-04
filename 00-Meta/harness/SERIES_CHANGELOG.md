@@ -5,6 +5,24 @@
 
 ## 最新
 
+### 2026-08-04 · boot · 第 10 章 应用启动与首帧
+- **路径**：`02-卷2-系统启动/10-应用启动与首帧/10.1-...md` ~ `10.7-...md` + `10-.../index.md`
+- **动作**：重写 + 删除旧的(A05 / A06 长文体)
+- **摘要**：第 10 章 7 节全部按 v6 规范完成——
+  - 10.1 Launcher 点击 → ActivityThread:Binder 跨进程调用(章首节 3097 中文字)
+  - 10.2 进程创建:Zygote fork 的应用侧参数(2663 中文字)
+  - 10.3 Application 初始化:attachBaseContext / onCreate / ContentProvider(2857 中文字)
+  - 10.4 视图树构建:measure / layout / draw(2452 中文字)
+  - 10.5 Choreographer 调度:VSYNC 与 input / animation / traversal 回调(2303 中文字)
+  - 10.6 首帧定义:First Frame / First Image / Cold / Warm / Hot Start(2952 中文字)
+  - 10.7 启动时间测量:am start -W / logcat / Perfetto(2576 中文字)
+  - 删除旧的 `A05-AMS-PMS-WMS四大组件启动.md` / `A06-第一帧与Choreographer.md`(A0x 长文体,不符合 v6 书章体)
+- **规范**：v6 §0 自检 ■ + verify 7/7 全 PASS(0 子线程 6 类 bug / 0 控制字符 / 0 半角冒号 / 0 rogue marker / 2 START + 2 END 配对)
+- **字数**：8 个文件 / 171 KB / 19991 中文字(章首页 1091 + 10.1-10.7 合计 18900)
+- **实战案例**：10.1×2 / 10.2×2 / 10.3×3 / 10.4×2 / 10.5×2 / 10.6×2 / 10.7×2 = **15 个**
+- **关联**：调整前后承接(与 8.1 §2.6 / 9.1 §2.6 / 9.3 / 11 章 / 卷 6 第 38 章边界已重新声明),跨卷引用 11 章 Perfetto / bootstat 工具链
+- **工具改进**：verify_bug6.py 增加 `(?<!a)` 排除 `android:` 命名空间(实战 10.2 命中 15 处误报)
+
 ### 2026-08-04 · meta+cleanup · 章定位 MDC + 全库错位稿归档
 - **路径**：`.cursor/rules/05-chapter-positioning.mdc`；`_archive/misplaced-by-chapter-boundary/2026-08-04/`
 - **动作**：规范落地 + 错位正文迁出（归档，非丢内容）
