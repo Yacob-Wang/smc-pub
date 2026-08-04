@@ -18,11 +18,14 @@
 | TD-008 | P2 | 结构 | 卷 8 第 48/49 章空壳，案例挤在 47/50 | 按书籍目录归口或改目录说明 | open | `08-卷8-案例实战/` |
 | TD-009 | P2 | 工具 | 写作质量未进 CI | 可选：PR 上对改动 md 跑 `verify_gc_publish.py` | open | `.github/workflows/pages.yml` |
 | TD-010 | P3 | 债务 | archive 中旧「待替换清单」易被误用 | README 标明「仅历史；以重跑结果为准」 | open | `_archive/legacy-workdocs/待替换清单-v1.md` |
+| TD-011 | P1 | 结构 | 仍有章内串题/系列 README 与书章入口并存 | 按 LT-004 扫尾；错位进 `_archive` 或归口正确章 | open | 见 `05-chapter-positioning.mdc` |
 
 ## 偿还日志
 
 | 日期 | ID | 动作 |
 |:---|:---|:---|
+| 2026-08-04 | — | 落地 `05-chapter-positioning.mdc`；首批错位归档（ch6 A02 / ch21 / ch35 / ch13.C）；E09→ch50 |
+| 2026-08-04 | — | 第 10 章 A01–A04 迁 `_archive/`（与第 6–9 章职责重叠）；章内仅留 A05/A06 |
 | 2026-08-04 | — | 卷 2 删除 `10-.../Old/` 15 篇无效 v1 稿；修正卷/章 index 过期状态 |
 | 2026-08-03 | TD-002 | 刷新 `缺口一览.md`，建立 harness 账本 |
 | 2026-08-03 | TD-001 | `quality_audit.py` 的 `REPO` 改为 `Path(__file__).parents[2]` |

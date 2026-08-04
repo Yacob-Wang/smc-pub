@@ -33,9 +33,10 @@ alwaysApply: true
 
 1. 读 `LONG_TASKS.md` 当前 `in_progress` 任务，优先推进而非另开平行大任务。
 2. 写作硬约束以 `.cursor/rules/01-writing-standards.mdc` 为准（AOSP 17 + GKI 6.18 + 真实源码）；详规/模板见 `PROMPT-技术系列文章写作指南.md`。
-3. 完成后：**追加** `SERIES_CHANGELOG.md` 一条；若关缺口则改 `缺口一览.md`；若引入/偿还债务则改 `TECH_DEBT.md`。
-4. 禁止臆造旧 module 路径（`01-Mechanism/`、`05-Governance/` 等已清空）。
-5. 不主动 commit，除非用户明确要求。
+3. **卷/章定位**以 `.cursor/rules/05-chapter-positioning.mdc` 为准——主题必须落入目标章 `index.md`；串章内容迁出或归档。
+4. 完成后：**追加** `SERIES_CHANGELOG.md` 一条；若关缺口则改 `缺口一览.md`；若引入/偿还债务则改 `TECH_DEBT.md`。
+5. 禁止臆造旧 module 路径（`01-Mechanism/`、`05-Governance/` 等已清空）。
+6. 不主动 commit，除非用户明确要求。
 
 ## 不做的事
 

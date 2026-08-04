@@ -13,16 +13,20 @@
 | [TECH_DEBT.md](TECH_DEBT.md) | 技术债务登记与偿还 |
 | [LONG_TASKS.md](LONG_TASKS.md) | 跨会话长任务 |
 | [SERIES_CHANGELOG.md](SERIES_CHANGELOG.md) | 系列正文更新流水（追加） |
+| [snapshots/](snapshots/) | 历史写作指南快照（如 Binder 同期 v4） |
 
 读者向缺口进度仍用：[../缺口一览.md](../缺口一览.md)（须与本 harness 一致）。
 
-写作规范真相源：[../../PROMPT-技术系列文章写作指南.md](../../PROMPT-技术系列文章写作指南.md) §0。
+写作**强制**真相源：[`.cursor/rules/01-writing-standards.mdc`](../../.cursor/rules/01-writing-standards.mdc)。  
+**卷/章定位**：[`.cursor/rules/05-chapter-positioning.mdc`](../../.cursor/rules/05-chapter-positioning.mdc)。  
+详规可选：[../../PROMPT-技术系列文章写作指南.md](../../PROMPT-技术系列文章写作指南.md)。
 
 ## Agent / 作者工作流（最短）
 
 ```
 开干 → 读 LONG_TASKS（in_progress）+ TECH_DEBT（P0）
-     → 按 v6 §0 写/改正文
+     → 核对目标章 index.md 定位（05-chapter-positioning）
+     → 按 01-writing-standards.mdc（书章体 + AOSP 17/GKI 6.18）写/改正文
      → 追加 SERIES_CHANGELOG
      → 必要时更新 缺口一览 / TECH_DEBT / LONG_TASKS
      → 结束（默认不 commit，除非用户要求）
@@ -33,6 +37,8 @@
 | 规则 | 作用 |
 |:---|:---|
 | `.cursor/rules/00-smc-harness.mdc` | 总则（always） |
-| `.cursor/rules/01-writing-standards.mdc` | 写作强制：AOSP 17 + GKI 6.18 + 真实源码（always） |
+| `.cursor/rules/01-writing-standards.mdc` | 写作强制：基线 + 源码 + 书章默认体例（always） |
+| `.cursor/rules/05-chapter-positioning.mdc` | 卷/章定位硬边界：禁止串章（always） |
 | `.cursor/rules/02-series-changelog.mdc` | 强制变更记录 |
 | `.cursor/rules/03-tech-debt-long-tasks.mdc` | 债务与长任务协议 |
+| `.cursor/rules/04-book-chapter.mdc` | 卷内书章节续写约定 |

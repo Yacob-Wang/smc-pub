@@ -14,7 +14,7 @@
 
 - **本篇系列角色**：**A 链路 · 阶段 A5 详解**（§8 破例：单篇 700+ 行 / 图表 5-7 张）
 - **强依赖**：
-  - [A01-启动链路总览](A01-启动链路总览.md)（必读前置）
+  - [卷2 启动总览](../index.md)（必读前置）
   - [A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md)（必读前置 · onResume 之后）
   - [Window 系列 · 01-WMS 总览](../Window/01-WMS-总览与架构.md)（如有）
   - [Stability S05-HANG 专题](../Stability/S05-HANG与黑屏专题.md)（启动期黑屏）
@@ -955,10 +955,10 @@ private void scheduleVsyncLocked() {
 ## 14.3 A 模块收口 + 下一步
 
 **A 模块 6 篇完结**：
-- [A01-启动链路总览](A01-启动链路总览.md)：5 大阶段 + 22 个时间锚点
-- [A02-Bootloader 到 Kernel](A02-Bootloader到Kernel.md)：A1+A2 阶段详解
-- [A03-Init 进程与 init.rc](A03-Init进程与init.rc.md)：A3 上半段详解
-- [A04-Zygote + SystemServer](A04-Zygote+SystemServer.md)：A3 下半段 + A4 详解
+- [卷2 启动总览](../index.md)：5 大阶段 + 22 个时间锚点
+- [第6章 Bootloader 到 Kernel](../06-Bootloader%20到%20Kernel/index.md)：A1+A2 阶段详解
+- [第7章 Init 与 init.rc](../07-Init%20进程与%20init.rc/index.md)：A3 上半段详解
+- [第8章 Zygote](../08-Zygote%20与%20ART%20启动/index.md) · [第9章 SystemServer](../09-SystemServer%20启动/index.md)：A3 下半段 + A4 详解
 - [A05-AMS/PMS/WMS 四大组件启动](A05-AMS-PMS-WMS四大组件启动.md)：A4 下半段详解
 - **A06（本文）**：A5 阶段详解
 

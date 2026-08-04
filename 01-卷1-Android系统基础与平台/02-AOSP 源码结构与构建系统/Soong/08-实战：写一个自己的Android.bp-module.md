@@ -534,7 +534,7 @@ aosp/
 | [06-Foundation/SELinux/07](../../05-安全基础（SELinux%20·%20AVB）/SELinux/07-实战：定制SELinux策略排错5例.md) | vendor daemon 案例同本文 |
 | [06-Foundation/Tools/Android_Tools/Init_RC_Complete_Guide](../../../05-卷5-调查工具链/35-断点与%20Native%20调试/Init_RC_Complete_Guide.md) | init.rc 完整语法 |
 | [Build-System/04_Build_Configuration_And_Options](../04_Build_Configuration_And_Options.md) | BoardConfig.mk |
-| [02-Symptom/S11-Startup/A03-Init进程与init.rc](../../../02-卷2-系统启动/10-应用启动与首帧/A03-Init进程与init.rc.md) | init 进程 |
+| [02-Symptom/S11-Startup/A03-Init进程与init.rc](../../../02-卷2-系统启动/07-Init%20进程与%20init.rc/index.md) | init 进程 |
 
 ---
 

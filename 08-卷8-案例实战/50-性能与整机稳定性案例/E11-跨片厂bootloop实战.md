@@ -312,7 +312,7 @@ service vendor.thermald /vendor/bin/thermald
 |:-----|:-----|:-----|
 | Bootloader | [01-Mechanism/Hardware/A02-Bootloader](../../../02-卷2-系统启动/06-Bootloader 到 Kernel/A02-Bootloader：LK体系分析与AOSP迁移.md) | 启动 |
 | Partition | [01-Mechanism/Kernel/Partition 系列](../../01-Mechanism/Kernel/Partition/) 8 篇 | 分区 |
-| Init | [02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc](../../02-卷2-系统启动/10-应用启动与首帧/A03-Init进程与init.rc.md) | init |
+| Init | [02-Symptom/S11-Startup/A-启动机制/A03-Init进程与init.rc](../../02-卷2-系统启动/07-Init%20进程与%20init.rc/index.md) | init |
 | REBOOT 流程 | [OC07-REBOOT 响应剧本](../../05-卷5-调查工具链/36-Oncall%20与应急响应/OC07-REBOOT响应剧本.md) | 4 类 |
 | pstore | [01-Mechanism/Kernel/Partition/05-动态分区与super容器](../../01-卷1-Android系统基础与平台/02-AOSP%20源码结构与构建系统/2.B-分区架构演进/05-动态分区与super容器.md) | pstore |
 

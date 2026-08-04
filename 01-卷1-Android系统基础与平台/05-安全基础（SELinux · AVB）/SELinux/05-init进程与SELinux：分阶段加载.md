@@ -10,7 +10,7 @@
 ## 本篇定位
 
 - **目的**：把"kernel 启动 → init 启动 → zygote 启动 → service 启动"全链路上 SELinux 怎么加载、怎么切 context、怎么从 permissive 转 enforcing 讲清楚——这是 boot 阶段 90% 的"起不来"问题的根因
-- **不是**：不复述 [04 §2 三个数据源](04-AVC与avc_denied：从一次denied反推策略.md)；不复述 init 进程本身（[02-Symptom/S11-Startup/A03](../../../02-卷2-系统启动/10-应用启动与首帧/A03-Init进程与init.rc.md)）
+- **不是**：不复述 [04 §2 三个数据源](04-AVC与avc_denied：从一次denied反推策略.md)；不复述 init 进程本身（[02-Symptom/S11-Startup/A03](../../../02-卷2-系统启动/07-Init%20进程与%20init.rc/index.md)）
 - **承接自**：[04 §6.5 unlabeled 案例](04-AVC与avc_denied：从一次denied反推策略.md)（启动期 unlabeled 修复的根因）
 - **衔接去**：[06 常见稳定性问题](06-常见稳定性问题：service-crash.neverallow.build-失败.md) / [08 AOSP 17 演进](08-AOSP-17演进：Treble+CIL+userspace加载.md)
 
@@ -457,7 +457,7 @@ androidboot.selinux=enforcing
 | [02 策略文件体系](02-策略文件体系：sepolicy.te.cil.编译产物.md) | §4 4 个 binary policy 怎么被加载 |
 | [03 Context 与 Label](03-Context与Label：四大主体的标签从哪来.md) | §3 进程 Context 何时变 = 本文 §5 type_transition |
 | [04 AVC 与 avc_denied](04-AVC与avc_denied：从一次denied反推策略.md) | §2 三个数据源 + 本文 §6 runtime 缓存 |
-| [02-Symptom/S11-Startup/A03-Init进程与init.rc](../../../02-卷2-系统启动/10-应用启动与首帧/A03-Init进程与init.rc.md) | init 进程本身的解析 |
+| [02-Symptom/S11-Startup/A03-Init进程与init.rc](../../../02-卷2-系统启动/07-Init%20进程与%20init.rc/index.md) | init 进程本身的解析 |
 | [06-Foundation/Tools/Android_Tools/Init_RC_Complete_Guide](../../../05-卷5-调查工具链/35-断点与%20Native%20调试/Init_RC_Complete_Guide.md) | init.rc 解析 + setcon / restorecon |
 | [06 常见稳定性问题](06-常见稳定性问题：service-crash.neverallow.build-失败.md) | 下篇讲 SELinux 引起的 7 大症状 |
 

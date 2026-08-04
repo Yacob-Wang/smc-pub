@@ -14,9 +14,9 @@
   - include/linux/init.h  (__init / __setup 宏)
   - drivers/of/fdt.c  (设备树展开)
 验证方式: pstore last_kmsg + serial console log + dmesg + ramoops + ab_partition
-状态: 🚧 撰写中（6.1–6.6 已落地；综合稿 A02 仍作前置素材）
+状态: 🚧 撰写中（6.1–6.6 已落地）
 字数: 已有书章正文（见 6.1–6.6）
-素材: A02-Bootloader：LK体系分析与AOSP迁移.md（综合稿，勿当读者主入口）
+素材: 综合稿 A02 已于 2026-08-04 归档（书章已覆盖，勿并列）
 ---
 
 # 第 6 章　Bootloader 到 Kernel
@@ -151,7 +151,7 @@ Kernel 启动阶段出问题 = boot loop，调查工具是 last_kmsg / pstore。
 ## 本章素材
 
 - 书章正文：`6.1`–`6.6`（现行读者入口）
-- 综合稿：`A02-Bootloader：LK体系分析与AOSP迁移.md`（拆章前置素材，已吸收进 6.x）
+- 综合稿 A02 已归档：`_archive/misplaced-by-chapter-boundary/2026-08-04/vol2-ch6-superseded/`
 - 源码 / 文档：AOSP `bootable/bootloader/`、Qualcomm/MTK 公开文档、source.android.com bootloader 文档
 
 ## 参考资料

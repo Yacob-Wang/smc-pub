@@ -5,6 +5,27 @@
 
 ## 最新
 
+### 2026-08-04 · meta+cleanup · 章定位 MDC + 全库错位稿归档
+- **路径**：`.cursor/rules/05-chapter-positioning.mdc`；`_archive/misplaced-by-chapter-boundary/2026-08-04/`
+- **动作**：规范落地 + 错位正文迁出（归档，非丢内容）
+- **摘要**：
+  - 新增 alwaysApply 规则：卷/章定位硬边界；同步 AGENTS / 00/01/04 MDC / harness README
+  - 归档：第6章已覆盖的 A02 综合稿；第21章中断/IO SOP；第35章 Git/Logcat/ftrace/Init.rc 等；第13.C 签名（应属第5章）
+  - 归口：`E09` Hprof 案例 → 第 50 章
+  - 第35章恢复为骨架（待写 35.1–35.6）
+- **规范**：`05-chapter-positioning.mdc`
+- **关联**：LT-004 继续扫剩余疑似串章（如第46章端侧 AI 深度 vs 调试定位）
+
+### 2026-08-04 · structure · 第10章边界收紧：A01–A04 迁出
+- **路径**：`02-卷2-系统启动/10-应用启动与首帧/A01`–`A04` → `_archive/vol2-A-module-superseded-by-ch6-9/`
+- **动作**：归档迁移（写书职责切分，非内容作废）
+- **摘要**：第 6–9 章已覆盖 Bootloader / Init / Zygote / SystemServer，第 10 章不得再放整机启动长文——
+  - 章内仅留 A05（组件/Activity 链路）+ A06（首帧 / Choreographer）供拆 10.x
+  - 第 10 / 卷 index / README 写明章边界；第 11 章与学习路线链接改指第 6–9 章
+  - `缺口一览` / `LONG_TASKS` 同步「素材仅 A05/A06」
+- **规范**：书章体严谨切分；禁止在第 10 章复述第 6–9 章主线
+- **关联**：承接同日 Old/ 清理；下一步拆写 10.1–10.7
+
 ### 2026-08-04 · cleanup · 卷 2 无效 Old 归档清理
 - **路径**：`02-卷2-系统启动/10-应用启动与首帧/Old/`（整夹删除，15 篇）
 - **动作**：删除（v1 旧基线 / C 级骨架，已被 A01–A06 与第 6–9 章覆盖）

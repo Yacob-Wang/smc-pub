@@ -26,9 +26,9 @@
 | E05 | 启动崩溃：SystemServer crash + BootLoop | [C04 启动崩溃](../../02-卷2-系统启动/11-系统启动性能专项/C-启动稳定性/C04-启动崩溃.md) |
 | E06 | 启动期 IO 卡顿：f2fs / ext4 fsync 案例 | [D02 dumpsys + dropbox](../../02-卷2-系统启动/11-系统启动性能专项/D-启动工具/D02-dumpsys+dropbox+bootstat联用.md) |
 | E07 | 启动期 GC 卡顿：分代 GC 启动期表现 | [S02 JE 案例](../../02-Symptom/S02-JE/) |
-| E08 | OEM 启动定制：小米/华为/OPPO 启动器对比 | [A03 Init 进程](../../02-卷2-系统启动/10-应用启动与首帧/A03-Init进程与init.rc.md) |
+| E08 | OEM 启动定制：小米/华为/OPPO 启动器对比 | [A03 Init 进程](../../02-卷2-系统启动/07-Init%20进程与%20init.rc/index.md) |
 | E09 | 启动期权限弹窗：弹窗流程耗时案例 | [A05 AMS](../../02-卷2-系统启动/10-应用启动与首帧/A05-AMS-PMS-WMS四大组件启动.md) |
-| E10 | 启动期 32/64 位切换：ART 17 优化 | [A04 Zygote](../../02-卷2-系统启动/10-应用启动与首帧/A04-Zygote+SystemServer.md) |
+| E10 | 启动期 32/64 位切换：ART 17 优化 | [A04 Zygote](../../02-卷2-系统启动/08-Zygote%20与%20ART%20启动/index.md) |
 | E11 | 启动期 AI Agent OS 集成：AOSP 17 AppFunctions | [A06 第一帧](../../02-卷2-系统启动/10-应用启动与首帧/A06-第一帧与Choreographer.md) |
 
 ## 跨系列引用

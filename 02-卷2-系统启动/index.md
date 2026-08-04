@@ -10,7 +10,7 @@
 | 第 7 章 | Init 进程与 init.rc | 🚧 撰写中（7.1–7.6） |
 | 第 8 章 | Zygote 与 ART 启动 | 🚧 撰写中（8.1–8.6） |
 | 第 9 章 | SystemServer 启动 | 🚧 撰写中（9.1–9.6） |
-| 第 10 章 | 应用启动与首帧 | 🚧 撰写中（素材 A01–A06；10.x 待拆） |
+| 第 10 章 | 应用启动与首帧 | 🚧 撰写中（仅 App→首帧；素材 A05/A06；10.x 待拆） |
 | 第 11 章 | 系统启动性能专项 | 🚧 撰写中（B/C/D 模块） |
 
 ---
@@ -72,10 +72,11 @@
 
 ### 第 10 章　应用启动与首帧
 
-> 从 Launcher 点击到第一帧显示——App 启动的**机制链路**。优化实践见卷 6 第 38 章。
+> 从 Launcher 点击到第一帧显示——App 启动的**机制链路**。  
+> **不重复**第 6–9 章整机启动（Bootloader / Init / Zygote / SystemServer）。优化实践见卷 6 第 38 章。
 
 - 10.1 Launcher 点击 → ActivityThread：Binder 跨进程调用
-- 10.2 进程创建：Zygote fork 的特殊参数
+- 10.2 进程创建：Zygote fork 的特殊参数（应用侧；机制见第 8 章）
 - 10.3 Application 初始化：attachBaseContext / onCreate / ContentProvider 初始化
 - 10.4 视图树构建：measure / layout / draw
 - 10.5 Choreographer 调度：VSYNC 与 input / animation / traversal 回调

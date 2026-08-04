@@ -14,15 +14,15 @@
 
 - **本篇系列角色**：**A 链路 · 阶段 A1+A2 详解**（§8 破例：单篇 700+ 行 / 图表 5-7 张）
 - **强依赖**：
-  - [A01-启动链路总览](../10-应用启动与首帧/A01-启动链路总览.md)（必读前置 · 5 大阶段 + 22 个时间锚点）
+  - [A01-启动链路总览](../index.md)（必读前置 · 5 大阶段 + 22 个时间锚点）
   - [Linux_Kernel/Process · 01-子系统全景](../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/01-进程子系统全景与边界契约.md)
   - [Linux_Kernel/Boot · 启动子系统](../01-Mechanism/Kernel/Boot/)（如有）
   - [Stability S07-KE 专题](../Stability/S07-KE内核与硬件异常专题.md)
-- **承接自**：[A01-启动链路总览](../10-应用启动与首帧/A01-启动链路总览.md) §3.1（A1 阶段 0-1s / A2 阶段 1-3s）
+- **承接自**：[A01-启动链路总览](../index.md) §3.1（A1 阶段 0-1s / A2 阶段 1-3s）
 - **衔接去**：
-  - 下一篇 [A03-Init 进程与 init.rc](../10-应用启动与首帧/A03-Init进程与init.rc.md) 深入 A3 阶段
+  - 下一篇 [A03-Init 进程与 init.rc](../07-Init%20进程与%20init.rc/index.md) 深入 A3 阶段
   - 然后 A04-A06 拆解 A4-A5 阶段
-  - 风险排查跳转 [C05-开机无限重启](../Stability/C05-开机无限重启与bootstat.md)（如已写）或 [C04-启动崩溃](../10-应用启动与首帧/A04-Zygote+SystemServer.md#6-风险地图强制))
+  - 风险排查跳转 [C05-开机无限重启](../Stability/C05-开机无限重启与bootstat.md)（如已写）或 [C04-启动崩溃](../09-SystemServer%20启动/index.md))
 - **不重复内容**：
   - **不重复** [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/) 已深入的 Linux 进程机制
   - **不重复** A01 已有的 5 大阶段总览
@@ -1059,7 +1059,7 @@ loglevel=0          # 关闭 printk
 
 > **本篇不重复**：
 > - [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/) 已深入的 Linux 进程机制
-> - [A01-启动链路总览](../10-应用启动与首帧/A01-启动链路总览.md) 已有的 5 大阶段总览
+> - [A01-启动链路总览](../index.md) 已有的 5 大阶段总览
 > - [Stability S07-KE 专题](../Stability/S07-KE内核与硬件异常专题.md) 已覆盖的 KE 机制
 >
 > **视角互补**：
@@ -1071,7 +1071,7 @@ loglevel=0          # 关闭 printk
 
 ## 12.3 下一步
 
-- 下一篇 [A03-Init 进程与 init.rc](../10-应用启动与首帧/A03-Init进程与init.rc.md) 深入 A3 阶段（init 进程 + init.rc 解析 + property）
+- 下一篇 [A03-Init 进程与 init.rc](../07-Init%20进程与%20init.rc/index.md) 深入 A3 阶段（init 进程 + init.rc 解析 + property）
 - 然后 A04-A06 拆解 A4-A5 阶段
 - 启动期 KE 排查跳转 [C05-开机无限重启](../Stability/C05-开机无限重启与bootstat.md)（规划中）
 
@@ -1167,8 +1167,8 @@ loglevel=0          # 关闭 printk
 ---
 
 > **系列导航**：
-> - **上一篇**：[A01-启动链路总览](../10-应用启动与首帧/A01-启动链路总览.md)
-> - **下一篇**：[A03-Init 进程与 init.rc](../10-应用启动与首帧/A03-Init进程与init.rc.md)
+> - **上一篇**：[A01-启动链路总览](../index.md)
+> - **下一篇**：[A03-Init 进程与 init.rc](../07-Init%20进程与%20init.rc/index.md)
 > - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
 > - **机制联动**：[Stability S06-重启专题](../Stability/S06-重启与REBOOT专题.md) · [Stability S07-KE 专题](../Stability/S07-KE内核与硬件异常专题.md) · [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/)
 > - **工具联动**：[Dumpsys D11-dropbox](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md)

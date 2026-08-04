@@ -16,7 +16,7 @@
 - **强依赖**：
   - [B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md)（必读 · perfetto 配置）
   - [Perfetto 系列 · 01-总览](../../../05-卷5-调查工具链/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md)
-  - [A01-A06 启动链路](../AOSP_Startup/)（4 层栈基础）
+  - [卷2 第6-9章](../../index.md)（整机启动 4 层栈）
 - **承接自**：[C05-开机无限重启](../C-启动稳定性/C05-开机无限重启.md)（C 模块收口）
 - **衔接去**：
   - 下一篇 [D02-dumpsys + dropbox + bootstat 联用](D02-dumpsys+dropbox+bootstat联用.md)
@@ -705,7 +705,7 @@ for e in slow_events:
 > **本篇不重复**：
 > - [B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md) 已深入的 perfetto 通用机制
 > - [Perfetto 系列](../../../05-卷5-调查工具链/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md) 已深入的 Perfetto 通用机制
-> - [A01-A06 启动链路](../AOSP_Startup/) 已深入的 4 层栈
+> - [卷2 第6-9章](../../index.md) 已深入的 4 层栈
 >
 > **视角互补**：
 > - **本篇**：**"启动场景" Perfetto 视角**——配置 + 抓取 + 解析

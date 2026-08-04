@@ -19,5 +19,6 @@
 
 ---
 
-**状态**：🚧 已有 17 篇，撰写中
+**状态**：📋 骨架（正文待按 35.1–35.6 撰写）
+**清理**：2026-08-04 迁出 Git/Logcat/ftrace/Init.rc 等错位稿 → `_archive/misplaced-by-chapter-boundary/2026-08-04/vol5-ch35-offtopic/`
 **生成**：sync_book_index.py（源：00-Meta/书籍目录-v1.md）

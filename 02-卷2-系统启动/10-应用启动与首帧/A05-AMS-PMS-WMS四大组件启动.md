@@ -14,14 +14,14 @@
 
 - **本篇系列角色**：**A 链路 · 阶段 A4 下半段详解**（§8 破例：单篇 700+ 行 / 图表 5-7 张）
 - **强依赖**：
-  - [A01-启动链路总览](A01-启动链路总览.md)（必读前置）
-  - [A04-Zygote + SystemServer](A04-Zygote+SystemServer.md)（必读前置 · SystemServer 已启动）
+  - [卷2 启动总览](../index.md)（必读前置）
+  - [第8章 Zygote](../08-Zygote%20与%20ART%20启动/index.md) · [第9章 SystemServer](../09-SystemServer%20启动/index.md)（必读前置 · SystemServer 已启动）
   - [Process 系列 · 02-AMS 冷启动判定](../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/02-AMS-冷启动判定与进程启动链路.md)（如有）
   - [Activity 系列 · 01-Activity 启动流程](../Activity/01-Activity启动流程.md)（如有）
   - [Window 系列 · 01-WMS 总览](../Window/01-WMS-总览与架构.md)（如有）
   - [Stability S01-ANR 专题](../Stability/S01-ANR卡死与Input响应专题.md)
   - [Dumpsys D02-AMS 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) · [D03-WMS 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/03-Window与WMS视角.md) · [D06-Package 视角](../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/06-Package与权限.md)
-- **承接自**：[A04 §4.1 T21 AMS ready](A04-Zygote+SystemServer.md) → ActivityManagerService.systemReady()
+- **承接自**：[第9章 SystemServer](../09-SystemServer%20启动/index.md)（AMS ready） → ActivityManagerService.systemReady()
 - **衔接去**：
   - 下一篇 [A06-第一帧与 Choreographer](A06-第一帧与Choreographer.md) 深入 A5 阶段
   - 风险排查跳转 [C01-启动 ANR](../Stability/C01-启动ANR与BootCompleted.md) · [C03-启动黑屏](../Stability/C03-启动黑屏与SurfaceFlinger卡.md)（如已写）
@@ -389,7 +389,7 @@ return startActivityCold(...);
 **关键源码**：
 - `frameworks/base/core/java/android/app/ActivityThread.java`
 - `frameworks/base/core/java/android/app/Application.java`
-- [A04 §3 Zygote](A04-Zygote+SystemServer.md)（Zygote 详解）
+- [第8章 Zygote](../08-Zygote%20与%20ART%20启动/index.md)（Zygote 详解）
 
 **耗时**：100-300ms（冷启动）/ 0ms（热启动）
 
@@ -948,7 +948,7 @@ public void handleResumeActivity(IBinder token, ...) {
 > - [Process 系列](../Process/) 已深入的 AMS 冷启动判定通用视角
 > - [Activity 系列](../Activity/) 已深入的 Activity 启动通用视角
 > - [Window 系列](../Window/) 已深入的 WMS 通用视角
-> - [A04-Zygote + SystemServer](A04-Zygote+SystemServer.md) 已深入的 SystemServer 启动
+> - [第8章 Zygote](../08-Zygote%20与%20ART%20启动/index.md) · [第9章 SystemServer](../09-SystemServer%20启动/index.md) 已深入的 SystemServer 启动
 >
 > **视角互补**：
 > - **本篇**：**"启动场景"穿透视角**——四大组件 + 冷热温三态 + 启动期 ANR
@@ -1052,7 +1052,7 @@ public void handleResumeActivity(IBinder token, ...) {
 ---
 
 > **系列导航**：
-> - **上一篇**：[A04-Zygote + SystemServer](A04-Zygote+SystemServer.md)
+> - **上一篇**：[第8章 Zygote](../08-Zygote%20与%20ART%20启动/index.md) · [第9章 SystemServer](../09-SystemServer%20启动/index.md)
 > - **下一篇**：[A06-第一帧与 Choreographer](A06-第一帧与Choreographer.md)
 > - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
 > - **机制联动**：[Stability S01-ANR 专题](../Stability/S01-ANR卡死与Input响应专题.md) · [Process 系列 · 02](../Process/) · [Activity 系列 · 01](../Activity/) · [Window 系列 · 01](../Window/)

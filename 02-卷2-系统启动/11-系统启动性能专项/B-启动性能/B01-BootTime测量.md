@@ -14,10 +14,10 @@
 
 - **本篇系列角色**：**B 模块 · 性能测量篇**（§8 破例：单篇 700+ 行 / 图表 5-7 张）
 - **强依赖**：
-  - [A01-启动链路总览](../../10-应用启动与首帧/A01-启动链路总览.md)（必读前置 · 5 大阶段）
-  - [A02-Bootloader 到 Kernel](../../10-应用启动与首帧/A02-Bootloader到Kernel.md)（测量 Kernel initcall 耗时）
-  - [A03-Init 进程与 init.rc](../../10-应用启动与首帧/A03-Init进程与init.rc.md)（测量 init.rc 解析耗时）
-  - [A04-Zygote + SystemServer](../../10-应用启动与首帧/A04-Zygote+SystemServer.md)（测量 50+ 服务启动耗时）
+  - [卷2 启动总览](../../index.md)（必读前置 · 5 大阶段）
+  - [第6章 Bootloader 到 Kernel](../../06-Bootloader%20到%20Kernel/index.md)（测量 Kernel initcall 耗时）
+  - [第7章 Init 与 init.rc](../../07-Init%20进程与%20init.rc/index.md)（测量 init.rc 解析耗时）
+  - [第8章 Zygote](../../08-Zygote%20与%20ART%20启动/index.md) · [第9章 SystemServer](../../09-SystemServer%20启动/index.md)（测量 50+ 服务启动耗时）
   - [Perfetto 系列 · 01-总览](../../../05-卷5-调查工具链/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md)（如有）
   - [Dumpsys D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md)（bootstat 工具）
 - **承接自**：[A06-第一帧与 Choreographer](../../10-应用启动与首帧/A06-第一帧与Choreographer.md)（A 模块收口）
@@ -27,7 +27,7 @@
   - 工具跳转 [D01-Perfetto Boot Trace](../D-启动工具/D01-Perfetto-Boot-Trace抓全栈启动时序.md)（规划中）
 - **不重复内容**：
   - **不重复** [Perfetto 系列](../Perfetto/) 已深入的 Perfetto 通用机制
-  - **不重复** A01-A06 已深入的启动链路
+  - **不重复** 第6-9章已深入的整机启动链路
   - 本篇与之关系：**"启动场景"测量视角**——把 bootchart + perfetto + bootstat 三大工具作为启动期性能测量的"三件套"
 - **本篇贡献**：让架构师能：
   - 完整画出 bootchart 抓取流程
@@ -868,7 +868,7 @@ adb shell dmesg | grep "initcall.*returned.*[0-9]\{4,\}"
 
 > **本篇不重复**：
 > - [Perfetto 系列](../Perfetto/) 已深入的 Perfetto 通用机制
-> - [A01-A06](../AOSP_Startup/) 已深入的启动链路
+> - [卷2 第6-9章](../../index.md) 已深入的整机启动链路
 > - [Dumpsys D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) 已深入的 bootstat 工具
 >
 > **视角互补**：

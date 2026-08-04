@@ -19,5 +19,6 @@
 
 ---
 
-**状态**：🚧 已有 10 篇，撰写中
+**状态**：🚧 撰写中（保留 PowerManager/WakeLock/Doze/耗电实战 4 篇）
+**清理**：2026-08-04 迁出中断教材/IO SOP 等错位稿 → `_archive/misplaced-by-chapter-boundary/2026-08-04/vol3-ch21-offtopic/`
 **生成**：sync_book_index.py（源：00-Meta/书籍目录-v1.md）
