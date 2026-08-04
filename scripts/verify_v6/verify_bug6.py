@@ -31,7 +31,7 @@ def verify_bug6(path: str) -> int:
         ('aart/', chr_join('aart/')),       # 独立 aart/(排除 frame 中的 'aart')
         ('vvmscan', chr_join('vvmscan')),
         ('rameworks', chr_join('rameworks')),  # 独立 rameworks(排除 frame 中的 'rameworks')
-        ('ndroid:', chr_join('ndroid:')),
+        ('ndroid:', chr_join('ndroid:')),     # 排除 'android:' 命名空间
         ('m_kill', chr_join('m_kill')),
         ('o.lmk', chr_join('o.lmk')),
     ]
@@ -40,18 +40,14 @@ def verify_bug6(path: str) -> int:
     fail = 0
     for name, pat in bug6:
         # 用 negative lookbehind 排除合法子串
-        if name in ('aart/', 'vvmscan', 'rameworks'):
-            # 这些可能被 'frameworks' 等合法词含
-            # 用 lookbehind 排除 'f' 开头的 'rameworks' 和 'art/' 结尾的 'aart/'
-            if name == 'rameworks':
-                # 排除 'frameworks'
-                regex = rb'(?<!f)' + re.escape(pat)
-            elif name == 'vvmscan':
-                # 'vvmscan' 在 'vmscan' 前多了 v,但 'vmscan' 不含 'vv'
-                regex = re.escape(pat)
-            else:  # aart/
-                regex = re.escape(pat)
+        if name == 'rameworks':
+            # 排除 'frameworks'
+            regex = rb'(?<!f)' + re.escape(pat)
+        elif name == 'ndroid:':
+            # 排除 'android:' 命名空间(Android manifest 合法属性)
+            regex = rb'(?<!a)' + re.escape(pat)
         else:
+            # aart/ / vvmscan / m_kill / o.lmk 不会被合法词包含
             regex = re.escape(pat)
         n = len(re.findall(regex, b))
         if n > 0:
