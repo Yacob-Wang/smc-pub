@@ -15,6 +15,56 @@
 
 ---
 
+
+
+## 卷首收口 · 上电到桌面
+
+> **本卷的"卷级收口"**——把 6-11 章的"上电到桌面"全链路用 26 个时间锚点串成 1 张时序图 + 1 张节点表,标注每个阶段的劣化易发点,以安卓模拟器真实启动日志为骨架。
+
+- [0. 上电到桌面: 冷启动 26 锚点全链路时序与劣化分析](0-上电到桌面-冷启动26锚点全链路时序与劣化分析.md)　— 5 大阶段 × 26 锚点 + 5 大劣化位置 + emulator 真实 logcat 串联
+  - 阶段 1 硬件+Bootloader(锚点 1-5) → 阶段 2 Kernel(锚点 6-10) → 阶段 3 init+Zygote+ART(锚点 11-17) → 阶段 4 SystemServer+PMS+AMS+WMS(锚点 18-23) → 阶段 5 Launcher+首帧+boot_completed(锚点 24-26)
+  - **阶段 4 是最大单一杠杆点**(40% 整机耗时);**5 大劣化易发点**: PMS 扫描(40%)/ Launcher+SDK 自启(25%)/ fs_mgr 挂载(15%)/ Zygote+ART(12%)/ AMS+WMS(8%)
+  - emulator 真实启动日志:`logcat -b events | grep boot_progress` + `getprop | grep boottime` + `dumpsys bootstat` + `bootchart` 4 件套
+  - 关键产出:emulator 启动对比法 + 劣化定位 3 步法
+  - 2 个实战案例:emulator PMS 扫描卡 12s / 真机 SDK 拉起 5s
+  - 字数 4500+ / 12 张表 / 6 张 ASCII 大图 / 真实 logcat 4 段
+
+### 26 锚点全链路总表(摘要)
+
+| 阶段 | 锚点 | 名称 | 关键 logcat 事件 | 关键源码 | 详见 |
+|------|------|------|------------------|----------|------|
+| 1 硬件+Bootloader | 1 | power-on | (硬件) | PMIC | §6.1 |
+| | 2 | PBL 启动 | (Boot ROM) | PBL | §6.2 |
+| | 3 | ABL 启动 | (OEM log) | aboot.c | §6.2 |
+| | 4 | Kernel 加载 | "Loading kernel..." | aboot.c | §6.2 |
+| | 5 | Kernel 启动 | "Uncompressing Linux..." | aboot.c | §6.3 |
+| 2 Kernel 启动 | 6 | start_kernel | `boot_progress_start` | init/main.c | §6.3 |
+| | 7 | setup_arch | (内核 log) | arch/arm64/kernel/setup.c | §6.4 |
+| | 8 | page_alloc_init | "Memory: ..." | mm/page_alloc.c | §6.4 |
+| | 9 | sched_init | "SMP: Total ... processors" | kernel/sched/core.c | §6.4 |
+| | 10 | rest_init | "Run /init as process 1" | init/main.c | §6.3 |
+| 3 init+Zygote+ART | 11 | init 进程启动 | "init: starting service 'init'" | system/core/init/init.cpp | §7.1 |
+| | 12 | init.rc 解析 | "init: Parsing file /init.rc" | init.cpp | §7.2 |
+| | 13 | early-init 触发 | "init: early-init" trigger | init.cpp | §7.3 |
+| | 14 | vold 启动 | "init: starting service 'vold'" | system/vold/main.cpp | §7.3 |
+| | 15 | fs_mgr 挂载 | "fs_mgr: mount /system OK" | fs_mgr/fs_mgr.cpp | §7.3 |
+| | 16 | Zygote 启动 | "init: starting service 'zygote'" | app_main.cpp | §8.1 |
+| | 17 | ART 启动 | "art: starting runtime" | art/runtime/runtime.cc | §8.2 |
+| 4 SystemServer+核心服务 | 18 | SystemServer 入口 | "SystemServer: Starting system server" | SystemServer.java | §9.1 |
+| | 19 | Bootstrap 服务 | "ActivityManager: System now booting" | SystemServer.java | §9.2 |
+| | 20 | PMS 启动 | `boot_progress_pms_start` | PackageManagerService.java | §9.3 |
+| | 21 | PMS 扫描 | `boot_progress_pms_scan_end` | PackageManagerService.java | §9.3 |
+| | 22 | AMS ready | `boot_progress_ams_ready` | ActivityManagerService.java | §9.3 |
+| | 23 | WMS 亮屏 | `boot_progress_enable_screen` | WindowManagerService.java | §9.3 |
+| 5 Launcher+首帧+boot_completed | 24 | boot anim 结束 | "SurfaceFlinger: Boot animation finished" | SurfaceFlinger.cpp | §10.0 |
+| | 25 | Launcher 首帧 | "ActivityTaskManager: START u0 {act=android.intent.action.MAIN...}" | ActivityTaskManager.java | §10.0 / §10.6 |
+| | 26 | boot_completed | `boot_progress_boot_completed` | ActivityManagerService.java | §10.0 |
+
+> **boot_progress_xxx 事件来自 AOSP 17 EventLogTags.logtags 真实定义**,可在 emulator 上 `adb logcat -b events | grep boot_progress` 直接验证。
+> **完整 26 锚点详细分析 + 时序图 + 真实 logcat 串联**:见 [0-上电到桌面](0-上电到桌面-冷启动26锚点全链路时序与劣化分析.md)
+
+---
+
 ## 章节详细
 
 ### 第 6 章　Bootloader 到 Kernel
