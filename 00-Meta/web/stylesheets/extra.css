@@ -892,6 +892,24 @@ body.jk-nav-sheet-open {
   object-fit: contain;
 }
 
+.jk-report {
+  width: 100%;
+  margin: 0.75rem 0 1.25rem;
+  border: 1px solid var(--jk-line);
+  border-radius: var(--jk-radius);
+  overflow: hidden;
+  background: #fff;
+}
+
+.jk-report-frame {
+  display: block;
+  width: 100%;
+  height: calc(100vh - 9rem);
+  min-height: 720px;
+  border: 0;
+  background: #f5f7fa;
+}
+
 /* ==========================================================================
    全屏布局：正文 + 右 TOC（无左侧主侧栏）
    - 主导航：顶栏 Tab / 下拉 + 篇章横条
