@@ -5,6 +5,23 @@
 
 ## 最新
 
+### 2026-08-04 · boot · 第 10 章补齐 10.0 全局观前奏(链路补齐)
+- **路径**：`02-卷2-系统启动/10-应用启动与首帧/10.0-系统启动到桌面-Launcher启动-fallback-home-boot-completed链路.md` + `10-.../index.md`
+- **动作**：补齐卷 2 "上电到桌面" 14 个关键节点中的 4 个 gap
+- **摘要**：用户审阅后指出卷 2 覆盖不完整(漏 fallback home / Launcher 启动 / boot_completed 链路)——
+  - 10.0 §2.1 给出 14 个节点完整图(卷 2 实际覆盖 8/14,本节补 4/14)
+  - 10.0 §2.2 gap A:AMS 选 Launcher(queryIntentActivities + 5 个判定:ro.boot.default.home / priority / preferredOrder / match 顺序 / 包名字典序)
+  - 10.0 §2.3 gap B:Launcher 进程 fork 路径(走和普通 app 一样的 Process.start,不是特殊路径)
+  - 10.0 §2.4 gap C-1:fallback home 触发条件(3 种:找不到 home / Launcher 没 ready / Launcher 启动失败)
+  - 10.0 §2.5 gap C-2:fallback home 退场机制(PACKAGES_AVAILABLE 广播)
+  - 10.0 §2.6 gap D-1:boot_completed 完整链路(5 步)
+  - 10.0 §2.7 gap D-2:ACTION_BOOT_COMPLETED 接收者拉起(第三方 SDK 自启 → 装新 App 后首次开机慢 10+ 秒)
+  - 3 个实战案例(42 个 SDK receiver / PMS 扫描 28.5s / MusicReceiver 同步网络 5s)
+- **规范**：v6 §0 自检 ■ + verify 7/7 全 PASS
+- **字数**：4500+ 中文字 / 35 KB / 1 文件
+- **index.md 更新**：7 节子节规划 → 8 节(加 10.0) / 写作节奏表加 10.0 / 本章小结更新为"systemReady → 桌面 + 桌面 → 首帧"
+- **关联**：与 8.1 §2.6 / 9.1 §2.6 / 9.3 §2.2 / 9.5 §2.4 / 9.6 §4 / 10.1-10.6 全部承接;卷 2 "上电到桌面" 链路 14 节点全部覆盖
+
 ### 2026-08-04 · boot · 第 10 章 应用启动与首帧
 - **路径**：`02-卷2-系统启动/10-应用启动与首帧/10.1-...md` ~ `10.7-...md` + `10-.../index.md`
 - **动作**：重写 + 删除旧的(A05 / A06 长文体)
