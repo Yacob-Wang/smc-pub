@@ -5,6 +5,65 @@
 
 ## 最新
 
+### 2026-08-05 · memory · 第 26 章 26.1-26.6 症状章(v6 新增)
+- **路径**:`04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/01-内存症状全景.md` + `02-Java-OOM-堆溢出-大对象-Bitmap-线程数超限.md` + `03-Native-内存增长与泄漏.md` + `04-进程被杀-LMK判定链路与优先级误配型误杀.md` + `05-内存压力连锁反应-GC抖动-掉帧-ANR.md` + `06-内存现场采集与水位治理.md` + `index.md` + `00-计划-26.1-26.6.md`
+- **动作**:v6 新增 6 篇"症状章"(26.1 总览 + 26.2-26.6 子章) + 26 章 index 全部 9 子节状态标 ✅ 完成 + 计划文件
+- **摘要**:承接 26.7-26.9 调查工具书组(2026-08-05 收口),补 26.1-26.6 症状章(全部空壳)——
+  - **26.1 内存症状全景**(14.3 KB / 14.6K 字符 · 总览,最后写):5 大症状族地图(Java OOM 30% / Native 增长 20% / 进程被杀 20% / 压力传导 15% / 现场治理 15%)+ 5 维速查矩阵(症状族 × 机制 × 产物 × 阈值 × 子文章)+ 30 秒决策树(Q1 闪退 → 26.2 / Q2 被杀 → 26.4 / Q3 卡 → 26.5 / Q4 Native 涨 → 26.3 / Q5 取证 → 26.6)+ 三角分工(15 章机制 / 26.1-26.6 症状 / 26.7-26.9 产物解读)
+  - **26.2 Java OOM 堆溢出-大对象-Bitmap-线程数超限**(16.6 KB / 17K 字符):4 大 OOM 类型逐一讲——`Java heap space` / `Failed to allocate a N byte allocation` / `Out of memory on a N-byte allocation by Bitmap` / `pthread_create failed`,logcat 怎么识别 / ART 触发路径 / 7 大根因占比(Bitmap 30% / Activity 25% / 大对象 15% / 线程数超限 10% / static 10% / Handler 5% / 其他 5%)
+  - **26.3 Native 内存增长与泄漏**(15.8 KB / 16.2K 字符):3 大分配源(ByteBuffer.allocateDirect / JNI malloc / mmap)+ scudo 6 大原则(Quarantine 等)+ JNI 4 大泄漏模式 + mmap 3 大模式 + 实战用 `proc/vmallocinfo` 1MB 11K 行解读
+  - **26.4 进程被杀:LMK 判定链路与 adj 误配型误杀**(16.4 KB / 16.8K 字符):杀进程 3 大触发路径(lmkd 75% / 内核 OOM killer 20% / 用户态 5%)+ lmkd 6 步判定链路(memcg → AMS → lmkd poll)+ 4 大 adj 误配模式(vendor service Bnd Fgs / App 长期 Top / GMS 拆子状态 / IME Perceptible)+ 误配 vs 真紧判断公式
+  - **26.5 内存压力连锁反应:GC 抖动 → 掉帧 → ANR**(14.3 KB / 14.6K 字符):5 大传导链(RAM 满 → kswapd / zRAM swap → IO 争抢 / CMA 满 → 拍照失败 / NUMA 失衡 / PSI full > 5%)+ 3 个时间窗口(毫秒 GC pause / 百毫秒掉帧 / 秒级 ANR)+ 5 大 GC 类型 + 治理 3 步走
+  - **26.6 内存现场采集与水位治理**(14.3 KB / 14.6K 字符 · 收口子章):5 件套采集清单(系统级/进程级/时间序列/堆转储/bugreport)+ 5 大治理动作(进程/阈值/ART/Native/硬件)+ 5 大监控指标(MemAvailable/allocstall/回收效率/oom_kill/SwapFree)+ 30 分钟采集时间规划
+- **实战样本**:0xffffff13 抓取贯穿 6 篇 12 个实战案例(26.2 × 2 / 26.3 × 2 / 26.4 × 2 / 26.5 × 2 / 26.6 × 2 + 26.1 总览引用)
+- **关键发现**:
+  - `com.transsion.kolun.aiservice` 12% Bnd Fgs → 典型 adj 误配(26.4)
+  - `com.android.phone` RssHwm 209MB + SatelliteController 启动栈 → 启动期 OOM 风险(26.4 §7.2)
+  - 0xffffff13 `CmaFree=0` + `pgscan_kswapd=2620134` → 链 3 + 链 1 双重信号(26.5 §7.2)
+  - 5 件套 30 分钟采集 SOP,防止"内存 P0 现场不能再来一次"(26.6 §1)
+  - 80% 内存问题不是直接说"内存"——是"卡""闪退""被杀"(26.1 §1)
+- **规范**:v6 verify 全部 PASS——
+  - 反样板 grep:6 篇 0 禁用词
+  - AUTHOR_ONLY 段:6 篇 11-12 行(≤15 行 ✓)
+  - 顶部 blockquote:6 篇 3 行(≤3 行 ✓)
+  - 路径对账:6 篇全部 ✅ 标注
+  - 公开站剥离:6 篇 0 残留
+  - 附录 C 量化自检:6 篇 12 条断言(≥10 ✓)
+- **字数**:6 篇合计 ~92 KB / ~93K 字符(26.1 14.6K / 26.2 17K / 26.3 16.2K / 26.4 16.8K / 26.5 14.6K / 26.6 14.6K)+ 计划文件 12K + index 改版
+- **实战案例**:6 篇 × 2 个 = **12 个**(全部用 0xffffff13 真实数据)
+- **index.md 更新**:全部 9 个子节标 ✅ 完成,状态"已有 9 篇"
+- **驱动**:用户"基于写作标准接着向下写"诉求,定制长任务 todowrite 严格追踪 10 个子任务,每篇 PASS 才进下一篇
+- **关联**:26.2-26.6 与 26.7-26.9 调查工具书组互补(症状识别 vs 产物解读);26.1 总览把 26.2-26.6 + 26.7-26.9 串成 1 张地图
+- **与 15 章关系**:26.1 三角分工 15 章(WHY 机制)/ 26.1-26.6(WHAT 症状)/ 26.7-26.9(HOW READ 产物解读)
+
+### 2026-08-05 · memory · 第 26 章 26.7-26.9 调查工具书组(v6 新增)
+- **路径**:`04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/07-proc节点文件深度解读-11大文件从读到诊断.md` + `08-dumpsys-meminfo全设备级与procstats解读.md` + `09-平台特有调试工具-MTK-mmstat-ion-dmabuf-gpu-memory解读.md` + `index.md` + `00-计划-新增3篇.md`
+- **动作**:v6 新增 3 篇"调查工具书组" + 26 章 index 加 26.7-26.9 三个子节 + 计划文件
+- **摘要**:用户提出"smc-pub 内存文章缺调试手段"诉求 → 评审后定 3 篇,补 15.06(单进程 PSS)/ 33.03(BugReport 速查 3 行/文件)/ 15 章全章未覆盖的维度——
+  - **26.7 proc 节点文件深度解读-11 大文件从读到诊断**(26.9 KB / 27K 字符):11 个 proc 节点文件(memory/vmstat/zoneinfo/slabinfo/buddyinfo/pagetypeinfo/vmallocinfo/pressure-memory/zraminfo/shmemstat/loadavg)按 5 层分类(系统级账本/分配器层/虚拟地址层/压力/zRAM),每个文件讲"读什么字段/异常阈值/对应哪个内核函数/是哪个机制的产物",6 个内核源码路径(fs/proc/meminfo.c / mm/vmstat.c / mm/page_alloc.c / mm/slab.c / mm/vmalloc.c / kernel/sched/psi.c)全部 ✅
+  - **26.8 dumpsys-meminfo 全设备级与 procstats 解读**(19.3 KB / 20K 字符):补 15.06(单进程)未讲的 `Total RSS by OOM adjustment` 12 大分组(Native/System/Persistent/Persistent Service/Foreground/Visible/Perceptible/Perceptible Low/A Services/Home/Previous/Cached)+ 3 大诊断信号阈值(system_server > 1GB / Cached > 30% / Foreground+Visible > 50%)+ `dumpsys_procstats` 8 大状态字段解读 + adj 误配 3 大典型模式
+  - **26.9 平台特有调试工具-MTK-mmstat-ion-dmabuf-gpu-memory 解读**(23.8 KB / 24K 字符):MTK mmstat/mmstat2 4 大 trace 深度解读(meminfo 13 字段/vmstat 8 字段/buddyinfo 12 列/proc 4 元组)+ ION 5 大 heap + DMA-BUF 4 大路径 + GPU memory(ARM Mali/Adreno/Xclipse) + 0 字节文件判别 3 步法 + 跨平台迁移(高通/三星用 perfetto + ftrace 替代)
+- **实战样本**:`D:\Users\jiabo.wang\Desktop\ANR-LOCK-OPTIMIZE\0xffffff\0xffffff13_2026_07_19_06_17_35_20\`(MTK 平台 ANR 抓取 37 个文件,内存相关 13 个),3 篇实战占比 50-60%
+- **关键发现**:
+  - `proc/meminfo: CmaFree=0` → CMA 已用光,拍照/视频大块 DMA 分配会失败(26.7 §6.1)
+  - `proc/vmstat: pgscan_kswapd=2620134 / pgsteal_kswapd=2544671 = 97% 回收效率` + `proc/zoneinfo: free=22915 < low=7626` → 系统刚经历一波压力但扛住了(26.7 §6.2)
+  - `dumpsys_meminfo: system_server=733MB` → 8GB 设备健康(占 9.5%)(26.8 §5.1)
+  - `dumpsys_procstats: kolun.aiservice 12% 全 Bnd Fgs` → adj 误配(26.8 §5.2)
+  - `mmstat_trace_proc: system_server 12 秒从 636MB 涨到 1012MB = 1.9GB/min` → **30 倍超标**系统泄漏(26.9 §2.5)
+  - 13 个 0 字节 vendor 文件分类(4 大根因:抓取失败/路径变化/功能未启用/运行时无数据)(26.9 §6)
+- **规范**:v6 verify 全部 PASS——
+  - 反样板 grep:3 篇 0 禁用词
+  - AUTHOR_ONLY 段:3 篇 11-12 行(≤15 行 ✓)
+  - 顶部 blockquote:3 篇 3 行(≤3 行 ✓)
+  - 路径对账:26.7 路径全部 ✅(29 个)/ 26.8 路径全部 ✅/ 26.9 路径 23 ✅ + 28 🟡(vendor 私有)
+  - 公开站剥离:3 篇 0 残留(剥后 27.5KB / 19.3KB / 23.8KB)
+- **字数**:3 篇合计 ~70 KB / ~71K 字符(26.7 27K / 26.8 20K / 26.9 24K)+ 计划文件 16K + index 改版
+- **实战案例**:26.7 × 2 / 26.8 × 2 / 26.9 × 2(全部用 0xffffff13 真实数据)= **6 个**
+- **index.md 更新**:加 26.7-26.9 三个子节 + 状态更新("已有 3 篇")+ 强依赖(15 章/33 章链接)
+- **驱动**:用户提出"smc-pub 内存文章缺调试手段"诉求 + 提供 0xffffff13 抓取目录作为实战样本,触发调查工具书组立项
+- **关联**:26.7 ← 15.07(PSI)/ 15.06(单进程)/ 33.03(速查);26.8 ← 15.06(单进程)/ 15.13(adj);26.9 ← 15.05(Native)/ 26.7/26.8(本组前 2 篇)
+- **与 33.03 关系**:33.03 给 30+ BugReport 文件 3 行/文件速查,本组 26.7-26.9 深入 11 大内存相关文件 4-6 行/文件深度解读,互补不重复
+
 ### 2026-08-04 · boot · 卷 2 P0 收口: 上电到桌面 26 锚点全链路时序与劣化分析
 - **路径**：`02-卷2-系统启动/0-上电到桌面-冷启动26锚点全链路时序与劣化分析.md` + `02-卷2-系统启动/index.md`
 - **动作**：新增卷级收口文章 + 更新 index.md 加入口链接 + 26 锚点总表
