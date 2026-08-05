@@ -2308,7 +2308,7 @@ grep -E "(ContentResolver|FileInputStream|Socket|SharedPreferences)" trace.html
 | ART 运行时 | 本系列 [05 篇](05-ART进程内世界：JIT-AOT与GC.md) | ART `Runtime::Init` 在 T5.2 触发;`OAT file` + `JIT` + `GC` 都在本篇 §9.3 概述 |
 | Kernel 调度 | `../01-Mechanism/Kernel/Kernel_Scheduler/` | 子进程的 `task_struct` 在 T5 fork 后第一次被调度;[07 篇](07-调度与资源：CFS与进程生死.md) 接管调度细节 |
 | 分区 / cgroup | `../01-Mechanism/Kernel/Partition/` | memcg 限额在 attach 后由 `ProcessList` 设置 |
-| 启动流程 | `../../02-卷2-系统启动/` | 早期稿,深度不足;本系列仅引用"启动时序" 的概念 |
+| 启动流程 | `../../01-卷1-平台基础与启动/` | 早期稿,深度不足;本系列仅引用"启动时序" 的概念 |
 | Watchdog / ANR 检测 | `../04-Tool/Watchdog/` | ANR 检测的 5s 阈值与本篇 10.1 案例直接相关 |
 
 **与本系列"上承下接" 的内部链接**:

@@ -465,7 +465,7 @@ $ adb shell dumpsys package install | grep "com.example.app"
 - 冷启动慢是正常的
 
 **修复方案**：
-1. 用 Cloud Profile（[ART 02-编译与执行](../../03-卷3-核心机制/20-ART 运行时/01-编译路径全景.md)）让首次启动也快
+1. 用 Cloud Profile（[ART 02-编译与执行](../../02-卷2-核心机制/20-ART 运行时/01-编译路径全景.md)）让首次启动也快
 2. 多次启动让 profile 收敛
 
 ## 6.2 CASE-DUMPSYS-06-02 权限被拒

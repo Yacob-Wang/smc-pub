@@ -11,7 +11,7 @@ alwaysApply: true
 
 见 `00-Meta/harness/GOALS.md`。摘要：
 
-1. 产出《Android 系统稳定性架构师》8 卷 50 章可发布正文（AOSP 17 + Kernel 6.18）。
+1. 产出《Android 系统稳定性架构师》6 卷 56 章可发布正文（AOSP 17 + Kernel 6.18）。
 2. 读者可按症状 / 机制 / 治理三条路径通读；缺口与质量可审计。
 3. 用 harness 账本跟踪补章、重写、债务与长任务，禁止「只改文不记账」。
 

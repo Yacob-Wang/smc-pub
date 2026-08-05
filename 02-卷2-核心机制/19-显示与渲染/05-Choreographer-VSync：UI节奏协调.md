@@ -513,7 +513,7 @@ $ adb shell setprop debug.hwui.skipped_frames_warning 50
 | [04 HWUI / RenderThread](04-HWUI-RenderThread：硬件加速渲染.md) | 上篇 |
 | [06 HWC](06-HWC（Hardware-Composer）：display-HAL抽象.md) | 续篇 |
 | [07 jank 实战](07-卡顿-jank实战：trace+logcat5分钟定位.md) | 续篇 |
-| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | trace 工具 |
+| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | trace 工具 |
 
 ---
 

@@ -78,7 +78,7 @@
 - **跨系列引用**:
   - [Perfetto 04-定制化实战:ANR 后自动抓取 trace](Perfetto/04-定制化实战：ANR后自动抓取trace.md)——perfetto 整体定制
   - [Perfetto 01-Perfetto 系统总览与架构设计](../31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md)——TraceConfig 基础
-  - [Kernel/MM 03-ART 堆与 GC 的设计动机](../../03-卷3-核心机制/15-内存管理全链路/03-ART堆与GC的设计动机：为什么这样设计.md)——Native 堆视角
+  - [Kernel/MM 03-ART 堆与 GC 的设计动机](../../02-卷2-核心机制/15-内存管理全链路/03-ART堆与GC的设计动机：为什么这样设计.md)——Native 堆视角
 
 # 写作标准
 

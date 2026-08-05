@@ -1,6 +1,6 @@
 ---
 description: 书章节续写约定——默认体例、样板路径、禁止系列长文体串台
-globs: "**/0[1-8]-卷*/**/*.md"
+globs: "**/0[1-6]-卷*/**/*.md"
 alwaysApply: false
 ---
 
@@ -17,13 +17,13 @@ alwaysApply: false
 
 ## 样板（照抄结构，勿照抄过时链接）
 
-- Bootloader：`02-卷2-系统启动/06-Bootloader 到 Kernel/6.1-*.md`
-- Init：`02-卷2-系统启动/07-Init 进程与 init.rc/7.1-*.md`
+- Bootloader：`01-卷1-平台基础与启动/06-Bootloader 到 Kernel/6.1-*.md`
+- Init：`01-卷1-平台基础与启动/07-Init 进程与 init.rc/7.1-*.md`
 
 ## 输出检查
 
 - 基线：`android-17.0.0_r1` + `android17-6.18`
 - YAML frontmatter + `# N.M` + 一句话开场 + Takeaway
 - `// path` + `// commit: android-17.0.0_r1`；对账表
-- 链接只用现行 8 卷相对路径
+- 链接只用现行 6 卷相对路径
 - 完成后提示用户/自行追加 `00-Meta/harness/SERIES_CHANGELOG.md`

@@ -45,7 +45,7 @@
 | **计算公式** | 启动成功率 = 首帧成功事件数 ÷ 启动尝试事件数 × 100% |
 | **典型阈值** | ≥ 99.5% |
 | **关联症状** | S11-Startup C01-C05 启动稳定性全系列 |
-| **关联机制** | [S11-Startup A01 启动链路总览](../../02-卷2-系统启动/index.md) |
+| **关联机制** | [S11-Startup A01 启动链路总览](../../01-卷1-平台基础与启动/index.md) |
 
 **代码示例（Java 层采集）**：
 
@@ -79,7 +79,7 @@ public class StabilityApp extends Application {
 | **计算公式** | Crash-free Session = 1 - (异常 Session ÷ 总 Session) × 100% |
 | **典型阈值** | Crash-free Session ≥ 99.95%（即崩溃率 ≤ 0.05%）|
 | **关联症状** | [S02-JE](../S02-JE/01-症状机制.md) |
-| **关联机制** | [01-Mechanism/Runtime/ART/06-信号与ANR-Trace](../../03-卷3-核心机制/20-ART 运行时/01-SignalCatcher与信号机制.md) |
+| **关联机制** | [01-Mechanism/Runtime/ART/06-信号与ANR-Trace](../../02-卷2-核心机制/20-ART 运行时/01-SignalCatcher与信号机制.md) |
 
 ### 2.3 SLI 3 · Native 崩溃率（NE 率）
 
@@ -92,7 +92,7 @@ public class StabilityApp extends Application {
 | **计算公式** | Crash-free Session = 1 - (NE Session ÷ 总 Session) × 100% |
 | **典型阈值** | Crash-free Session ≥ 99.9%（Native 容忍度低于 Java，因为更难复现）|
 | **关联症状** | [S03-NE](../S03-NE/01-症状机制.md) |
-| **关联取证** | [03-Forensics/F04-NE](../../04-卷4-诊断方法论与稳定性症状/25-Native 异常/01-取证机制.md) |
+| **关联取证** | [03-Forensics/F04-NE](../../04-卷4-稳定性症状/37-Native 异常/01-取证机制.md) |
 
 ### 2.4 SLI 4 · ANR 率
 
@@ -117,7 +117,7 @@ public class StabilityApp extends Application {
 | **采集点** | ProcessList 监听 / adj 变化 / am force-stop 监听 |
 | **计算公式** | 后台存活率 = 5min 仍存活 ÷ 总退后台 × 100% |
 | **典型阈值** | ≥ 95%（Android 默认会杀后台）|
-| **关联机制** | [01-Mechanism/Framework/Process 系列](../01-Mechanism/Framework/Process/) + [01-Mechanism/Kernel/Memory_Management/09](../../03-卷3-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) |
+| **关联机制** | [01-Mechanism/Framework/Process 系列](../01-Mechanism/Framework/Process/) + [01-Mechanism/Kernel/Memory_Management/09](../../02-卷2-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) |
 
 ### 2.6 5 大 SLI 速查表
 
@@ -127,7 +127,7 @@ public class StabilityApp extends Application {
 | 2 | Java 崩溃率 | ≤ 0.05% | UncaughtExceptionHandler | [S02-JE](../S02-JE/) |
 | 3 | Native 崩溃率 | ≤ 0.1% | debuggerd | [S03-NE](../S03-NE/) |
 | 4 | ANR 率 | ≤ 0.1% | ANR-Detection | [S01-ANR](../S01-ANR/) |
-| 5 | 后台存活率 | ≥ 95% | ProcessList 监听 | [Memory 09](../../03-卷3-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) |
+| 5 | 后台存活率 | ≥ 95% | ProcessList 监听 | [Memory 09](../../02-卷2-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) |
 
 ---
 
@@ -354,15 +354,15 @@ Error Budget：0.5% × 30 天
 
 | 本篇概念 | 已有内容 | 引用 |
 |:---------|:---------|:-----|
-| 启动 SLI | [S11-Startup A01](../../02-卷2-系统启动/index.md) | 启动机制 |
+| 启动 SLI | [S11-Startup A01](../../01-卷1-平台基础与启动/index.md) | 启动机制 |
 | 启动 SLI | [S11-Startup B01-B04](../S11-Startup/B-启动性能/) | 启动性能 |
 | 启动 SLI | [S11-Startup C01-C05](../S11-Startup/C-启动稳定性/) | 启动稳定性 |
 | 崩溃 SLI | [S02-JE](../S02-JE/01-症状机制.md) / [S03-NE](../S03-NE/01-症状机制.md) | 症状机制 |
 | ANR SLI | [S01-ANR](../S01-ANR/01-症状机制.md) / [ANR-Detection](../04-Tool/ANR-Detection/) | 症状 + 工具 |
-| 后台 SLI | [Memory 09](../../03-卷3-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) | 杀进程机制 |
+| 后台 SLI | [Memory 09](../../02-卷2-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) | 杀进程机制 |
 | 治理体系 | [S10-01 症状机制](01-症状机制.md) | 度量基础 |
 | 治理体系 | [F07-Governance](../03-Forensics/F07-Governance/01-取证机制.md) | 取证治理 |
-| 治理体系 | [APM A01](../../../07-卷7-APM与工程治理/43-APM 架构与自研实践/A01-APM体系总览.md) | APM 总览 |
+| 治理体系 | [APM A01](../../../05-卷5-性能工程与治理/49-APM 架构与自研实践/A01-APM体系总览.md) | APM 总览 |
 | AI 辅助 | [AI for Stability F01-F06](../../05-Governance/AI-Native/03_AI_for_Stability/) | AI 治理 |
 
 ---

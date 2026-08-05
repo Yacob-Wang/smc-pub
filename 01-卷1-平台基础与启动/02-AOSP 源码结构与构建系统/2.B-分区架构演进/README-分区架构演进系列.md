@@ -220,7 +220,7 @@
 | [08](./08-分区稳定性风险全景与诊断治理.md) | 分区稳定性风险全景与诊断治理 | 10 大故障 + 监控指标 + OTA checklist | 5 列 18 行速查表 + OTA 前/中/后 checklist | 综合 01-07 实战落点 |
 
 > **跨系列引用一览**（已确认存在于同作者其它系列中）：
-> - Binder 系列 → [Binder 总览](../../../03-卷3-核心机制/12-Binder%20IPC%20深度/01-Binder总览.md)、[Binder 诊断工具](../../../03-卷3-核心机制/12-Binder%20IPC%20深度/08-Binder诊断工具与治理体系.md)
+> - Binder 系列 → [Binder 总览](../../../02-卷2-核心机制/12-Binder%20IPC%20深度/01-Binder总览.md)、[Binder 诊断工具](../../../02-卷2-核心机制/12-Binder%20IPC%20深度/08-Binder诊断工具与治理体系.md)
 > - Window 系列 → `../Window/`（WMS HIDL 接口、SurfaceFlinger partition 依赖）
 > - ART / Runtime → `../ART/` 或 `../01-Mechanism/Runtime/`（如该系列存在；本系列仅在 [06] 提及其作为 APEX 容器）
 > - Memory Management → `../Memory_Management/`（page_alloc / VMA / slab 细节；本系列仅在 [03] 提及其在 kernel 加载时的依赖）
@@ -246,9 +246,9 @@
 
 | 本系列涉及主题 | 跨系列引用 | 引用理由 |
 |--------------|------------|---------|
-| VINTF / HIDL 通过 hwservicemanager 注册 | [Binder 总览](../../../03-卷3-核心机制/12-Binder%20IPC%20深度/01-Binder总览.md) § 5 AIDL 与 Proxy/Stub | HIDL/AIDL 用 hwbinder / binder 传输，理解 IPC 机制是排查前提 |
+| VINTF / HIDL 通过 hwservicemanager 注册 | [Binder 总览](../../../02-卷2-核心机制/12-Binder%20IPC%20深度/01-Binder总览.md) § 5 AIDL 与 Proxy/Stub | HIDL/AIDL 用 hwbinder / binder 传输，理解 IPC 机制是排查前提 |
 | WMS HIDL 接口（如 IInputManager / IWindowManager HIDL 残留）| Window 系列 | Window 系列（WMS HIDL 接口、SurfaceFlinger partition 依赖）|
-| `dumpsys binder` / `dumpsys hal` / `dumpsys apexd` | [Binder 诊断工具](../../../03-卷3-核心机制/12-Binder%20IPC%20深度/08-Binder诊断工具与治理体系.md) | Binder 系列有完整 dumpsys 解读；分区视角复用其 dumpsys 工具集 |
+| `dumpsys binder` / `dumpsys hal` / `dumpsys apexd` | [Binder 诊断工具](../../../02-卷2-核心机制/12-Binder%20IPC%20深度/08-Binder诊断工具与治理体系.md) | Binder 系列有完整 dumpsys 解读；分区视角复用其 dumpsys 工具集 |
 | ANR 中"卡在 HAL 调用" 的关联分析 | Window 系列（Input ANR 风险地图）| ANR 风险地图的组织方式对齐（故障类型 + 日志关键字 + 排查入口）|
 | ART 升级失败导致 NoClassDefFoundError | ART/Runtime 系列（如存在）| ART 作为 `com.android.runtime` APEX 容器，其编译版本与 APEX 版本必须一致 |
 | Kernel 模块加载失败 / dlkm 符号缺失 | Memory Management 系列 | page_alloc / VMA / slab 细节（[03] 仅在模块加载路径上引用）|

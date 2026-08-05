@@ -39,8 +39,8 @@ alwaysApply: true
 
 续写卷内章节（如 `6.1` / `7.2` / `8.1`）**必须**用书章体，对齐样板：
 
-- `02-卷2-系统启动/06-Bootloader 到 Kernel/6.1-Bootloader类型：LK-ABL-U-Boot.md`
-- `02-卷2-系统启动/07-Init 进程与 init.rc/7.1-Init进程启动流程.md`
+- `01-卷1-平台基础与启动/06-Bootloader 到 Kernel/6.1-Bootloader类型：LK-ABL-U-Boot.md`
+- `01-卷1-平台基础与启动/07-Init 进程与 init.rc/7.1-Init进程启动流程.md`
 
 **不要**对新书章节使用 A02 式「系列长文」体（本篇定位 / 校准决策日志 / 角色设定 / 附录 A–D 五段长前言）。  
 A0x 综合稿仅作**素材**，拆章时压缩进书章体。  

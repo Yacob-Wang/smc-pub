@@ -159,8 +159,8 @@
 
 ### 相关系列
 
-- `../../03-卷3-核心机制/17-网络与连接/06-Unix_Domain_Socket与Android使用.md` - InputChannel 底层是 UDS socketpair
-- `../../03-卷3-核心机制/16-IO 与存储/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md` - D 状态进入机制
+- `../../02-卷2-核心机制/17-网络与连接/06-Unix_Domain_Socket与Android使用.md` - InputChannel 底层是 UDS socketpair
+- `../../02-卷2-核心机制/16-IO 与存储/06-IO与进程的深度耦合：D状态、iowait、IO-hang、进程阻塞.md` - D 状态进入机制
 - `../../Linux_Kernel/Process/19-用户态与内核态深入解析.md` - 内核态死锁原理
 - `../Memory_Management/MM_v2/06-LMKD 用户态内存杀手.md` - LMKD 与 Watchdog 关系
 - `../Input/06-InputANR.md` - Input ANR 与 Watchdog 联动

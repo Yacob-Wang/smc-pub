@@ -114,9 +114,9 @@ Perfetto 是 Android 新一代系统级追踪框架,统一了 ftrace/atrace/syst
 
 | 本系列章节 | 引用系列 | 引用文章 | 引用原因 |
 |----------|---------|---------|---------|
-| [01 §4 数据源] | Kernel_Tools | [ftrace 语法解析](../../05-卷5-调查工具链/35-断点与 Native 调试/ftrace的语法解析.md) | 数据源底层就是 ftrace |
+| [01 §4 数据源] | Kernel_Tools | [ftrace 语法解析](../../03-卷3-调查工具/26-断点与 Native 调试/ftrace的语法解析.md) | 数据源底层就是 ftrace |
 | [02 §3 ftrace 数据源] | Kernel_Tools | [block_bio_complete 与 block_rq_complete 核心区别](../35-断点与%20Native%20调试/block_bio_complete%20与%20block_rq_complete%20核心区别.md) | Block IO tracepoint 的语义差异 |
-| [03 §3 statsd 触发器] | Tools | [Trace 抓取方法全面指南](../../05-卷5-调查工具链/35-断点与 Native 调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) | 与 atrace / systrace 的能力对比 |
+| [03 §3 statsd 触发器] | Tools | [Trace 抓取方法全面指南](../../03-卷3-调查工具/26-断点与 Native 调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) | 与 atrace / systrace 的能力对比 |
 | [04 §3 ANR 自动抓] | ANR_Detection | (已有 ANR 系列) | ANR 检测 → 触发 Perfetto 抓取的链路 |
 | [04 §4 IO 劣化案例] | IO | (已有 IO 系列) | IO 等待 → 冷启动退化 的 trace 特征 |
 | [04 §5 Input ANR 案例] | Input | (已有 Input 系列) | Input ANR 在 trace 中的特征切片 |
@@ -258,9 +258,9 @@ Perfetto 配置错误是线上最高频的问题来源(占比 ~40%)。本系列:
 | 现有文档 | 边界声明 | 本系列如何引用 |
 |---------|---------|--------------|
 | [20-Trace抓取方法全面指南](../06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南:ftrace-atrace-systrace-perfetto.md) | 工具使用入门(命令行、参数) | [01 §6] 引用其能力对比表,本系列不重复命令行基础 |
-| [ftrace 的语法解析](../../05-卷5-调查工具链/35-断点与 Native 调试/ftrace的语法解析.md) | ftrace 语法本身 | [02 §3] 引用其语法规则,本系列只讲 Perfetto 怎么读 ftrace |
+| [ftrace 的语法解析](../../03-卷3-调查工具/26-断点与 Native 调试/ftrace的语法解析.md) | ftrace 语法本身 | [02 §3] 引用其语法规则,本系列只讲 Perfetto 怎么读 ftrace |
 | [block_bio_complete 与 block_rq_complete 核心区别](../35-断点与%20Native%20调试/block_bio_complete%20与%20block_rq_complete%20核心区别.md) | Block IO tracepoint 语义 | [02 §3] 引用其区别,本系列讲怎么在 Perfetto 里看到这两个事件 |
-| [Android 设备如何抓取 trace](../../05-卷5-调查工具链/35-断点与 Native 调试/Android设备如何抓取trace.md) | 设备操作基础 | 不重复,本系列默认读者会抓 trace |
+| [Android 设备如何抓取 trace](../../03-卷3-调查工具/26-断点与 Native 调试/Android设备如何抓取trace.md) | 设备操作基础 | 不重复,本系列默认读者会抓 trace |
 
 **本系列从 01 §6 开始就是"Perfetto 进阶"——默认你会跑 `perfetto` 命令,默认你懂 ftrace 基础语法,默认你会用 trace UI。**
 

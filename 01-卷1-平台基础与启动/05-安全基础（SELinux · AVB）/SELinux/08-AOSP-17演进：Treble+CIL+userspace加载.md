@@ -12,7 +12,7 @@
 - **目的**：把 AOSP 4.3（SELinux 引入）到 AOSP 17 的 SELinux 演进时间线讲清楚——为什么 Treble 隔离、为什么 CIL 替代 .te、为什么 userspace 加载、为什么 AOSP 17 的 3 个硬变化
 - **不是**：不复述 [01]-[07] 任一篇；本文是 SELinux 系列的"收官篇" + 跨版本迁移指南
 - **承接自**：[07 实战 5 例](07-实战：定制SELinux策略排错5例.md) 5 个 case 中的 AOSP 17 假设
-- **衔接去**：[02-Symptom/S08-AOSP17-K618](../../../../../01-卷1-Android系统基础与平台/01-Android 系统全景与 AOSP 17/01-症状机制.md) / [Android.bp 01](../../02-AOSP%20源码结构与构建系统/Soong/01-从Make到Soong：AOSP编译系统演进.md) / [05-Governance/Security](../../../05-Governance/Security/)
+- **衔接去**：[02-Symptom/S08-AOSP17-K618](../../../../../01-卷1-平台基础与启动/01-系统全景与 AOSP 17/01-症状机制.md) / [Android.bp 01](../../02-AOSP%20源码结构与构建系统/Soong/01-从Make到Soong：AOSP编译系统演进.md) / [05-Governance/Security](../../../05-Governance/Security/)
 
 ## 校准决策日志
 
@@ -378,9 +378,9 @@ $ fastboot reboot
 | [05 init 与 SELinux](05-init进程与SELinux：分阶段加载.md) | userspace 加载见本文 §4 |
 | [06 常见稳定性问题](06-常见稳定性问题：service-crash.neverallow.build-失败.md) | 跨版本常见稳定性问题 |
 | [07 实战 5 例](07-实战：定制SELinux策略排错5例.md) | 5 案例的 AOSP 17 假设见本文 §5 |
-| [02-Symptom/S08-AOSP17-K618](../../../../../01-卷1-Android系统基础与平台/01-Android 系统全景与 AOSP 17/01-症状机制.md) | AOSP 17 全局演进 |
-| [01-Mechanism/Kernel/Binder/13-Rust Binder专题](../../../../03-卷3-核心机制/12-Binder IPC 深度/13-Rust Binder专题.md) | Rust Binder 集成 |
-| [05-Governance/AI-Native/02_AI_Native_OS/O03-AICore_System_Service_AOSP中的AI调度核心](../../../../07-卷7-APM与工程治理/46-AI-Native 调试/O03-AICore_System_Service_AOSP中的AI调度核心.md) | AICore 域 |
+| [02-Symptom/S08-AOSP17-K618](../../../../../01-卷1-平台基础与启动/01-系统全景与 AOSP 17/01-症状机制.md) | AOSP 17 全局演进 |
+| [01-Mechanism/Kernel/Binder/13-Rust Binder专题](../../../../02-卷2-核心机制/12-Binder IPC 深度/13-Rust Binder专题.md) | Rust Binder 集成 |
+| [05-Governance/AI-Native/02_AI_Native_OS/O03-AICore_System_Service_AOSP中的AI调度核心](../../../../05-卷5-性能工程与治理/52-AI-Native 调试/O03-AICore_System_Service_AOSP中的AI调度核心.md) | AICore 域 |
 | [Android.bp 01](../../02-AOSP%20源码结构与构建系统/Soong/01-从Make到Soong：AOSP编译系统演进.md) | Soong 编译系统演进（与 SELinux 编译耦合）|
 
 ---
@@ -452,7 +452,7 @@ SELinux 这条线在稳定性架构师的能力模型里属于**"机制理解" +
 
 下一步推荐读：
 - [Android.bp 01](../../02-AOSP%20源码结构与构建系统/Soong/01-从Make到Soong：AOSP编译系统演进.md) — 编译系统是 SELinux 编译的前置
-- [02-Symptom/S08-AOSP17-K618](../../../../../01-卷1-Android系统基础与平台/01-Android 系统全景与 AOSP 17/01-症状机制.md) — AOSP 17 全局演进
+- [02-Symptom/S08-AOSP17-K618](../../../../../01-卷1-平台基础与启动/01-系统全景与 AOSP 17/01-症状机制.md) — AOSP 17 全局演进
 - [05-Governance/Security](../../../05-Governance/Security/) — SELinux 治理 SOP（**待补**，M1-M6 规划外）
 
 ---

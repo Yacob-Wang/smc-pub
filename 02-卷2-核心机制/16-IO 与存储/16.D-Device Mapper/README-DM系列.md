@@ -132,13 +132,13 @@ Android 17 上 DM 的特殊应用场景                              → 第 07 
 
 | 本系列文章 | 引用其他系列 | 引用文章 | 引用原因 |
 |---|---|---|---|
-| 01 开篇 | Partition | [01-分区演进史与三大架构改革](../../../01-卷1-Android系统基础与平台/02-AOSP%20源码结构与构建系统/2.B-分区架构演进/01-分区演进史与三大架构改革.md) | 动态分区前的方案 |
+| 01 开篇 | Partition | [01-分区演进史与三大架构改革](../../../01-卷1-平台基础与启动/02-AOSP%20源码结构与构建系统/2.B-分区架构演进/01-分区演进史与三大架构改革.md) | 动态分区前的方案 |
 | 02 架构 | （暂无强依赖）| — | — |
 | 03 原理 | MM_v2 | [08-物理内存组织-Node,Zone,Page,memblock(GKI 5.10)](../../Memory_Management/MM_v2/08-物理内存组织-Node,Zone,Page,memblock(GKI 5.10).md) | dm_target 结构体的 slab 分配（待升 6.18 sheaves）|
 | 03 原理 | Process | [02-task_struct 全景拆解](../../13-进程与生命周期/13.B-进程生命周期/02-task_struct全景拆解.md) | dm_ioctl 上下文是 current 进程 |
 | 05 交互 | IO | [03-Block 层核心机制：bio-request-plug-merge-throttle](../../IO/03-Block层核心机制.md) | DM 拦截 bio 后如何交回 Block 层 |
 | 06 Target | （暂无）| — | Target 内部机制 DM 自治 |
-| 07 安卓 | Partition | [05-动态分区与 super 容器](../../../01-卷1-Android系统基础与平台/02-AOSP%20源码结构与构建系统/2.B-分区架构演进/05-动态分区与super容器.md) | 动态分区底层 = dm-linear |
+| 07 安卓 | Partition | [05-动态分区与 super 容器](../../../01-卷1-平台基础与启动/02-AOSP%20源码结构与构建系统/2.B-分区架构演进/05-动态分区与super容器.md) | 动态分区底层 = dm-linear |
 | 07 安卓 | FS | [15-Android 存储架构概述](../../FS/15-Android存储架构概述.md) | DM 设备上的文件系统（ext4/f2fs/erofs）|
 | 07 安卓 | AI_Native_X | 端侧 AI Runtime 相关文章（待写）| 端侧 LLM 模型存储与 dm-thin |
 | 09 调优 | IO | [02-IO 调度器与多队列架构](../02-IO调度器与多队列架构.md) | DM 设备的 blk-mq 队列深度调优 |

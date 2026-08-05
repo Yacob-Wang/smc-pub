@@ -216,11 +216,11 @@ $ adb shell cat /proc/<pid>/smaps_rollup
 # Mapped: 800MB + 持续涨 = mmap 泄漏
 ```
 
-(更多 mmap 解读见 [26.7 §4.1 /proc/vmallocinfo](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/07-proc节点文件深度解读-11大文件从读到诊断.md))
+(更多 mmap 解读见 [26.7 §4.1 /proc/vmallocinfo](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/07-proc节点文件深度解读-11大文件从读到诊断.md))
 
 ### 5.4 26.9 vendor 工具:dmabuf 详情
 
-**dmabuf / DMA-BUF 详情**见 [26.9 §4 DMA / dmabuf 解读](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/09-平台特有调试工具-MTK-mmstat-ion-dmabuf-gpu-memory解读.md)——`/d/dma_buf/bufinfo` + `new_dma_bufinfo` 可以看每个 dmabuf 的 size / exp_name / flags。
+**dmabuf / DMA-BUF 详情**见 [26.9 §4 DMA / dmabuf 解读](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/09-平台特有调试工具-MTK-mmstat-ion-dmabuf-gpu-memory解读.md)——`/d/dma_buf/bufinfo` + `new_dma_bufinfo` 可以看每个 dmabuf 的 size / exp_name / flags。
 
 ---
 
@@ -259,7 +259,7 @@ $ adb shell cat /proc/<pid>/smaps_rollup
 | `SCUDO_CACHE_SIZE_MB` | 32MB | 长期占用大的降到 8MB |
 | `SCUDO_DEAD_RATIO` | 1%(Quarantine 清理比例) | 内存紧的降到 5% |
 
-(更多 scudo 调优见 [15.05 Native 堆与分配器 §6 scudo](file:///E:/smc-pub/03-卷3-核心机制/15-内存管理全链路/04-Native堆与分配器的设计动机：bionic-scudo的取舍.md))
+(更多 scudo 调优见 [15.05 Native 堆与分配器 §6 scudo](file:///E:/smc-pub/02-卷2-核心机制/15-内存管理全链路/04-Native堆与分配器的设计动机：bionic-scudo的取舍.md))
 
 ---
 
@@ -269,7 +269,7 @@ $ adb shell cat /proc/<pid>/smaps_rollup
 
 **场景**:用户报"系统刚开机就有点卡,top 显示 system_server 占了 800MB"。
 
-**取证(0xffffff13 抓取 `proc_vmallocinfo` 1MB 文件,见 [26.7 §4](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/07-proc节点文件深度解读-11大文件从读到诊断.md))**:
+**取证(0xffffff13 抓取 `proc_vmallocinfo` 1MB 文件,见 [26.7 §4](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/07-proc节点文件深度解读-11大文件从读到诊断.md))**:
 
 ```text
 [1]   20480 init_IRQ+0x1c/0x8c          pages=4   vmalloc
@@ -390,7 +390,7 @@ $ adb logcat -d | grep -E "Bugly|Firebase|友盟|Umeng"
    - `cat /proc/<pid>/maps | grep ashmem | wc -l` → 大量 ashmem 段
    - `ls /proc/<pid>/fd | wc -l` → 正常 < 100,异常 > 1000 = fd 泄漏
    - `cat /proc/<pid>/smaps_rollup` → `Mapped` 涨速异常
-   - dmabuf 详情看 [26.9 §4](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/09-平台特有调试工具-MTK-mmstat-ion-dmabuf-gpu-memory解读.md) `/d/dma_buf/bufinfo`
+   - dmabuf 详情看 [26.9 §4](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/09-平台特有调试工具-MTK-mmstat-ion-dmabuf-gpu-memory解读.md) `/d/dma_buf/bufinfo`
 
 ---
 
@@ -463,6 +463,6 @@ $ adb logcat -d | grep -E "Bugly|Firebase|友盟|Umeng"
 ---
 
 **本文为 26 章 26.3 子节,「症状章」第 2 篇(Native 内存)。**
-**上一篇**:[26.2 Java OOM 堆溢出-大对象-Bitmap-线程数超限](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/02-Java-OOM-堆溢出-大对象-Bitmap-线程数超限.md)
-**下一篇**:[26.4 进程被杀:LMK 判定链路与优先级误配型误杀](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/04-进程被杀-LMK判定链路与优先级误配型误杀.md)——杀进程的 3 大触发路径 + 4 大 adj 误配模式
-**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/index.md) / [00-计划-26.1-26.6](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/00-计划-26.1-26.6.md)
+**上一篇**:[26.2 Java OOM 堆溢出-大对象-Bitmap-线程数超限](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/02-Java-OOM-堆溢出-大对象-Bitmap-线程数超限.md)
+**下一篇**:[26.4 进程被杀:LMK 判定链路与优先级误配型误杀](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/04-进程被杀-LMK判定链路与优先级误配型误杀.md)——杀进程的 3 大触发路径 + 4 大 adj 误配模式
+**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/index.md) / [00-计划-26.1-26.6](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/00-计划-26.1-26.6.md)

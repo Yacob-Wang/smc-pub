@@ -714,7 +714,7 @@ Step 4: 修复 + 回归
 
 | 引用系列 | 引用文章 | 引用原因 |
 |---------|---------|---------|
-| [Input 系列](../../03-卷3-核心机制/17-网络与连接/01-Socket总览.md) | 06-InputANR | Watchdog 与 Input ANR 联动 |
+| [Input 系列](../../02-卷2-核心机制/17-网络与连接/01-Socket总览.md) | 06-InputANR | Watchdog 与 Input ANR 联动 |
 | [Process 系列](../../Process/) | D 状态详解 | system_server 主线程 D 状态机制 |
 | [MM_v2 系列](../Memory_Management/MM_v2/) | 06-LMKD | LMKD 与 Watchdog 都是 system_server 内的守护 |
 | [Binder 系列](../01-Mechanism/Kernel/Binder/) | 03-Binder 驱动 | Binder 线程死锁触发 Watchdog |

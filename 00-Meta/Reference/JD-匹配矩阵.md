@@ -59,7 +59,7 @@
 | **D6 Kernel / KE** | **高** | P1 | [S07-KE](../../02-Symptom/S07-KE/) → [F05-KE](../../03-Forensics/F05-KE/) → [Kernel/Process/11](../../01-Mechanism/Kernel/Process/) | Oncall OC07/OC08 待补，见 [Oncall/](../../03-Forensics/Oncall/) |
 | **D7 Framework** | **高** | P0 | [Framework/](../../01-Mechanism/Framework/) 7 组件 + [Process_Exit/](../../01-Mechanism/Framework/Process_Exit/) | Activity/Input/Window 与 ANR 强相关 |
 | **D8 Binder / IPC** | **高** | P0 | [Kernel/Binder/](../../01-Mechanism/Kernel/Binder/)（14）→ [Watchdog/BinderStarve](../../04-Tool/Watchdog/) → [ContentProvider/C07](../../01-Mechanism/Framework/ContentProvider/) | 案例 E08（oneway 风暴）待写 |
-| **D9 性能 / 启动** | **高** | P1 | [S11-Startup/](../../02-卷2-系统启动/index.md) → [Startup 案例](../../06-Case/Startup/) → [ART/07-启动流程/](../../01-Mechanism/Runtime/ART/07-启动流程/) → [Perfetto/](../../04-Tool/Perfetto/) | 性能岗可主读此线 |
+| **D9 性能 / 启动** | **高** | P1 | [S11-Startup/](../../01-卷1-平台基础与启动/index.md) → [Startup 案例](../../06-Case/Startup/) → [ART/07-启动流程/](../../01-Mechanism/Runtime/ART/07-启动流程/) → [Perfetto/](../../04-Tool/Perfetto/) | 性能岗可主读此线 |
 | **D10 工具 / 取证** | **高** | P0 | [F00-Overview/](../../03-Forensics/F00-Overview/) → [04-Tool/](../../04-Tool/) 7 系列 → [Tracing/](../../06-Foundation/Tools/Tracing/) | Dumpsys SOP 是 oncall 基本功 |
 | **D11 APM / 治理** | **低** | P0（JD 高权重） | [S10-Measure/](../../02-Symptom/S10-Measure/)（**2/5**）→ [APM/](../../05-Governance/APM/)（**4/10**）→ [AI for Stability](../../05-Governance/AI-Native/03_AI_for_Stability/) | **最大 JD-内容错配**，见 [缺项规划 §1](../缺项规划-P0补全路线图.md) |
 | **D12 OEM / BSP** | **缺失** | P1 | 机制侧：[App/Hook/](../../01-Mechanism/App/Hook/)（15）；治理侧：[OEM-BSP/](../../05-Governance/OEM-BSP/) **空** | Hook 可临时顶替；案例 E11 待写 |
@@ -103,7 +103,7 @@
 | 架构师级 APM 设计 | **弱** | 必读 A01–A04 + S10-01/02；A05–A10 与 S10-03–05 是 P0 补全项 |
 | OEM 厂商经验 | **弱** | 机制：[Hook/](../../01-Mechanism/App/Hook/)；治理：等 OEM-BSP/；案例：等 E11 |
 | 面试案例叙述 | **中** | E01–E04 + [案例索引](../案例索引.md)；缺跨系列 E05–E11 |
-| 行业 SLO 对标 | **缺失** | 等 `Industry-Benchmark/`；临时用 [S10-02](../../06-卷6-性能工程/37-性能基线与回归防劣化/02-SLI与SLO设计：从指标到门禁.md) |
+| 行业 SLO 对标 | **缺失** | 等 `Industry-Benchmark/`；临时用 [S10-02](../../05-卷5-性能工程与治理/43-性能基线与回归防劣化/02-SLI与SLO设计：从指标到门禁.md) |
 
 ---
 

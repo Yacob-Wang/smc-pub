@@ -4,15 +4,15 @@
 >
 > **角色**：稳定性架构师 · oncall 工程师 · 现场取证
 >
-> **强依赖**：[03 关键文件速查](03-Bugreport-关键文件速查.md) · [02 目录结构全梳理](02-Bugreport-目录结构全梳理.md) · [06-Foundation/SELinux/04-AVC与avc_denied](../../../01-卷1-Android系统基础与平台/05-安全基础（SELinux · AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md)
+> **强依赖**：[03 关键文件速查](03-Bugreport-关键文件速查.md) · [02 目录结构全梳理](02-Bugreport-目录结构全梳理.md) · [06-Foundation/SELinux/04-AVC与avc_denied](../../../01-卷1-平台基础与启动/05-安全基础（SELinux · AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md)
 
 <!-- AUTHOR_ONLY:START -->
 ## 本篇定位
 
 - **目的**：用 5 个真实可重现的 bugreport 取证案例（ANR / NE / OOM / KE / bootloop），把 [03 §6 30 grep 命令](03-Bugreport-关键文件速查.md) 和 [03 §7 7 大症状路径](03-Bugreport-关键文件速查.md) 跑一遍实战
-- **不是**：不复述 [01] [02] [03] 任一篇；不复述 [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md)
+- **不是**：不复述 [01] [02] [03] 任一篇；不复述 [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md)
 - **承接自**：[03 §6 30 grep 命令](03-Bugreport-关键文件速查.md) → 本文用真实 case 走完
-- **衔接去**：[05 vs perfetto](05-Bugreport-vs-perfetto-trace.md) / [06-Case/Cases-Extended/](../../../06-Case/Cases-Extended/) / [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md)
+- **衔接去**：[05 vs perfetto](05-Bugreport-vs-perfetto-trace.md) / [06-Case/Cases-Extended/](../../../06-Case/Cases-Extended/) / [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md)
 
 ## 校准决策日志
 
@@ -555,9 +555,9 @@ init 启动 setcon 失败，触发 init 重启循环。
 | [02 目录结构全梳理](02-Bugreport-目录结构全梳理.md) | 结构 |
 | [03 关键文件速查](03-Bugreport-关键文件速查.md) | 30 命令 |
 | [05 vs perfetto](05-Bugreport-vs-perfetto-trace.md) | 工具边界 |
-| [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md) | dumpsys 实战 |
-| [06-Foundation/SELinux/07-实战：定制SELinux策略排错5例](../../../01-卷1-Android系统基础与平台/05-安全基础（SELinux · AVB）/SELinux/07-实战：定制SELinux策略排错5例.md) | SELinux 实战 |
-| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | perfetto |
+| [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md) | dumpsys 实战 |
+| [06-Foundation/SELinux/07-实战：定制SELinux策略排错5例](../../../01-卷1-平台基础与启动/05-安全基础（SELinux · AVB）/SELinux/07-实战：定制SELinux策略排错5例.md) | SELinux 实战 |
+| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | perfetto |
 | [06-Case/Cases-Extended/](../../../06-Case/Cases-Extended/) | 完整案例 |
 | [02-Symptom/S00-S09 7 大症状](../../02-Symptom/) | 7 大症状 |
 | [03-Forensics/F00-F07 7 大取证](../../03-Forensics/) | 取证总览 |

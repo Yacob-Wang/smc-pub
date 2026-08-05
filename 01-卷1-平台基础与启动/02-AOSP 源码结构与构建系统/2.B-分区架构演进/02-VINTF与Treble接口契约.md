@@ -10,7 +10,7 @@
 >
 > **目录位置**：`Linux_Kernel/Partition/`
 >
-> **关联已有系列**：[01-分区演进史与三大架构改革](01-分区演进史与三大架构改革.md)、[Binder 系列](../../../03-卷3-核心机制/12-Binder%20IPC%20深度/README-Binder系列.md)（HIDL/AIDL 通过 Binder 进程间通信）、[Window 系列](../Window/)（WMS HIDL 接口）
+> **关联已有系列**：[01-分区演进史与三大架构改革](01-分区演进史与三大架构改革.md)、[Binder 系列](../../../02-卷2-核心机制/12-Binder%20IPC%20深度/README-Binder系列.md)（HIDL/AIDL 通过 Binder 进程间通信）、[Window 系列](../Window/)（WMS HIDL 接口）
 
 ---
 

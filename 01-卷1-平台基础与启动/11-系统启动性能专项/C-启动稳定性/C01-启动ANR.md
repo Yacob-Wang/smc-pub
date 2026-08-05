@@ -16,8 +16,8 @@
 - **强依赖**：
   - [A05-AMS/PMS/WMS 四大组件启动](../../10-应用启动与首帧/A05-AMS-PMS-WMS四大组件启动.md)（必读 · ANR 阈值）
   - [Stability S01-ANR 专题](../Stability/S01-ANR卡死与Input响应专题.md)（必读）
-  - [Dumpsys D02-AMS 视角](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md)
-  - [Dumpsys D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md)
+  - [Dumpsys D02-AMS 视角](../../../03-卷3-调查工具/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md)
+  - [Dumpsys D11-dropbox](../../../03-卷3-调查工具/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md)
 - **承接自**：[B04-启动卡顿](../B-启动性能/B04-启动卡顿.md)（B 模块收口）
 - **衔接去**：
   - 下一篇 [C02-启动死锁](C02-启动死锁.md)
@@ -698,8 +698,8 @@ adb shell dumpsys dropbox --print SYSTEM_BOOT
 > - **上一篇**：[B04-启动卡顿](../B-启动性能/B04-启动卡顿.md)
 > - **下一篇**：[C02-启动死锁](C02-启动死锁.md)
 > - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
-> - **机制联动**：[Stability S01-ANR 专题](../Stability/S01-ANR卡死与Input响应专题.md) · [Dumpsys D02-AMS 视角](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) · [Dumpsys D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md)
-> - **工具联动**：[Dumpsys D02-AMS 视角](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) · [D04-启动期综合调试](../D-启动工具/D04-启动期dumpsys-systrace-traceview综合.md)（规划中）
+> - **机制联动**：[Stability S01-ANR 专题](../Stability/S01-ANR卡死与Input响应专题.md) · [Dumpsys D02-AMS 视角](../../../03-卷3-调查工具/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) · [Dumpsys D11-dropbox](../../../03-卷3-调查工具/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md)
+> - **工具联动**：[Dumpsys D02-AMS 视角](../../../03-卷3-调查工具/33-Dumpsys%20·%20Bugreport%20·%20DropBox/02-Activity与AMS视角.md) · [D04-启动期综合调试](../D-启动工具/D04-启动期dumpsys-systrace-traceview综合.md)（规划中）
 
 ---
 

@@ -4,7 +4,7 @@
 >
 > **角色**：稳定性架构师 · oncall 工程师 · 卡顿 / jank 问题排查
 >
-> **强依赖**：[04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) · [02-Symptom/S09-jank/01-症状机制](../../../02-Symptom/S09-jank/01-症状机制.md)
+> **强依赖**：[04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) · [02-Symptom/S09-jank/01-症状机制](../../../02-Symptom/S09-jank/01-症状机制.md)
 
 <!-- AUTHOR_ONLY:START -->
 ## 本篇定位
@@ -12,7 +12,7 @@
 - **目的**：把 Android 图形栈从 app 绘制 → WindowManager → SurfaceFlinger → HWC → Display 的完整链路讲清楚——oncall 5 秒定位"卡顿在哪一段"
 - **不是**：不复述 [02 SurfaceFlinger 内部](02-SurfaceFlinger内部：合成-VSync-Layer树.md)（本文是总览，下篇深入）；不复述 [04 HWUI](04-HWUI-RenderThread：硬件加速渲染.md) / [05 Choreographer](05-Choreographer-VSync：UI节奏协调.md) / [06 HWC](06-HWC（Hardware-Composer）：display-HAL抽象.md)（这些是深入专题）
 - **承接自**：[06-Foundation/Network/01 网络栈总览](../17-网络与连接/01-网络栈总览：从app-socket到网卡的全链路.md) → 同样思路应用图形栈
-- **衔接去**：[02 SurfaceFlinger 内部](02-SurfaceFlinger内部：合成-VSync-Layer树.md) / [07 jank 实战](07-卡顿-jank实战：trace+logcat5分钟定位.md) / [04-Tool/Perfetto/04-Perfetto定制化实战](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/04-Perfetto定制化实战：ANR后自动抓取trace.md)
+- **衔接去**：[02 SurfaceFlinger 内部](02-SurfaceFlinger内部：合成-VSync-Layer树.md) / [07 jank 实战](07-卡顿-jank实战：trace+logcat5分钟定位.md) / [04-Tool/Perfetto/04-Perfetto定制化实战](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/04-Perfetto定制化实战：ANR后自动抓取trace.md)
 
 ## 校准决策日志
 
@@ -440,7 +440,7 @@ $ adb shell dumpsys SurfaceFlinger | grep "Skipped"
 | [05 Choreographer / VSync](05-Choreographer-VSync：UI节奏协调.md) | 续篇 |
 | [06 HWC](06-HWC（Hardware-Composer）：display-HAL抽象.md) | 续篇 |
 | [07 jank 实战](07-卡顿-jank实战：trace+logcat5分钟定位.md) | 续篇 |
-| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | trace 工具 |
+| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | trace 工具 |
 | [02-Symptom/S09-jank/01-症状机制](../../../02-Symptom/S09-jank/01-症状机制.md) | jank 症状 |
 | [06-Foundation/Network/01 网络栈总览](../17-网络与连接/01-网络栈总览：从app-socket到网卡的全链路.md) | 姊妹篇 |
 

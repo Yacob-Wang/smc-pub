@@ -15,7 +15,7 @@
 | TD-005 | P1 | 规范 | 多篇仍标 v5 / AOSP 14 基线 | 升 v6 §0 + AOSP 17，或标废弃进 `_archive` | open | Perfetto/Watchdog/AI-Native 等 |
 | TD-006 | P1 | 链接 | 正文残留 `01-Mechanism/`、`05-Governance/` 等 | 全库 grep 清零或改现行卷路径 | open | v6 §0.8 黑名单 |
 | TD-007 | P2 | 元数据 | 系列 README 状态与正文不同步（如 APM README 仍写「占位」） | README 进度表与文件列表一致 | open | `07-卷7/.../43-APM/README.md` |
-| TD-008 | P2 | 结构 | 卷 8 第 48/49 章空壳，案例挤在 47/50 | 按书籍目录归口或改目录说明 | open | `08-卷8-案例实战/` |
+| TD-008 | P2 | 结构 | 卷 8 第 48/49 章空壳，案例挤在 47/50 | 按书籍目录归口或改目录说明 | open | `06-卷6-案例实战/` |
 | TD-009 | P2 | 工具 | 写作质量未进 CI | 可选：PR 上对改动 md 跑 `verify_gc_publish.py` | open | `.github/workflows/pages.yml` |
 | TD-010 | P3 | 债务 | archive 中旧「待替换清单」易被误用 | README 标明「仅历史；以重跑结果为准」 | open | `_archive/legacy-workdocs/待替换清单-v1.md` |
 | TD-011 | P1 | 结构 | 仍有章内串题/系列 README 与书章入口并存 | 按 LT-004 扫尾；错位进 `_archive` 或归口正确章 | open | 见 `05-chapter-positioning.mdc` |

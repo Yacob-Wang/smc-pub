@@ -11,7 +11,7 @@
 ## 本篇定位
 
 - oncall 7 大症状剧本第 5 篇
-- 强依赖：[OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) / [02-Symptom/S04-SWT](../../../04-卷4-诊断方法论与稳定性症状/27-系统无响应（SWT · Watchdog）/01-症状机制.md) / [03-Forensics/F02-SWT](../F02-SWT/01-取证机制.md) / [04-Tool/Watchdog 系列](../../04-Tool/Watchdog/) 9 篇
+- 强依赖：[OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) / [02-Symptom/S04-SWT](../../../04-卷4-稳定性症状/39-系统无响应（SWT · Watchdog）/01-症状机制.md) / [03-Forensics/F02-SWT](../F02-SWT/01-取证机制.md) / [04-Tool/Watchdog 系列](../../04-Tool/Watchdog/) 9 篇
 - 衔接去：[OC06-HANG/OOM 响应剧本](OC06-HANG-OOM响应剧本.md)
 
 ## 校准决策日志
@@ -50,7 +50,7 @@
 | **L3 HW Watchdog** | HAL ServiceManager checkService | 60s | 杀 system_server |
 | **L4 VM Watchdog** | Init.rc watchdogd | 10min | 重启手机 |
 
-详见 [04-Tool/Watchdog/02-多层Watchdog架构](../../../04-卷4-诊断方法论与稳定性症状/27-系统无响应（SWT · Watchdog）/02-多层Watchdog架构.md)。
+详见 [04-Tool/Watchdog/02-多层Watchdog架构](../../../04-卷4-稳定性症状/39-系统无响应（SWT · Watchdog）/02-多层Watchdog架构.md)。
 
 ---
 
@@ -276,9 +276,9 @@ init: Watchdog detected
 
 | 模块 | 路径 | 关键 |
 |:-----|:-----|:-----|
-| SWT 机制 | [../04-卷4-诊断方法论与稳定性症状/27-系统无响应（SWT · Watchdog）/01-症状机制.md](../../../04-卷4-诊断方法论与稳定性症状/27-系统无响应（SWT · Watchdog）/01-症状机制.md) | Watchdog |
-| SWT 取证 | [../04-卷4-诊断方法论与稳定性症状/27-系统无响应（SWT · Watchdog）/01-取证机制.md](../F02-SWT/01-取证机制.md) | 完整流程 |
-| Watchdog 工具 | [04-Tool/Watchdog/02-多层Watchdog架构](../../../04-卷4-诊断方法论与稳定性症状/27-系统无响应（SWT · Watchdog）/02-多层Watchdog架构.md) | 4 层 |
+| SWT 机制 | [../04-卷4-稳定性症状/39-系统无响应（SWT · Watchdog）/01-症状机制.md](../../../04-卷4-稳定性症状/39-系统无响应（SWT · Watchdog）/01-症状机制.md) | Watchdog |
+| SWT 取证 | [../04-卷4-稳定性症状/39-系统无响应（SWT · Watchdog）/01-取证机制.md](../F02-SWT/01-取证机制.md) | 完整流程 |
+| Watchdog 工具 | [04-Tool/Watchdog/02-多层Watchdog架构](../../../04-卷4-稳定性症状/39-系统无响应（SWT · Watchdog）/02-多层Watchdog架构.md) | 4 层 |
 | oncall 流程 | [OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) | 5/15/30 |
 
 ## B 路径对账

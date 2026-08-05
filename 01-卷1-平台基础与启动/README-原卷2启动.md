@@ -25,10 +25,10 @@
 
 - **本篇系列角色**：**系列规划 / 全局观**（AOSP_Startup 22 篇的总入口）
 - **强依赖**：
-  - [Process 系列](../03-卷3-核心机制/13-进程与生命周期/README-进程架构演进系列.md) 第 1-4 篇（AMS 冷启动判定 + Zygote + 应用进程首生）
+  - [Process 系列](../02-卷2-核心机制/13-进程与生命周期/README-进程架构演进系列.md) 第 1-4 篇（AMS 冷启动判定 + Zygote + 应用进程首生）
   - [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/) 1-5（Linux 进程基础）
-  - [Stability S00-Stability 总览](../04-卷4-诊断方法论与稳定性症状/22-稳定性调查方法论/S00-症状总览.md)
-  - [Dumpsys 系列](../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/01-dumpsys总览与架构.md) D02/D04/D05（AMS / meminfo / gfxinfo）
+  - [Stability S00-Stability 总览](../04-卷4-稳定性症状/34-稳定性调查方法论/S00-症状总览.md)
+  - [Dumpsys 系列](../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/01-dumpsys总览与架构.md) D02/D04/D05（AMS / meminfo / gfxinfo）
 - **承接自**：无（系列根文章）
 - **衔接去**：
   - A 模块 A01-A06（启动链路 6 篇）—— 在 [A-启动机制](A-启动机制/)
@@ -39,7 +39,7 @@
 - **不重复内容**：
   - **不重复** [Process 系列](../01-Mechanism/Framework/Process/) 已深入的 Zygote fork 细节
   - **不重复** [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/) 已深入的 Linux 进程机制
-  - **不重复** [Stability S00-S10](../04-卷4-诊断方法论与稳定性症状/22-稳定性调查方法论/S00-症状总览.md) 已覆盖的 7 大症状机制
+  - **不重复** [Stability S00-S10](../04-卷4-稳定性症状/34-稳定性调查方法论/S00-症状总览.md) 已覆盖的 7 大症状机制
   - 本系列与之关系：**"启动场景 × 性能 + 稳定性"专项**（其他系列是"机制 / 工具"通用视角）
 - **本篇贡献**：把"启动链路"作为 4 层栈穿透场景，**立住性能 + 稳定性专项 + 面试必考 + 22 篇规划**
 
@@ -142,9 +142,9 @@
 | 17 | D02 | dumpsys + dropbox + bootstat 联用 | D 工具 | A06 | 500 | 📝 |
 | 18 | D03 | bootchart 工具链 | D 工具 | B01 | 400 | 📝 |
 | 19 | D04 | 启动期 dumpsys / systrace / traceview 综合 | D 工具 | A06 | 500 | 📝 |
-| 20 | **E01** | **案例 1：某应用冷启动 8s → 1s 优化全过程** | [06-Case/Startup/E01-冷启动8s-1s](../08-卷8-案例实战/47-启动性能案例/E01-冷启动8s-1s.md) | B02 | 800 | ✅ |
-| 21 | **E02** | **案例 2：某设备启动卡死在 SystemServer 60% 进度** | [06-Case/Startup/E02-SystemServer60%进度](../08-卷8-案例实战/47-启动性能案例/E02-SystemServer60%进度.md) | C02 | 800 | ✅ |
-| 22 | **E03** | **案例 3：开机黑屏 30s，SurfaceFlinger 卡死** | [06-Case/Startup/E03-开机黑屏30s](../08-卷8-案例实战/47-启动性能案例/E03-开机黑屏30s.md) | C03 | 800 | ✅ |
+| 20 | **E01** | **案例 1：某应用冷启动 8s → 1s 优化全过程** | [06-Case/Startup/E01-冷启动8s-1s](../06-卷6-案例实战/53-启动性能案例/E01-冷启动8s-1s.md) | B02 | 800 | ✅ |
+| 21 | **E02** | **案例 2：某设备启动卡死在 SystemServer 60% 进度** | [06-Case/Startup/E02-SystemServer60%进度](../06-卷6-案例实战/53-启动性能案例/E02-SystemServer60%进度.md) | C02 | 800 | ✅ |
+| 22 | **E03** | **案例 3：开机黑屏 30s，SurfaceFlinger 卡死** | [06-Case/Startup/E03-开机黑屏30s](../06-卷6-案例实战/53-启动性能案例/E03-开机黑屏30s.md) | C03 | 800 | ✅ |
 
 **合计**：22 篇 · 估计 ~14,000-15,000 行 · 22 个锚点案例 · 30+ 张时序图
 
@@ -363,8 +363,8 @@ A02 Bootloader→Kernel 与 Linux_Kernel/Process 1-5 强联动。
 > **系列导航**：
 > - **本系列 README**：[README-AOSP_Startup系列.md](README.md)
 > - **学习路线**：[L00-稳定性架构师学习路线](../Stability/README-学习路线-稳定性架构师.md)
-> - **机制联动**：[Stability S00-S10](../Stability/S00-稳定性症状总览.md) · [Process 系列](../03-卷3-核心机制/13-进程与生命周期/README-进程架构演进系列.md) · [Window 系列](../03-卷3-核心机制/19-显示与渲染/README-Window系列.md)
-> - **工具联动**：[Dumpsys 系列](../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/01-dumpsys总览与架构.md) · [Perfetto 系列](../05-卷5-调查工具链/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md)
+> - **机制联动**：[Stability S00-S10](../Stability/S00-稳定性症状总览.md) · [Process 系列](../02-卷2-核心机制/13-进程与生命周期/README-进程架构演进系列.md) · [Window 系列](../02-卷2-核心机制/19-显示与渲染/README-Window系列.md)
+> - **工具联动**：[Dumpsys 系列](../03-卷3-调查工具/33-Dumpsys%20·%20Bugreport%20·%20DropBox/01-dumpsys总览与架构.md) · [Perfetto 系列](../03-卷3-调查工具/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md)
 
 ---
 

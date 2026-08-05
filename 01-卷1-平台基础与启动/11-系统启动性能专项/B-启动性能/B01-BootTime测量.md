@@ -18,8 +18,8 @@
   - [第6章 Bootloader 到 Kernel](../../06-Bootloader%20到%20Kernel/index.md)（测量 Kernel initcall 耗时）
   - [第7章 Init 与 init.rc](../../07-Init%20进程与%20init.rc/index.md)（测量 init.rc 解析耗时）
   - [第8章 Zygote](../../08-Zygote%20与%20ART%20启动/index.md) · [第9章 SystemServer](../../09-SystemServer%20启动/index.md)（测量 50+ 服务启动耗时）
-  - [Perfetto 系列 · 01-总览](../../../05-卷5-调查工具链/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md)（如有）
-  - [Dumpsys D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md)（bootstat 工具）
+  - [Perfetto 系列 · 01-总览](../../../03-卷3-调查工具/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md)（如有）
+  - [Dumpsys D11-dropbox](../../../03-卷3-调查工具/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md)（bootstat 工具）
 - **承接自**：[A06-第一帧与 Choreographer](../../10-应用启动与首帧/A06-第一帧与Choreographer.md)（A 模块收口）
 - **衔接去**：
   - 下一篇 [B02-启动时间优化](B02-启动时间优化.md) 介绍优化方法
@@ -869,7 +869,7 @@ adb shell dmesg | grep "initcall.*returned.*[0-9]\{4,\}"
 > **本篇不重复**：
 > - [Perfetto 系列](../Perfetto/) 已深入的 Perfetto 通用机制
 > - [卷2 第6-9章](../../index.md) 已深入的整机启动链路
-> - [Dumpsys D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) 已深入的 bootstat 工具
+> - [Dumpsys D11-dropbox](../../../03-卷3-调查工具/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) 已深入的 bootstat 工具
 >
 > **视角互补**：
 > - **本篇**：**"启动场景"测量视角**——3 大工具联用覆盖 4 层栈
@@ -962,8 +962,8 @@ adb shell dmesg | grep "initcall.*returned.*[0-9]\{4,\}"
 > - **上一篇**：[A06-第一帧与 Choreographer](../../10-应用启动与首帧/A06-第一帧与Choreographer.md)
 > - **下一篇**：[B02-启动时间优化](B02-启动时间优化.md)
 > - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
-> - **机制联动**：[Perfetto 系列 · 01](../../../05-卷5-调查工具链/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md) · [Stability S05-HANG 专题](../Stability/S05-HANG与黑屏专题.md)
-> - **工具联动**：[Dumpsys D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) · [D01-Perfetto Boot Trace](../D-启动工具/D01-Perfetto-Boot-Trace抓全栈启动时序.md)（规划中）
+> - **机制联动**：[Perfetto 系列 · 01](../../../03-卷3-调查工具/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md) · [Stability S05-HANG 专题](../Stability/S05-HANG与黑屏专题.md)
+> - **工具联动**：[Dumpsys D11-dropbox](../../../03-卷3-调查工具/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) · [D01-Perfetto Boot Trace](../D-启动工具/D01-Perfetto-Boot-Trace抓全栈启动时序.md)（规划中）
 
 ---
 

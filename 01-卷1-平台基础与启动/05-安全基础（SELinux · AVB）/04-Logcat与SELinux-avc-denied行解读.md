@@ -4,14 +4,14 @@
 >
 > **角色**：稳定性架构师 · oncall 工程师 · 看 denied 行的所有人
 >
-> **强依赖**：[03 Logcat 过滤与持久化](../../05-卷5-调查工具链/35-断点与%20Native%20调试/03-Logcat过滤与持久化.md) · [06-Foundation/SELinux/04-AVC与avc_denied](SELinux/04-AVC与avc_denied：从一次denied反推策略.md) · [06-Foundation/SELinux/07-实战](SELinux/07-实战：定制SELinux策略排错5例.md)
+> **强依赖**：[03 Logcat 过滤与持久化](../../03-卷3-调查工具/35-断点与%20Native%20调试/03-Logcat过滤与持久化.md) · [06-Foundation/SELinux/04-AVC与avc_denied](SELinux/04-AVC与avc_denied：从一次denied反推策略.md) · [06-Foundation/SELinux/07-实战](SELinux/07-实战：定制SELinux策略排错5例.md)
 
 <!-- AUTHOR_ONLY:START -->
 ## 本篇定位
 
 - **目的**：把 logcat 中 `avc: denied` 行的 8 字段精确读法 + logcat 跟 SELinux 5 大集成场景 + 5 个真实 case 讲清楚——oncall 5 分钟从 denied 改 .te
-- **不是**：不复述 [06-Foundation/SELinux/04 §1 8 字段完整版](SELinux/04-AVC与avc_denied：从一次denied反推策略.md)（本文是 logcat 视角的精简版）；不复述 [02 格式与 tag](../../05-卷5-调查工具链/35-断点与%20Native%20调试/02-Logcat格式与tag体系.md)
-- **承接自**：[03 §2.2 denied 模板](../../05-卷5-调查工具链/35-断点与%20Native%20调试/03-Logcat过滤与持久化.md) → 本文展开"denied 怎么读 + 怎么改"
+- **不是**：不复述 [06-Foundation/SELinux/04 §1 8 字段完整版](SELinux/04-AVC与avc_denied：从一次denied反推策略.md)（本文是 logcat 视角的精简版）；不复述 [02 格式与 tag](../../03-卷3-调查工具/35-断点与%20Native%20调试/02-Logcat格式与tag体系.md)
+- **承接自**：[03 §2.2 denied 模板](../../03-卷3-调查工具/35-断点与%20Native%20调试/03-Logcat过滤与持久化.md) → 本文展开"denied 怎么读 + 怎么改"
 - **衔接去**：[06-Foundation/SELinux/04 完整 8 字段](SELinux/04-AVC与avc_denied：从一次denied反推策略.md) / [06-Foundation/SELinux/07 实战 5 例](SELinux/07-实战：定制SELinux策略排错5例.md)
 
 ## 校准决策日志
@@ -484,8 +484,8 @@ allow vendor_foo system_data_file:file { read write open getattr };
 
 | smc-pub 已有文章 | 关系 |
 |:----------------|:-----|
-| [02 Logcat 格式](../../05-卷5-调查工具链/35-断点与%20Native%20调试/02-Logcat格式与tag体系.md) | 基础 |
-| [03 Logcat 过滤与持久化](../../05-卷5-调查工具链/35-断点与%20Native%20调试/03-Logcat过滤与持久化.md) | 过滤 |
+| [02 Logcat 格式](../../03-卷3-调查工具/35-断点与%20Native%20调试/02-Logcat格式与tag体系.md) | 基础 |
+| [03 Logcat 过滤与持久化](../../03-卷3-调查工具/35-断点与%20Native%20调试/03-Logcat过滤与持久化.md) | 过滤 |
 | [06-Foundation/SELinux/04 完整 8 字段](SELinux/04-AVC与avc_denied：从一次denied反推策略.md) | 完整 |
 | [06-Foundation/SELinux/05 init 与 SELinux](SELinux/05-init进程与SELinux：分阶段加载.md) | 启动期 |
 | [06-Foundation/SELinux/06 常见稳定性问题](SELinux/06-常见稳定性问题：service-crash.neverallow.build-失败.md) | 速查表 |

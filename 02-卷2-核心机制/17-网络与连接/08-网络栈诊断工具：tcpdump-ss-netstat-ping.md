@@ -10,7 +10,7 @@
 ## 本篇定位
 
 - **目的**：把网络栈 8 大诊断工具（ping / traceroute / ss / netstat / tcpdump / ndc / ip / iptables）讲清楚——oncall 5 分钟工具箱
-- **不是**：不复述 [01]-[07] 任一篇；不复述 [06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](../../05-卷5-调查工具链/35-断点与%20Native%20调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md)（trace 类工具）
+- **不是**：不复述 [01]-[07] 任一篇；不复述 [06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](../../03-卷3-调查工具/35-断点与%20Native%20调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md)（trace 类工具）
 - **承接自**：[07 Mobile Data](07-Mobile-Data：RIL-数据业务-漫游.md) → 本文给 8 大工具实战
 - **衔接去**：[01]-[07] 任一篇
 

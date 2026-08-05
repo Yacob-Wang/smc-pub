@@ -12,7 +12,7 @@
 - **目的**：把 bugreport 30+ 关键文件的"看 / 不看"指南做成速查表，5 类事故下"先看哪个 / 再看哪个 / 不要看哪个"明确
 - **不是**：不复述 [02 §2-7 各子目录结构](02-Bugreport-目录结构全梳理.md)；不复述 [04 实战 5 案例](04-Bugreport-实战5类典型案例.md)
 - **承接自**：[02 §9 看 / 不看原则](02-Bugreport-目录结构全梳理.md)（本文给完整 30 文件速查）
-- **衔接去**：[04 实战 5 案例](04-Bugreport-实战5类典型案例.md) / [05 bugreport vs perfetto](05-Bugreport-vs-perfetto-trace.md) / [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md)
+- **衔接去**：[04 实战 5 案例](04-Bugreport-实战5类典型案例.md) / [05 bugreport vs perfetto](05-Bugreport-vs-perfetto-trace.md) / [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md)
 
 ## 校准决策日志
 
@@ -683,10 +683,10 @@ unzip -p bugreport.zip kernel/kallsyms | grep "<symbol>"
 | [02 目录结构全梳理](02-Bugreport-目录结构全梳理.md) | 上篇 |
 | [04 实战 5 类典型案例](04-Bugreport-实战5类典型案例.md) | 下篇 |
 | [05 vs perfetto](05-Bugreport-vs-perfetto-trace.md) | 工具边界 |
-| [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md) | dumpsys 完整 |
-| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | perfetto |
-| [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../05-卷5-调查工具链/35-断点与 Native 调试/Logcat_Complete_Guide.md) | logcat 完整 |
-| [06-Foundation/SELinux/04-AVC与avc_denied](../../../01-卷1-Android系统基础与平台/05-安全基础（SELinux · AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md) | denied 解读 |
+| [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md) | dumpsys 完整 |
+| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | perfetto |
+| [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../03-卷3-调查工具/26-断点与 Native 调试/Logcat_Complete_Guide.md) | logcat 完整 |
+| [06-Foundation/SELinux/04-AVC与avc_denied](../../../01-卷1-平台基础与启动/05-安全基础（SELinux · AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md) | denied 解读 |
 
 ---
 

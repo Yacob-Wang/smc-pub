@@ -10,7 +10,7 @@
 ## 本篇定位
 
 - **目的**：把 bugreport.zip 里 50+ 关键文件**逐一拆解**——每个文件"是什么 / 看什么 / 不看什么"，8 类事故"看哪个文件"
-- **不是**：不复述 [01 §2 顶层结构](01-Bugreport-总览与生成解析.md)；不复述 [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md)
+- **不是**：不复述 [01 §2 顶层结构](01-Bugreport-总览与生成解析.md)；不复述 [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md)
 - **承接自**：[01 §1.4 5 类现场的工具选择](01-Bugreport-总览与生成解析.md) → 本文展开"具体看哪个文件"
 - **衔接去**：[03 关键文件速查](03-Bugreport-关键文件速查.md) / [04 实战 5 类典型案例](04-Bugreport-实战5类典型案例.md) / [05 bugreport vs perfetto trace](05-Bugreport-vs-perfetto-trace.md)
 
@@ -611,9 +611,9 @@ $ unzip -p bugreport.zip kernel/dmesg.txt | grep "cgroup"
 | [03 关键文件速查](03-Bugreport-关键文件速查.md) | 下篇 |
 | [04 实战 5 类典型案例](04-Bugreport-实战5类典型案例.md) | 实战 |
 | [05 bugreport vs perfetto](05-Bugreport-vs-perfetto-trace.md) | 工具边界 |
-| [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md) | dumpsys 完整 |
-| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | perfetto 完整 |
-| [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../05-卷5-调查工具链/35-断点与 Native 调试/Logcat_Complete_Guide.md) | logcat 完整 |
+| [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md) | dumpsys 完整 |
+| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | perfetto 完整 |
+| [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../03-卷3-调查工具/26-断点与 Native 调试/Logcat_Complete_Guide.md) | logcat 完整 |
 | [02-Symptom/S00-S09 7 大症状](../../02-Symptom/) | 7 大症状视角 |
 | [03-Forensics/F00-F07 7 大取证](../../03-Forensics/) | 取证总览 |
 | [06-Case/Cases-Extended/](../../../06-Case/Cases-Extended/) | 实战案例 |

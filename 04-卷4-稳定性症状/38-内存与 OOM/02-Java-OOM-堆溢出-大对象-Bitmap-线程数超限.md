@@ -56,7 +56,7 @@
 
 (表 1-1:Java OOM 7 大根因 + 占比 + 修复难度)
 
-**关键事实**:**80% 的 Java OOM 是"对象不再使用但仍被引用,GC 收不掉"——本质是引用链管理问题,不是 ART 堆机制问题**。所以本篇讲"识别"和"修复方向",ART 机制见 [15.04 ART 堆与 GC](file:///E:/smc-pub/03-卷3-核心机制/15-内存管理全链路/03-ART堆与GC的设计动机：为什么这样设计.md)。
+**关键事实**:**80% 的 Java OOM 是"对象不再使用但仍被引用,GC 收不掉"——本质是引用链管理问题,不是 ART 堆机制问题**。所以本篇讲"识别"和"修复方向",ART 机制见 [15.04 ART 堆与 GC](file:///E:/smc-pub/02-卷2-核心机制/15-内存管理全链路/03-ART堆与GC的设计动机：为什么这样设计.md)。
 
 ---
 
@@ -189,7 +189,7 @@ java.lang.OutOfMemoryError: Failed to allocate a 8388608 byte allocation with 41
 - 之前:Bitmap 像素分配在 Java 堆(`int[]`)
 - 现在:像素分配在 **Native 堆**(`ashmem`),Java 端通过 `NativeAllocationRegistry` 持有引用
 - **后果**:**Bitmap 像素在 native,引用在 Java**——`dumpsys meminfo` 看到 `Graphics` 涨,`Java Heap` 不涨
-- 详细机制见 [15.06 §4.2 Bitmap 泄漏](file:///E:/smc-pub/03-卷3-核心机制/15-内存管理全链路/06-dumpsys-meminfo解读-从输出反推FWK内存账本.md)
+- 详细机制见 [15.06 §4.2 Bitmap 泄漏](file:///E:/smc-pub/02-卷2-核心机制/15-内存管理全链路/06-dumpsys-meminfo解读-从输出反推FWK内存账本.md)
 
 ### 5.2 logcat 怎么读
 
@@ -477,5 +477,5 @@ Objects
 ---
 
 **本文为 26 章 26.2 子节,「症状章」第 1 篇(Java OOM)。**
-**下一篇**:[26.3 Native 内存增长与泄漏](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/03-Native-内存增长与泄漏.md)——Native 堆 3 大泄漏模式
-**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/index.md) / [00-计划-26.1-26.6](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/00-计划-26.1-26.6.md) / [00-计划-26.7-26.9 调查工具书](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/00-计划-新增3篇.md)
+**下一篇**:[26.3 Native 内存增长与泄漏](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/03-Native-内存增长与泄漏.md)——Native 堆 3 大泄漏模式
+**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/index.md) / [00-计划-26.1-26.6](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/00-计划-26.1-26.6.md) / [00-计划-26.7-26.9 调查工具书](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/00-计划-新增3篇.md)

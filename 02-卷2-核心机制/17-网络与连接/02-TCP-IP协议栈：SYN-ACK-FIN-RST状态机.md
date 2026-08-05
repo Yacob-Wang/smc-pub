@@ -648,7 +648,7 @@ $ adb shell "lsof -p $(pidof server) | wc -l"
 | [03 DNS/DHCP](03-DNS-DHCP：从解析到连接的5秒流程.md) | 续篇 |
 | [04 ConnectivityService](04-ConnectivityService：网络选路-评分-切换.md) | 续篇 |
 | [08 诊断工具](08-网络栈诊断工具：tcpdump-ss-netstat-ping.md) | 续篇 |
-| [01-Mechanism/Kernel/IO/11-eBPF](../../../../03-卷3-核心机制/16-IO 与存储/11-eBPF在IO性能分析中的实战：从bpftrace到Android落地.md) | eBPF 工具 |
+| [01-Mechanism/Kernel/IO/11-eBPF](../../../../02-卷2-核心机制/16-IO 与存储/11-eBPF在IO性能分析中的实战：从bpftrace到Android落地.md) | eBPF 工具 |
 | [02-Symptom/S09-jank/01-症状机制](../../../02-Symptom/S09-jank/01-症状机制.md) | 卡顿 |
 
 ---

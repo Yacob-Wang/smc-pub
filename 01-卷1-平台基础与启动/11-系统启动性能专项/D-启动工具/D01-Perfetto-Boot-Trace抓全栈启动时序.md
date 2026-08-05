@@ -15,7 +15,7 @@
 - **本篇系列角色**：**D 模块 · Perfetto Boot Trace 工具篇**（§8 破例：单篇 600+ 行 / 图表 4-6 张）
 - **强依赖**：
   - [B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md)（必读 · perfetto 配置）
-  - [Perfetto 系列 · 01-总览](../../../05-卷5-调查工具链/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md)
+  - [Perfetto 系列 · 01-总览](../../../03-卷3-调查工具/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md)
   - [卷2 第6-9章](../../index.md)（整机启动 4 层栈）
 - **承接自**：[C05-开机无限重启](../C-启动稳定性/C05-开机无限重启.md)（C 模块收口）
 - **衔接去**：
@@ -704,7 +704,7 @@ for e in slow_events:
 
 > **本篇不重复**：
 > - [B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md) 已深入的 perfetto 通用机制
-> - [Perfetto 系列](../../../05-卷5-调查工具链/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md) 已深入的 Perfetto 通用机制
+> - [Perfetto 系列](../../../03-卷3-调查工具/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md) 已深入的 Perfetto 通用机制
 > - [卷2 第6-9章](../../index.md) 已深入的 4 层栈
 >
 > **视角互补**：
@@ -785,8 +785,8 @@ for e in slow_events:
 > - **上一篇**：[C05-开机无限重启](../C-启动稳定性/C05-开机无限重启.md)
 > - **下一篇**：[D02-dumpsys + dropbox + bootstat 联用](D02-dumpsys+dropbox+bootstat联用.md)
 > - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
-> - **机制联动**：[B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md) · [Perfetto 系列 · 01](../../../05-卷5-调查工具链/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md)
-> - **工具联动**：[Dumpsys D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) · [B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md)
+> - **机制联动**：[B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md) · [Perfetto 系列 · 01](../../../03-卷3-调查工具/31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md)
+> - **工具联动**：[Dumpsys D11-dropbox](../../../03-卷3-调查工具/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) · [B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md)
 
 ---
 

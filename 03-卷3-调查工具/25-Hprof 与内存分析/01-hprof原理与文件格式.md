@@ -73,8 +73,8 @@
 - **本系列 README**:README.md(待批 1 完成后补)
 - **本篇的强依赖**:无
 - **跨系列引用**:
-  - [Kernel/MM 01-Android 内存分类学](../../03-卷3-核心机制/15-内存管理全链路/01-Android内存分类学：5大管理职责与全景.md)——5 大管理职责全景
-  - [Runtime/ART 02-Heap 与分配器专题](../../03-卷3-核心机制/20-ART%20运行时/20.C-GC系统/02-Heap与分配器专题.md)——ART 堆内部布局,本篇 §4 INSTANCE/ARRAY 引用其 §3
+  - [Kernel/MM 01-Android 内存分类学](../../02-卷2-核心机制/15-内存管理全链路/01-Android内存分类学：5大管理职责与全景.md)——5 大管理职责全景
+  - [Runtime/ART 02-Heap 与分配器专题](../../02-卷2-核心机制/20-ART%20运行时/20.C-GC系统/02-Heap与分配器专题.md)——ART 堆内部布局,本篇 §4 INSTANCE/ARRAY 引用其 §3
   - [AmCommand 04-堆内存转储 dumpheap 详解](../33-Dumpsys%20·%20Bugreport%20·%20DropBox/04-堆内存转储-dumpheap详解.md)——本篇 §5.1 第 1 条触发路径
   - [Dumpsys 04-内存分析](../33-Dumpsys%20·%20Bugreport%20·%20DropBox/04-内存分析.md)——`dumpsys meminfo` 实时快照,本篇 §6 工具链对比
   - [Perfetto 04-定制化实战:ANR 后自动抓取 trace](Perfetto/04-定制化实战：ANR后自动抓取trace.md)——本篇 §5.1 第 3 条触发路径

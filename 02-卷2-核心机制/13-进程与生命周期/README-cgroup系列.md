@@ -23,11 +23,11 @@
 
 | 已有视角 | 已有文章 | 主模块 | cgroup 的角色 |
 |---|---|---|---|
-| Kernel Process 视角 | `../03-卷3-核心机制/13-进程与生命周期/10-cgroup_v2_内核里的资源控制器.md` | 进程 | cgroup 是"被约束"的代表 |
-| Kernel IO 视角 | `../03-卷3-核心机制/16-IO 与存储/04-IO优先级与cgroup-IO控制器.md` | IO | cgroup 是 IO 资源隔离的边界 |
+| Kernel Process 视角 | `../02-卷2-核心机制/13-进程与生命周期/10-cgroup_v2_内核里的资源控制器.md` | 进程 | cgroup 是"被约束"的代表 |
+| Kernel IO 视角 | `../02-卷2-核心机制/16-IO 与存储/04-IO优先级与cgroup-IO控制器.md` | IO | cgroup 是 IO 资源隔离的边界 |
 | Kernel MM 视角 | `01-Mechanism/Kernel/Memory_Management/MM_v2/07-PSI、vmpressure、memcg 压力传递.md` | Memory | cgroup 是 memcg 的载体 |
-| Framework 视角 | `../03-卷3-核心机制/13-进程与生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md` | Framework 接口 | cgroup fs 是 Framework 的"配置通道" |
-| App/Hook 视角 | `../03-卷3-核心机制/14-线程与 Handler 消息机制/09-场景2-后台治理-cgroup_freezer与启动拦截.md` | OEM Hook | freezer 是"半杀"工具 |
+| Framework 视角 | `../02-卷2-核心机制/13-进程与生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md` | Framework 接口 | cgroup fs 是 Framework 的"配置通道" |
+| App/Hook 视角 | `../02-卷2-核心机制/14-线程与 Handler 消息机制/09-场景2-后台治理-cgroup_freezer与启动拦截.md` | OEM Hook | freezer 是"半杀"工具 |
 
 **本系列的横切视角**：把 cgroup 从"被其他系列瓜分的子模块"，提升为"主模块"——讲它自己的**历史、设计、横向地位、稳定性收口**。
 
@@ -342,9 +342,9 @@ CG-06：可观测性 + 风险地图（收口）
 | 引用 | 路径 |
 |---|---|
 | 系列原文 | `01-Mechanism/Kernel/cgroup/01-...md` ~ `06-...md` |
-| Kernel Process 视角 | `../03-卷3-核心机制/13-进程与生命周期/10-cgroup_v2_内核里的资源控制器.md` |
-| Kernel IO 视角 | `../03-卷3-核心机制/16-IO 与存储/04-IO优先级与cgroup-IO控制器.md` |
+| Kernel Process 视角 | `../02-卷2-核心机制/13-进程与生命周期/10-cgroup_v2_内核里的资源控制器.md` |
+| Kernel IO 视角 | `../02-卷2-核心机制/16-IO 与存储/04-IO优先级与cgroup-IO控制器.md` |
 | Kernel MM 视角 | `01-Mechanism/Kernel/Memory_Management/MM_v2/07-PSI、vmpressure、memcg 压力传递.md` |
-| Framework 视角 | `../03-卷3-核心机制/13-进程与生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md` |
-| App Hook 视角 | `../03-卷3-核心机制/14-线程与 Handler 消息机制/09-场景2-后台治理-cgroup_freezer与启动拦截.md` |
+| Framework 视角 | `../02-卷2-核心机制/13-进程与生命周期/06-Framework视角的Kernel进程接口_procfs_cgroup_pidfd.md` |
+| App Hook 视角 | `../02-卷2-核心机制/14-线程与 Handler 消息机制/09-场景2-后台治理-cgroup_freezer与启动拦截.md` |
 | 实战 SOP | CG-06 §4 排查命令 + §5 完整案例 |

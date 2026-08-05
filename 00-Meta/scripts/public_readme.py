@@ -107,11 +107,11 @@ def build_reader_homepage(repo_root: Path | None = None, docs_dir: Path | None =
     hero = render_page_hero(
         "稳知库 · Android 稳定性架构师系列",
         "从启动到性能 — 以稳定性问题为中心、横跨 Kernel / Native / Framework 的体系化参考。"
-        "按 8 卷 50 章组织：机制、症状、工具、治理一条链路。",
+        "按 6 卷 56 章组织：平台启动、机制、工具、症状、性能治理、案例一条链路。",
         chips=[
             "AOSP 17 + android17-6.18",
             f"{article_count} 篇文章",
-            "8 卷 50 章",
+            "6 卷 56 章",
         ],
     )
 

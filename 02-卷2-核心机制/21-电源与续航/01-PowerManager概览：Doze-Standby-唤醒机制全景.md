@@ -4,7 +4,7 @@
 >
 > **角色**：稳定性架构师 · oncall 工程师 · 耗电 / 后台被 freeze 根因排查
 >
-> **强依赖**：[02-Symptom/S05-后台被冻结](../../../02-Symptom/S05-后台被冻结.md) · [06-Foundation/Network/01](../17-网络与连接/01-网络栈总览：从app-socket到网卡的全链路.md) · [06-Foundation/Tools/Android_Tools/02-Logcat格式与tag体系](../../05-卷5-调查工具链/35-断点与%20Native%20调试/02-Logcat格式与tag体系.md)
+> **强依赖**：[02-Symptom/S05-后台被冻结](../../../02-Symptom/S05-后台被冻结.md) · [06-Foundation/Network/01](../17-网络与连接/01-网络栈总览：从app-socket到网卡的全链路.md) · [06-Foundation/Tools/Android_Tools/02-Logcat格式与tag体系](../../03-卷3-调查工具/35-断点与%20Native%20调试/02-Logcat格式与tag体系.md)
 
 <!-- AUTHOR_ONLY:START -->
 ## 本篇定位

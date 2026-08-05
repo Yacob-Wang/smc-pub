@@ -175,7 +175,7 @@ logcat 打印 "Kill <pid> with adj <adj>"
 | `ro.lmk.critical` | 768MB | 调高到 1024MB |
 | `ro.lmk.swap_free_low_percentage` | 20% | 调高到 30% 更激进 |
 
-(详见 [15.10 §4 lmkd 水位配置](file:///E:/smc-pub/03-卷3-核心机制/15-内存管理全链路/10-杀进程时序-从trimMemory-80到lmkd-kill的FWK视角.md))
+(详见 [15.10 §4 lmkd 水位配置](file:///E:/smc-pub/02-卷2-核心机制/15-内存管理全链路/10-杀进程时序-从trimMemory-80到lmkd-kill的FWK视角.md))
 
 ---
 
@@ -296,7 +296,7 @@ else:
 
 ### 6.2 onTrimMemory 7 等级与 release 行为
 
-`ComponentCallbacks2.onTrimMemory(int level)` 7 等级([15.02 §2](file:///E:/smc-pub/03-卷3-核心机制/15-内存管理全链路/02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md)详述):
+`ComponentCallbacks2.onTrimMemory(int level)` 7 等级([15.02 §2](file:///E:/smc-pub/02-卷2-核心机制/15-内存管理全链路/02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md)详述):
 
 | level | 触发条件 | App 应释放 |
 |:-----:|----------|------------|
@@ -308,7 +308,7 @@ else:
 | `TRIM_MEMORY_MODERATE` | 系统 LRU 列表中部 | 释放非必要资源 |
 | `TRIM_MEMORY_COMPLETE` | 系统 LRU 列表尾部 | **释放一切可释放**,准备被杀 |
 
-(详见 [15.02 §2.1 7 等级设计动机](file:///E:/smc-pub/03-卷3-核心机制/15-内存管理全链路/02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md))
+(详见 [15.02 §2.1 7 等级设计动机](file:///E:/smc-pub/02-卷2-核心机制/15-内存管理全链路/02-ComponentCallbacks2-onTrimMemory-7等级的设计动机.md))
 
 ---
 
@@ -318,7 +318,7 @@ else:
 
 **场景**:用户报"Transsion AI 助手用完后退到后台,内存不释放,杀不掉"。
 
-**取证(0xffffff13 抓取 `dumpsys_procstats` 18KB,见 [26.8 §3.3](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/08-dumpsys-meminfo全设备级与procstats解读.md))**:
+**取证(0xffffff13 抓取 `dumpsys_procstats` 18KB,见 [26.8 §3.3](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/08-dumpsys-meminfo全设备级与procstats解读.md))**:
 
 ```text
 * com.transsion.kolun.aiservice / 1000 / v160200009:
@@ -507,6 +507,6 @@ DALVIK THREADS (64):
 ---
 
 **本文为 26 章 26.4 子节,「症状章」第 3 篇(进程被杀)。**
-**上一篇**:[26.3 Native 内存增长与泄漏](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/03-Native-内存增长与泄漏.md)
-**下一篇**:[26.5 内存压力的连锁反应:GC 抖动 → 掉帧 → ANR](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/05-内存压力连锁反应-GC抖动-掉帧-ANR.md)——5 大传导链
-**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/index.md) / [00-计划-26.1-26.6](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/00-计划-26.1-26.6.md)
+**上一篇**:[26.3 Native 内存增长与泄漏](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/03-Native-内存增长与泄漏.md)
+**下一篇**:[26.5 内存压力的连锁反应:GC 抖动 → 掉帧 → ANR](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/05-内存压力连锁反应-GC抖动-掉帧-ANR.md)——5 大传导链
+**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/index.md) / [00-计划-26.1-26.6](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/00-计划-26.1-26.6.md)

@@ -540,7 +540,7 @@ $ adb shell setprop debug.hwui.disable_vsync 1
 | [06 HWC](06-HWC（Hardware-Composer）：display-HAL抽象.md) | 续篇 |
 | [07 jank 实战](07-卡顿-jank实战：trace+logcat5分钟定位.md) | 续篇 |
 | [02-Symptom/S09-jank/01-症状机制](../../../02-Symptom/S09-jank/01-症状机制.md) | jank 症状 |
-| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | trace 工具 |
+| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | trace 工具 |
 
 ---
 

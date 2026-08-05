@@ -60,7 +60,7 @@
 
 (表 1-1:Hprof 5 秒 5 大信息)
 
-**关键事实**:**Hprof 是 Java 堆的"快照"——抓 hprof 时 Java 堆使用情况被冻结,之后所有分析都基于这个快照**。Native 堆不归 hprof 管(详见 [26.3](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/03-Native-内存增长与泄漏.md))。
+**关键事实**:**Hprof 是 Java 堆的"快照"——抓 hprof 时 Java 堆使用情况被冻结,之后所有分析都基于这个快照**。Native 堆不归 hprof 管(详见 [26.3](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/03-Native-内存增长与泄漏.md))。
 
 ---
 
@@ -143,7 +143,7 @@ $ hprof-conv demo.hprof demo-conv.hprof
 
 ### 3.2 关键时间点参考(0xffffff13 ANR 现场)
 
-**0xffffff13 抓取 `anr_bn_1981_2026-07-19-06-17-32-646` 605KB,这是 `com.android.phone` 启动时 ANR 触发 SIGQUIT 抓取**(详见 [26.2 §7.1](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/02-Java-OOM-堆溢出-大对象-Bitmap-线程数超限.md)):
+**0xffffff13 抓取 `anr_bn_1981_2026-07-19-06-17-32-646` 605KB,这是 `com.android.phone` 启动时 ANR 触发 SIGQUIT 抓取**(详见 [26.2 §7.1](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/02-Java-OOM-堆溢出-大对象-Bitmap-线程数超限.md)):
 
 ```text
 RssHwmKb: 209668              ← 进程 RSS 历史峰值 209MB
@@ -563,6 +563,6 @@ Glide.with(activity)
 ---
 
 **本文为 26 章 26.10 子节,「补全系列」第 1 篇(Hprof 深度分析)。**
-**下一篇**:[26.11 Native 调试基础-GWP-ASan-HWASan-MTE 调试验证](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/11-Native-调试基础-GWP-ASan-HWASan-MTE-调试验证.md)——内存错误检测 3 大机制
-**实战引用**:[26.20 真机调试实战-1-内存泄漏复现与全流程抓取分析](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/20-真机调试实战-1-内存泄漏复现与全流程抓取分析.md)
-**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/README.md) / [00-计划-26.10-26.23](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/00-计划-26.10-26.23.md)
+**下一篇**:[26.11 Native 调试基础-GWP-ASan-HWASan-MTE 调试验证](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/11-Native-调试基础-GWP-ASan-HWASan-MTE-调试验证.md)——内存错误检测 3 大机制
+**实战引用**:[26.20 真机调试实战-1-内存泄漏复现与全流程抓取分析](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/20-真机调试实战-1-内存泄漏复现与全流程抓取分析.md)
+**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/README.md) / [00-计划-26.10-26.23](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/00-计划-26.10-26.23.md)

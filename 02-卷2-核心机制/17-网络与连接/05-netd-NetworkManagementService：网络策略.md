@@ -529,7 +529,7 @@ $ adb shell settings put global ipv6_disabled 1
 | [06 WiFi](06-WiFi协议栈：wpa-supplicant-HAL-连接.md) | 续篇 |
 | [07 Mobile Data](07-Mobile-Data：RIL-数据业务-漫游.md) | 续篇 |
 | [08 诊断工具](08-网络栈诊断工具：tcpdump-ss-netstat-ping.md) | 续篇 |
-| [06-Foundation/SELinux/04-AVC与avc_denied](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md) | SELinux 视角 |
+| [06-Foundation/SELinux/04-AVC与avc_denied](../../01-卷1-平台基础与启动/05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md) | SELinux 视角 |
 | [02-Symptom/S09-jank/01-症状机制](../../../02-Symptom/S09-jank/01-症状机制.md) | 卡顿 |
 
 ---

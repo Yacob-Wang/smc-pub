@@ -35,39 +35,39 @@
 
 | # | 标题 | 核心内容 |
 |---|---|---|
-| **01** | [进程子系统全景与边界契约](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/01-进程子系统全景与边界契约.md) | Kernel 进程子系统模块图 + 与 Framework 06 镜像分工契约 |
-| **02** | [task_struct 全景拆解](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/02-task_struct全景拆解.md) | task_struct 字段按子系统分组 + 5 个排查场景 |
+| **01** | [进程子系统全景与边界契约](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/01-进程子系统全景与边界契约.md) | Kernel 进程子系统模块图 + 与 Framework 06 镜像分工契约 |
+| **02** | [task_struct 全景拆解](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/02-task_struct全景拆解.md) | task_struct 字段按子系统分组 + 5 个排查场景 |
 
 ### 阶段 B：生命周期（怎么活）
 
 | # | 标题 | 核心内容 |
 |---|---|---|
-| **03** | [进程的诞生：fork / clone / vfork](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/03-进程的诞生_fork_clone_vfork.md) | sys_clone → copy_process + COW + vfork + Zygote 优化 |
-| **04** | [进程的执行：execve 与程序加载](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/04-进程的执行_execve与程序加载.md) | sys_execve → linux_binprm → load_elf_binary + Android 14 binfmt |
-| **05** | [进程的退出：do_exit 与资源回收](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/05-进程的退出_do_exit与资源回收.md) | sys_exit_group → do_exit + SIGCHLD + 僵尸进程 |
+| **03** | [进程的诞生：fork / clone / vfork](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/03-进程的诞生_fork_clone_vfork.md) | sys_clone → copy_process + COW + vfork + Zygote 优化 |
+| **04** | [进程的执行：execve 与程序加载](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/04-进程的执行_execve与程序加载.md) | sys_execve → linux_binprm → load_elf_binary + Android 14 binfmt |
+| **05** | [进程的退出：do_exit 与资源回收](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/05-进程的退出_do_exit与资源回收.md) | sys_exit_group → do_exit + SIGCHLD + 僵尸进程 |
 
 ### 阶段 C：调度（被谁挑中跑）
 
 | # | 标题 | 核心内容 |
 |---|---|---|
-| **06** | [调度基础架构：调度类与上下文切换](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/06-调度基础架构_调度类与上下文切换.md) | sched_class 5 类 + runqueue + schedule() + context_switch |
-| **07** | [CFS 调度器：vruntime 与红黑树](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/07-CFS调度器_vruntime与红黑树.md) | sched_entity + cfs_rq + vruntime 公式 + PELT + 任务组调度 |
-| **08** | [调度扩展：RT / Deadline / Idle](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/08-调度扩展_RT_Deadline_Idle.md) | SCHED_FIFO/RR + SCHED_DEADLINE CBS + 优先级反转 + PI-futex |
-| **09** | [多核调度：SMP 负载均衡 + EAS](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/09-多核调度_SMP负载均衡_EAS.md) | sched_domain + load_balance + EAS + WALT + UClamp + cpuset |
+| **06** | [调度基础架构：调度类与上下文切换](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/06-调度基础架构_调度类与上下文切换.md) | sched_class 5 类 + runqueue + schedule() + context_switch |
+| **07** | [CFS 调度器：vruntime 与红黑树](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/07-CFS调度器_vruntime与红黑树.md) | sched_entity + cfs_rq + vruntime 公式 + PELT + 任务组调度 |
+| **08** | [调度扩展：RT / Deadline / Idle](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/08-调度扩展_RT_Deadline_Idle.md) | SCHED_FIFO/RR + SCHED_DEADLINE CBS + 优先级反转 + PI-futex |
+| **09** | [多核调度：SMP 负载均衡 + EAS](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/09-多核调度_SMP负载均衡_EAS.md) | sched_domain + load_balance + EAS + WALT + UClamp + cpuset |
 
 ### 阶段 D：控制（被谁约束 + 协作）
 
 | # | 标题 | 核心内容 |
 |---|---|---|
-| **10** | [cgroup v2：内核里的资源控制器](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/10-cgroup_v2_内核里的资源控制器.md) | cgroup_subsys + cftype + memory / cpu / freezer + Android 14 cgroup 树 |
-| **11** | [信号机制：从产生到投递](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/11-信号机制_从产生到投递.md) | sys_kill / pending / dequeue_signal / **SIGKILL 不可捕获的底层原因** |
-| **12** | [进程间通信：pipe / fifo / shm / futex / Binder](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/12-进程间通信_pipe_fifo_shm_futex_Binder.md) | pipe / mmap / futex + **Binder 驱动内核实现** + 与 Framework 06 镜像分工 |
+| **10** | [cgroup v2：内核里的资源控制器](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/10-cgroup_v2_内核里的资源控制器.md) | cgroup_subsys + cftype + memory / cpu / freezer + Android 14 cgroup 树 |
+| **11** | [信号机制：从产生到投递](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/11-信号机制_从产生到投递.md) | sys_kill / pending / dequeue_signal / **SIGKILL 不可捕获的底层原因** |
+| **12** | [进程间通信：pipe / fifo / shm / futex / Binder](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/12-进程间通信_pipe_fifo_shm_futex_Binder.md) | pipe / mmap / futex + **Binder 驱动内核实现** + 与 Framework 06 镜像分工 |
 
 ### 阶段 E：调试收口
 
 | # | 标题 | 核心内容 |
 |---|---|---|
-| **13** | [进程调试与稳定性关联](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/13-进程调试与稳定性关联.md) | ftrace / perfetto / PSI + **3 个实战案例**（卡顿 / ANR / LMKD）+ bpftrace |
+| **13** | [进程调试与稳定性关联](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/13-进程调试与稳定性关联.md) | ftrace / perfetto / PSI + **3 个实战案例**（卡顿 / ANR / LMKD）+ bpftrace |
 
 ---
 
@@ -275,19 +275,19 @@ Kernel 视角与 Framework 视角**互不重叠**——见下一节。
 
 | 主题 | Kernel 系列（本系列） | Framework 系列镜像篇目 |
 |---|---|---|
-| 进程子系统全景 | **[01](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/01-进程子系统全景与边界契约.md)** | Framework/Process/06 §1 模块图视角 |
-| `task_struct` 字段语义 | **[02](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/02-task_struct全景拆解.md)** | Framework/Process/06 §3.1 投影视角 |
-| fork / copy_process | **[03](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/03-进程的诞生_fork_clone_vfork.md)** | Framework/Process/06 §3 fork 视角 |
-| execve / 程序加载 | **[04](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/04-进程的执行_execve与程序加载.md)** | Framework/Process/06 §3.2 ELF 视角 |
-| do_exit / 资源回收 | **[05](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/05-进程的退出_do_exit与资源回收.md)** | Framework/Process/06 §3.3 do_exit 视角 |
-| sched_class / 调度基础 | **[06](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/06-调度基础架构_调度类与上下文切换.md)** | Framework/Process/06 §4.1 调度视角 |
-| CFS / vruntime | **[07](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/07-CFS调度器_vruntime与红黑树.md)** | Framework/Process/06 §4.2 CFS 视角 |
-| RT / Deadline | **[08](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/08-调度扩展_RT_Deadline_Idle.md)** | Framework/Process/06 §4.3 RT 视角 |
-| SMP / EAS / UClamp | **[09](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/09-多核调度_SMP负载均衡_EAS.md)** | Framework/Process/06 §4.4 EAS 视角 |
-| cgroup v2 | **[10](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/10-cgroup_v2_内核里的资源控制器.md)** | Framework/Process/06 §5 cgroup 视角 |
-| 信号机制 | **[11](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/11-信号机制_从产生到投递.md)** | Framework/Process/06 §6 信号视角 |
-| IPC / Binder | **[12](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/12-进程间通信_pipe_fifo_shm_futex_Binder.md)** | Framework/Process/06 §7 Binder 视角 |
-| 进程调试 | **[13](../../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/13-进程调试与稳定性关联.md)** | Framework/Process/06 §8 调试视角 |
+| 进程子系统全景 | **[01](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/01-进程子系统全景与边界契约.md)** | Framework/Process/06 §1 模块图视角 |
+| `task_struct` 字段语义 | **[02](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/02-task_struct全景拆解.md)** | Framework/Process/06 §3.1 投影视角 |
+| fork / copy_process | **[03](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/03-进程的诞生_fork_clone_vfork.md)** | Framework/Process/06 §3 fork 视角 |
+| execve / 程序加载 | **[04](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/04-进程的执行_execve与程序加载.md)** | Framework/Process/06 §3.2 ELF 视角 |
+| do_exit / 资源回收 | **[05](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/05-进程的退出_do_exit与资源回收.md)** | Framework/Process/06 §3.3 do_exit 视角 |
+| sched_class / 调度基础 | **[06](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/06-调度基础架构_调度类与上下文切换.md)** | Framework/Process/06 §4.1 调度视角 |
+| CFS / vruntime | **[07](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/07-CFS调度器_vruntime与红黑树.md)** | Framework/Process/06 §4.2 CFS 视角 |
+| RT / Deadline | **[08](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/08-调度扩展_RT_Deadline_Idle.md)** | Framework/Process/06 §4.3 RT 视角 |
+| SMP / EAS / UClamp | **[09](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/09-多核调度_SMP负载均衡_EAS.md)** | Framework/Process/06 §4.4 EAS 视角 |
+| cgroup v2 | **[10](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/10-cgroup_v2_内核里的资源控制器.md)** | Framework/Process/06 §5 cgroup 视角 |
+| 信号机制 | **[11](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/11-信号机制_从产生到投递.md)** | Framework/Process/06 §6 信号视角 |
+| IPC / Binder | **[12](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/12-进程间通信_pipe_fifo_shm_futex_Binder.md)** | Framework/Process/06 §7 Binder 视角 |
+| 进程调试 | **[13](../../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/13-进程调试与稳定性关联.md)** | Framework/Process/06 §8 调试视角 |
 
 **判断标准**：
 - 读完后想去看 `kernel/sched/` 或 `kernel/fork.c` → **本系列**

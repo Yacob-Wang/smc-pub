@@ -692,7 +692,7 @@ adb shell cat /proc/bootprof | grep "initcall"
 > - **下一篇**：[D04-启动期综合调试](D04-启动期dumpsys-systrace-traceview综合.md)
 > - **本系列 README**：[README-AOSP_Startup系列.md](../README.md)
 > - **机制联动**：[B01-Boot Time 测量](../B-启动性能/B01-BootTime测量.md) · [第6章 Bootloader 到 Kernel](../../06-Bootloader%20到%20Kernel/index.md) · [Linux_Kernel/Process](../01-Mechanism/Kernel/Process/)
-> - **工具联动**：[Dumpsys D11-dropbox](../../../05-卷5-调查工具链/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) · [D01-Perfetto Boot Trace](D01-Perfetto-Boot-Trace抓全栈启动时序.md)
+> - **工具联动**：[Dumpsys D11-dropbox](../../../03-卷3-调查工具/33-Dumpsys%20·%20Bugreport%20·%20DropBox/11-稳定性监控集成.md) · [D01-Perfetto Boot Trace](D01-Perfetto-Boot-Trace抓全栈启动时序.md)
 
 ---
 

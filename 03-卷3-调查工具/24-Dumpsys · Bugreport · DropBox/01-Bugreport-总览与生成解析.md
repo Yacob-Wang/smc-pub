@@ -4,13 +4,13 @@
 >
 > **角色**：稳定性架构师 · oncall 工程师 · 现场取证人员
 >
-> **强依赖**：[06-Foundation/Tools/Tracing](../../06-Foundation/Tools/Tracing/) · [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../05-卷5-调查工具链/35-断点与 Native 调试/Logcat_Complete_Guide.md)
+> **强依赖**：[06-Foundation/Tools/Tracing](../../06-Foundation/Tools/Tracing/) · [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../03-卷3-调查工具/26-断点与 Native 调试/Logcat_Complete_Guide.md)
 
 <!-- AUTHOR_ONLY:START -->
 ## 本篇定位
 
 - **目的**：把 bugreport 这个 oncall 7×24 最高频工具讲清楚——怎么生成、怎么解析、内部结构、5 类现场 5 分钟取证
-- **不是**：不复述 logcat 命令（[06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../05-卷5-调查工具链/35-断点与 Native 调试/Logcat_Complete_Guide.md)）；不复述 trace 抓取（[06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](../../../05-卷5-调查工具链/35-断点与 Native 调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md)）
+- **不是**：不复述 logcat 命令（[06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../03-卷3-调查工具/26-断点与 Native 调试/Logcat_Complete_Guide.md)）；不复述 trace 抓取（[06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](../../../03-卷3-调查工具/26-断点与 Native 调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md)）
 - **承接自**：[00-Meta/缺项规划-P0补全路线图 §1.4 缺项清单](../../00-Meta/缺项规划-P0补全路线图.md)（bugreport 系列从 0 到 1 新建）
 - **衔接去**：[02 目录结构全梳理](02-Bugreport-目录结构全梳理.md) / [06-Case/Cases-Extended/](../06-Case/Cases-Extended/) 实战案例 / [04-Tool/Dumpsys/](../04-Tool/Dumpsys/)
 
@@ -426,10 +426,10 @@ $ sync
 | smc-pub 已有文章 | 关系 |
 |:----------------|:-----|
 | [02 目录结构全梳理](02-Bugreport-目录结构全梳理.md) | 下篇 |
-| [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../05-卷5-调查工具链/35-断点与 Native 调试/Logcat_Complete_Guide.md) | logcat 完整语法 |
-| [06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](../../../05-卷5-调查工具链/35-断点与 Native 调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) | trace 抓取 |
-| [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md) | dumpsys 实战 |
-| [04-Tool/AmCommand/01-am命令全景与Activity触发](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/01-am命令全景与Activity触发.md) | am + bugreport 联动 |
+| [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../03-卷3-调查工具/26-断点与 Native 调试/Logcat_Complete_Guide.md) | logcat 完整语法 |
+| [06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](../../../03-卷3-调查工具/26-断点与 Native 调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) | trace 抓取 |
+| [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md) | dumpsys 实战 |
+| [04-Tool/AmCommand/01-am命令全景与Activity触发](../../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/01-am命令全景与Activity触发.md) | am + bugreport 联动 |
 | [04-Tool/Hprof/01-Hprof总览](../../../04-Tool/Hprof/) | 内存泄漏取证 |
 | [06-Case/Cases-Extended/](../../../06-Case/Cases-Extended/) | 实战案例 |
 | [02-Symptom/S00-S09 7 大症状](../../02-Symptom/) | 7 大症状 |

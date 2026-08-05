@@ -7,8 +7,8 @@
 > **衔接去**:[02-Perfetto 核心实现深度解析](02-Perfetto核心实现深度解析.md) 会深入 traced 守护进程、共享内存零拷贝、数据源实现
 >
 > **不重复内容**:本篇只讲"是什么、为什么、在系统中位置",**不讲**:
-> - 命令行参数细节(见 [Tools/Tracing/20-Trace抓取方法全面指南](../../05-卷5-调查工具链/35-断点与 Native 调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md))
-> - ftrace 语法本身(见 [Tools/Tracing/ftrace 的语法解析](../../05-卷5-调查工具链/35-断点与 Native 调试/ftrace的语法解析.md))
+> - 命令行参数细节(见 [Tools/Tracing/20-Trace抓取方法全面指南](../../03-卷3-调查工具/26-断点与 Native 调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md))
+> - ftrace 语法本身(见 [Tools/Tracing/ftrace 的语法解析](../../03-卷3-调查工具/26-断点与 Native 调试/ftrace的语法解析.md))
 > - 任何具体的数据源内部实现(留到 [02 §3](02-Perfetto核心实现深度解析.md))
 >
 > **基线**:AOSP `android-14.0.0_r1` + Perfetto upstream `v43+` + Kernel `android14-5.15` GKI

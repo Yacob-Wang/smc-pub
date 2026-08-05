@@ -4,15 +4,15 @@
 >
 > **角色**：稳定性架构师 · oncall 工程师 · 取证工具选择
 >
-> **强依赖**：[04 实战 5 类典型案例](04-Bugreport-实战5类典型案例.md) · [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md)
+> **强依赖**：[04 实战 5 类典型案例](04-Bugreport-实战5类典型案例.md) · [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md)
 
 <!-- AUTHOR_ONLY:START -->
 ## 本篇定位
 
 - **目的**：把 bugreport 和 perfetto trace 各自的"擅长什么 / 不擅长什么"讲清楚，5 类事故下"用哪个 / 都要用 / 都不用"
-- **不是**：不复述 [04-Tool/Perfetto/01](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) Perfetto 架构；不复述 [01]-[04] Bugreport 已有内容
+- **不是**：不复述 [04-Tool/Perfetto/01](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) Perfetto 架构；不复述 [01]-[04] Bugreport 已有内容
 - **承接自**：[04 §6 通用取证清单](04-Bugreport-实战5类典型案例.md) → 本文给"工具选择"维度
-- **衔接去**：[Bugreport 系列收官](05-Bugreport-vs-perfetto-trace.md)（本文是收官篇） / [04-Tool/Perfetto/04-Perfetto定制化实战](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/04-Perfetto定制化实战：ANR后自动抓取trace.md)
+- **衔接去**：[Bugreport 系列收官](05-Bugreport-vs-perfetto-trace.md)（本文是收官篇） / [04-Tool/Perfetto/04-Perfetto定制化实战](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/04-Perfetto定制化实战：ANR后自动抓取trace.md)
 
 ## 校准决策日志
 
@@ -415,12 +415,12 @@ fix：LruCache 减半 + 改 RGB_565
 
 | smc-pub 已有文章 | 关系 |
 |:----------------|:-----|
-| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | perfetto 完整 |
-| [04-Tool/Perfetto/03-Perfetto与statsd联动机制](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/03-Perfetto与statsd联动机制.md) | perfetto + statsd |
-| [04-Tool/Perfetto/04-Perfetto定制化实战：ANR后自动抓取trace](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/04-Perfetto定制化实战：ANR后自动抓取trace.md) | perfetto 自动抓 |
-| [06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](../../../05-卷5-调查工具链/35-断点与 Native 调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) | 4 大 trace 对比 |
-| [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md) | dumpsys 完整 |
-| [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../05-卷5-调查工具链/35-断点与 Native 调试/Logcat_Complete_Guide.md) | logcat 完整 |
+| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | perfetto 完整 |
+| [04-Tool/Perfetto/03-Perfetto与statsd联动机制](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/03-Perfetto与statsd联动机制.md) | perfetto + statsd |
+| [04-Tool/Perfetto/04-Perfetto定制化实战：ANR后自动抓取trace](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/04-Perfetto定制化实战：ANR后自动抓取trace.md) | perfetto 自动抓 |
+| [06-Foundation/Tools/Tracing/20-Trace抓取方法全面指南](../../../03-卷3-调查工具/26-断点与 Native 调试/20-Trace抓取方法全面指南：ftrace-atrace-systrace-perfetto.md) | 4 大 trace 对比 |
+| [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md) | dumpsys 完整 |
+| [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../03-卷3-调查工具/26-断点与 Native 调试/Logcat_Complete_Guide.md) | logcat 完整 |
 | [02-Symptom/S00-S09 7 大症状](../../02-Symptom/) | 7 大症状 |
 | [03-Forensics/F00-F07 7 大取证](../../03-Forensics/) | 取证总览 |
 | [06-Case/Cases-Extended/](../../../06-Case/Cases-Extended/) | 实战案例 |
@@ -447,8 +447,8 @@ fix：LruCache 减半 + 改 RGB_565
 Bugreport 这条线在稳定性架构师的能力模型里属于**"取证落地"层**——拿到 bugreport 能 5 分钟定位 7 大症状的根因。
 
 下一步推荐读：
-- [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) — perfetto 深入
-- [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md) — dumpsys 深入
+- [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) — perfetto 深入
+- [04-Tool/Dumpsys/12-dumpsys实战SOP](../../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/12-dumpsys实战SOP.md) — dumpsys 深入
 - [06-Case/Cases-Extended/](../../../06-Case/Cases-Extended/) — 实战案例（待补）
 
 ---

@@ -11,7 +11,7 @@
 ## 本篇定位
 
 - S10-Measure 子系列的预算管理篇（与 S10-01 度量 + S10-02 SLI/SLO + S10-03 门禁配套）
-- 强依赖：[S10-02-SLI与SLO设计](02-SLI与SLO设计：从指标到门禁.md) / [A04-Stability Score](../../../07-卷7-APM与工程治理/43-APM 架构与自研实践/A04-StabilityScore综合指数.md) / [A05-4 步闭环](../../../07-卷7-APM与工程治理/43-APM 架构与自研实践/A05-4步闭环.md) / [IB01-Google SRE](../../00-Meta/Industry-Benchmark/IB01-Google SRE稳定性白皮书解读.md)
+- 强依赖：[S10-02-SLI与SLO设计](02-SLI与SLO设计：从指标到门禁.md) / [A04-Stability Score](../../../05-卷5-性能工程与治理/49-APM 架构与自研实践/A04-StabilityScore综合指数.md) / [A05-4 步闭环](../../../05-卷5-性能工程与治理/49-APM 架构与自研实践/A05-4步闭环.md) / [IB01-Google SRE](../../00-Meta/Industry-Benchmark/IB01-Google SRE稳定性白皮书解读.md)
 
 ## 校准决策日志
 
@@ -295,9 +295,9 @@ ANR 预算 = 100 - 实际 ANR 分
 | 模块 | 路径 | 关键 |
 |:-----|:-----|:-----|
 | 5 SLI | [S10-02-SLI与SLO设计](02-SLI与SLO设计：从指标到门禁.md) | SLI/SLO |
-| 综合分 | [A04-Stability Score](../../../07-卷7-APM与工程治理/43-APM 架构与自研实践/A04-StabilityScore综合指数.md) | 6 维 |
-| 4 步闭环 | [A05-4 步闭环](../../../07-卷7-APM与工程治理/43-APM 架构与自研实践/A05-4步闭环.md) | 闭环 |
-| 6 门禁 | [A03-6 大门禁维度](../../../07-卷7-APM与工程治理/43-APM 架构与自研实践/A03-6大门禁维度.md) | 6 维度 |
+| 综合分 | [A04-Stability Score](../../../05-卷5-性能工程与治理/49-APM 架构与自研实践/A04-StabilityScore综合指数.md) | 6 维 |
+| 4 步闭环 | [A05-4 步闭环](../../../05-卷5-性能工程与治理/49-APM 架构与自研实践/A05-4步闭环.md) | 闭环 |
+| 6 门禁 | [A03-6 大门禁维度](../../../05-卷5-性能工程与治理/49-APM 架构与自研实践/A03-6大门禁维度.md) | 6 维度 |
 | Google SRE | [IB01-Google SRE §4](../../00-Meta/Industry-Benchmark/IB01-Google SRE稳定性白皮书解读.md) | Error Budget |
 
 ## B 路径对账

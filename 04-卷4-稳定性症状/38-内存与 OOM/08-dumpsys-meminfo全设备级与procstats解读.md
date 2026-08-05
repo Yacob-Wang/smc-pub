@@ -42,7 +42,7 @@
 
 ### 1.1 15.06 已讲:单进程 PSS 6 大模块
 
-[15.06 dumpsys meminfo 单进程 PSS](file:///E:/smc-pub/03-卷3-核心机制/15-内存管理全链路/06-dumpsys-meminfo解读-从输出反推FWK内存账本.md) §2 讲透:
+[15.06 dumpsys meminfo 单进程 PSS](file:///E:/smc-pub/02-卷2-核心机制/15-内存管理全链路/06-dumpsys-meminfo解读-从输出反推FWK内存账本.md) §2 讲透:
 
 ```bash
 $ adb shell dumpsys meminfo com.example.demo
@@ -112,7 +112,7 @@ Total RSS by OOM adjustment:                ← ★ 本篇核心 ★
 
 **对应 AOSP 源码**:`frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java:printMemInfo()` → 遍历 `mProcessList` 按 `setAdj` 排序,累加每个进程的 `lastPss`(单位 KB)。
 
-12 大分组对应 adj 体系(详见 [15.13 adj 体系](file:///E:/smc-pub/03-卷3-核心机制/15-内存管理全链路/13-保护与释放的协同：adj体系与4大释放源.md)):
+12 大分组对应 adj 体系(详见 [15.13 adj 体系](file:///E:/smc-pub/02-卷2-核心机制/15-内存管理全链路/13-保护与释放的协同：adj体系与4大释放源.md)):
 
 | # | OOM adjustment 分组 | adj 范围 | adj 含义 | 典型进程 |
 |:-:|:-------------------|:--------:|----------|----------|
@@ -543,6 +543,6 @@ $ adb shell am stopservice <service_name>
 ---
 
 **本文为 26 章 26.8 子节,「调查工具书」系列第 2 篇。**
-**上一篇**:[26.7 proc 节点文件深度解读](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/07-proc节点文件深度解读-11大文件从读到诊断.md)——把"内核怎么说"补完
-**下一篇**:[26.9 平台特有调试工具:MTK mmstat / ion / dmabuf / GPU memory 解读](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/09-平台特有调试工具-MTK-mmstat-ion-dmabuf-gpu-memory解读.md)——把"平台怎么说"补完
-**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/index.md) / [00-计划-新增3篇](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/00-计划-新增3篇.md)
+**上一篇**:[26.7 proc 节点文件深度解读](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/07-proc节点文件深度解读-11大文件从读到诊断.md)——把"内核怎么说"补完
+**下一篇**:[26.9 平台特有调试工具:MTK mmstat / ion / dmabuf / GPU memory 解读](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/09-平台特有调试工具-MTK-mmstat-ion-dmabuf-gpu-memory解读.md)——把"平台怎么说"补完
+**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/index.md) / [00-计划-新增3篇](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/00-计划-新增3篇.md)

@@ -10,7 +10,7 @@
 ## 本篇定位
 
 - **目的**：把 5 大卡顿类别的完整实战排查流程（perfetto + logcat + dumpsys）讲清楚——oncall 5 分钟定位"卡顿是哪个阶段慢"
-- **不是**：不复述 [01]-[06] 任一篇（实战用）；不复述 [04-Tool/Perfetto/04-Perfetto定制化实战](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/04-Perfetto定制化实战：ANR后自动抓取trace.md)（trace 工具深入）
+- **不是**：不复述 [01]-[06] 任一篇（实战用）；不复述 [04-Tool/Perfetto/04-Perfetto定制化实战](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/04-Perfetto定制化实战：ANR后自动抓取trace.md)（trace 工具深入）
 - **承接自**：[01]-[06] 6 篇方法论 → 本文实战
 - **衔接去**：[02-Symptom/S09-jank/01-症状机制](../../../02-Symptom/S09-jank/01-症状机制.md) / [06-Case/Cases-Extended/](../../../06-Case/Cases-Extended/)
 
@@ -666,7 +666,7 @@ $ adb shell setprop debug.sf.disable_glcomposition 1
 | [04 HWUI / RenderThread](04-HWUI-RenderThread：硬件加速渲染.md) | 渲染 |
 | [05 Choreographer / VSync](05-Choreographer-VSync：UI节奏协调.md) | 节拍器 |
 | [06 HWC](06-HWC（Hardware-Composer）：display-HAL抽象.md) | HWC HAL |
-| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../05-卷5-调查工具链/31-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | trace 工具 |
+| [04-Tool/Perfetto/01-Perfetto系统总览与架构设计](../../../../03-卷3-调查工具/22-Perfetto 全栈使用/01-Perfetto系统总览与架构设计.md) | trace 工具 |
 | [02-Symptom/S09-jank/01-症状机制](../../../02-Symptom/S09-jank/01-症状机制.md) | jank 症状 |
 | [06-Case/Cases-Extended/](../../../06-Case/Cases-Extended/) | 实战案例 |
 

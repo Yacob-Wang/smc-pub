@@ -532,9 +532,9 @@ aosp/
 | [06-Foundation/SELinux/02](../../05-安全基础（SELinux%20·%20AVB）/SELinux/02-策略文件体系：sepolicy.te.cil.编译产物.md) | SELinux 编译 |
 | [06-Foundation/SELinux/04](../../05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md) | 实战排 denied |
 | [06-Foundation/SELinux/07](../../05-安全基础（SELinux%20·%20AVB）/SELinux/07-实战：定制SELinux策略排错5例.md) | vendor daemon 案例同本文 |
-| [06-Foundation/Tools/Android_Tools/Init_RC_Complete_Guide](../../../05-卷5-调查工具链/35-断点与%20Native%20调试/Init_RC_Complete_Guide.md) | init.rc 完整语法 |
+| [06-Foundation/Tools/Android_Tools/Init_RC_Complete_Guide](../../../03-卷3-调查工具/35-断点与%20Native%20调试/Init_RC_Complete_Guide.md) | init.rc 完整语法 |
 | [Build-System/04_Build_Configuration_And_Options](../04_Build_Configuration_And_Options.md) | BoardConfig.mk |
-| [02-Symptom/S11-Startup/A03-Init进程与init.rc](../../../02-卷2-系统启动/07-Init%20进程与%20init.rc/index.md) | init 进程 |
+| [02-Symptom/S11-Startup/A03-Init进程与init.rc](../../../01-卷1-平台基础与启动/07-Init%20进程与%20init.rc/index.md) | init 进程 |
 
 ---
 
@@ -556,9 +556,9 @@ aosp/
 Soong 这条线在稳定性架构师的能力模型里属于**"改源码" + "机制理解"两层交集**——读得懂 Android.bp 能 5 秒加 module，看得懂 build.ninja 能手工增量构建。
 
 下一步推荐读：
-- [03-Forensics/Bugreport/01-总览与生成/解析](../../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/01-Bugreport-总览与生成解析.md) — 编译产物上线后怎么取证（下一条 M4-B1 系列）
+- [03-Forensics/Bugreport/01-总览与生成/解析](../../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/01-Bugreport-总览与生成解析.md) — 编译产物上线后怎么取证（下一条 M4-B1 系列）
 - [06-Foundation/SELinux/08](../../05-安全基础（SELinux%20·%20AVB）/SELinux/08-AOSP-17演进：Treble+CIL+userspace加载.md) — AOSP 17 跨版本迁移
-- [02-Symptom/S08-AOSP17-K618](../../../../../01-卷1-Android系统基础与平台/01-Android 系统全景与 AOSP 17/01-症状机制.md) — AOSP 17 全局演进
+- [02-Symptom/S08-AOSP17-K618](../../../../../01-卷1-平台基础与启动/01-系统全景与 AOSP 17/01-症状机制.md) — AOSP 17 全局演进
 
 ---
 

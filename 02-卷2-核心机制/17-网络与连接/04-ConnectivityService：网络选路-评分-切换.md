@@ -444,7 +444,7 @@ $ adb shell settings put global captive_portal_server "captive.apple.com"
 | [06 WiFi](06-WiFi协议栈：wpa-supplicant-HAL-连接.md) | 续篇 |
 | [07 Mobile Data](07-Mobile-Data：RIL-数据业务-漫游.md) | 续篇 |
 | [02-Symptom/S09-jank/01-症状机制](../../../02-Symptom/S09-jank/01-症状机制.md) | 卡顿 |
-| [03-Forensics/F04-NE/01-取证机制](../../../../04-卷4-诊断方法论与稳定性症状/25-Native 异常/01-取证机制.md) | NE 取证 |
+| [03-Forensics/F04-NE/01-取证机制](../../../../04-卷4-稳定性症状/37-Native 异常/01-取证机制.md) | NE 取证 |
 
 ---
 

@@ -21,7 +21,7 @@
 - **不重复内容**:
   - **AssetManager / ResTable 三层结构** → 详见 [PLE-10](10-资源加载-AssetManager-ApkAssets-ResTable.md)
   - **ClassLoader / DEX / 类加载** → 详见 [PLE-06](06-DEX-ODEX-VDEX格式-为mmap而生的字节码.md) / [PLE-07](07-ART-ClassLoader体系-从BootClassLoader到PathClassLoader.md)
-  - **APK 签名 v2/v3/v4 细节** → 不在本系列(详见 [Tools/Android_Tools/Init_RC](../../05-卷5-调查工具链/35-断点与 Native 调试/Init_RC_Complete_Guide.md))
+  - **APK 签名 v2/v3/v4 细节** → 不在本系列(详见 [Tools/Android_Tools/Init_RC](../../03-卷3-调查工具/26-断点与 Native 调试/Init_RC_Complete_Guide.md))
 
 ## 0. 写在前面:为什么 APK 容器单独成篇
 

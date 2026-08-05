@@ -13,7 +13,7 @@
 ## 本篇定位
 
 - oncall 7 大症状剧本第 2 篇（JE 5 类异常 + 3 步定位）
-- 强依赖：[OC01](OC01-oncall工程总论：值班机制与工具栈.md) / [S02-JE](../../../04-卷4-诊断方法论与稳定性症状/24-Java 异常/01-症状机制.md) / [F03-JE](../F03-JE/01-取证机制.md) / [Dumpsys](../../04-Tool/Dumpsys/)
+- 强依赖：[OC01](OC01-oncall工程总论：值班机制与工具栈.md) / [S02-JE](../../../04-卷4-稳定性症状/36-Java 异常/01-症状机制.md) / [F03-JE](../F03-JE/01-取证机制.md) / [Dumpsys](../../04-Tool/Dumpsys/)
 - 衔接去：[OC04-NE](OC04-NE响应剧本.md) / [OC05-SWT](OC05-SWT响应剧本.md)
 
 ## 校准决策日志
@@ -370,10 +370,10 @@ try {
 
 | 模块 | 路径 | 关键类/方法 |
 |:-----|:-----|:-------------|
-| JE 机制 | [../04-卷4-诊断方法论与稳定性症状/24-Java 异常/01-症状机制.md](../../../04-卷4-诊断方法论与稳定性症状/24-Java 异常/01-症状机制.md) | UncaughtExceptionHandler |
-| JE 取证 | [../04-卷4-诊断方法论与稳定性症状/24-Java 异常/01-取证机制.md](../F03-JE/01-取证机制.md) | 完整流程 |
-| dumpsys | [04-Tool/Dumpsys/01-dumpsys总览与架构](../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/01-dumpsys总览与架构.md) | dumpsys |
-| 内存分析 | [04-Tool/Dumpsys/04-内存分析](../../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/04-内存分析.md) | meminfo |
+| JE 机制 | [../04-卷4-稳定性症状/36-Java 异常/01-症状机制.md](../../../04-卷4-稳定性症状/36-Java 异常/01-症状机制.md) | UncaughtExceptionHandler |
+| JE 取证 | [../04-卷4-稳定性症状/36-Java 异常/01-取证机制.md](../F03-JE/01-取证机制.md) | 完整流程 |
+| dumpsys | [04-Tool/Dumpsys/01-dumpsys总览与架构](../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/01-dumpsys总览与架构.md) | dumpsys |
+| 内存分析 | [04-Tool/Dumpsys/04-内存分析](../../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/04-内存分析.md) | meminfo |
 | oncall 流程 | [OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) | 5/15/30 |
 
 ## 附录 B：路径对账

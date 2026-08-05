@@ -189,13 +189,13 @@ ActivityManager: ANR in com.example.app (PID 12345), Reason: Input dispatching t
 - `Reason: Input dispatching timed out` ← **5s+ 无 input 处理**
 - `Reason: Broadcast of ...` ← **10s+ Broadcast 未处理**
 - `Reason: Service ...` ← **20s+ Service 未处理**
-- 详见 [15.10 杀进程时序 §3 ANR 分类](file:///E:/smc-pub/03-卷3-核心机制/15-内存管理全链路/10-杀进程时序-从trimMemory-80到lmkd-kill的FWK视角.md)
+- 详见 [15.10 杀进程时序 §3 ANR 分类](file:///E:/smc-pub/02-卷2-核心机制/15-内存管理全链路/10-杀进程时序-从trimMemory-80到lmkd-kill的FWK视角.md)
 
 ---
 
 ## 4. GC 类型与机制:5 大类型 + 5 大触发条件
 
-AOSP 17 ART 默认 GC 5 大类型(基于 [15.04 §3 GC 类型](file:///E:/smc-pub/03-卷3-核心机制/15-内存管理全链路/03-ART堆与GC的设计动机：为什么这样设计.md)):
+AOSP 17 ART 默认 GC 5 大类型(基于 [15.04 §3 GC 类型](file:///E:/smc-pub/02-卷2-核心机制/15-内存管理全链路/03-ART堆与GC的设计动机：为什么这样设计.md)):
 
 | # | GC 类型 | 触发条件 | pause 时间 | 频率 |
 |:-:|---------|----------|:----------:|:----:|
@@ -229,7 +229,7 @@ AOSP 17 ART 默认 GC 5 大类型(基于 [15.04 §3 GC 类型](file:///E:/smc-pu
 | `dalvik.vm.heaptargetutilization` | 0.75 | 频繁 GC = 调低到 0.5 |
 | `dalvik.vm.usesharedgc` | false | 多进程共享堆 = true |
 
-(更多 ART 调优见 [15.04 §5 ART 调优](file:///E:/smc-pub/03-卷3-核心机制/15-内存管理全链路/03-ART堆与GC的设计动机：为什么这样设计.md))
+(更多 ART 调优见 [15.04 §5 ART 调优](file:///E:/smc-pub/02-卷2-核心机制/15-内存管理全链路/03-ART堆与GC的设计动机：为什么这样设计.md))
 
 ---
 
@@ -239,9 +239,9 @@ AOSP 17 ART 默认 GC 5 大类型(基于 [15.04 §3 GC 类型](file:///E:/smc-pu
 
 | # | 工具 | 数据源 | 看什么 | 适用窗口 |
 |:-:|------|--------|--------|----------|
-| 1 | [26.7 PSI](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/07-proc节点文件深度解读-11大文件从读到诊断.md) | `proc/pressure/memory` | 系统级压力 | 任何窗口 |
-| 2 | [26.8 dumpsys](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/08-dumpsys-meminfo全设备级与procstats解读.md) | `dumpsys meminfo` + `dumpsys procstats` | 进程级 adj × RSS | 单点快照 |
-| 3 | [26.9 mmstat2](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/09-平台特有调试工具-MTK-mmstat-ion-dmabuf-gpu-memory解读.md) | `mmstat_trace_*` | 时间序列(MTK 平台) | 趋势分析 |
+| 1 | [26.7 PSI](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/07-proc节点文件深度解读-11大文件从读到诊断.md) | `proc/pressure/memory` | 系统级压力 | 任何窗口 |
+| 2 | [26.8 dumpsys](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/08-dumpsys-meminfo全设备级与procstats解读.md) | `dumpsys meminfo` + `dumpsys procstats` | 进程级 adj × RSS | 单点快照 |
+| 3 | [26.9 mmstat2](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/09-平台特有调试工具-MTK-mmstat-ion-dmabuf-gpu-memory解读.md) | `mmstat_trace_*` | 时间序列(MTK 平台) | 趋势分析 |
 | 4 | perfetto | ftrace | 全栈 trace(用户态 + 内核) | 完整分析 |
 
 (表 5-1:4 大压力检测工具)
@@ -322,7 +322,7 @@ $ adb shell dumpsys gfxinfo <pkg> | grep "Janky frames"
 
 **场景**:用户报"系统一直有点卡,但看不出具体原因"。
 
-**取证(0xffffff13 抓取,详见 [26.7 §2.2 + §6.2](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/07-proc节点文件深度解读-11大文件从读到诊断.md))**:
+**取证(0xffffff13 抓取,详见 [26.7 §2.2 + §6.2](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/07-proc节点文件深度解读-11大文件从读到诊断.md))**:
 
 ```text
 $ cat proc/vmstat
@@ -359,7 +359,7 @@ Node 0, zone Normal
 
 **场景**:用户报"打开相机 12MP 模式偶发失败"。
 
-**取证(0xffffff13 抓取,详见 [26.7 §6.1](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/07-proc节点文件深度解读-11大文件从读到诊断.md))**:
+**取证(0xffffff13 抓取,详见 [26.7 §6.1](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/07-proc节点文件深度解读-11大文件从读到诊断.md))**:
 
 ```text
 $ cat proc/meminfo | grep Cma
@@ -482,6 +482,6 @@ CmaFree:               0 kB    # 0 空闲 ⚠️
 ---
 
 **本文为 26 章 26.5 子节,「症状章」第 4 篇(压力传导)。**
-**上一篇**:[26.4 进程被杀:LMK 判定链路与优先级误配型误杀](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/04-进程被杀-LMK判定链路与优先级误配型误杀.md)
-**下一篇**:[26.6 内存类问题的现场采集与水位治理](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/06-内存现场采集与水位治理.md)——5 件套 + 5 大治理
-**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/index.md) / [00-计划-26.1-26.6](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/00-计划-26.1-26.6.md)
+**上一篇**:[26.4 进程被杀:LMK 判定链路与优先级误配型误杀](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/04-进程被杀-LMK判定链路与优先级误配型误杀.md)
+**下一篇**:[26.6 内存类问题的现场采集与水位治理](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/06-内存现场采集与水位治理.md)——5 件套 + 5 大治理
+**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/index.md) / [00-计划-26.1-26.6](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/00-计划-26.1-26.6.md)

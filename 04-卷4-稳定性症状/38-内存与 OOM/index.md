@@ -3,8 +3,8 @@
 > **所属卷**：卷 4　诊断方法论与稳定性症状
 > **章定位**：内存不足引发的症状族。内存**机制**见卷 3 第 15 章，本章讲**症状识别 + 调查 + 深度调试 + 真机实战**完整闭环（17 篇 4 大部分）。
 > **工程基线**：AOSP 17.0.0_r1 + Linux 6.18 GKI + Pixel 7/8 + MTK 天玑 9200（Transsion Infinix X6887 实战）
-> **强依赖**：[03-卷3/15 章 内存管理全链路](../../03-卷3-核心机制/15-内存管理全链路/README.md)（14 字段账本、6 大模块 dumpsys、adj 体系、压力检测、杀进程时序）
-> **工具伴侣**：[05-卷5/33 章 Dumpsys · Bugreport · DropBox](../../05-卷5-调查工具链/33-Dumpsys · Bugreport · DropBox/03-Bugreport-关键文件速查.md)（30+ bugreport 文件速查 + 12 P0 取证剧本）
+> **强依赖**：[03-卷3/15 章 内存管理全链路](../../02-卷2-核心机制/15-内存管理全链路/README.md)（14 字段账本、6 大模块 dumpsys、adj 体系、压力检测、杀进程时序）
+> **工具伴侣**：[05-卷5/33 章 Dumpsys · Bugreport · DropBox](../../03-卷3-调查工具/24-Dumpsys · Bugreport · DropBox/03-Bugreport-关键文件速查.md)（30+ bugreport 文件速查 + 12 P0 取证剧本）
 > **实战样本**：`D:\Users\jiabo.wang\Desktop\ANR-LOCK-OPTIMIZE\0xffffff\0xffffff13_2026_07_19_06_17_35_20\`（37 个文件，13 个内存相关）
 
 ## 子系列结构（17 篇 4 大部分）

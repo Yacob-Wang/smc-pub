@@ -350,14 +350,14 @@ Android_Framework/Hprof/
 
 | 本系列章节 | 引用系列 | 引用文章 | 引用原因 |
 |----------|---------|---------|---------|
-| [01 §3 二进制结构](01-hprof原理与文件格式.md#3-hprof-二进制文件结构header--record--tag) | Runtime/ART | [02-Heap 与分配器专题](../../03-卷3-核心机制/20-ART%20运行时/20.C-GC系统/02-Heap与分配器专题.md) | ART 堆对象布局,本篇 INSTANCE 引用其 §3 |
+| [01 §3 二进制结构](01-hprof原理与文件格式.md#3-hprof-二进制文件结构header--record--tag) | Runtime/ART | [02-Heap 与分配器专题](../../02-卷2-核心机制/20-ART%20运行时/20.C-GC系统/02-Heap与分配器专题.md) | ART 堆对象布局,本篇 INSTANCE 引用其 §3 |
 | [01 §5.1 触发路径](01-hprof原理与文件格式.md#51-三种触发路径debugdumphprofdata--kill--10--perfetto-heapprofd) | Tool/AmCommand | [04-堆内存转储 dumpheap 详解](../33-Dumpsys%20·%20Bugreport%20·%20DropBox/04-堆内存转储-dumpheap详解.md) | 第 1 条触发路径详细用法 |
 | [01 §6 工具链定位](01-hprof原理与文件格式.md#6-hprof-在稳定性工具链中的定位) | Tool/Dumpsys | [04-内存分析](../33-Dumpsys%20·%20Bugreport%20·%20DropBox/04-内存分析.md) | `dumpsys meminfo` 实时对照 |
 | [02 §1.3 触发路径](02-hprof解析工具链.md#13-dump--解析的-3-条路径) | Tool/Perfetto | [04-定制化实战:ANR 后自动抓取 trace](Perfetto/04-定制化实战:ANR后自动抓取trace.md) | perfetto 整体定制 |
 | [03 §3 heapprofd](03-perfetto_hprof详解.md#3-heapprofd-数据源详解) | Tool/Perfetto | [01-Perfetto 系统总览](../31-Perfetto%20全栈使用/01-Perfetto系统总览与架构设计.md) | perfetto 整体架构 |
 | [03 §5.1 Native 堆](03-perfetto_hprof详解.md#51-native-堆采样) | Kernel/MM | [03-ART 堆与 GC 的设计动机](../Kernel/Memory_Management/03-ART堆与GC的设计动机:为什么这样设计.md) | Native 堆视角 |
 | [04 §2 案例 1 Activity](04-内存泄漏典型案例与排查SOP.md#21-案例-1activity-泄漏handler-消息堆积) | FWK/MM | [01-11 全系列](../Framework/Memory_Management/README.md) | onTrimMemory / 进程回收视角 |
-| [04 §2 案例 2 Bitmap](04-内存泄漏典型案例与排查SOP.md#22-案例-2bitmap-暴涨native-增长) | Runtime/ART | [02-Heap 与分配器专题](../../03-卷3-核心机制/20-ART%20运行时/20.C-GC系统/02-Heap与分配器专题.md) | ART 堆 Bitmap 引用计数 |
+| [04 §2 案例 2 Bitmap](04-内存泄漏典型案例与排查SOP.md#22-案例-2bitmap-暴涨native-增长) | Runtime/ART | [02-Heap 与分配器专题](../../02-卷2-核心机制/20-ART%20运行时/20.C-GC系统/02-Heap与分配器专题.md) | ART 堆 Bitmap 引用计数 |
 | [05 §2 数据采集](05-实战:内存监控体系搭建.md#22-第-1-层数据采集dumpsys--perfetto--leakcanary--业务埋点) | Tool/Dumpsys | [04-内存分析](../33-Dumpsys%20·%20Bugreport%20·%20DropBox/04-内存分析.md) | dumpsys meminfo 巡检 |
 | [05 §5 报警阈值](05-实战:内存监控体系搭建.md#5-6-类报警阈值设计) | Forensics | [07-治理](../03-Forensics/F07-Governance/01-取证机制.md) | 监控治理范式 |
 

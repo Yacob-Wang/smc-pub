@@ -13,7 +13,7 @@
 ## 本篇定位
 
 - oncall 7 大症状剧本第 3 篇（NE 6 类信号 + Tombstone 解读）
-- 强依赖：[OC01](OC01-oncall工程总论：值班机制与工具栈.md) / [S03-NE](../../../04-卷4-诊断方法论与稳定性症状/25-Native 异常/01-症状机制.md) / [F04-NE](../F04-NE/01-取证机制.md) / [Native_Crash](../../01-Mechanism/Runtime/Native_Crash/) 8 篇
+- 强依赖：[OC01](OC01-oncall工程总论：值班机制与工具栈.md) / [S03-NE](../../../04-卷4-稳定性症状/37-Native 异常/01-症状机制.md) / [F04-NE](../F04-NE/01-取证机制.md) / [Native_Crash](../../01-Mechanism/Runtime/Native_Crash/) 8 篇
 - 衔接去：[OC05-SWT](OC05-SWT响应剧本.md)
 
 ## 校准决策日志
@@ -423,11 +423,11 @@ target_link_options(myjni PRIVATE -fsanitize=address)
 
 | 模块 | 路径 | 关键类/方法 |
 |:-----|:-----|:-------------|
-| NE 机制 | [../04-卷4-诊断方法论与稳定性症状/25-Native 异常/01-症状机制.md](../../../04-卷4-诊断方法论与稳定性症状/25-Native 异常/01-症状机制.md) | 6 类信号 |
-| NE 取证 | [../04-卷4-诊断方法论与稳定性症状/25-Native 异常/01-取证机制.md](../F04-NE/01-取证机制.md) | 完整流程 |
-| Native Crash 总览 | [01-Mechanism/Runtime/Native_Crash/01-NativeCrash总览](../../../04-卷4-诊断方法论与稳定性症状/25-Native 异常/01-NativeCrash总览.md) | 8 篇 |
-| debuggerd | [Native_Crash/04-debuggerd与Tombstone](../../../04-卷4-诊断方法论与稳定性症状/25-Native 异常/04-debuggerd与Tombstone.md) | tombstone 落盘 |
-| Tombstone 解读 | [Native_Crash/06-Tombstone深度解读](../../../04-卷4-诊断方法论与稳定性症状/25-Native 异常/06-Tombstone深度解读.md) | 9 段 |
+| NE 机制 | [../04-卷4-稳定性症状/37-Native 异常/01-症状机制.md](../../../04-卷4-稳定性症状/37-Native 异常/01-症状机制.md) | 6 类信号 |
+| NE 取证 | [../04-卷4-稳定性症状/37-Native 异常/01-取证机制.md](../F04-NE/01-取证机制.md) | 完整流程 |
+| Native Crash 总览 | [01-Mechanism/Runtime/Native_Crash/01-NativeCrash总览](../../../04-卷4-稳定性症状/37-Native 异常/01-NativeCrash总览.md) | 8 篇 |
+| debuggerd | [Native_Crash/04-debuggerd与Tombstone](../../../04-卷4-稳定性症状/37-Native 异常/04-debuggerd与Tombstone.md) | tombstone 落盘 |
+| Tombstone 解读 | [Native_Crash/06-Tombstone深度解读](../../../04-卷4-稳定性症状/37-Native 异常/06-Tombstone深度解读.md) | 9 段 |
 | oncall 流程 | [OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) | 5/15/30 |
 
 ## 附录 B：路径对账

@@ -473,7 +473,7 @@ make[1]: *** [out/target/product/cf_x86_64_phone/obj/ETC/treble_sepolicy_interme
 | [03 Context 与 Label](03-Context与Label：四大主体的标签从哪来.md) | 下篇讲 .fc / property_contexts 怎么生效 |
 | [04 AVC 与 avc_denied](04-AVC与avc_denied：从一次denied反推策略.md) | 下下篇讲怎么从 denied 行改 .te |
 | [06-Foundation/Build-System/04_Build_Configuration_And_Options](../../02-AOSP%20源码结构与构建系统/04_Build_Configuration_And_Options.md) | `m selinux_policy` 怎么配 |
-| [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../05-卷5-调查工具链/35-断点与%20Native%20调试/Logcat_Complete_Guide.md) | denied 怎么从 kernel 走到 logcat |
+| [06-Foundation/Tools/Android_Tools/Logcat_Complete_Guide](../../../03-卷3-调查工具/35-断点与%20Native%20调试/Logcat_Complete_Guide.md) | denied 怎么从 kernel 走到 logcat |
 | [05-Governance/Security](../../../05-Governance/Security/) | SELinux 治理 SOP（**待补**）|
 
 ---

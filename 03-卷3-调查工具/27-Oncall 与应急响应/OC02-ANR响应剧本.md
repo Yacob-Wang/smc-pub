@@ -13,7 +13,7 @@
 ## 本篇定位
 
 - oncall 7 大症状剧本第 1 篇（ANR 60% 最常触发）
-- 强依赖：[OC01](OC01-oncall工程总论：值班机制与工具栈.md) / [S01-ANR](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-症状机制.md) / [F01-ANR](../F01-ANR/01-取证机制.md) / [ANR-Detection](../../04-Tool/ANR-Detection/)
+- 强依赖：[OC01](OC01-oncall工程总论：值班机制与工具栈.md) / [S01-ANR](../../../04-卷4-稳定性症状/35-ANR 深度/01-症状机制.md) / [F01-ANR](../F01-ANR/01-取证机制.md) / [ANR-Detection](../../04-Tool/ANR-Detection/)
 - 衔接去：[OC03-JE](OC03-JE响应剧本.md) / [OC04-NE](OC04-NE响应剧本.md)
 
 ## 校准决策日志
@@ -135,7 +135,7 @@ adb logcat -d -b events,main | grep -E "ANR in|Input event injection|Broadcast o
 | **主线程 Binder 调用** | `at android.os.BinderProxy.transactNative` | 移到子线程 |
 | **Handler 消息卡死** | `at android.os.Handler.dispatchMessage` | 检查 handleMessage |
 
-详见 [../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/Input_Dispatch_Timeout_ANR_Deep_Dive.md](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/Input_Dispatch_Timeout_ANR_Deep_Dive.md)。
+详见 [../04-卷4-稳定性症状/35-ANR 深度/Input_Dispatch_Timeout_ANR_Deep_Dive.md](../../../04-卷4-稳定性症状/35-ANR 深度/Input_Dispatch_Timeout_ANR_Deep_Dive.md)。
 
 ## 3.2 Service ANR（占 20%）
 
@@ -158,7 +158,7 @@ adb logcat -d -b events,main | grep -E "ANR in|Input event injection|Broadcast o
 | **同步等系统服务** | `BinderProxy.transactNative` | 改异步 |
 | **多次 start 串行** | service 堆积 | 用 startId 区分 |
 
-详见 [../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/Service_ANR_Deep_Dive.md](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/Service_ANR_Deep_Dive.md)。
+详见 [../04-卷4-稳定性症状/35-ANR 深度/Service_ANR_Deep_Dive.md](../../../04-卷4-稳定性症状/35-ANR 深度/Service_ANR_Deep_Dive.md)。
 
 ## 3.3 Broadcast ANR（占 15%）
 
@@ -177,7 +177,7 @@ adb logcat -d -b events,main | grep -E "ANR in|Input event injection|Broadcast o
 | **串行队列卡死** | `waiting for ... receiver` | 排查前一个 receiver |
 | **manifest 注册** | `static` 注册 + 启动时间紧 | 改动态注册 |
 
-详见 [../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-症状机制.md](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-症状机制.md) §3。
+详见 [../04-卷4-稳定性症状/35-ANR 深度/01-症状机制.md](../../../04-卷4-稳定性症状/35-ANR 深度/01-症状机制.md) §3。
 
 ## 3.4 Provider ANR（占 5%）
 
@@ -527,13 +527,13 @@ public void onReceive(Context context, Intent intent) {
 
 | 模块 | 路径 | 关键类/方法 |
 |:-----|:-----|:-------------|
-| ANR 机制 | [../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-症状机制.md](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-症状机制.md) | 4 类触发 |
-| ANR 取证 | [../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/01-取证机制.md](../F01-ANR/01-取证机制.md) | 完整流程 |
-| Input ANR 深潜 | [../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/Input_Dispatch_Timeout_ANR_Deep_Dive.md](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/Input_Dispatch_Timeout_ANR_Deep_Dive.md) | Input 5s |
-| Service ANR 深潜 | [../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/Service_ANR_Deep_Dive.md](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/Service_ANR_Deep_Dive.md) | Service 20s |
-| NoFocusWindow ANR | [../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/No_Focus_Window_ANR_Deep_Dive.md](../../../04-卷4-诊断方法论与稳定性症状/23-ANR 深度/No_Focus_Window_ANR_Deep_Dive.md) | 焦点窗口 |
+| ANR 机制 | [../04-卷4-稳定性症状/35-ANR 深度/01-症状机制.md](../../../04-卷4-稳定性症状/35-ANR 深度/01-症状机制.md) | 4 类触发 |
+| ANR 取证 | [../04-卷4-稳定性症状/35-ANR 深度/01-取证机制.md](../F01-ANR/01-取证机制.md) | 完整流程 |
+| Input ANR 深潜 | [../04-卷4-稳定性症状/35-ANR 深度/Input_Dispatch_Timeout_ANR_Deep_Dive.md](../../../04-卷4-稳定性症状/35-ANR 深度/Input_Dispatch_Timeout_ANR_Deep_Dive.md) | Input 5s |
+| Service ANR 深潜 | [../04-卷4-稳定性症状/35-ANR 深度/Service_ANR_Deep_Dive.md](../../../04-卷4-稳定性症状/35-ANR 深度/Service_ANR_Deep_Dive.md) | Service 20s |
+| NoFocusWindow ANR | [../04-卷4-稳定性症状/35-ANR 深度/No_Focus_Window_ANR_Deep_Dive.md](../../../04-卷4-稳定性症状/35-ANR 深度/No_Focus_Window_ANR_Deep_Dive.md) | 焦点窗口 |
 | oncall 流程 | [OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) | 5/15/30 |
-| Input ANR 机制 | [01-Mechanism/Framework/Input/06-InputANR.md](../../03-卷3-核心机制/18-输入系统/18.A-Framework%20输入链路/06-InputANR.md) | InputDispatcher |
+| Input ANR 机制 | [01-Mechanism/Framework/Input/06-InputANR.md](../../02-卷2-核心机制/18-输入系统/18.A-Framework%20输入链路/06-InputANR.md) | InputDispatcher |
 
 ## 附录 B：路径对账
 

@@ -4,7 +4,7 @@
 >
 > **角色**：稳定性架构师 · oncall 工程师 · 网络问题排查
 >
-> **强依赖**：[06-Foundation/Tools/Android_Tools/02-Logcat格式](../../05-卷5-调查工具链/35-断点与%20Native%20调试/02-Logcat格式与tag体系.md) · [01-Mechanism/Kernel/IO/11-eBPF在IO性能分析中的实战](../../../../03-卷3-核心机制/16-IO 与存储/11-eBPF在IO性能分析中的实战：从bpftrace到Android落地.md)
+> **强依赖**：[06-Foundation/Tools/Android_Tools/02-Logcat格式](../../03-卷3-调查工具/35-断点与%20Native%20调试/02-Logcat格式与tag体系.md) · [01-Mechanism/Kernel/IO/11-eBPF在IO性能分析中的实战](../../../../02-卷2-核心机制/16-IO 与存储/11-eBPF在IO性能分析中的实战：从bpftrace到Android落地.md)
 
 <!-- AUTHOR_ONLY:START -->
 ## 本篇定位
@@ -402,7 +402,7 @@ $ adb logcat -d -b kernel | grep "avc: denied" | grep -E "network|socket|connect
 # tcontext: socket / node / port
 # tclass: socket / tcp_socket
 
-# 3. 修法（见 [06-Foundation/SELinux/04](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md)）
+# 3. 修法（见 [06-Foundation/SELinux/04](../../01-卷1-平台基础与启动/05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md)）
 ```
 
 ---
@@ -496,8 +496,8 @@ Passive 6789
 | [06 WiFi](06-WiFi协议栈：wpa-supplicant-HAL-连接.md) | 续篇 |
 | [07 Mobile Data](07-Mobile-Data：RIL-数据业务-漫游.md) | 续篇 |
 | [08 诊断工具](08-网络栈诊断工具：tcpdump-ss-netstat-ping.md) | 续篇 |
-| [01-Mechanism/Kernel/IO/11-eBPF](../../../../03-卷3-核心机制/16-IO 与存储/11-eBPF在IO性能分析中的实战：从bpftrace到Android落地.md) | eBPF 工具 |
-| [06-Foundation/SELinux/04-AVC与avc_denied](../../01-卷1-Android系统基础与平台/05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md) | N05 修法 |
+| [01-Mechanism/Kernel/IO/11-eBPF](../../../../02-卷2-核心机制/16-IO 与存储/11-eBPF在IO性能分析中的实战：从bpftrace到Android落地.md) | eBPF 工具 |
+| [06-Foundation/SELinux/04-AVC与avc_denied](../../01-卷1-平台基础与启动/05-安全基础（SELinux%20·%20AVB）/SELinux/04-AVC与avc_denied：从一次denied反推策略.md) | N05 修法 |
 | [02-Symptom/S09-jank/01-症状机制](../../../02-Symptom/S09-jank/01-症状机制.md) | 卡顿 |
 
 ---

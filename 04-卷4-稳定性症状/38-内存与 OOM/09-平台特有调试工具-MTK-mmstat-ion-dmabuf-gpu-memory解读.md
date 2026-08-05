@@ -43,7 +43,7 @@
 
 ### 1.1 smc-pub 主线是 Pixel 7/8,产线 70% 是 MTK/高通/三星
 
-[15 章 内存管理全链路](file:///E:/smc-pub/03-卷3-核心机制/15-内存管理全链路/index.md) 14 篇全部基于 AOSP 17 公开代码 + Pixel 7/8 基线。但**产线 70%+ 设备不是 Pixel**——MTK、高通、三星 Exynos 各自有 vendor 私有工具,这些工具**不开源、文档稀缺、只在 bugreport 抓取**——smc-pub 缺位最严重。
+[15 章 内存管理全链路](file:///E:/smc-pub/02-卷2-核心机制/15-内存管理全链路/index.md) 14 篇全部基于 AOSP 17 公开代码 + Pixel 7/8 基线。但**产线 70%+ 设备不是 Pixel**——MTK、高通、三星 Exynos 各自有 vendor 私有工具,这些工具**不开源、文档稀缺、只在 bugreport 抓取**——smc-pub 缺位最严重。
 
 ### 1.2 vendor 工具的 3 大共同特点
 
@@ -669,6 +669,6 @@ zram0_bdstat: 27B
 ---
 
 **本文为 26 章 26.9 子节,「调查工具书」系列第 3 篇(收口)。**
-**上一篇**:[26.8 dumpsys_meminfo 全设备级 + procstats 解读](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/08-dumpsys-meminfo全设备级与procstats解读.md)——把"AMS 怎么说"补完
-**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/index.md) / [00-计划-新增3篇](file:///E:/smc-pub/04-卷4-诊断方法论与稳定性症状/26-内存与 OOM/00-计划-新增3篇.md)
+**上一篇**:[26.8 dumpsys_meminfo 全设备级 + procstats 解读](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/08-dumpsys-meminfo全设备级与procstats解读.md)——把"AMS 怎么说"补完
+**回到**:[26 章 README](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/index.md) / [00-计划-新增3篇](file:///E:/smc-pub/04-卷4-稳定性症状/38-内存与 OOM/00-计划-新增3篇.md)
 **完成**:26.7-26.9 调查工具书组,3 篇收官

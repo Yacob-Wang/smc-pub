@@ -11,7 +11,7 @@
 ## 本篇定位
 
 - oncall 7 大症状剧本最后一篇（KE / Kernel Exception）—— oncall 系列闭环
-- 强依赖：[OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) / [02-Symptom/S07-KE](../../../04-卷4-诊断方法论与稳定性症状/29-Kernel Exception/01-症状机制.md) / [03-Forensics/F05-KE](../F05-KE/01-取证机制.md) / [01-Mechanism/Kernel/Process 系列](../../01-Mechanism/Kernel/Process/) 13 篇
+- 强依赖：[OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) / [02-Symptom/S07-KE](../../../04-卷4-稳定性症状/41-Kernel Exception/01-症状机制.md) / [03-Forensics/F05-KE](../F05-KE/01-取证机制.md) / [01-Mechanism/Kernel/Process 系列](../../01-Mechanism/Kernel/Process/) 13 篇
 - 衔接去：KE 经常触发 REBOOT → [OC07-REBOOT 响应剧本](OC07-REBOOT响应剧本.md)
 
 ## 校准决策日志
@@ -322,10 +322,10 @@ INFO: task kworker/u8:1 blocked for more than 120 seconds.
 
 | 模块 | 路径 | 关键 |
 |:-----|:-----|:-----|
-| KE 机制 | [../04-卷4-诊断方法论与稳定性症状/29-Kernel Exception/01-症状机制.md](../../../04-卷4-诊断方法论与稳定性症状/29-Kernel Exception/01-症状机制.md) | 6 类 |
-| KE 取证 | [../04-卷4-诊断方法论与稳定性症状/29-Kernel Exception/01-取证机制.md](../F05-KE/01-取证机制.md) | 完整流程 |
-| Kernel 进程 | [01-Mechanism/Kernel/Process/13-进程调试与稳定性关联](../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/13-进程调试与稳定性关联.md) | 进程调试 |
-| 杀进程慢 | [Process_Exit/03-杀进程慢的真正根因](../../03-卷3-核心机制/13-进程与生命周期/13.B-进程生命周期/03-杀进程慢的真正根因：诱因-根因-证伪.md) | 4 类根因 |
+| KE 机制 | [../04-卷4-稳定性症状/41-Kernel Exception/01-症状机制.md](../../../04-卷4-稳定性症状/41-Kernel Exception/01-症状机制.md) | 6 类 |
+| KE 取证 | [../04-卷4-稳定性症状/41-Kernel Exception/01-取证机制.md](../F05-KE/01-取证机制.md) | 完整流程 |
+| Kernel 进程 | [01-Mechanism/Kernel/Process/13-进程调试与稳定性关联](../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/13-进程调试与稳定性关联.md) | 进程调试 |
+| 杀进程慢 | [Process_Exit/03-杀进程慢的真正根因](../../02-卷2-核心机制/13-进程与生命周期/13.B-进程生命周期/03-杀进程慢的真正根因：诱因-根因-证伪.md) | 4 类根因 |
 | REBOOT | [OC07-REBOOT 响应剧本](OC07-REBOOT响应剧本.md) | 4 类 |
 | oncall 流程 | [OC01-oncall 工程总论](OC01-oncall工程总论：值班机制与工具栈.md) | 5/15/30 |
 

@@ -11,7 +11,7 @@
 ## 本篇定位
 
 - 实战案例第 10 篇（与低端机专项强相关，把"冷启动 OOM"立成真实剧本）
-- 强依赖：[01-Mechanism/Kernel/Memory_Management 系列](../../01-Mechanism/Kernel/Memory_Management/) 15 篇 / [01-Mechanism/Kernel/cgroup 系列](../../01-Mechanism/Kernel/cgroup/) 6 篇 / [02-Symptom/S05-HANG/01-症状机制](../../../04-卷4-诊断方法论与稳定性症状/28-HANG 与死锁/01-症状机制.md)
+- 强依赖：[01-Mechanism/Kernel/Memory_Management 系列](../../01-Mechanism/Kernel/Memory_Management/) 15 篇 / [01-Mechanism/Kernel/cgroup 系列](../../01-Mechanism/Kernel/cgroup/) 6 篇 / [02-Symptom/S05-HANG/01-症状机制](../../../04-卷4-稳定性症状/40-HANG 与死锁/01-症状机制.md)
 
 ## 校准决策日志
 
@@ -300,7 +300,7 @@ public boolean isLowEndDevice() {
 | 缓存 | 缩小 50% |
 | 线程 | 减半 |
 
-详见 [01-Mechanism/Kernel/Memory_Management/15-未来方向](../../03-卷3-核心机制/15-内存管理全链路/15-未来方向：基于真实信息的6大演进路径.md)。
+详见 [01-Mechanism/Kernel/Memory_Management/15-未来方向](../../02-卷2-核心机制/15-内存管理全链路/15-未来方向：基于真实信息的6大演进路径.md)。
 
 ---
 
@@ -336,10 +336,10 @@ public boolean isLowEndDevice() {
 | 模块 | 路径 | 关键 |
 |:-----|:-----|:-----|
 | Memory 总览 | [01-Mechanism/Kernel/Memory_Management 系列](../../01-Mechanism/Kernel/Memory_Management/) 15 篇 | 完整 |
-| LMKD 决策 | [Memory_Management/09-杀进程决策子系统](../../03-卷3-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) | LMKD |
+| LMKD 决策 | [Memory_Management/09-杀进程决策子系统](../../02-卷2-核心机制/15-内存管理全链路/09-杀进程决策子系统：LMKD-MemoryLimiter-的协同.md) | LMKD |
 | cgroup | [01-Mechanism/Kernel/cgroup 系列](../../01-Mechanism/Kernel/cgroup/) 6 篇 | cgroup |
 | ART GC | [01-Mechanism/Runtime/ART/03-GC系统/05-Generational-CC 系列](../../01-Mechanism/Runtime/ART/03-GC系统/05-Generational-CC/) | 8 篇 |
-| HANG/OOM | [OC06-HANG/OOM 响应剧本](../../05-卷5-调查工具链/36-Oncall%20与应急响应/OC06-HANG-OOM响应剧本.md) | OOM |
+| HANG/OOM | [OC06-HANG/OOM 响应剧本](../../03-卷3-调查工具/36-Oncall%20与应急响应/OC06-HANG-OOM响应剧本.md) | OOM |
 
 ## B 路径对账
 

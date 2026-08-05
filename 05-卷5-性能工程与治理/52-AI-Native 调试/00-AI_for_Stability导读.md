@@ -370,10 +370,10 @@ LLM 日志分析技术栈：
 - LLM 日志分析：LangChain / LlamaIndex / vLLM
 - AI APM：Datadog Watchdog / New Relic AI / 阿里云 ARMS AI
 - 端侧 AI 框架：[MediaPipe](../05-Governance/AI-Native/01_AI_Native_Runtime/) / ML Kit
-- 端侧 LLM：[Gemini Nano](../../07-卷7-APM与工程治理/46-AI-Native 调试/O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md)
+- 端侧 LLM：[Gemini Nano](../../05-卷5-性能工程与治理/52-AI-Native 调试/O05-端侧大模型系统集成_Gemini_Nano_端侧LLM_SDK.md)
 
 ---
 
-> **子系列导航**：[← 02 AI_Native_OS](../02_AI_Native_OS/README.md) | [AI Native X 总览](../../../07-卷7-APM与工程治理/46-AI-Native%20调试/README-AI_Native_X系列.md)
+> **子系列导航**：[← 02 AI_Native_OS](../02_AI_Native_OS/README.md) | [AI Native X 总览](../../../05-卷5-性能工程与治理/46-AI-Native%20调试/README-AI_Native_X系列.md)
 >
 > **最后更新**：2026-06-26（F01-F06 撰写中）
