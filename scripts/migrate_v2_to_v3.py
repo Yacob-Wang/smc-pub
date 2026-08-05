@@ -107,17 +107,26 @@ def check_pretable():
         checks.append(False)
 
     # 2. ahead/behind
+    # git rev-list --left-right --count A...B 含义:
+    #   parts[0] = A 独有 (origin/master 独有 = 本地 behind)
+    #   parts[1] = B 独有 (master 独有 = 本地 ahead)
     subprocess.run(["git", "fetch", "origin"], cwd=ROOT, capture_output=True)
     result = subprocess.run(
         ["git", "rev-list", "--left-right", "--count", "origin/master...master"],
         cwd=ROOT, capture_output=True, text=True
     )
     parts = result.stdout.strip().split()
-    if len(parts) == 2 and parts[0] == "0":
-        print(f"✅ 2. ahead=0 ({result.stdout.strip()})")
-        checks.append(True)
+    if len(parts) == 2:
+        behind = int(parts[0])
+        ahead = int(parts[1])
+        if behind == 0:
+            print(f"✅ 2. ahead=0 behind=0 ({result.stdout.strip()})")
+            checks.append(True)
+        else:
+            print(f"⚠️ 2. ahead={ahead} behind={behind} (建议先 pull 同步 origin)")
+            checks.append(False)
     else:
-        print(f"⚠️ 2. ahead={parts[0] if parts else '?'} (建议 push 后再迁)")
+        print(f"❌ 2. rev-list 输出异常: {result.stdout}")
         checks.append(False)
 
     # 3. 大文件无未跟踪
