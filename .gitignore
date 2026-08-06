@@ -20,6 +20,10 @@ Thumbs.db
 *.hprof
 *.dump
 tmp/
+_tmp/
+
+# harness 本地快照草稿（正式考古快照请放 _archive/ 并入库）
+00-Meta/harness/snapshots/
 
 # 根目录临时源码/草稿
 /*.java
