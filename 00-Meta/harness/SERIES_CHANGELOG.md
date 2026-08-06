@@ -5,6 +5,11 @@
 
 ## 最新
 
+### 2026-08-06 · art · 20.D.2 ANR Trace 扩写 traces.txt 解读方法论
+- **路径**：`02-卷2-核心机制/20-ART 运行时/20.D-信号与Hook/02-ANR_Trace完整链路.md`；同目录 `index.md`
+- **动作**：新增 §5 traces.txt 解读（非原子快照 / held-by 多 owner 误读 / AMS 大锁实战）；原 §5–§7 顺延为 §6–§8；index 补 5 大稳定性信号全景与 20.D.4 导航
+- **摘要**：解释同一把锁在 traces.txt 中显示多个 held by 的根因（SignalCatcher 逐线程 suspend/dump/resume），给出持锁方反查框架
+
 ### 2026-08-05 · structure · 8 卷 50 章 → 6 卷 56 章重组 + Web 适配
 - **路径**：`01-卷1-平台基础与启动/` … `06-卷6-案例实战/`；`00-Meta/scripts/content_policy.py`；`scripts/migrate_v2_to_v3.py`；`docs/`（prepare 重生）
 - **动作**：按 v3 规划 git mv 全量章目录；工具卷前移为卷 3（章号 22–27，原 31–36）；症状卷章号 34–42；性能+治理合并为卷 5（43–52）；案例为卷 6（53–56）；更新顶栏导航 / 首页 / 文章总目录生成器 / README / 章定位 MDC
