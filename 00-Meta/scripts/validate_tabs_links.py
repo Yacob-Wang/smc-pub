@@ -15,9 +15,9 @@ SITE_DIR = REPO_ROOT / "site"
 # 意图分组顶栏：唯一合法顶层 Tab 文案（顺序固定）
 EXPECTED_TAB_LABELS = ("首页", "总目录", "查问题", "学机制", "性能与治理")
 
-# 意图分组 Tab 点击落点（相对 site/ 的路径前缀）
+# 意图分组 Tab 点击落点（相对 site/ 的路径前缀；v3 · 6 卷）
 EXPECTED_TAB_HREFS = {
-    "学机制": "03-卷3-核心机制/",
+    "学机制": "02-卷2-核心机制/",
 }
 
 # 文件系统回退态特征（出现任一即失败）
@@ -37,20 +37,19 @@ FORBIDDEN_TAB_PATTERNS = (
     re.compile(r"^08-卷"),
 )
 
-# 每个顶层模块至少 1 页；Mechanism 含 flyout 深层页
+# 每个顶层卷至少 1 页；机制卷含 flyout 深层页（v3 · 6 卷路径）
 SAMPLE_PAGES = [
     "index.html",
     "00-Meta/index.html",
-    "01-卷1-Android系统基础与平台/index.html",
-    "03-卷3-核心机制/index.html",
-    "03-卷3-核心机制/15-内存管理全链路/index.html",
-    "04-卷4-诊断方法论与稳定性症状/index.html",
-    "04-卷4-诊断方法论与稳定性症状/23-ANR 深度/index.html",
-    "05-卷5-调查工具链/index.html",
-    "06-卷6-性能工程/index.html",
-    "07-卷7-APM与工程治理/index.html",
-    "08-卷8-案例实战/index.html",
-    "02-卷2-系统启动/11-系统启动性能专项/index.html",
+    "01-卷1-平台基础与启动/index.html",
+    "01-卷1-平台基础与启动/11-系统启动性能专项/index.html",
+    "02-卷2-核心机制/index.html",
+    "02-卷2-核心机制/15-内存管理全链路/index.html",
+    "03-卷3-调查工具/index.html",
+    "04-卷4-稳定性症状/index.html",
+    "04-卷4-稳定性症状/35-ANR 深度/index.html",
+    "05-卷5-性能工程与治理/index.html",
+    "06-卷6-案例实战/index.html",
 ]
 
 _TAG_RE = re.compile(r"<[^>]+>")
